@@ -232,3 +232,24 @@ T-009 的蓝图主文档因输出上限截断。本轮只写 blueprint/REBUILD_B
 1) .github/workflows/ios.yml —— 完整 workflow；
 2) docs/CI_FIRST_BUILD.md —— 首次编译排障清单：基于对现有代码的审查，列出 10 个最可能的编译错误（Swift 6 严格并发的 Sendable 违例、any 协议、GameServices 非 Sendable 跨 actor、FNPBCoreTests 的 @testable import、blueprint/ 编入模块的路径、Metal shader 编译期检查、Info.plist 与 GENERATE_INFOPLIST_FILE 冲突等），每条给症状+修法；
 并在文件头说明：本仓库尚未推 GitHub 时的本地替代命令（xcodegen generate && xcodebuild 一行命令）。
+
+### [T-021] doing :: FNPBUI 界面层 v1：五个核心屏幕
+- 创建: 2026-10-31T02:33:56+08:00　更新: 2026-10-31T02:34:02+08:00
+- 验收: Sources/FNPBUI/ 下 ≥4 个 swift 文件落盘；project.yml 对应依赖无需改动或同步改；screen 枚举与 uiscreen 文件名一一对应；不臆造 FNPBCore 字段，全部经 GameSnapshot 注入
+
+实现 FNPBUI 界面层第一批（蓝图 S8 的 v1 切片，纯 SwiftUI，import SwiftUI/UIKit 仅限本 target）。
+【锚点：原版界面清单，来自 IPA 解包 assets_raw/xml/screens/ 的 20 个 .uiscreen 文件名，逐字抄录】
+mainscreen / gamemode / inGameClassic / inGameAdventure / inGameChallengeHud / inGameChallengeBackground / inGameChallengeInstructionsScreen / inGameChallengeMapScreen / inGameChallengeScoreScreen / inGameChallengeScoreScreenComplete / inGameChallengeScoreScreenCompleteFailure / pause / results / extras / about / newsscreen / newsscreenFruitNinja / newsscreenJetpack / shopScreen / Background
+v1 只做 5 个：mainscreen、gamemode、inGameClassic（HUD）、pause、results。其余 15 个在 ScreenID 枚举里占位（case 齐全+注释锚定对应 uiscreen 文件名），不实现视图。
+【架构约束（不可违反）】
+1) FNPBUI 不得 import FNPBCore 的具体类型去直接读字段——定义纯值结构 GameSnapshot（score/lives/timer/comboCount/bestScore/pauseVisible/result 等），由 App 层每帧或事件驱动组装注入（@Observable 或 @StateObject 均可，但 Snapshot 结构本身 Sendable、无游戏类型）；
+2) 反向通路走闭包/Intent 回调（onPauseTapped/onResumeTapped/onRestartTapped/onQuitTapped/onModeSelected 等），UI 不直接持有 GameWorld；
+3) import UIKit 仅限需要 UIViewRepresentable 的文件（如把 TouchRouter.captureView / MetalContext 的 MTKView 嵌入 SwiftUI 的桥接器——若蓝图已把桥接放在 FNPBRender/FNPBPlatform，则 FNPBUI 只用其公开包装类型）；
+4) 背景图/按钮图：assets_png/ 下已有 .tex 转换产物，用 Image(uiImage:) 加载并写清单注释（用了哪些文件、对应哪个 uiscreen 元素）；找不到对应素材的元素用色块占位 + [待验证] 注释，禁止臆造资源名；
+5) 横竖屏：原版为横屏游戏（macho 启动即 landscape），v1 只保证横屏布局正确，竖屏加 .ignoresSafeArea 级别的简单适配即可，标注 [待验证]。
+输出 4 个文件块：
+1) Sources/FNPBUI/ScreenID.swift —— 20 case 枚举 + 每个 case 锚定 uiscreen 文件名的注释；
+2) Sources/FNPBUI/GameSnapshot.swift —— 快照值结构 + ViewModel 协议（Blueprint 风格的单向数据流）；
+3) Sources/FNPBUI/Screens/MainMenuScreen.swift + GameModeScreen.swift（一个 FILE 块两个类型也可，分开更稳）；
+4) Sources/FNPBUI/Screens/InGameHUDScreen.swift + PauseScreen.swift + ResultsScreen.swift；
+约束：不臆造 FNPBCore/FNPBRender 的 API（拿不准的写 [待验证] 并在文件头列出疑问清单）；Swift 6 并发模式——ViewModel 协议标 @MainActor；每个屏幕文件头注明锚定的 uiscreen 名与主要元素（分数/暂停按钮/生命图标/连击横幅…）。
