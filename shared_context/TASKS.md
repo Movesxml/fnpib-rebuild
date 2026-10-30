@@ -233,9 +233,10 @@ T-009 的蓝图主文档因输出上限截断。本轮只写 blueprint/REBUILD_B
 2) docs/CI_FIRST_BUILD.md —— 首次编译排障清单：基于对现有代码的审查，列出 10 个最可能的编译错误（Swift 6 严格并发的 Sendable 违例、any 协议、GameServices 非 Sendable 跨 actor、FNPBCoreTests 的 @testable import、blueprint/ 编入模块的路径、Metal shader 编译期检查、Info.plist 与 GENERATE_INFOPLIST_FILE 冲突等），每条给症状+修法；
 并在文件头说明：本仓库尚未推 GitHub 时的本地替代命令（xcodegen generate && xcodebuild 一行命令）。
 
-### [T-021] doing :: FNPBUI 界面层 v1：五个核心屏幕
-- 创建: 2026-10-31T02:33:56+08:00　更新: 2026-10-31T02:34:02+08:00
+### [T-021] done :: FNPBUI 界面层 v1：五个核心屏幕
+- 创建: 2026-10-31T02:33:56+08:00　更新: 2026-10-31T02:49:23+08:00
 - 验收: Sources/FNPBUI/ 下 ≥4 个 swift 文件落盘；project.yml 对应依赖无需改动或同步改；screen 枚举与 uiscreen 文件名一一对应；不臆造 FNPBCore 字段，全部经 GameSnapshot 注入
+- 备注: 8 文件落盘（ScreenID/GameSnapshot/UISupport+5 屏幕）；CI success（3d9db404）；曾因提取截断丢 UIActions 已修复；素材全部走语义 key 待资产清单回填
 
 实现 FNPBUI 界面层第一批（蓝图 S8 的 v1 切片，纯 SwiftUI，import SwiftUI/UIKit 仅限本 target）。
 【锚点：原版界面清单，来自 IPA 解包 assets_raw/xml/screens/ 的 20 个 .uiscreen 文件名，逐字抄录】
@@ -253,3 +254,35 @@ v1 只做 5 个：mainscreen、gamemode、inGameClassic（HUD）、pause、resul
 3) Sources/FNPBUI/Screens/MainMenuScreen.swift + GameModeScreen.swift（一个 FILE 块两个类型也可，分开更稳）；
 4) Sources/FNPBUI/Screens/InGameHUDScreen.swift + PauseScreen.swift + ResultsScreen.swift；
 约束：不臆造 FNPBCore/FNPBRender 的 API（拿不准的写 [待验证] 并在文件头列出疑问清单）；Swift 6 并发模式——ViewModel 协议标 @MainActor；每个屏幕文件头注明锚定的 uiscreen 名与主要元素（分数/暂停按钮/生命图标/连击横幅…）。
+
+### [T-022] doing :: App 装配层 T-022：GameHost 真实服务接线 + UI 五屏闭环
+- 创建: 2026-10-31T02:51:24+08:00　更新: 2026-10-31T02:52:05+08:00
+- 验收: FNPBApp.swift 重写后 CI 绿；占位服务仅剩 EffectEmitting；触摸写入 GameState 真实字段；五屏随 UIPhase 切换
+
+重写 App 装配层，打通「菜单→开局→游玩→暂停→结算→重开」闭环（蓝图 S1 收口 + S8 接线）。
+
+【Kimi 已核准的接口事实，直接采用（均已编译验证，勿再存疑）】
+- GameState 真实字段（blueprint/GameState.swift，已编入 FNPBCore）：hitPoint: SIMD3<Float>（=macho game+0x10/14/18 触摸点）、slashTrailActive: Bool（=+0xa5）、slashTrailTimer: Float（=+0x17c）、comboCount/comboWindowTimer/comboFruitTypes/comboTypeFlag、missPenaltyCount、specialFruitBonusEnabled、specialOrBombMarked、isFaulted、sliceRadiusSquared 等；
+- 真实服务类（全在 FNPBCore）：SliceTester()（init(intersector:queryProvider:)，queryProvider 给默认实现即可，provider 内部从 GameState 组 SliceQuery——切割形状暂用 .line 占位并注明 [待验证]）；ComboTracker(stats:specialFruitBonus:)；ScoreSystem()（total 只读）；StatsRecorder()；WaveDirector(playerCount:rng:)；
+- EffectEmitting 无真实实现，**保留 PlaceholderEffectEmitter**（文件内注明待特效任务卡）；
+- RandomSource 保留现有 SplitMix64Random（PRNG 序列 [待验证]，勿动）；
+- 存档：SaveStore.load()/save() 与 SaveData.highscores 沿用，最高分键语义见 FNPBPlatform 存档映射注释。
+
+【触摸接线（macho §1.2 语义，直接采用）】
+began → state.hitPoint = position; state.slashTrailActive = true；
+moved 且 slashTrailActive → state.hitPoint = position；
+ended → 无操作（轨迹由 slashTrailTimer 超时自清，原版同款）。
+GameWorld 十步仍是桩，写入暂无人消费——这是预期，不许因此删掉接线。
+
+【五屏闭环（FNPBUI T-021 已落盘，接口以 GameSnapshot.swift 为准）】
+1) 新增 App/AppViewModel.swift：@Observable @MainActor final class AppViewModel: FNPBUIViewModel——持 GameHost 引用，phase 状态机（mainMenu→modeSelect→playing→paused→results），send(_:) 实现全部 UIIntent（selectMode 开局、pause 停 DisplayLink、resume 重启 DisplayLink、restart 重置全套状态、quitToMenu、toggleSound 切 AudioEngine masterVolume 并落 saveData）；snapshot 每帧由 handleFrame 末尾组装（score←ScoreSystem.total、bestScore←saveData、combo←ComboTracker 当前值经 clamp(combo-3,0,2) 视觉档位与 clamp(combo-2,1,5) 文本档位、文本占位 "COMBO" [待验证]、result 在转入 results 时组装）；
+2) 重写 App/FNPBApp.swift 的 ContentView：按 vm.snapshot.phase switch——mainMenu→MainMenuScreen、modeSelect→GameModeScreen、playing/paused→ZStack{ Metal 渲染视图(TODO 可先纯黑底+注释锚点)、TouchSurfaceView、InGameHUDScreen }（paused 再叠 PauseScreen）、results→ResultsScreen；每屏传 (snapshot: vm.snapshot, actions: vm.actions)；
+3) GameHost 改造：init 用真实服务替换 5 个占位（保留 EffectEmitting 占位与 SplitMix64Random）；handleFrame 末尾调 vm 刷新快照；新增 startGame(mode:)/restart()/quitToMenu() 三个流程方法（重置 GameState()、store.clear()、score.reset()、combo.reset(state:)、waveDirector.beginGame(waves: [WaveInfo()]) 占位波次 [待验证]、DisplayLink start/stop）；
+4) GameHost 保留 handleScenePhase/persist 现有语义。
+
+【硬约束】import 关系不许变（App 可 import 全部四模块；FNPBUI 不许新增模块依赖）；Swift 6 严格并发：AppViewModel 全类 @MainActor；不臆造任何 API（每个调用点必须与注入文件里的签名一致）；GameWorld.tick 调用签名以 GameWorld.swift 为准。
+【已知会翻车点，先想清楚再写】
+a) GameHost 持有 AppViewModel、AppViewModel 持有 GameHost → 用 weak 或单向持有+闭包打破循环；
+b) ObservableObject(GameHost) 与 @Observable(AppViewModel) 混用：统一走 AppViewModel 暴露 @Published 等价物（@Observable 的 @Observable 宏属性即可）；
+c) FNPBUIViewModel 要求 class 类型且 @MainActor——实现头照抄协议声明；
+d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通过，开局时在 startGame 写入 Constants.Slash 系的合理初值（15.0² 归一化语义见 RenderSurface 注释），标注 [待验证]。
