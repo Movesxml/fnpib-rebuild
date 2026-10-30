@@ -220,4 +220,29 @@ public enum UIIntent: Sendable, Equatable {
 ///
 /// 闭包**假定在主线程调用**（SwiftUI 事件与渲染都在 MainActor）。
 /// App 层（Composition Root）构造示例：
-/// 
+/// /// ```swift
+/// let actions = UIActions { intent in
+///     MainActor.assumeIsolated { model.send(intent) }   // Swift 5.9+ / iOS 17+
+/// }
+/// ```
+/// [待验证] 若 App 层 `model` 不是 `@MainActor`，此处写法需相应调整（接线任务卡确认）。
+public struct UIActions {
+    public var send: (UIIntent) -> Void
+
+    public init(_ send: @escaping (UIIntent) -> Void) {
+        self.send = send
+    }
+
+    /// 空实现（预览 / 快照测试用）。
+    public static var noop: UIActions { UIActions { _ in } }
+}
+
+// MARK: - ViewModel 协议
+
+/// 单向数据流中枢：App 层实现，把游戏世界翻译成 `GameSnapshot`，并消费 `UIIntent`。
+/// 典型实现是 `@Observable @MainActor final class`，每帧（或按事件）更新 `snapshot`。
+@MainActor
+public protocol FNPBUIViewModel: AnyObject {
+    var snapshot: GameSnapshot { get }
+    func send(_ intent: UIIntent)
+}
