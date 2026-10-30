@@ -1,0 +1,354 @@
+exe 源文件路径串: 1246 条, 去重 276 个文件
+
+[d:\projects\engines\mortarworking\src\source\basicgraphics] (5 文件)
+    defaultvertexstreams.h
+    effect.cpp
+    effectproperties.cpp
+    effectproperties.h
+    vertexelement.cpp
+[d:\projects\engines\mortarworking\src\source\basicgraphics\gles2] (3 文件)
+    defaultvertexstreams_gles2.cpp
+    effect_gles2.cpp
+    iindexstreamgles2.cpp
+[d:\projects\engines\mortarworking\src\source\collision] (6 文件)
+    colaabb.cpp
+    colaabb.h
+    colline.cpp
+    colline.h
+    collision.h
+    colsphere.cpp
+[d:\projects\engines\mortarworking\src\source\containers] (6 文件)
+    enumerator.h
+    list.h
+    matrix.h
+    microbuffer.h
+    quaternion.h
+    treenode.h
+[d:\projects\engines\mortarworking\src\source\debug] (3 文件)
+    debugbridge_pipewin32.cpp
+    debugbridge_pipewin32.h
+    pipemessage.h
+[d:\projects\engines\mortarworking\src\source\debug\comms] (2 文件)
+    commsmanager.cpp
+    commsmanagerpipewin32.cpp
+[d:\projects\engines\mortarworking\src\source\debug\comms\bricked] (5 文件)
+    message.cpp
+    messagebody.cpp
+    messagebody.h
+    messagebodycomponent.cpp
+    messagebodycomponent.h
+[d:\projects\engines\mortarworking\src\source\display] (6 文件)
+    displaymanager.cpp
+    displaymanager.h
+    gles2shadermanager.cpp
+    mortarcamera.cpp
+    simple2dsystem.cpp
+    simple2dsystem.h
+[d:\projects\engines\mortarworking\src\source\display\pc] (2 文件)
+    displaymanagerpc_gles2.cpp
+    displaymanagerpc_gles2.h
+[d:\projects\engines\mortarworking\src\source\file] (11 文件)
+    datastreamreader.h
+    datastreamwriter.h
+    file_common.cpp
+    filesystem_basicmemfs.cpp
+    filesystem_basicmemfs.h
+    filesystem_direct.cpp
+    ifile_basicmemfs.cpp
+    ifile_direct.cpp
+    ... 等共 11 个
+[d:\projects\engines\mortarworking\src\source\file\structures] (2 文件)
+    datareader.h
+    resourceloader.h
+[d:\projects\engines\mortarworking\src\source\font] (7 文件)
+    bakedstringbox.cpp
+    bakedstringttf.cpp
+    fancybakedstring.h
+    font.h
+    font_common.cpp
+    fontcacheobjectttf.cpp
+    fontinterface.cpp
+[d:\projects\engines\mortarworking\src\source\input] (4 文件)
+    inputdevice.cpp
+    inputdevicedxkeyboard.cpp
+    inputevent.cpp
+    inputevent.h
+[d:\projects\engines\mortarworking\src\source\keyboard] (1 文件)
+    keyboard.cpp
+[d:\projects\engines\mortarworking\src\source\math] (3 文件)
+    enginemath.h
+    enginemath_common.cpp
+    enginemath_unittests.cpp
+[d:\projects\engines\mortarworking\src\source\memory] (5 文件)
+    freelist.cpp
+    linkedheap.cpp
+    memorypool.h
+    stackheap.cpp
+    stlpoolallocator.cpp
+[d:\projects\engines\mortarworking\src\source\memory\pc] (1 文件)
+    stacktracer_pc.cpp
+[d:\projects\engines\mortarworking\src\source\mesh] (7 文件)
+    animation.cpp
+    mesh.cpp
+    meshfactory.cpp
+    model.cpp
+    model.h
+    triclipper.h
+    triclippertree.h
+[d:\projects\engines\mortarworking\src\source\mesh\gles2] (1 文件)
+    mesh_gles2.cpp
+[d:\projects\engines\mortarworking\src\source\network] (2 文件)
+    networkmanager_common.cpp
+    newsrenderer.cpp
+[d:\projects\engines\mortarworking\src\source\network\socialnetworking] (4 文件)
+    leaderboard.cpp
+    socialnetworkmanager.cpp
+    socialnetworkprovider.cpp
+    socialnetworkprovider.h
+[d:\projects\engines\mortarworking\src\source\renderer\2d] (1 文件)
+    vectorimagequad.cpp
+[d:\projects\engines\mortarworking\src\source\renderer\binmodel] (1 文件)
+    binmodelfile.cpp
+[d:\projects\engines\mortarworking\src\source\renderer\codegeneratedprimitives] (1 文件)
+    sphere.cpp
+[d:\projects\engines\mortarworking\src\source\renderer\scenegraph] (1 文件)
+    scenegraph.cpp
+[d:\projects\engines\mortarworking\src\source\renderer\scenegraph\skyworld] (1 文件)
+    gamescene_skyworld.cpp
+[d:\projects\engines\mortarworking\src\source\renderer\scenegraph\skyworld\gles2] (1 文件)
+    skyworldmaterial_gles2.cpp
+[d:\projects\engines\mortarworking\src\source\renderer\skinmodel] (3 文件)
+    animdatafile.cpp
+    binfileutils.cpp
+    skinmodelfile.cpp
+[d:\projects\engines\mortarworking\src\source\resources] (1 文件)
+    autoinstancelist.h
+[d:\projects\engines\mortarworking\src\source\security\hashing] (1 文件)
+    sha1.cpp
+[d:\projects\engines\mortarworking\src\source\sound] (5 文件)
+    audiodecoders.cpp
+    audiodecoders.h
+    mortaraudiomixer.cpp
+    sounddatasource.cpp
+    soundmanager_mam.cpp
+[d:\projects\engines\mortarworking\src\source\sound\audiodecoders] (1 文件)
+    oggtremor.cpp
+[d:\projects\engines\mortarworking\src\source\sound\mixer] (4 文件)
+    audiomixer.h
+    audiomixerbase.cpp
+    voice.cpp
+    xaudio2mixerout.cpp
+[d:\projects\engines\mortarworking\src\source\startup] (1 文件)
+    mortargame.cpp
+[d:\projects\engines\mortarworking\src\source\startup\win32] (1 文件)
+    deviceproperties_win32.cpp
+[d:\projects\engines\mortarworking\src\source\stringtable] (3 文件)
+    numericformatters.h
+    stringtable.cpp
+    stringtable.h
+[d:\projects\engines\mortarworking\src\source\texture] (11 文件)
+    memoryblocktexturesource.cpp
+    texture.cpp
+    texture2d.h
+    textureatlas.cpp
+    textureconverter.cpp
+    textureinfo.cpp
+    textureinfo.h
+    textureloader.cpp
+    ... 等共 11 个
+[d:\projects\engines\mortarworking\src\source\texture\compression] (1 文件)
+    dxtc.cpp
+[d:\projects\engines\mortarworking\src\source\texture\fileformats] (4 文件)
+    ddsformat.cpp
+    tex1format.cpp
+    tex2format.cpp
+    tex3format.cpp
+[d:\projects\engines\mortarworking\src\source\texture\fileformats\svgparser] (1 文件)
+    svgpathtokenizer.cpp
+[d:\projects\engines\mortarworking\src\source\texture\opengl] (1 文件)
+    apihelper_opengl.cpp
+[d:\projects\engines\mortarworking\src\source\texture\opengles2] (1 文件)
+    texture2d_opengles2.cpp
+[d:\projects\engines\mortarworking\src\source\texture\utils] (4 文件)
+    texturecrop.cpp
+    texturedatabuffer.cpp
+    texturesourcelocktracking.cpp
+    texturesourcescaler.cpp
+[d:\projects\engines\mortarworking\src\source\texture\vectorrenderers] (4 文件)
+    aggimagesource.cpp
+    svgparser.cpp
+    vectorimagedom.cpp
+    vectorimagedom.h
+[d:\projects\engines\mortarworking\src\source\texture\writer] (1 文件)
+    tex3writer.cpp
+[d:\projects\engines\mortarworking\src\source\threading\win32] (1 文件)
+    win32genericthread.cpp
+[d:\projects\engines\mortarworking\src\source\tinyxml] (5 文件)
+    tinxmlbinparser.cpp
+    tinystr.h
+    tinyxml.cpp
+    tinyxml.h
+    tinyxmlparser.cpp
+[d:\projects\engines\mortarworking\src\source\types] (5 文件)
+    asciistring.cpp
+    asciistringbuilder.cpp
+    immutable.h
+    referencecounter.h
+    utf8string.cpp
+[d:\projects\engines\mortarworking\src\source\types\registeredvar] (3 文件)
+    registeredvarhandle.h
+    registeredvarmanager.cpp
+    registeredvarunittests.cpp
+[d:\projects\engines\mortarworking\src\source\unicode] (1 文件)
+    arabicstringshaper.cpp
+[d:\projects\engines\mortarworking\src\source\unittest] (2 文件)
+    unittestmanager.cpp
+    unittestresult.cpp
+[d:\projects\engines\mortarworking\src\source\userinterface] (23 文件)
+    brickuiprojectconfiguration.cpp
+    brickuiutil.cpp
+    component.cpp
+    componentdefinition.cpp
+    componentdefinition.h
+    componenteditor.cpp
+    componentinstantiationanimation.cpp
+    componentinstantiationdefinition.cpp
+    ... 等共 23 个
+[d:\projects\engines\mortarworking\src\source\userinterface\callback] (11 文件)
+    uicallback_hidescreen.cpp
+    uicallback_isanimfinished.h
+    uicallback_playanimation.h
+    uicallback_playmusic.h
+    uicallback_playsound.h
+    uicallback_setproperty.h
+    uicallback_stopanimation.h
+    uicallback_transitiontoscreen.cpp
+    ... 等共 11 个
+[d:\projects\engines\mortarworking\src\source\userinterface\clipping] (1 文件)
+    uiclipping.h
+[d:\projects\engines\mortarworking\src\source\userinterface\comms\messages] (1 文件)
+    messagesetselectedcomponents.cpp
+[d:\projects\engines\mortarworking\src\source\userinterface\components] (4 文件)
+    componentdebugger.cpp
+    componentswipie.cpp
+    componentswipie.h
+    componenttimer.cpp
+[d:\projects\engines\mortarworking\src\source\userinterface\serialization] (24 文件)
+    serializededitorpacketanimation.cpp
+    serializededitorpacketchildanimation.cpp
+    serializedpacketanimation.cpp
+    serializedpacketanimationkeyframe.h
+    serializedpacketanimationmapbody.cpp
+    serializedpacketanimationmapfooter.cpp
+    serializedpacketanimationmapheader.cpp
+    serializedpacketanimationtrack.h
+    ... 等共 24 个
+[d:\projects\fruitninjapuss\source] (3 文件)
+    achievements.cpp
+    game.cpp
+    initialise.cpp
+[d:\projects\fruitninjapuss\source\challengemode] (9 文件)
+    challengeconditions.cpp
+    challengecontrol.cpp
+    challengehud.cpp
+    challengeinfo.cpp
+    challengemods.cpp
+    challengescorebonus.cpp
+    challengetier.cpp
+    challengetier.h
+    ... 等共 9 个
+[d:\projects\fruitninjapuss\source\entities] (5 文件)
+    actormanager.cpp
+    fruit.cpp
+    fruit.h
+    jiblet.cpp
+    slash.cpp
+[d:\projects\fruitninjapuss\source\entity] (2 文件)
+    entity.cpp
+    entitymanager.cpp
+[d:\projects\fruitninjapuss\source\gametask] (1 文件)
+    gametask.cpp
+[d:\projects\fruitninjapuss\source\hud] (16 文件)
+    checkbox.cpp
+    hud.cpp
+    hudcontrol.h
+    leaderboardlist.cpp
+    listbox.cpp
+    mainscreen.cpp
+    notificationcontrol.cpp
+    radiobutton.cpp
+    ... 等共 16 个
+[d:\projects\fruitninjapuss\source\originalmode] (1 文件)
+    originalmodecontrol.cpp
+[d:\projects\fruitninjapuss\source\save] (1 文件)
+    save.cpp
+[d:\projects\fruitninjapuss\source\sound] (2 文件)
+    gamesound.cpp
+    vomanager.cpp
+[d:\projects\fruitninjapuss\source\utils] (11 文件)
+    bonusmanager.cpp
+    combochecker.cpp
+    highscorelist.cpp
+    powerupmanager.cpp
+    pspparticles.cpp
+    pspparticles.h
+    scoremodifier.cpp
+    stringtableutil.cpp
+    ... 等共 11 个
+[d:\projects\fruitninjapuss\source\wavemanager] (2 文件)
+    wavemanager.cpp
+    wavemanager.h
+[f:\dd\vctools\crt_bld\self_x86\crt\src] (2 文件)
+    locale0.cpp
+    xmutex.cpp
+
+=== 玩法断言/调试串样例 ===
+  [combo] d:\projects\fruitninjapuss\source\utils\combochecker.cpp(14) :  error : 
+  [combo] d:\projects\fruitninjapuss\source\utils\combochecker.cpp(279) :  error : 
+  [combo] d:\projects\fruitninjapuss\source\utils\combochecker.cpp(280) :  error : 
+  [slash] d:\projects\fruitninjapuss\source\entities\slash.cpp(1901) :  error : 
+  [slash] d:\projects\fruitninjapuss\source\entities\slash.cpp(2206) :  error : 
+  [slash] d:\projects\fruitninjapuss\source\entities\slash.cpp(325) :  error : 
+  [slash] d:\projects\fruitninjapuss\source\entities\slash.cpp(326) :  error : 
+
+=== 玩法相关源文件 (88 个) ===
+  d:\projects\engines\mortarworking\src\source\debug\comms\bricked\messagebodycomponent.cpp  x7
+  d:\projects\engines\mortarworking\src\source\debug\comms\bricked\messagebodycomponent.h  x1
+  d:\projects\engines\mortarworking\src\source\mesh\model.cpp  x1
+  d:\projects\engines\mortarworking\src\source\mesh\model.h  x3
+  d:\projects\engines\mortarworking\src\source\renderer\binmodel\binmodelfile.cpp  x5
+  d:\projects\engines\mortarworking\src\source\renderer\scenegraph\skyworld\gamescene_skyworld.cpp  x2
+  d:\projects\engines\mortarworking\src\source\renderer\skinmodel\animdatafile.cpp  x6
+  d:\projects\engines\mortarworking\src\source\renderer\skinmodel\binfileutils.cpp  x1
+  d:\projects\engines\mortarworking\src\source\renderer\skinmodel\skinmodelfile.cpp  x10
+  d:\projects\engines\mortarworking\src\source\startup\mortargame.cpp  x2
+  d:\projects\engines\mortarworking\src\source\userinterface\callback\uicallback_hidescreen.cpp  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\callback\uicallback_transitiontoscreen.cpp  x3
+  d:\projects\engines\mortarworking\src\source\userinterface\comms\messages\messagesetselectedcomponents.cpp  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\component.cpp  x22
+  d:\projects\engines\mortarworking\src\source\userinterface\componentdefinition.cpp  x5
+  d:\projects\engines\mortarworking\src\source\userinterface\componentdefinition.h  x5
+  d:\projects\engines\mortarworking\src\source\userinterface\componenteditor.cpp  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\componentinstantiationanimation.cpp  x15
+  d:\projects\engines\mortarworking\src\source\userinterface\componentinstantiationdefinition.cpp  x28
+  d:\projects\engines\mortarworking\src\source\userinterface\componentinstantiationdefinitionserialization.cpp  x4
+  d:\projects\engines\mortarworking\src\source\userinterface\components\componentdebugger.cpp  x2
+  d:\projects\engines\mortarworking\src\source\userinterface\components\componentswipie.cpp  x4
+  d:\projects\engines\mortarworking\src\source\userinterface\components\componentswipie.h  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\components\componenttimer.cpp  x4
+  d:\projects\engines\mortarworking\src\source\userinterface\componentserialization.cpp  x2
+  d:\projects\engines\mortarworking\src\source\userinterface\componenttext.cpp  x7
+  d:\projects\engines\mortarworking\src\source\userinterface\componenttextinput.cpp  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\componenttype.h  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\serialization\serializedpacketcomponentbody.cpp  x2
+  d:\projects\engines\mortarworking\src\source\userinterface\serialization\serializedpacketcomponentfooter.cpp  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\serialization\serializedpacketcomponentheader.h  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\serialization\serializedpacketcomponentsynch.cpp  x2
+  d:\projects\engines\mortarworking\src\source\userinterface\serialization\serializedscreenfilebody.h  x2
+  d:\projects\engines\mortarworking\src\source\userinterface\serialization\serializedscreenfilefooter.h  x1
+  d:\projects\engines\mortarworking\src\source\userinterface\serialization\serializedscreenfileheader.h  x3
+  d:\projects\fruitninjapuss\source\achievements.cpp  x7
+  d:\projects\fruitninjapuss\source\challengemode\challengeconditions.cpp  x3
+  d:\projects\fruitninjapuss\source\challengemode\challengecontrol.cpp  x20
+  d:\projects\fruitninjapuss\source\challengemode\challengehud.cpp  x2
+  d:\projects\fruitninjapuss\source\challengemode\challengeinfo.cpp  x1

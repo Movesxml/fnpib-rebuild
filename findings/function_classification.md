@@ -1,0 +1,289 @@
+# T-004 玩法函数语义分类与双源关联（73 函数）
+
+- 输入：`reverse/exe_gameplay_located.md`（x86 Debug，31 个命中函数）、`shared_context/findings/macho_core_functions.md`（armv7 Release，42 个命中函数）
+- 协议：遵循 `findings/binary_equivalence.md` 取数规则——**类结构走 exe，数值以 macho 为准，行为冲突信 macho**
+- 标签：`[exe]` / `[macho]` / `[both]`；置信度：极高 / 高 / 中 / 低
+- 全表编号：`E01–E31`（exe）、`M01–M42`（macho），共 73 项
+
+## 0. 类目码
+
+| 码 | 含义 |
+|---|---|
+| A | 切割/实体运动与更新 |
+| B | 连击（combo） |
+| C | 计分 / 回合结算 |
+| D | 波次与生成（wave / spawner） |
+| E | 道具有效性（bomb / freeze / critical / slashMod） |
+| F | 资源注册与加载 |
+| G | 存档与进度 |
+| H | 引擎配置 / 属性系统框架 |
+| I | UI / 流程 |
+| J | 后端服务（成就 / 联赛 / 内购） |
+| K | 音效 |
+| L | 未能判定 |
+
+## 1. 方法论备注（本轮新增，影响全表置信度）
+
+### 1.1 exe 字符串池按模块聚簇
+PE 里同一模块的 XML 键名/资源名在 `.rdata` 中地址相邻，可直接用来「合并归属」：
+
+| 地址带 | 成员 | 归属 |
+|---|---|---|
+| `01710a74–01710ac8` | `wave`, `critical`, `…a84/a a8/ab4/ac8` | 同一配置表（E03/E04 共用） |
+| `01709b64–01709c68` | `slash`, `…bc0/bd4/be8/c00/c1c/c2c/c44/c5c/68` | slashMod 配置（E11） |
+| `016ee214–016ee24c` | `score` 家族 6 条 | 计分串注册（E07） |
+| `016ef0cc–016ef240` | `bandito`, `slash` | 结算/流程串（E09） |
+| `016f2b88–016f2c5c` | `bomb` 家族 | 炸弹串注册（E14–E16） |
+| `0171e1a4–0171e54c` | `blade-*`, `bomb` 等数百条 | 音效名表（E13） |
+| `01724760` | `UNHANDLED FRUIT ACTION - %s` | 引擎枚举兜底断言（E24–E27） |
+
+### 1.2 「偏移一致」是本轮唯一硬证据
+只有两处达到：M11↔E06（wave 8 字段）、M27↔E11（slashMod 12 字段）。其余关联均降级为「假设」。
+
+---
+
+## 2. exe 侧 31 个函数分类表
+
+| 编号 | 函数 | 类目 | 判定依据（具体证据） | 源 | 置信 |
+|---|---|---|---|---|---|
+| E01 | `FUN_00aa7890` | B 连击 | `__thiscall`；前置条件 `(char)param_1[10] && 2 < *(int*)(param_2+0x8c)`；命中 `combo@016f40d0`；`param_1[0xc]` 缓存对象；`thunk_FUN_00c49730(…, _DAT_016f40cc, 0x3f800000)`（1.0f 参数） | `[exe]` | 高 |
+| E02 | `FUN_00b29620` | B 连击（HUD/音效） | 同一 combo 字段 `+0x8c`；clamp `combo-3` 到 `[0, _DAT_018b6414]`；`*(int*)(iStack_18+0x4c)` 作缓存槽；构造串 `>&UNK_016f40e8`（形如 `>combo-%i`） | `[exe]` | 高 |
+| E03 | `FUN_00baaea0` | D/H 波次配置读取 | `__fastcall` 无 struct 参数；6 条连续 `thunk_FUN_00a71290/int_reader(&key, param_1+0x24/0x28/0x2c/0x30/0x34/0x38)`；键名含 `wave`/`critical`（01710a74/a94） | `[exe]` | 中高 |
+| E04 | `FUN_00c6e770` | F/H XML 解析器 | `thunk_FUN_00c8c9a0(0x48)` = `operator_new(0x48)`（**与 macho XML 节点尺寸完全一致**）+ `thunk_FUN_00c98e40(0)` 打开 + `thunk_FUN_00c98ca0(name)` 绑定文件名 + `thunk_FUN_00c973d0(&key,&int)` 取值 + `piStack_2c[0x2c]=iStack_24` 顺序索引 + 越界回填 `if (piStack_2c[0x23]<0) piStack_2c[0x23]=piStack_2c[0x24]` | `[exe]` | 高 |
+| E05 | `FUN_00bcc3a0` | F/H XML 解析器（另一份） | 同 E04 骨架（`0x48` + `c98ca0(&UNK_0171356c)` + `c98e40`）；`uStack_38=0xff`×4 取 RGBA；`critical@01713550` | `[exe]` | 高 |
+| E06 | `FUN_00c3a7e0` | D 波次配置解析 | **偏移逐一命中**：`+0x248/+0x24c/+0x250/+0x254/+0x258/+0x298/+0x29c/+0x2a0`；`while` 遍历 `wave@01719e38` 子节点 + 内层遍历 `01719e20`；`beanStart/EndPos` 式键 `01719e34/01719e2c` | `[both]` | **极高** |
+| E07 | `FUN_01638c90` | F 字符串 ID 注册 | 6 条 `_DAT_018bebXX = thunk_FUN_00a6dff0(&UNK_016ee2XX)` 纯赋值，无分支；score 家族串 016ee214–016ee24c | `[exe]` | 高 |
+| E08 | `FUN_00aa6ca0` | H 枚举字符串→索引 | 读 2 个串 ID 入 `aiStack_c[0..1]`，读 `016f3ef4` 比对，返回 `0/1`，未命中返回 0 | `[exe]` | 中高 |
+| E09 | `FUN_00a7df70` | C 回合结算 | `thunk_FUN_00a6fe80()` 取模式；**`if (99 < uVar3)`** 与 M23 完全同阈值；`thunk_FUN_00a6dff0(&UNK_016ef184)` 取成就键；串 `slash@016ef164/178`、`bandito@016ef0f4` | `[both]` | 高 |
+| E10 | `FUN_00bda510` | H/I 主更新 tick（疑似） | `float param_1`=dt；先 `thunk_FUN_00bdf180(dt)` 调基类；`+0x50` 标志、`+0xa5` 冷却累加 `*(+0x17c)+=dt` 与 `_DAT_016f2018` 比较；`+0xb4 < 4` 分支；遍历 `thunk_FUN_00bab5e0(1,…)`/`thunk_FUN_00bb0610()`；串 `slash@016ef178` | `[exe]` | 中（体量大且截断） |
+| E11 | `FUN_00b5a560` | E slashMod 配置解析 | **偏移逐一命中**：`+0xe4`(speed)、`+0xe0`(type)、`+0xf0`/`+0x128`/`+0x124`(particles 三类)、`+0xe9/+0xe8/+0xea`(三个 bool)、`+0xec`、`+0xf4`(texture)、`+0x120/+0xf8`(impactParticles 计数与数组)、`+0xdc`(count)、`+0xd8`(数组指针)、`+0x130..0x13c`(scales)；串 `slash@01709c1c` | `[both]` | **极高** |
+| E12 | `FUN_00b7f860` | E/D 列表配置解析 | `operator_new(0xc4)` 创建条目 + `thunk_FUN_00b7e340(iStack_1c)`；大写化循环 `'`' < c < '{' → c-=0x20`（与 M37 同款）；`thunk_FUN_00b80500()` 取子节点名 + `strcmp(UNK_0170ceb4/0170ceac)`；串 `slash@0170ce94` | `[exe]` | 中高 |
+| E13 | `FUN_00c622c0` | K 音效名批量注册 | 数百条 `(**(code**)*puStack_c)(&UNK_0171eXXX)`，含 `blade@0171e36c/394`、`bomb@016f2c34/016fca74`；**形态与 M05 完全相同** | `[both]` | 高 |
+| E14 | `FUN_0163ab10` | F 字符串 ID 注册 | 单条 `_DAT_018befe0 = thunk_FUN_00a6dff0("bomb")` | `[exe]` | 高 |
+| E15 | `FUN_0163abd0` | F 字符串 ID 注册 | 单条 `_DAT_018beff4 = …(016f2bd4)` | `[exe]` | 高 |
+| E16 | `FUN_0163ac90` | F 字符串 ID 注册 | 单条 `_DAT_018bf004 = …(016f2c14)` | `[exe]` | 高 |
+| E17 | `FUN_00ae2470` | E 道具计时/冷却管理器 | `float dt, char flag`；`_DAT_018c491c -= dt` 且 `DAT_018c490a = (0 < _DAT_018c491c)`（倒计时到零）；`_DAT_018c4928` 同型第二计时器；`switch(_DAT_018b522c) case 10/11/12/13` 播不同音；`0x197f50c + i*0xc` 共 **16 槽**数组，`==0` 时置 `_DAT_016ee204`、`<=0` 时清零 | `[exe]` | 中高 |
+| E18 | `FUN_00c49680` | E 实体名排除谓词 | 三次 `strcmp(param_1, {016fca74, 016f7b40, 01703c6c})` 全不等 → 返回 1，任一相等 → 0；`bomb@016fca74` 在列 | `[exe]` | 中高 |
+| E19 | `FUN_00b0ae60` | I Bandito 流程/结算 | `__fastcall(int*)`；先写 `DAT_0197f5e9=0`、**`_DAT_0197f458 = 0x3f800000`**、`*(p+0x30)=0`、`*((int)p+0xc1)=0`；`if (_DAT_0197f448 == 1) thunk_FUN_00b42ff0() else thunk_FUN_00a800b0()`；串 `bandito@01700ddc` | `[both]` | 中高 |
+| E20 | `FUN_00c2beb0` | I 成就弹窗构造 | **逐句对应 M37**：`*param_1 = &UNK_017189a4`(vtable)、`param_1[0xd] = 0x200`、`param_5==2 / ==1` 两分支各建子对象、`param_1[0x21]=param_3`、大写化循环 `'`'<c<'{' → -0x20`、`operator_new(0xac?)`；串 `achiev@01707330` | `[both]` | **极高** |
+| E21 | `FUN_00c4a780` | J 成就列表 XML 解析 | `thunk_FUN_00c598c0(&UNK_0171b868)`、XML 文件名 `UNK_0171b828`（**与 M01 的 `0171b828` 同址域**）、`thunk_FUN_00a6ef60(&UNK_0171b80c)` + 遍历 `01707330`(achiev)，反复取 `016f18d4` | `[exe]` | 中高 |
+| E22 | `FUN_00f0cdd0` | J 成就请求构建 | 巨型栈帧（`apiStack_6f8[44]` + `0xcccccccc` 填充 = Debug 栈初始化）；`thunk_FUN_00c98ca0(param_1)` + `c98e40`；读 `0177edfc/0177edec/0177eddc` 三键；`if (param_3==0) { thunk_FUN_00f10910/00f10960 }`；遍历 `achiev@01707330` | `[exe]` | 中 |
+| E23 | `FUN_00bf8ed0` | I 状态机 + 未处理动作 | `float dt`；先 `thunk_FUN_00bea2b0(dt)` 调基类；`switch(*(int*)(p+0xdc))` case `0/1/3/4/0xe/0xf/0x10`；**共享全局 `_DAT_0197f448` / `_DAT_0197f458`（与 E19 同组）**；case 0 里 `*_DAT_0197f458 = (1.0 - …)*K + …` 缓动；命中 `UNHANDLED@01715b18`（`UNHANDLED FRUIT ACTION - %s`） | `[exe]` | 中 |
+| E24 | `FUN_00ca6bb0` | H 8 路类型分发器 | `switch(iVar1) case 1..8` → `thunk_FUN_00d1be60..00d1c1b0`；default 走 `DebugBreak()` + `01724760` | `[exe]` | 高 |
+| E25 | `FUN_00ff99f0` | H 属性读取器 | `thunk_FUN_01171c50/getattr` + `thunk_FUN_01171db0` 取类型；`case 1..8` → `0100ca70/0100cd00/0100cf90/0100d220/0100d4b0/0100d740`；每支按类型取 int/float/vector2/string | `[exe]` | 高 |
+| E26 | `FUN_00ffa8a0` | H 属性写入器 | `case 1..8` → `0100e5d0/0100e680/0100e730/0100e7e0/0100e890/0100e940/0100e9f0/0100eaa0`（取待写值）→ 写回；与 E25 成对 | `[exe]` | 高 |
+| E27 | `FUN_00ffb720` | H 属性存在性/hash 分发 | 前置 `thunk_FUN_01171c50 && thunk_FUN_00ffa5d0`（双重校验）；`case 1..8` → `0100fef0..01010270`（无返回值使用） | `[exe]` | 中高 |
+| E28 | `FUN_00ee70b0` | H 资源加载分发 | `thunk_FUN_00c971c0(&UNK_016ec4a0)` 取配置根 + `thunk_FUN_00ee7590` 位校验；XML `thunk_FUN_00c9f550(uStack_24)` + `thunk_FUN_00c9f6a0()` 配对（RAII）；`case 1..8` → `00eec230/00eec7a0/00eecc50/00eed0f0/00eed590/00eeda00/00eedea0/00eee310` | `[exe]` | 中高 |
+| E29 | `FUN_0116b880` | H 名称查表/比较 | 巨型帧 `0x26f` int 填充；`thunk_FUN_00c3c350()` 断言==1；`thunk_FUN_00b80500()` 取串后 `do { bVar7 = *p < *q; ... } while` 标准字典序比较，结果 `(1 - bVar7) - (bVar7 != 0)` | `[exe]` | 中 |
+| E30 | `FUN_011ae9d0` | H 存档/配置读（8 字段） | `thunk_FUN_01172d70()` + `thunk_FUN_00c96dc0(&UNK_017c79b0)`；`thunk_FUN_00b624d0(&UNK_016ec4a0, uVar2)` / `b62510(&UNK_01709cd4, int)` 写配置；`case 0..7` → `FUN_011b4db0/011b5bf0/011b5fe0/011b63d0/011b67c0/011b6bb0/011b6fa0/011b7380` | `[exe]` | 高 |
+| E31 | `FUN_011b17b0` | H 存档/配置写（8 字段） | `thunk_FUN_00caec40(p+1,*p,p+0x15)` 开写上下文；`case 0..7` → `FUN_011b7710/011b78d0/011b7ab0/011b7c90/011b7e70/011b8030/011b8210/011b83d0`；`thunk_FUN_00cafab0(p+1, (float)fVar5)` 写 float；与 E30 成对 | `[exe]` | 高 |
+
+**exe 侧汇总**：A 0 / B 2 / C 1 / D 3（含 1 个 both）/ E 6 / F 6 / G 0 / H 10 / I 3 / J 2 / K 1 / L 0。
+（exe 侧**完全没有**命中存档/进度函数 G——存档逻辑在 exe 侧未被字符串定位，是当前最大的盲区。）
+
+---
+
+## 3. macho 侧 42 个函数分类表
+
+| 编号 | 函数 | 类目 | 判定依据（具体证据） | 源 | 置信 |
+|---|---|---|---|---|---|
+| M01 | `FUN_000035e8` | F/G 成就表初始化 | `"hud/hud_unlocked_dialog.tex"` + `operator_new(0x48)` + `"xml/achievementList.xml"` + `"achievementManagerFile"` + `"achievement"` + `"id"`/`"social_id"` + `operator_new(0xac)` | `[macho]` | 极高 |
+| M02 | `FUN_0006c2b4` | I 结算 UI 填充 | 纯路径查表 `"resultsContainer.BonusList"` / `".BonusListFail"` / `".Fail"` / `".Success"` / `".textTotal"` / `"@totalScore"`；`FUN_0001da28(*(node+0x260), &flag)` 设可见性；`FUN_000659a0(*(p+8)+8, i)` 取数据 | `[macho]` | 高 |
+| M03 | `FUN_00016214` | A 切割实体更新 | `float param_2`=dt；先 `FUN_0001702c(param_1)` 调基类；`param_1+0xc0/0xc4/0xc8` 三分量 `FloatVectorMult/Add` 求模，`fVar10 / 15.0 <= 1.0` 归一化；`*(char*)(p+0x50)` 分支；串 `combo`/`slash` | `[macho]` | 中高 |
+| M04 | `FUN_0006cae0` | I/C 结算进入 + Combo 音效 | `FUN_00020698(1,1)`；`"resultsContainer"` + 遍历子节点；`"animate_trigger"`；**`FUN_0002bb34(iVar6,"Combo",0x3f800000,0x3f800000,…)`**；`*(param_1+0x10) = (mode==1 ? 1 : 2)` | `[both]` | 高 |
+| M05 | `FUN_0002447c` | K 音效名注册表 | 数百条 `(**(code**)*puVar2)(puVar2,"…")`；含 `"Combo"`/`"Critical"`/`"blade-paw-1..3"`/`"Bomb-explode"`/`"Impact-Apple"` 等 | `[both]` | 高 |
+| M06 | `FUN_00010bec` | E 暴击判定/触发 | `*(char*)(p+0x1bc)` 状态 + `-1.0 < *(float*)(p+0x104)` 早退；`FUN_000065c4()` 取 RNG + `FUN_00006a84(rng,2)` 取上限；线性同余 `uVar19 = a*b; carry; %n`；`FUN_00057000(rng, 1, *(p+0x3c), 0, 0)` 播音；串 `critical` | `[macho]` | 中 |
+| M07 | `FUN_0001267c` | **E/D 全局数值表初始化** | `"xml/fruitlist.xml"` → `"critical"` 段读 `colour`/`new_life_at`→`DAT_0052bf78`/`score`→`_0052bf64`/`chance`→`_0052bf68`/`chance_inc`→`_0052bf6c`/`splats`→`_0052bf54`/`scale`→`_0052bf58`/`spread`→`_0052bf5c`/`disappear_speed`→`_0052bf60`；`"bomb"` 段读 `size`；另载 `fruit_shadow.tex`/`menuFruitShadow.tex` | `[macho]` | **极高** |
+| M08 | `FUN_000292e0` | G 存档写出 | `operator_new(0x50)` + `"save_file"` + `"version"`/`"highscore"`/`"%shighscore"`/`"%s_unposted"`/`"%s_dolg"`/`"critical_chance"`/`"rated"`/`"p2pCancelled"`/`"appLicensedState"`；Rb_tree 遍历写 `"total"`/`"que"`/`"ach"` | `[macho]` | 极高 |
+| M09 | `FUN_00028350` | G 存档读入 | `strcmp` 分派 `"save_file"`/`"que"`/`"challengeData"`/`"challengeDataPersistent"`；读回 version/highscore/critical_chance/rated/p2pCancelled/`%shighscore`/`%s_unposted`/`%s_dolg` | `[macho]` | 极高 |
+| M10 | `FUN_00053cb8` | **D 波次表解析** | `operator_new(0x48)` + `"waveManagerFile"`；槽步长 `param_1 + param_3*0x40`；默认值 `+0xb0=10`、`+0xb4=0.25f`、`+0xb8=1.0f`、`+0xbc=1.0f`、`+200=2.0f`、`+0xe4=100`、`+0xdc=1`、`+0xdd=1`、`+0xe0=0`、`+0xe8=0`、`+0xec=-1`；`strcmp "WaveInfo"` → `operator_new(0xc4)` + `FUN_00058ee4` + `"waveNo"`/`"overideProbabiltyPool"`/`"until"`/`"forever"`/`"chance"`/`"criticalChance"` | `[macho]` | **极高** |
+| M11 | `FUN_00027f24` | **D/G wave 状态序列化** | 键↔偏移：`waveCount`+0x248 / `numberOfWavesSpawned`+0x24c / `numberOfWavesSinceReset`+0x250 / `waveDelay`+0x254 / `waveWait`+0x258 / `blitzSpawnedThisGame`+0x298 / `blitzForceSpawnedCounter`+0x29c / `blitzSpawnTime`+0x2a0 / `beanStartPos`+0x11c / `beanEndPos`+0x128 / `beanTime`+0x134 / `beanVisible`+0x138；`"wave"`→`"spawner"`→`"delay"`/`"toSpawn"`/`"index"`/`"inc"` | `[both]` | **极高** |
+| M12 | `FUN_0002a878` | G 挑战进度写出 | `operator_new(0x50)` + `"challengeData"` + 40 余键：`state`/`currentChallenge`/`uistate`/`uiTime`/`uimapstate`/`quickShotState`/`comboPoints`/`challengeTime`/`challengeFruit`/`lastRoundScore`/`score`/`fails`/`resultMenuState`/`resultDisplayScore(Total)`/`instructMenuState`/`finaleScreen*`/`megaBomb`/`megaFruit`/`Stack1`/`Stack2`/`snakeVec` | `[macho]` | 极高 |
+| M13 | `FUN_00211268` | J 联赛数据解析 | 虚表密集 `(**(code**)(*p+0x4c/0x8c/0x90/0x130))`；键 `"displayName"`/`"score"`/`"countryId"`/`"leagueId"`/`"type"`；`std::vector<Mortar::LeagueFeedUser>::push_back`；`FUN_002f7060(uVar7,"global")` | `[macho]` | 高 |
+| M14 | `FUN_002115b0` | J 排行榜排序 | `std::map<std::string,float>::operator[]` + `__introsort_loop` + `__final_insertion_sort` + `vector<pair<string,float>>::push_back` | `[macho]` | 高 |
+| M15 | `FUN_00028b20` | G 挑战进度读入 | 与 M12 键一一对应（`FUN_0030c6c0/0030c718` 读回），字段落 `param_1+0x3c…0xd0` | `[macho]` | 极高 |
+| M16 | `FUN_00080ca0` | I 排行榜 UI 构建 | `"addFriends"` + `"textureDivider_0"`/`"textureDivider_1"` + `"ComponentLeaderboardItem"`/`"ComponentLeaderboardItemPlayer"` + `FUN_003ee190` 建组件 + `__introsort` 排序 | `[macho]` | 高 |
+| M17 | `FUN_0022ca90` | J Bricknet 社交同步 | `"bricknetId"`/`"score"`/`"metaData"`；`FUN_00226f6c`/`FUN_0026d030`/`FUN_0022aa2c`/`FUN_00233640` 建实体并入 map | `[macho]` | 中高 |
+| M18 | `FUN_0001cb08` | C 计分回调派发 | `DAT_005576f0++`；遍历 `DAT_005576e8` 链表逐个 `(**(code**)(*p+0xc))(p, param_1, param_2)`；`FUN_00027588(DAT_005f8e04, "all", …)`、`"upside_down_points"`、`"bean"`、`"score_without_beans"`；溢出保护 `0x7fffffff < DAT_005f8dd4` | `[macho]` | 中高 |
+| M19 | `FUN_00053388` | **D 生成器配置解析** | 键 `"name"`/`"mode"`/`"minWait"`/`"maxWait"`/`"dontSpawnBeforeWave"`/`"canSpawnWithPowers"`/`"fruit"`→`"type"`+`"chance"`；`param_1[1] += local_2c` 累加权重和；`FUN_00039714()` 解析 mode 枚举 | `[macho]` | **极高** |
+| M20 | `FUN_0000a3a0` | **A/E 实体类型枚举表** | 通过 `___cxa_guard_acquire` 惰性初始化：`"fruit"`(len5,id 1) / `"bomb"`(4, **2**) / `"coin"`(4, **3**) / `"slash"`(5, **4**) / `"blast"`(5, **5**) / `"jiblet"`(6, **6**) / `"fruitray"`(8, **7**)；返回索引，未命中 `*param_2=0; return -1` | `[macho]` | **极高** |
+| M21 | `FUN_00059ee0` | I **过期 SDK** UI 切换 | `"extras.backgroundControl.openfeint"` / `"extras.backgroundControl.gamecenter"` + `"animate_in"`/`"animate_out"` + `"fruit"` 子节点显隐；`FUN_00021fbc(uVar3,0)` | `[macho]` | 高（重建时**剔除**） |
+| M22 | `FUN_00018e60` | E 暴击特效生成 | `FUN_002f69c4("crit_hit_stars", 0xe)` → `FUN_00035a08(uVar5, key, 0, 1)` 建粒子；`*(iVar7+0x4c) = 1`；`FUN_000050f8(…)` 坐标变换；前置 `(**(code**)(**(int**)PTR_DAT+0x28))()` 取暂停态 | `[macho]` | 中高 |
+| M23 | `FUN_00060108` | **C 回合结算（Bandito/挑战）** | `"animate_out"`；`FUN_0005edbc(&DAT_005f94b4)` 取当前模式（0/1）；`*(iVar9+0x80)++`、模式1时 `*(iVar9+0x84)++`；**`if (99 < uVar6)`** → `"full_slice_bonus_total"`；`"slashes"` vs `"slashesScoring"` 相等 → `"no_misses_consecutive_total"`；`"bandito_round_score"`/`"bonus_round_score"`/`"bandito_1_heart_finish"`/`"challenge_hard_pass(_total)"` | `[both]` | **极高** |
+| M24 | `FUN_00065ad4` | C 命中率公式 | `(slashes - slashesScoring) * DAT_00065b70 * totalfruit / (totalfruit + *(float*)(p+0x2c))`，再 `* DAT_00065b74`（负值归零）；全整数 + FixedToFP 定点运算 | `[macho]` | 高 |
+| M25 | `FUN_0002ee94` | E 道具类型枚举 | 惰性建 3 键：`"SLASH_MODIFIER"`(0xe) / `"BACKGROUND"`(10) / `"REMOVEADS"`(9)；线性查表返回 `0..2`，未命中 `-1` | `[macho]` | 高 |
+| M26 | `FUN_0002f2e8` | E slashMod 兜底默认值 | `FUN_0002ef34()` 初始化；`operator_new__(0xc)`，`*p=4`、`p[1]=1`、颜色 `0xff000000`；RGBA 字节从 `param_1+0x34..0x37` 拷入 | `[macho]` | 高 |
+| M27 | `FUN_0002f36c` | **E slashMod 配置解析** | 键↔偏移：`speed`+0xe4 / `type`+0xe0 / `particles`+0xf0 / `release_particles`+0x128 / `contact_particles`+0x124 / `slash_flash`+0xe9 / `particles_directional`+0xe8 / `flipForUpsideDown`+0xea / `splat_override`+0xec / `texture`+0xf4(`"%s.tex"`) / `impactParticles`→`+0x120` 计数 + `+0xf8` 数组 / `scales`→`start_thickness` 等 | `[both]` | **极高** |
+| M28 | `FUN_00056098` | E 冰冻道具更新 | 串 `freeze@0041a436`（全报告唯一命中）；`param_1[0x17b]=0`；`*(p+0x40/0x44) += dt-like`；`*(p + param_3*4 + 0x170) <= 0.0` 计时槽、`+0x168` 指向水果、`+0xb8 < +0xbc` 阈值判定；`*(iVar11+0x18) < 2` | `[macho]` | 中 |
+| M29 | `FUN_00006ddc` | F 炸弹模型预加载 | `"models/Fruit/Bomb.mmd"` / `"models/Fruit/Bomb_purple.mmd"` / `"bomb_smoke"`(len10) / `"purple_bomb_smoke"`(0x11)；`DAT_00556a70` 一次性懒加载守卫 | `[macho]` | 高 |
+| M30 | `FUN_0007ebd0` | I/E 炸弹视觉槽切换 | 路径查 `"bomb"` 节点；`FUN_0000698c(rng, 1, 1)` / `(rng, 2, 1)` 两互斥槽（`+0x784`/`+0x788`）；`p[7..9] = DAT_0052bfe0/e4/e8` 位置；`FUN_00013cec` 移动 | `[macho]` | 中 |
+| M31 | `FUN_00055670` | E 水果池类型 ID 表 | `"bomb"`/`"Bomb"`(len4) → ID **`0xfffffffe`(-2)**；否则 `FUN_0000aae0(name,0)` 查模型 ID；`FUN_0005ef30` 模式下用 `FUN_0000af04(0)` 随机且与 `FUN_000617a8()` 去重 | `[macho]` | 高 |
+| M32 | `FUN_00020c38` | E 炸弹爆炸初始化 | **常量金矿**：`*(puVar2+0x24) = 0x404ccccd`(3.2f)；`FUN_0000577c(…, 0x3fcccccd/*1.6f*/, 0x40000000/*2.0f*/, 0x41100000/*9.0f*/)`；`DAT_00557804..0c = param_1[0..2]`（爆炸坐标）；`FUN_00027588(…,"bomb",1,1,1)` 统计；`"Bomb-explode"` 音效 | `[macho]` | 高 |
+| M33 | `FUN_0005bf9c` | I 结算分数显示 | `PTR_DAT_004d9048[0x1b1]=0`；**`*(puVar2+0x20) = 0x3f800000`**；`"backgroundControl.score.score"` / `.bestScore` / `.newBest` / `"backgroundControl.fruitFact.poster.animation_wrapper.text2"`；`"lastFruitFact"` 随机不重复 | `[both]` | 高 |
+| M34 | `FUN_0006d80c` | L 未判定 | **反编译未完成**，仅有字符串 `bandito@0041cbb2/cbc8` | `[macho]` | 低 |
+| M35 | `FUN_002e1100` | J 成就服务注册 | `FUN_00350cc8(uVar10, uVar3, "IAchievementService")`；遍历 `"achievement"` 节点读 `"id"`/`"name"`/`"providerID"`/`"range"`/`"visible"`（`"TRUE"/"True"/"true"/"1"` 四种真值写法）；`operator_new(0x1c)` | `[macho]` | 高 |
+| M36 | `FUN_0026ea7c` | J 内购事务分发 | `"transactionals"` 数组遍历 + `std::string::compare` 多重分派 → `operator_new(0x14/0x18/0x1c/0x58)` 各类型事务对象 | `[macho]` | 中 |
+| M37 | `FUN_00045b78` | I 成就弹窗构造 | **与 E20 逐句对应**：`*param_1 = &PTR_FUN_…`(vtable)、`param_1[0xd] = 0x200`、`param_5==1`→`FUN_00072874`、`param_5==2`→`FUN_00072878`、大写化 `if ((byte)(c+0x9f) < 0x1a) c -= 0x20`、`FUN_002bb34(…,"achievement",1.0,1.0,…)`、`operator_new(0xf4)` | `[both]` | **极高** |
+| M38 | `FUN_0002c540` | E/G 成就条件解析 | 键 `"min"`/`"max"`/`"equals"`/`"points"`/`"multiple"`/`"texture"`/`"colour"`/`"valuesEqual"`/`"achievement"`/`"min-*"`/`"max-*"` 前缀分派；`param_1[0x34]` 存成就 ID | `[macho]` | 高 |
+| M39 | `FUN_0026a308` | J 成就上报构造 | `("type" → "achievement")`、`(key → std::string::c_str())`、`("value" → *(p+0x10))` | `[macho]` | 中 |
+| M40 | `FUN_0004afe8` | I Dojo 商店分支 | `"DOJO_OPTION_ANDROID_01"` / `"MENU_TEXTURE_55"` / `"mango"` / `"black_pineapple"`；常量 `0x41800000`(16.0f)；`*(p+0x278+0xc) < 1` 分支 | `[macho]` | 中 |
+| M41 | `FUN_000718b0` | **B 连击 HUD + 音效** | `2 < *(int*)(param_2+0x8c)` 且 `*(int*)(*(int*)(param_1+0x54)+0x18) != 0`（**与 E01/E02 完全同条件**）；`"comboValue"` + `FUN_002f702c(…, "%i", combo)`；`FUN_00074254(iVar7, param_2+0x104, clamp01..2)`；`FUN_0007250c(…, 0x3ecccccd/*0.4f*/, 0x3f800000/*1.0f*/)`；`_memcpy(buf,"combo-",0x20)` + `"%i"`(1..5) → `*(param_1+0x4c)` 缓存音效 ID；`FUN_0002bc94(…, 0x3e800000/*0.25f*/, 1.0f)` | `[both]` | **极高** |
+| M42 | `FUN_0002447c` | （同 M05，报告内重复列出）| 见 M05 | `[both]` | 高 |
+
+**macho 侧汇总**：A 1 / B 1 / C 4 / D 3 / E 10 / F 3 / G 5 / H 0 / I 7 / J 6 / K 1 / L 1。
+
+---
+
+## 4. 双源关联假设
+
+按证据强度排序。**A 级 = 结构体偏移逐字段一致；B 级 = 相同字符串键 / 相同阈值常量；C 级 = 相同调用形态；D 级 = 仅语义相似。**
+
+### A1 ★★★ `M11 FUN_00027f24` ≡ `E06 FUN_00c3a7e0` — 波次管理器状态处理
+
+| 键 | macho 偏移 | exe 偏移 |
+|---|---|---|
+| waveCount | +0x248 | +0x248 |
+| numberOfWavesSpawned | +0x24c | +0x24c |
+| numberOfWavesSinceReset | +0x250 | +0x250 |
+| waveDelay | +0x254 | +0x254 |
+| waveWait | +0x258（`param_2 + 600`） | +0x258（`param_2 + 600`） |
+| blitzSpawnedThisGame | +0x298 | +0x298 |
+| blitzForceSpawnedCounter | +0x29c | +0x29c |
+| blitzSpawnTime | +0x2a0 | +0x2a0 |
+
+**8/8 命中**，且两者都用「`while` 遍历同名子节点 → `bean*` 键」的循环结构。
+→ 结论：exe 与 macho 的 `WaveManager` 类布局**同源同版本**（仅 Debug/Release 差异），偏移表可直接用于重建。
+→ 该关联的价值超出单个函数：**它证明了两编译单元的类布局一致**，后续任何 exe 偏移都可放心迁移。
+
+### A2 ★★★ `M27 FUN_0002f36c` ≡ `E11 FUN_00b5a560` — slashMod 配置解析
+
+12 个键↔偏移全部一致（speed/type/particles/release_particles/contact_particles/slash_flash/particles_directional/flipForUpsideDown/splat_override/texture/impactParticles 计数+数组/scales）。
+差异：macho 用 `std::string` 逐个析构（有引用计数），exe 用裸 `operator_delete__`——同语义不同 STL 实现。**以 macho 为结构真值**。
+
+### B1 ★★ `M41 FUN_000718b0` ↔ `E01 FUN_00aa7890` + `E02 FUN_00b29620` — 连击
+
+- 共同条件式：`2 < *(int*)(param_2 + 0x8c)`（combo 计数 = `param_2+0x8c`，三处完全相同）
+- 共同缓存字段：成员 `+0x4c`（macho 存 `combo-N` 音效 ID；exe 中 E02 的 `*(int*)(iStack_18+0x4c)` 同址）
+- 共同 clamp 语义：`combo - 3`，但**上限不同**——macho 硬编码 `clamp(0..2)`，exe 用全局 `_DAT_018b6414`
+- **冲突裁决：以 macho 为准**，combo 音效档位为 3/4/5 三档（对应 `combo-1/2/3`… 由 `"%i"` 拼接，上限 5）
+
+→ 假设：macho 把「HUD 文本 + 音效」合并在一个函数；exe Debug 版拆成两个（一个可能是 `ComboModifier` 的 delegate 回调，另一个是 UI 更新）。**E01 vs E02 具体谁对应哪个子职责 = 待验证**（两者反编译均截断）。
+
+### B2 ★★ `M23 FUN_00060108` ↔ `E09 FUN_00a7df70` — 回合结算
+
+- 共同阈值：`99 < X`（macho 判 `uVar6` 是否给 `full_slice_bonus_total`；exe 判 `uVar3` 后取成就键）
+- 共同主题：`bandito_*` 相关串在两者字符串池中都紧邻 `slash`
+- 结论：同一套「回合末统计 + 成就上报」逻辑，E09 为 exe 侧对应实现，置信高但非偏移级。
+
+### B3 ★★ `M37 FUN_00045b78` ≡ `E20 FUN_00c2beb0` — 成就弹窗对象构造
+
+逐句对应：vtable 首赋 → `param_1[0xd] = 0x200` → `param_5` 的 1/2 双分支 → 大写化循环 → `operator_new`(0xf4/0xc4) → 播放 `"achievement"` 音效。
+差异：`operator_new` 尺寸不同（0xf4 vs 0xc4），且 exe 多 `param_6==0` 分支 → 判定为**版本差异**（Debug 构造多两个成员）或**不同类**（成就弹窗 vs 成就图标）。
+→ 标为「高度可疑同一逻辑族」，需第三轮核对 vtable `UNK_017189a4` 与 `PTR_FUN_00046068_1_005382f8` 的虚函数数。
+
+### B4 ★★ `M07 FUN_0001267c` 无 exe 对应（重要「单源」）
+exe 侧 31 个命中函数里**没有** `fruitlist.xml` 的键名（`disappear_speed`/`new_life_at`/`chance_inc`/`splats`）。可能原因：exe 侧 XML 键名以字符串池形式被优化内联（不在立即数扫描范围）或 Debug 版路径不同。
+→ **所有 critical/bomb 段数值（chance / chance_inc / new_life_at / scale / spread / disappear_speed / size）只有 macho 一支来源，必须逐个反编译确证，不可用 exe 交叉验证**。这是重建数值表的最大单点风险。
+
+### C1 ★★ `M05 FUN_0002447c` ↔ `E13 FUN_00c622c0` — 音效名注册
+调用形态完全相同（`(**(code**)*p)(p, &name)` 逐条注册）。**但不保证名字集合相同** —— 建议做一次差集，直接产出「发售版有效音效清单」（免费资产）。
+
+### C2 ★★ `M19 FUN_00053388` ↔ `E12 FUN_00b7f860` / `E04 FUN_00c6e770` — spawner/列表解析
+- 共同 `operator_new(0xc4)`（macho WaveInfo 条目 = exe `b7f860` 的 0xc4）
+- 共同 `operator_new(0x48)`（XML 节点 = E04/E05）
+→ 假设：`E12` 解析的是「生成器/波次条目列表」，与 `M19`/`M10` 同族。**E12 具体解析哪份 XML 未定 —— 待验证**（其 XML 文件名串未出现在截断片段中）。
+
+### C3 ★ `M31 FUN_00055670` ↔ `E18 FUN_00c49680` — bomb 名称特判
+macho 把 `"bomb"`/`"Bomb"` 映射到哨兵 ID `-2`；exe 有「名字属于排除集（含 bomb）→ 返回 0」的谓词。语义同族（bomb 在水果池中的特殊处理），非同一函数。
+
+### C4 ★ `M33 FUN_0005bf9c` ↔ `E19 FUN_00b0ae60` — Bandito 流程
+共同：`*(p+0x20 or +0x24) = 0x3f800000`(1.0f) 初始化 + 共享全局组 `_DAT_0197f4xx`（E19 写 `0197f458/0197f448`，E23 读同组）。
+→ 假设：macho `0005bf9c`(结算显示) + `00060108`(结算统计) 合起来 ≈ exe `00b0ae60` + `00bf8ed0` 这一对。**exe 侧把 Bandito 流程拆得更细**。
+
+### D1 `M10 FUN_00053cb8` ←→ `E06/E03` 关系
+M10 是**解析**（写默认值 + 读 XML），M11 是**序列化**（读写运行时状态），E06 对应 M11，E03 可能是 M10 的 exe 对应（键名含 wave/critical）。但 E03 偏移是 `+0x24..0x38`，与 M10 的 `+0xb0..+0xe4` **不符** → E03 更可能是另一张表。**标为待验证**。
+
+### 无对应（单源）
+| 函数 | 说明 |
+|---|---|
+| `M08`/`M09`/`M12`/`M15` | 存档/进度（exe 侧 G 类为 0），**exe 完全没定位到** |
+| `M20` | 实体类型枚举表，exe 侧无等价（可能被 RTTI 替代） |
+| `M22`/`M28`/`M32`/`M29`/`M30` | 暴击特效/冰冻/炸弹爆炸/模型加载——exe 侧字符串命中但未定位到同逻辑 |
+| `M25`/`M26`/`M38`/`M40` | 道具枚举/slashMod 兜底/成就条件/Dojo |
+| `M13`/`M14`/`M16`/`M17`/`M35`/`M36`/`M39` | 后端层（联赛/排行榜/成就服务/内购） |
+| `E24`–`E31` | 引擎属性系统（8 路分发 × 4 + 名字查表 + 序列化对），macho 侧未命中（纯模板代码，无字符串） |
+
+---
+
+## 5. Top 5 优先深挖建议
+
+### 🥇 1. `M10 FUN_00053cb8` + `M11 FUN_00027f24` + `E06 FUN_00c3a7e0` — 波次系统全链路
+**理由**：
+- 唯一达成「8 字段偏移 100% 双源一致」的模块 → 反编译结论可直接双向校验，错误率最低
+- 决定街机模式全部节奏（`waveDelay 0.25` 默认、`waveWait`、`blitzSpawnTime`、`bean` 飞行参数）
+- 已捕获默认常量（10 / 0.25 / 1.0 / 1.0 / 2.0 / 100 / 1 / 1），只差 XML 实际值
+**动作**：对三函数做完整反编译（不止 150 函数批次），产出 `WaveInfo` 结构体定义 + 全部键语义 + 默认值表。
+
+### 🥈 2. `M07 FUN_0001267c` — fruitlist.xml 全局数值表
+**理由**：
+- **所有玩法手感数值的权威来源**：critical 的 `chance`/`chance_inc`/`new_life_at`/`score`/`splats`/`scale`/`spread`/`disappear_speed`，bomb 的 `size`
+- **且只有 macho 一支**（exe 无对应）→ 无法交叉验证，越早确证越好
+- 数值写入全局 `DAT_0052bf54..bf68`，之后全代码引用这些全局 → 一旦定位，可反查所有使用点
+**动作**：追 `DAT_0052bf54..bf78` 全部 xref，产出「数值 → 使用点」反向索引。
+
+### 🥉 3. `M23 FUN_00060108` + `M24 FUN_00065ad4` + `E09 FUN_00a7df70` — 计分/结算/成就触发
+**理由**：
+- 计分规则 + 奖励判定 + 成就上报表三合一，是「玩法规则」的最终体现
+- `M24` 的命中率公式已可见形如 `(slashes - slashesScoring) * K1 * totalfruit / (totalfruit + x) * K2`，只差 K1/K2 与 x 的确切值
+- `99 <` 阈值在 exe 有对应 → 可交叉验证
+**动作**：破 `DAT_00065b70`/`DAT_00065b74`/`param_1+0x2c` 三常量；整理 `full_slice_bonus` / `no_misses_consecutive` / `bandito_round_score` 触发条件表。
+
+### 4. `M41 FUN_000718b0` + `E01`/`E02` — 连击（Combo）
+**理由**：
+- 三处共享 `param_2+0x8c` 与成员 `+0x4c`，交叉验证成本极低
+- 边界清晰：`combo >= 3` 触发，音效档位 1..5，缩放 `0.4f`/`1.0f`，音高 `0.25f`/`1.0f`
+- 已有明确冲突点（clamp 上限 2 vs 全局配置）需裁决 → 高信息密度
+**动作**：确认 E01/E02 分工（HUD vs 音效），解决 clamp 上限冲突，产出 `combo → (音效, 缩放, 音高)` 映射表。
+
+### 5. `M20 FUN_0000a3a0` + `M19 FUN_00053388` + `M31 FUN_00055670` — 实体类型表与生成器
+**理由**：
+- `M20` 给出**全局类型编号约定**（fruit=1, bomb=2, coin=3, slash=4, blast=5, jiblet=6, fruitray=8，跳过 7），任何重建代码只要错一个编号就全盘错位 → 必须先钉死
+- `M31` 给出 bomb 的哨兵值 `-2`（`0xfffffffe`），与 `M20` 的 2 不同 → 说明存在**两套 ID 空间**（全局枚举 vs 池槽位），必须先分清
+- `M19` 的加权随机表直接决定出果分布
+**动作**：产出「类型 ID 双空间对照表」+ 生成器加权算法伪码。
+
+### 备选（不进 Top5 的理由）
+- `E10 FUN_00bda510`（疑似主 update）：体量大、截断严重，**应先有 A1/A2 的结构体布局再做**，否则读不懂字段
+- `M08`/`M09`/`M12`/`M15`（存档）：重要但**改动风险低**（存档格式可自行重定义），且 exe 侧无对应，性价比低于前五
+- `M21 FUN_00059ee0`：OpenFeint/GameCenter，**直接剔除**
+- `E24`–`E31`：引擎属性系统，是「基础设施」而非玩法，可在玩法确定后统一实现
+
+---
+
+## 6. 遗留问题（交 Kimi 决策）
+
+1. **E01 vs E02 分工不明**：两者前置条件相同，需第三轮反编译（当前均截断）才能区分 HUD 与音效职责。
+2. **E03 归属未定**：偏移 `+0x24..0x38` 与 M10 的 `+0xb0..+0xe4` 不符，可能属于 FruitInfo 而非 WaveInfo。
+3. **E12 的 XML 文件名未知**：只能确定它是 0xc4 条目的列表解析器。
+4. **`E20` vs `M37` 的 `operator_new` 尺寸差**（0xc4 vs 0xf4）：需 vtable 长度比对才能确认是否同类。
+5. **exe 侧完全没有存档函数**（G 类 = 0）：38 个 macho 键（M08/M09/M12/M15）无第二来源。
+6. **`M34 FUN_0006d80c` 反编译失败**：需补跑（可尝试降低反编译优化级别或分段）。
+7. **`M03 FUN_00016214` 的速度归一化常数 15.0**：是「最大速度」还是「参考速度」未定，影响切割判定的灵敏度标定。
+
+---
+
+## 7. 统计汇总
+
+| 维度 | 数值 |
+|---|---|
+| 总函数 | 73（exe 31 / macho 42） |
+| 已判定职责 | 72（98.6%）；未判定 1（`M34`） |
+| 高/极高置信 | 46（63%） |
+| 中置信 | 24（33%） |
+| 低置信 | 3（`E10` / `M28` / `M34`） |
+| A 级双源关联（偏移级） | 2 对 |
+| B 级（键名/阈值级） | 3 对 |
+| C 级（形态级） | 4 对 |
+| 单源无对应 | 28 个函数 |
+| 玩法核心（A–E）占比 | 33 / 73（45%） |
+| 后端/UI（I、J）占比 | 22 / 73（30%） |

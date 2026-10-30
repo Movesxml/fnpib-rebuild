@@ -1,0 +1,220 @@
+# T-020 · 第一条验证链：生成工程 → 编译（Debug, simulator）→ 跑 FNPBCoreTests
+#
+# 设计边界（Kimi 架构约束 + 本卡实现说明）
+# - 只在 simulator destination 上构建/测试，不接触真机签名；真机未签名 IPA 由 pipeline/ 负责。
+# - 资产：编译不依赖原版美术资源。ContentBundle 缺失必须在运行期降级为占位（T-019 约定）。
+#   本仓库注入上下文中未包含 Sources/FNPBCore/Content/*，是否存在编译期资产依赖标 [待验证]
+#   → 因此这里只做目录兜底，**不**臆造资源生成步骤。详见 docs/CI_FIRST_BUILD.md §2。
+# - 全部 xcodebuild 调用带 -derivedDataPath，产物与日志路径可预测，便于失败收集。
+# - 单矩阵（不 matrix），job 级 timeout-minutes: 40。
+name: iOS CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # brew 无版本化 formula：安装后做严格版本断言，漂移即显式失败（见 docs §3.13）
+  XCODEGEN_VERSION: "2.44.1"
+  PROJECT: FNPIB.xcodeproj
+  SCHEME: FNPIB
+  DERIVED_DATA: build/DerivedData
+  SIM_NAME: "iPhone 17"
+  SIM_OS: "latest"
+
+jobs:
+  build-and-test:
+    name: Build & Test (FNPBCoreTests)
+    # Xcode 26 所在镜像；若该镜像不含 Xcode 26，改 macos-26（docs §3.1）
+    runs-on: macos-15
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      # ------------------------------------------------------------------ 工具链
+      - name: Select Xcode 26
+        run: |
+          set -euo pipefail
+          echo "== /Applications 下的 Xcode =="
+          ls -d /Applications/Xcode*.app 2>/dev/null || true
+
+          pick=""
+          while IFS= read -r app; do
+            [ -n "$app" ] || continue
+            [ -d "$app" ] || continue
+            ver="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' \
+                    "$app/Contents/Info.plist" 2>/dev/null || echo 0)"
+            echo "  $app -> $ver"
+            case "$ver" in
+              26.*) pick="$app" ;;
+            esac
+          done < <(ls -d /Applications/Xcode*.app 2>/dev/null || true)
+
+          if [ -z "$pick" ]; then
+            echo "::error::未找到 Xcode 26.x。project.yml 的 IPHONEOS_DEPLOYMENT_TARGET=26.0 需要 Xcode 26 SDK。请改用含 Xcode 26 的 runner 镜像（如 macos-26），或临时降低部署目标做语法级验证（不要提交该改动）。见 docs/CI_FIRST_BUILD.md §3.1"
+            xcodebuild -version || true
+            exit 1
+          fi
+
+          echo "改用 $pick"
+          sudo xcode-select -s "$pick"
+          xcodebuild -version
+          echo "iPhoneSimulator SDK: $(xcrun --sdk iphonesimulator --show-sdk-version)"
+
+      - name: Install XcodeGen (pinned)
+        run: |
+          set -euo pipefail
+          brew install xcodegen || brew upgrade xcodegen || true
+          got="$(xcodegen --version 2>/dev/null | awk '{print $NF}')"
+          echo "xcodegen=${got:-<none>} pinned=$XCODEGEN_VERSION"
+          if [ "$got" != "$XCODEGEN_VERSION" ]; then
+            echo "::error::XcodeGen 版本漂移：期望 $XCODEGEN_VERSION，实得 ${got:-<none>}。更新 env.XCODEGEN_VERSION，或按 docs/CI_FIRST_BUILD.md §3.13 用固定 release 安装。"
+            exit 1
+          fi
+
+      # xcpretty 仅用于日志美化；装不上就回落 cat，不影响构建结论
+      - name: Install xcpretty (optional)
+        continue-on-error: true
+        run: |
+          gem install xcpretty --no-document --user-install
+          echo "$(ruby -e 'print Gem.user_dir')/bin" >> "$GITHUB_PATH"
+
+      # ------------------------------------------------------------------ 资产/目录兜底
+      - name: Prepare workspace (asset-independent)
+        run: |
+          set -euo pipefail
+          mkdir -p build "$DERIVED_DATA" Raw
+
+          # 编译期不需要原版美术资源（T-019 ContentBundle 约定运行期降级）。
+          # 若未来资产管线改为编译期生成（tools/AssetPipeline 进 Run Script），在下面追加生成步骤。
+          ls -la Raw || true
+
+          for d in Sources/FNPBCore Sources/FNPBRender Sources/FNPBRender/Shaders \
+                   Sources/FNPBPlatform Sources/FNPBUI App Tests/FNPBCoreTests; do
+            if [ -d "$d" ]; then
+              echo "ok    $d"
+            else
+              echo "::warning::$d 缺失：xcodegen 可能生成空 target，编译期会以「找不到类型/符号」的形式暴露（docs §3.2）"
+            fi
+          done
+
+      # ------------------------------------------------------------------ 生成工程
+      - name: Generate Xcode project
+        run: |
+          set -euo pipefail
+          xcodegen generate --spec project.yml
+          xcodebuild -list -project "$PROJECT"
+
+          # 防回归：blueprint 两个 Swift 源必须真的进工程（T-011 约定直编入 FNPBCore）
+          for f in Constants.swift GameState.swift; do
+            if grep -q "$f" "$PROJECT/project.pbxproj"; then
+              echo "ok    $f 已进入工程"
+            else
+              echo "::warning::$f 未出现在 $PROJECT 中，FNPBCore 会缺类型（docs §3.7）"
+            fi
+          done
+
+      # ------------------------------------------------------------------ 构建
+      - name: Build (Debug, simulator)
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$DERIVED_DATA" \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee build.log | (xcpretty --color || cat)
+
+      # ------------------------------------------------------------------ 测试
+      - name: Test (FNPBCoreTests)
+        run: |
+          set -o pipefail
+          rm -rf build/TestResults.xcresult
+          xcodebuild test \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,name=$SIM_NAME,OS=$SIM_OS" \
+            -derivedDataPath "$DERIVED_DATA" \
+            -enableCodeCoverage YES \
+            -resultBundlePath build/TestResults.xcresult \
+            2>&1 | tee test.log | (xcpretty --test --color || cat)
+
+      # ------------------------------------------------------------------ 失败诊断 + 产物
+      - name: Diagnostics (failure only)
+        if: failure()
+        run: |
+          set +e
+          echo "== xcodebuild -version =="
+          xcodebuild -version
+          echo
+          echo "== 可用模拟器 =="
+          xcrun simctl list devices available | sed -n '1,80p'
+          echo
+          echo "== xcresult 摘要 =="
+          if [ -d build/TestResults.xcresult ]; then
+            # Xcode 16+ 子命令形态（首选）
+            xcrun xcresulttool get test-results summary \
+              --path build/TestResults.xcresult --format json > test-summary.json 2>> xcresult-errors.log
+            head -c 4000 test-summary.json 2>/dev/null || true
+            if [ ! -s test-summary.json ]; then
+              # 旧格式回退 [待验证]
+              xcrun xcresulttool get --path build/TestResults.xcresult \
+                --format json > xcresult-legacy.json 2>> xcresult-errors.log || true
+            fi
+          fi
+          echo
+          echo "== build.log 尾部 =="
+          tail -n 120 build.log 2>/dev/null
+          echo
+          echo "== test.log 尾部 =="
+          tail -n 200 test.log 2>/dev/null
+          exit 0
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ci-logs-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: ignore
+          path: |
+            build.log
+            test.log
+            test-summary.json
+            xcresult-legacy.json
+            xcresult-errors.log
+            build/TestResults.xcresult
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## iOS CI (FNPIB)"
+            echo ""
+            echo "| 项 | 值 |"
+            echo "|---|---|"
+            echo "| XcodeGen | \`$(xcodegen --version 2>/dev/null | awk '{print $NF}' || echo n/a)\` |"
+            echo "| Xcode | \`$(xcodebuild -version 2>/dev/null | tr '\n' ' ')\` |"
+            echo "| scheme | \`$SCHEME\` |"
+            echo "| destination | \`platform=iOS Simulator,name=$SIM_NAME,OS=$SIM_OS\` |"
+          } >> "$GITHUB_STEP_SUMMARY"

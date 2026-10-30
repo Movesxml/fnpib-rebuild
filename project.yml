@@ -1,0 +1,150 @@
+# XcodeGen 工程定义（T-011）
+#   生成：xcodegen generate --spec project.yml   （macOS + XcodeGen ≥ 2.38，Xcode 26 工具链）
+# 目录约定见 blueprint/REBUILD_BLUEPRINT.md §1。
+# 说明：App/ 、Sources/FNPBRender/ 等目录由后续任务卡填充；目录暂缺时 xcodegen 只告警不失败 [待验证]
+name: FNPIB
+
+options:
+  bundleIdPrefix: com.example.fnpib
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+  developmentLanguage: en
+  groupSortPosition: top
+
+settings:
+  base:
+    # Swift 6 语言模式 + 严格并发（T-011 验收要求）
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+    TARGETED_DEVICE_FAMILY: "1,2"        # iPhone + iPad
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    CLANG_ENABLE_MODULES: YES
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+    DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+    ENABLE_MODULE_VERIFIER: NO
+
+targets:
+  # ---------------------------------------------------------------- 纯逻辑层
+  FNPBCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources/FNPBCore
+      # 蓝图三件套中的两个 Swift 源直接编入本模块（不在 blueprint/ 下另建副本）
+      - path: blueprint/Constants.swift
+      - path: blueprint/GameState.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.core
+        PRODUCT_NAME: FNPBCore
+        DEFINES_MODULE: YES
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+        # FNPBCore 不得依赖 UIKit/Metal（蓝图 §1），此处不加任何 UI SDK
+
+  # ---------------------------------------------------------------- 渲染层
+  FNPBRender:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources/FNPBRender          # 含 Shaders/*.metal，.metal 自动进编译 phase
+    dependencies:
+      - target: FNPBCore
+      - sdk: Metal.framework
+      - sdk: MetalKit.framework
+      - sdk: QuartzCore.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.render
+        PRODUCT_NAME: FNPBRender
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+        MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
+
+  # ---------------------------------------------------------------- 平台胶合层
+  FNPBPlatform:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources/FNPBPlatform
+    dependencies:
+      - target: FNPBCore
+      - sdk: UIKit.framework
+      - sdk: QuartzCore.framework         # CADisplayLink
+      - sdk: AVFoundation.framework       # AVAudioEngine
+      - sdk: CoreHaptics.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.platform
+        PRODUCT_NAME: FNPBPlatform
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+
+  # ---------------------------------------------------------------- UI 层
+  FNPBUI:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources/FNPBUI
+    dependencies:
+      - target: FNPBCore
+      - target: FNPBPlatform
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.ui
+        PRODUCT_NAME: FNPBUI
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+
+  # ---------------------------------------------------------------- App
+  FNPIB:
+    type: application
+    platform: iOS
+    sources:
+      - path: App                        # FNPBApp.swift / Assets.xcassets / PrivacyInfo.xcprivacy
+    dependencies:
+      - target: FNPBCore
+      - target: FNPBRender
+      - target: FNPBPlatform
+      - target: FNPBUI
+    # Info.plist 单一来源 = App/Info.plist（T-020 修复：此处曾同时存在 info: 块与
+    # INFOPLIST_FILE，XcodeGen 会覆盖 plist 造成静默数据丢失 + Portrait/Landscape 双写矛盾）
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib
+        PRODUCT_NAME: FNPIB
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: App/Info.plist
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_MACCATALYST: NO
+
+  # ---------------------------------------------------------------- 测试
+  FNPBCoreTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/FNPBCoreTests
+    dependencies:
+      - target: FNPBCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.coretests
+        GENERATE_INFOPLIST_FILE: YES   # 纯逻辑测试，不设 TEST_HOST
+
+schemes:
+  FNPIB:
+    build:
+      targets:
+        FNPIB: all
+        FNPBCoreTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - FNPBCoreTests

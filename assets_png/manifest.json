@@ -1,0 +1,5002 @@
+{
+  "tool": "tex_convert.py",
+  "version": "T-018",
+  "source_root": "D:\\fnpib_update\\assets_raw",
+  "output_root": "D:\\fnpib_update\\assets_png",
+  "totals": {
+    "total": 264,
+    "ok": 186,
+    "external_palette": 78,
+    "failed": 0,
+    "fallback_raw": 7
+  },
+  "variants": {
+    "C": 107,
+    "A": 72,
+    "B": 78,
+    "?": 7
+  },
+  "formats": {
+    "RGBA32": 104,
+    "RGB565": 7,
+    "RGBA5551": 12,
+    "RGBA8888": 13,
+    "RGBA4444": 22,
+    "INDEX4": 78,
+    "RAW8": 7,
+    "LA88": 16,
+    "ABGR4444": 2,
+    "RGB24": 1,
+    "RAW16": 2
+  },
+  "c_header_hint": 28,
+  "c_header_histogram": {
+    "28": 67,
+    "52": 36,
+    "16": 1,
+    "212": 1,
+    "40": 2
+  },
+  "files": [
+    {
+      "rel": "Particles/Adventure_line.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/Adventure_line.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/Glass_smash.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/Glass_smash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/auroraHaze1.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/auroraHaze1.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/auroraHaze2.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/auroraHaze2.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/auroraHaze3.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/auroraHaze3.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/balloon.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/balloon.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/beanSunburst.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/beanSunburst.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/bean_swirl.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/bean_swirl.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/bolt.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/bolt.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/card01.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/card01.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/card02.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/card02.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/card03.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/card03.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/card04.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/card04.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/chainHead.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/chainHead.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/cloud01.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/cloud01.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/cloud02.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/cloud02.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/cloud03.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/cloud03.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/cog01.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/cog01.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/cog02.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/cog02.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/coin.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/coin.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/coin2.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/coin2.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/coin3.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/coin3.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/coin4.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/coin4.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/coin_shine.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGB565",
+      "width": 32,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/coin_shine.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/confetti_1.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/confetti_1.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/confetti_2.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/confetti_2.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/confetti_3.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/confetti_3.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/cracker_02.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/cracker_02.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/cracker_base.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/cracker_base.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/crit_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/crit_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/d_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGB565",
+      "width": 32,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/d_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/d_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 128,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/d_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x07 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "Particles/diamond.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/diamond.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/diamond2.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/diamond2.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/guitarNote1.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/guitarNote1.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/guitarNote2.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 32,
+      "height": 32,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/guitarNote2.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x05 minor=0x05 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/guitarTreb.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/guitarTreb.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/gust_1.tex",
+      "status": "ok",
+      "variant": "?",
+      "format": "RAW8",
+      "width": 128,
+      "height": 3,
+      "bpp": 1,
+      "header_bytes": 0,
+      "mip_levels": 1,
+      "png": "Particles/gust_1.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "fallback: unrecognised layout, raw luma preview",
+        "fallback_raw_luma"
+      ]
+    },
+    {
+      "rel": "Particles/heart.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 32,
+      "height": 32,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/heart.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x05 minor=0x05 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/heart_cloud.tex",
+      "status": "ok",
+      "variant": "?",
+      "format": "RAW8",
+      "width": 128,
+      "height": 9,
+      "bpp": 1,
+      "header_bytes": 0,
+      "mip_levels": 1,
+      "png": "Particles/heart_cloud.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "fallback: unrecognised layout, raw luma preview",
+        "fallback_raw_luma"
+      ]
+    },
+    {
+      "rel": "Particles/impact.tex",
+      "status": "ok",
+      "variant": "?",
+      "format": "RAW8",
+      "width": 128,
+      "height": 9,
+      "bpp": 1,
+      "header_bytes": 0,
+      "mip_levels": 1,
+      "png": "Particles/impact.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "fallback: unrecognised layout, raw luma preview",
+        "fallback_raw_luma"
+      ]
+    },
+    {
+      "rel": "Particles/k_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/k_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/k_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/k_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/leaf.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/leaf.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/light_smoke.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 16,
+      "height": 16,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/light_smoke.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x04 minor=0x04 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/lockPiece1.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/lockPiece1.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/lockPiece2.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/lockPiece2.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/lockPiece3.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/lockPiece3.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/m_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 16,
+      "height": 16,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/m_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/m_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/m_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/map_points.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/map_points.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/nacho01.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/nacho01.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/nacho02.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/nacho02.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/o_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/o_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/o_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/o_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/p_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/p_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/p_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/p_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/pas_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/pas_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x05 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/pinataring.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/pinataring.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/pl_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/pl_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/pl_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/pl_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/rainbow_sparks.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGB565",
+      "width": 32,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/rainbow_sparks.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/rimhit.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/rimhit.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/ring.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 32,
+      "height": 32,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/ring.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x05 minor=0x05 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/ring_wave.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/ring_wave.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/screw01.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/screw01.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/screw02.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/screw02.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/senoritaHeart.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/senoritaHeart.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/smoke.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 16,
+      "height": 16,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/smoke.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x04 minor=0x04 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/smoke_split.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 16,
+      "height": 16,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/smoke_split.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/smoke_trans.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 16,
+      "height": 16,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/smoke_trans.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/snow.tex",
+      "status": "ok",
+      "variant": "?",
+      "format": "RAW8",
+      "width": 76,
+      "height": 1,
+      "bpp": 1,
+      "header_bytes": 0,
+      "mip_levels": 1,
+      "png": "Particles/snow.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "fallback: unrecognised layout, raw luma preview",
+        "fallback_raw_luma"
+      ]
+    },
+    {
+      "rel": "Particles/sparkle_32.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGB565",
+      "width": 32,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/sparkle_32.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/sparkle_32_2.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "Particles/sparkle_32_2.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "Particles/sparks.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 16,
+      "height": 16,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/sparks.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x04 minor=0x04 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/stalkleaf_01.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/stalkleaf_01.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/star.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 16,
+      "height": 16,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/star.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x04 minor=0x04 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "Particles/tom_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 16,
+      "height": 16,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/tom_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/tom_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/tom_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/twinkle.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "Particles/twinkle.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/w_big_juice.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/w_big_juice.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "Particles/w_main_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/w_main_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "Particles/waveRipSml.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "Particles/waveRipSml.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "localized/de/textures/shop_n_dojo/new_item.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/de/textures/shop_n_dojo/new_item.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "localized/de/textures/shop_n_dojo/selected.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/de/textures/shop_n_dojo/selected.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x06 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "localized/de/textures/shop_n_dojo/selected_sml.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/de/textures/shop_n_dojo/selected_sml.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "localized/es/textures/shop_n_dojo/new_item.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/es/textures/shop_n_dojo/new_item.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "localized/es/textures/shop_n_dojo/selected.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/es/textures/shop_n_dojo/selected.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x06 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "localized/es/textures/shop_n_dojo/selected_sml.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/es/textures/shop_n_dojo/selected_sml.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "localized/fr/textures/shop_n_dojo/new_item.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/fr/textures/shop_n_dojo/new_item.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "localized/fr/textures/shop_n_dojo/selected.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/fr/textures/shop_n_dojo/selected.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x06 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "localized/fr/textures/shop_n_dojo/selected_sml.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/fr/textures/shop_n_dojo/selected_sml.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "localized/it/textures/shop_n_dojo/new_item.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/it/textures/shop_n_dojo/new_item.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "localized/it/textures/shop_n_dojo/selected.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/it/textures/shop_n_dojo/selected.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x06 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "localized/it/textures/shop_n_dojo/selected_sml.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "localized/it/textures/shop_n_dojo/selected_sml.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "models/Effects/textures/crit_slash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "ABGR4444",
+      "width": 8,
+      "height": 8,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Effects/textures/crit_slash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x03 minor=0x03 field=17"
+      ]
+    },
+    {
+      "rel": "models/Effects/textures/slash_fx.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "ABGR4444",
+      "width": 8,
+      "height": 8,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Effects/textures/slash_fx.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x03 minor=0x03 field=17"
+      ]
+    },
+    {
+      "rel": "models/Fruit/textures/bomb_explod.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Fruit/textures/bomb_explod.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x06 field=15"
+      ]
+    },
+    {
+      "rel": "models/Fruit/textures/chest.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Fruit/textures/chest.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "models/Fruit/textures/chestRays.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Fruit/textures/chestRays.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "models/Fruit/textures/fruit_atlas.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 512,
+      "height": 512,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Fruit/textures/fruit_atlas.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x09 minor=0x09 field=17",
+        "type not in table; format guessed from bpp"
+      ]
+    },
+    {
+      "rel": "models/Fruit/textures/pinata.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 256,
+      "height": 256,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Fruit/textures/pinata.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x08 minor=0x08 field=17",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "models/Fruit/textures/pinata2.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Fruit/textures/pinata2.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "models/Hud/texture/hud_cross.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 128,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "models/Hud/texture/hud_cross.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "models/Hud/texture/timer_clock.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 256,
+      "height": 128,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "models/Hud/texture/timer_clock.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x08 minor=0x07 field=17",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/Hud/hudFruitDropped.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/Hud/hudFruitDropped.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=16"
+      ]
+    },
+    {
+      "rel": "textures/Hud/hud_cross.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 128,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/Hud/hud_cross.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/Hud/hud_fruit.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/Hud/hud_fruit.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=16"
+      ]
+    },
+    {
+      "rel": "textures/Hud/hud_unlocked_dialog.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 256,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/Hud/hud_unlocked_dialog.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/Hud/pointsCircle.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/Hud/pointsCircle.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/Hud/wantedStar.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/Hud/wantedStar.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement1.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement1.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement10.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement10.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement11.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement11.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement12.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement12.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement13.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement13.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement14.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement14.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement15.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement15.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement16.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement16.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement17.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement17.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement18.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement18.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement19.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement19.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement2.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement2.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement20.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement20.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement21.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement21.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement22.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement22.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement23.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement23.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement24.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement24.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement3.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement3.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement4.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement4.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement5.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement5.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement6.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement6.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement7.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement7.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement8.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement8.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/achievements/achievement9.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/achievements/achievement9.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/bounceCircle.tex",
+      "status": "ok",
+      "variant": "?",
+      "format": "RAW8",
+      "width": 128,
+      "height": 513,
+      "bpp": 1,
+      "header_bytes": 0,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/bounceCircle.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "fallback: unrecognised layout, raw luma preview",
+        "fallback_raw_luma"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/bounceFlat.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 512,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/bounceFlat.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x09 minor=0x06 field=16",
+        "type not in table; format guessed from bpp"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/challengeAtlas.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 1024,
+      "height": 1024,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/challengeAtlas.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x0a minor=0x0a field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/cross.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/cross.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/divider.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 126,
+      "height": 4,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/divider.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/doorLeft.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/doorLeft.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/doorRight.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/doorRight.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/flipper.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/flipper.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/flourish.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 64,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/flourish.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/halfpipe.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 256,
+      "height": 256,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/halfpipe.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x08 minor=0x08 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/iconShadow.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 128,
+      "height": 128,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/iconShadow.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/iconSlot.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 128,
+      "height": 128,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/iconSlot.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/locations.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/locations.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/pachinkoCircle.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 128,
+      "height": 128,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/pachinkoCircle.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/pauseTweak.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/pauseTweak.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/resultsLife.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/resultsLife.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/shutterWindow.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 512,
+      "height": 128,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/shutterWindow.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x09 minor=0x07 field=16",
+        "type not in table; format guessed from bpp"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/snakeDots.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 32,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/snakeDots.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/adventureProgress/tick.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/adventureProgress/tick.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/buttons/music.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/buttons/music.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/buttons/musicCross.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/buttons/musicCross.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/buttons/sound.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/buttons/sound.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/buttons/soundCross.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/buttons/soundCross.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/buttons/vo.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/buttons/vo.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/buttons/voCross.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/buttons/voCross.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/effects/Fruit_shadow.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 128,
+      "height": 128,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/Fruit_shadow.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/auroraBlade.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 256,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/auroraBlade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/beanstalk_blade.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 512,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/beanstalk_blade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x09 minor=0x06 field=16",
+        "type not in table; format guessed from bpp"
+      ]
+    },
+    {
+      "rel": "textures/effects/blade.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 16,
+      "height": 16,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/blade.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x04 minor=0x04 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/effects/bladeCatClaws.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/bladeCatClaws.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x06 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/effects/bladeCloud.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 512,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/bladeCloud.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/bladeFireCracker.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/bladeFireCracker.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x05 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/effects/bladeGadget.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 512,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/bladeGadget.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/bladeGuitar.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 512,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/bladeGuitar.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x09 minor=0x06 field=16",
+        "type not in table; format guessed from bpp"
+      ]
+    },
+    {
+      "rel": "textures/effects/bladeNacho.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 256,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/bladeNacho.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x08 minor=0x05 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/effects/bladeRoyalFlush.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 512,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/bladeRoyalFlush.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x09 minor=0x05 field=16",
+        "type not in table; format guessed from bpp"
+      ]
+    },
+    {
+      "rel": "textures/effects/bomb_explode.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGB565",
+      "width": 32,
+      "height": 128,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/bomb_explode.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x07 field=17"
+      ]
+    },
+    {
+      "rel": "textures/effects/chainBlade.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/effects/chainBlade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/effects/challengeComplete.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/challengeComplete.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/effects/chestRays.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/chestRays.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/effects/explosion_radius.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/effects/explosion_radius.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/effects/flash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 128,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/flash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x07 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/effects/flatAlpha.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 8,
+      "height": 8,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/flatAlpha.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/gold_blade.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 16,
+      "height": 16,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/gold_blade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/item_mr_sparkle.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/effects/item_mr_sparkle.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/effects/menuFruitShadow.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 128,
+      "height": 128,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/menuFruitShadow.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/pinataRope.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/pinataRope.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "textures/effects/pomegranate_rays.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/pomegranate_rays.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/effects/senoritaBlade.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGB24",
+      "width": 2051,
+      "height": 4,
+      "bpp": 3,
+      "header_bytes": 16,
+      "mip_levels": 1,
+      "png": "textures/effects/senoritaBlade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=16B dims_off=11 bpp=3",
+        "header_len 16 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/treasureBlade.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 256,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/effects/treasureBlade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/effects/white_splash.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 256,
+      "height": 256,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/effects/white_splash.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x08 minor=0x08 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/catCantina.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/catCantina.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/catCantina1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/catCantina1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/catCantina_sml.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/catCantina_sml.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/catCantina_sml1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/catCantina_sml1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/giantsCastle.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/giantsCastle.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/giantsCastle1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/giantsCastle1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/giantsCastle_sml.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/giantsCastle_sml.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/giantsCastle_sml1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/giantsCastle_sml1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/goldRoom.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/goldRoom.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/goldRoom1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/goldRoom1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/goldRoom_sml.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/goldRoom_sml.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/goldRoom_sml1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/goldRoom_sml1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/humptyHideout.tex",
+      "status": "ok",
+      "variant": "?",
+      "format": "RAW8",
+      "width": 128,
+      "height": 513,
+      "bpp": 1,
+      "header_bytes": 0,
+      "mip_levels": 1,
+      "png": "textures/menu_background/humptyHideout.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "fallback: unrecognised layout, raw luma preview",
+        "fallback_raw_luma"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/humptyHideout1.tex",
+      "status": "ok",
+      "variant": "?",
+      "format": "RAW8",
+      "width": 128,
+      "height": 513,
+      "bpp": 1,
+      "header_bytes": 0,
+      "mip_levels": 1,
+      "png": "textures/menu_background/humptyHideout1.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "fallback: unrecognised layout, raw luma preview",
+        "fallback_raw_luma"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/humptyHideout_sml.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/humptyHideout_sml.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/humptyHideout_sml1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/humptyHideout_sml1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/sanRicardo.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/sanRicardo.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/sanRicardo1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/sanRicardo1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/sanRicardo_sml.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/sanRicardo_sml.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menu_background/sanRicardo_sml1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menu_background/sanRicardo_sml1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menus/aboutHints1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/aboutHints1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menus/basicPoster.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/basicPoster.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menus/blackOverlay.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 8,
+      "height": 1,
+      "bpp": 4,
+      "header_bytes": 212,
+      "mip_levels": 1,
+      "png": "textures/menus/blackOverlay.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=212B dims_off=22 bpp=4",
+        "header_len 212 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/menus/gameLogo.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 512,
+      "height": 256,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/menus/gameLogo.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/menus/gameLogo_Japan.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 512,
+      "height": 256,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/menus/gameLogo_Japan.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/menus/leaderBoardDivide.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 128,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/leaderBoardDivide.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x07 field=16"
+      ]
+    },
+    {
+      "rel": "textures/menus/leftArrow.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RAW16",
+      "width": 2051,
+      "height": 2,
+      "bpp": 2,
+      "header_bytes": 40,
+      "mip_levels": 1,
+      "png": "textures/menus/leftArrow.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=40B dims_off=13 bpp=2",
+        "header_len 40 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/menus/loadingRing.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/loadingRing.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menus/paintStroke.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 128,
+      "height": 32,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/paintStroke.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x05 field=1",
+        "type_table bpp=1 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/menus/posterDeco01.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/posterDeco01.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menus/posterDeco02.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/menus/posterDeco02.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/menus/posterDeco03.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/posterDeco03.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menus/posterOval.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/menus/posterOval.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/menus/rightArrow.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RAW16",
+      "width": 2051,
+      "height": 2,
+      "bpp": 2,
+      "header_bytes": 40,
+      "mip_levels": 1,
+      "png": "textures/menus/rightArrow.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=40B dims_off=13 bpp=2",
+        "header_len 40 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/menus/titleBoard.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 512,
+      "height": 128,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/menus/titleBoard.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/pause_menu/pause_button.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/pause_menu/pause_button.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/pause_menu/play_button.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/pause_menu/play_button.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/pause_menu/quit_title.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/pause_menu/quit_title.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=16"
+      ]
+    },
+    {
+      "rel": "textures/pause_menu/retry_button.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 128,
+      "height": 128,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/pause_menu/retry_button.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x07 minor=0x07 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/pussPose/pussPoses1.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/pussPose/pussPoses1.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/pussPose/pussPoses2.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/pussPose/pussPoses2.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/results_screen/connectButton.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 256,
+      "height": 128,
+      "bpp": 4,
+      "header_bytes": 52,
+      "mip_levels": 1,
+      "png": "textures/results_screen/connectButton.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=52B dims_off=20 bpp=4",
+        "header_len 52 != global hint 28 (fallback to local)"
+      ]
+    },
+    {
+      "rel": "textures/results_screen/facebook.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/results_screen/facebook.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/results_screen/twitter.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/results_screen/twitter.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_AuroraBlade.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_AuroraBlade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_BeanStalk.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_BeanStalk.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_CatClaws.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_CatClaws.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_CloudBlade.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_CloudBlade.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_FireCracker.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_FireCracker.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_GadgetBlade.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_GadgetBlade.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_GoldenBlade.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_GoldenBlade.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_Guitar.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_Guitar.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_PussSword.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_PussSword.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_SenoritaBlade.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_SenoritaBlade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_chainBlade.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_chainBlade.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_nacho.tex",
+      "status": "ok",
+      "variant": "C",
+      "format": "RGBA32",
+      "width": 2051,
+      "height": 2,
+      "bpp": 4,
+      "header_bytes": 28,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_nacho.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "c_container hdr=28B dims_off=13 bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_royalFlash.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_royalFlash.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/item_treasureBlade.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA8888",
+      "width": 64,
+      "height": 64,
+      "bpp": 4,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/item_treasureBlade.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x06 field=1",
+        "type_table bpp=2 != payload bpp=4"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/locked_stroke.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/locked_stroke.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/menu_background/catCantina.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/menu_background/catCantina.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/menu_background/giantsCastle.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/menu_background/giantsCastle.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/menu_background/goldRoom.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/menu_background/goldRoom.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/menu_background/humptyHideout.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/menu_background/humptyHideout.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/menu_background/locked_stroke.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/menu_background/locked_stroke.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/menu_background/sanRicardo.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/menu_background/sanRicardo.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/new_item.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/new_item.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/new_item_sml.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/new_item_sml.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/scratch_deviders.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 256,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/scratch_deviders.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x08 minor=0x05 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/selected.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 128,
+      "height": 64,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/selected.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x07 minor=0x06 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/selectedDivider.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 32,
+      "height": 32,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/selectedDivider.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x05 minor=0x05 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/selectedPointer.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 64,
+      "height": 64,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/selectedPointer.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x06 minor=0x06 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/shop_n_dojo/selected_sml.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "LA88",
+      "width": 64,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/shop_n_dojo/selected_sml.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x06 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "textures/title_screen/HB_logo.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 256,
+      "height": 256,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/title_screen/HB_logo.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x08 minor=0x08 field=14",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/title_screen/news_backing.tex",
+      "status": "external_palette",
+      "variant": "B",
+      "format": "INDEX4",
+      "width": 512,
+      "height": 512,
+      "bpp": 0.5,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/title_screen/news_backing.png",
+      "needs_external_palette": true,
+      "palette_candidates": [
+        "fruitlist.xml 等 xml 中的 colour/color 键（16 色表）",
+        "同名伴随文件（.binmodel / .pal / .json / .atlas）",
+        "Mortar 引擎全局默认调色板（常量表，可能位于 macho/exe 数据段）"
+      ],
+      "notes": [
+        "type=0x09 minor=0x09 field=12",
+        "4bpp indexed; palette not embedded (TEX_FORMAT.md §3.2)"
+      ]
+    },
+    {
+      "rel": "textures/title_screen/notification.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGB565",
+      "width": 32,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/title_screen/notification.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x05 field=15"
+      ]
+    },
+    {
+      "rel": "textures/title_screen/notificationblank.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGB565",
+      "width": 32,
+      "height": 32,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/title_screen/notificationblank.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x05 minor=0x05 field=16"
+      ]
+    },
+    {
+      "rel": "textures/title_screen/press_indicate.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA5551",
+      "width": 16,
+      "height": 16,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/title_screen/press_indicate.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x04 minor=0x04 field=16"
+      ]
+    },
+    {
+      "rel": "textures/title_screen/swipe_fruit_begin.tex",
+      "status": "ok",
+      "variant": "A",
+      "format": "RGBA4444",
+      "width": 256,
+      "height": 128,
+      "bpp": 2,
+      "header_bytes": 12,
+      "mip_levels": 1,
+      "png": "textures/title_screen/swipe_fruit_begin.png",
+      "needs_external_palette": false,
+      "palette_candidates": [],
+      "notes": [
+        "type=0x08 minor=0x07 field=16",
+        "type_table bpp=1 != payload bpp=2"
+      ]
+    }
+  ]
+}

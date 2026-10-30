@@ -1,0 +1,33 @@
+# 密钥
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 大文件 / 产物
+ipa/*.ipa
+ipa/extracted/
+shared_context/progress/*.raw.md
+tools/rea/
+tools/rea.tgz
+shared_context/findings/rea_sample.*
+shared_context/findings/rea_fnpiB_exe.*
+shared_context/findings/rea_binary.*
+reverse/fnpiB/
+reverse/decompiled/
+reverse/gtest/
+reverse/*.exe
+reverse/*.dll
+
+# 系统
+Thumbs.db
+.DS_Store
+
+# Ghidra 工程（体积大、可重建，不进仓库）
+reverse/fnpiB-ios/
+reverse/fnpiB/
+
+# 原版游戏资产（版权 + 74MB，由 ipa/ 经 tools/AssetPipeline 重建）
+assets_raw/

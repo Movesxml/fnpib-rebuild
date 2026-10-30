@@ -1,0 +1,78 @@
+# Fruit Ninja PiB 游戏侧源文件清单（__FILE__ 恢复）
+
+共 53 个文件 / 321 次引用；引用次数≈该文件内断言/日志点数量，可指示模块复杂度
+
+## (根目录)/ (3 文件)
+- achievements.cpp (x7)
+- game.cpp (x2)
+- initialise.cpp (x2)
+
+## challengemode/ (9 文件)
+- challengeconditions.cpp (x3)
+- challengecontrol.cpp (x20)
+- challengehud.cpp (x2)
+- challengeinfo.cpp (x1)
+- challengemods.cpp (x5)
+- challengescorebonus.cpp (x2)
+- challengetier.cpp (x8)
+- challengetier.h (x2)
+- challengeuimap.h (x1)
+
+## entities/ (5 文件)
+- actormanager.cpp (x54)
+- fruit.cpp (x12)
+- fruit.h (x1)
+- jiblet.cpp (x1)
+- slash.cpp (x4)
+
+## entity/ (2 文件)
+- entity.cpp (x12)
+- entitymanager.cpp (x88)
+
+## gametask/ (1 文件)
+- gametask.cpp (x3)
+
+## hud/ (16 文件)
+- checkbox.cpp (x1)
+- hud.cpp (x2)
+- hudcontrol.h (x2)
+- leaderboardlist.cpp (x1)
+- listbox.cpp (x1)
+- mainscreen.cpp (x1)
+- notificationcontrol.cpp (x1)
+- radiobutton.cpp (x1)
+- scrollinglist.cpp (x2)
+- scrollinglist.h (x1)
+- slidercontrol.cpp (x4)
+- superfruitchest.cpp (x1)
+- superfruitcontrol.cpp (x1)
+- superfruitpinata.cpp (x2)
+- upsellscreen.cpp (x2)
+- verticalscroller.cpp (x9)
+
+## originalmode/ (1 文件)
+- originalmodecontrol.cpp (x3)
+
+## save/ (1 文件)
+- save.cpp (x4)
+
+## sound/ (2 文件)
+- gamesound.cpp (x6)
+- vomanager.cpp (x6)
+
+## utils/ (11 文件)
+- bonusmanager.cpp (x1)
+- combochecker.cpp (x3)
+- highscorelist.cpp (x5)
+- powerupmanager.cpp (x3)
+- pspparticles.cpp (x5)
+- pspparticles.h (x1)
+- scoremodifier.cpp (x1)
+- stringtableutil.cpp (x5)
+- timesinkmodifier.cpp (x1)
+- transitionfunctions.cpp (x1)
+- utils.cpp (x4)
+
+## wavemanager/ (2 文件)
+- wavemanager.cpp (x8)
+- wavemanager.h (x2)

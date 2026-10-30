@@ -1,0 +1,313 @@
+[
+  {
+    "id": "T-001",
+    "title": "IPA 资产体检与三问判定",
+    "desc": "用户上传 ipa 后：1) 运行 harness.ipa_tools inspect 生成体检报告；2) 用 REA 对包做成员级体检；3) 判定加密/64位/引擎三个问题并把结论写入 DECISIONS.md",
+    "acceptance": "findings/ipa_inventory.md 存在；DECISIONS.md 有三问结论",
+    "notes": "体检早已完成：IPA 未加密、armv7-only，产物 findings/ipa_inventory.md（延迟登记）",
+    "status": "done",
+    "created": "2026-10-30T19:37:33+08:00",
+    "updated": "2026-10-30T22:30:00+08:00"
+  },
+  {
+    "id": "T-002",
+    "title": "双二进制等价性验证",
+    "desc": "系统对比 iOS Mach-O（发售版=基准真源）与 x86 Debug exe（辅助对照）：1) Mortar 类清单差异表（exe 131 类 MSVC-RTTI vs macho 740 符号 Itanium）；2) 关键玩法字符串/文案差异（如 UNHANDLED FRUIT ACTION 仅 exe 有）；3) 判定 exe 可用于加速理解的边界；4) 结论写入 findings/binary_equivalence.md 与 DECISIONS.md",
+    "acceptance": "findings/binary_equivalence.md 存在且含类清单差异与可用性边界结论",
+    "notes": "报告: findings/binary_equivalence.md；关键更正: macho 游戏类符号被剥离，结构信息唯靠 exe，数值常量以 macho 为准",
+    "status": "done",
+    "created": "2026-10-30T20:58:31+08:00",
+    "updated": "2026-10-30T21:07:37+08:00"
+  },
+  {
+    "id": "T-003",
+    "title": "Mach-O 导入 Ghidra 并定位核心玩法函数",
+    "desc": "把 iOS 发售版 FruitNinjaPuss (armv7) 导入 Ghidra 项目 reverse/fnpiB-ios，跑自动分析，然后基于字符串交叉引用定位: 1) 主循环/帧率控制; 2) 切割判定与连击; 3) 计分与高分; 4) 分辨率/渲染初始化。无名函数用字符串 xref 识别。产出: findings/macho_core_functions.md",
+    "acceptance": "项目建立; findings/macho_core_functions.md 含上述四类函数地址+证据",
+    "notes": "Mach-O 已导入 fnpiB-ios 并完成全量分析（27857 函数）；42 个关键词命中函数已定位并分类（见 T-004）",
+    "status": "done",
+    "created": "2026-10-30T21:07:37+08:00",
+    "updated": "2026-10-30T22:30:00+08:00"
+  },
+  {
+    "id": "T-004",
+    "title": "玩法函数语义分类与双源关联",
+    "desc": "阅读 reverse/exe_gameplay_located.md(x86,31个函数) 与 shared_context/findings/macho_core_functions.md(armv7,42个函数): 1) 逐个函数判定玩法职责(切割判定/连击/计分/波次/道具有效性/资源注册等), 说明依据; 2) 尝试双源关联: 哪些 exe 函数与哪些 macho 函数可能是同一逻辑(依据字符串/常量/结构); 3) 标出最值得优先深挖的5个函数及理由",
+    "acceptance": "输出 findings/function_classification.md: 73个函数的分类表+双源关联假设+Top5深挖建议",
+    "notes": "第二轮：harness 已支持 extra_files/finding_cap，exe 侧 31 函数报告已注入 | 报告§5已给出下游任务建议 T-005~T-008；关键词法未覆盖切割几何，定位方法需换",
+    "status": "done",
+    "created": "2026-10-30T21:40:07+08:00",
+    "updated": "2026-10-30T21:54:22+08:00",
+    "extra_files": [
+      "reverse/exe_gameplay_located.md",
+      "shared_context/findings/macho_core_functions.md"
+    ],
+    "finding_cap": 140000,
+    "note": "第三轮完整注入后完成：73 槽位中 72 判定（M34 反编译缺失除外），A级双源关联 2 对（M11≡E06 波次状态、M27≡E11 slashMod），落盘 findings/function_classification.md"
+  },
+  {
+    "id": "T-005",
+    "title": "Top5 核心玩法函数深度反编译与双源常量核对",
+    "desc": "基于 findings/function_classification.md §4 Top5，对下列函数做【完整未截断】反编译深度对比（exe↔macho）：\n1) 主循环/实体更新：exe E10 FUN_00bda510 ↔ macho M03 FUN_00016214（帧更新顺序、实体接口、固定步长）\n2) 连击族：exe E01/E02 ↔ macho M41 FUN_000718b0（combo 计数语义、档位、窗口清零条件）\n3) 计分：macho M18 FUN_0001cb08 + M24 FUN_00065ad4（计分回调链、命中率公式）\n4) 波次：macho M10 FUN_00053cb8 + M19 FUN_00053388 + M11 FUN_00027f24（WaveInfo 字段真值、出果节奏参数）\n5) 炸弹/道具：macho M32 FUN_00020c38 + M28 FUN_00056098（爆炸常量、freeze 计时）\n要求：输入文件 reverse/exe_gameplay_located.md 与 findings/macho_core_functions.md 中的函数体尾部被 /* ...截断... */ 切掉，需先用 Ghidra DumpDecompile 脚本对以上函数重新导出【无截断】反编译（Kimi 负责产输入，放 shared_context/findings/deep_top5_{exe,macho}.md），然后逐函数提取：完整常量表（浮点+整数，标注来源端）、分支条件全链、调用图一跳。产出 findings/core_logic_notes.md。\n\n【输出纪律】输入全文约 19 万字符，输出务必紧凑：常量用表格（hex→float→语义），分支链用编号列表不用长引文；目标产出 core_logic_notes.md ≤ 2 万字符。若某函数信息量过大，优先保证常量表与分支条件完整，文字分析从简。",
+    "acceptance": "core_logic_notes.md：≥5 组函数的深度语义笔记，每组含常量表（含换算后的 float 值）、状态/分支全链、双源冲突裁决记录；切割判定缺失问题给出定位方案",
+    "extra_files": [
+      "shared_context/findings/deep_top5_exe.md",
+      "shared_context/findings/deep_top5_macho.md",
+      "shared_context/findings/function_classification.md"
+    ],
+    "finding_cap": 130000,
+    "status": "done",
+    "created": "2026-10-30T22:30:00+08:00",
+    "updated": "2026-10-30T22:03:23+08:00",
+    "notes": "前置：需 Kimi 先用 Ghidra 导出 10 个函数的完整反编译（DumpDecompile 无截断版）",
+    "note": "core_logic_notes.md 落盘：Game 状态类 22 偏移双源一致、WaveManager 13 键一致、combo 双档公式双源确认、炸弹常量 3.2/1.6/2.0/9.0 H 置信；切割判定入口已定位 FUN_00017d74/17fdc"
+  },
+  {
+    "id": "T-006",
+    "title": "切割几何函数深挖 + 数据段待验证常量读取",
+    "desc": "承接 core_logic_notes.md §6/§7：\n1) 用 DumpByName 导出 macho FUN_00017d74（命中测试）、FUN_00017fdc（近失）、FUN_00009b50（模长/点积）全量反编译，从其调用图向下一跳定位引擎碰撞层（colaabb/coline/colsphere/triclipper），还原切割几何公式（线段-球/三角裁剪）；\n2) 读 macho/exe 数据段，闭合 §7 常量清单：固定步长(PTR+0x44/_DAT_0197f47c)、轨迹时长(DAT_00016614/_DAT_016f2018)、combo 窗口(DAT_00017024/00017028)、命中率 K/SCALE(DAT_00065b70/b74)、特效位掩码 DAT_005d4d74；\n3) exe 侧用 RTTI 类 Fruit/SlashEntity 虚表 +0x24 反查 OnSliced 实现，与 macho 语义对齐。\n输入由 Kimi 准备（DeepSeek 只用本任务卡 + findings）。",
+    "acceptance": "findings/slash_geometry.md：切割判定完整公式（含所有常量与分支）、碰撞层函数地图；findings/pending_constants.md：§7 清单全部闭合（值+来源地址）",
+    "extra_files": [
+      "shared_context/findings/core_logic_notes.md",
+      "shared_context/findings/deep_slash_macho.md",
+      "shared_context/findings/pending_constants_macho.md",
+      "shared_context/findings/pending_constants_exe.md"
+    ],
+    "finding_cap": 80000,
+    "status": "done",
+    "created": "2026-10-30T22:55:00+08:00",
+    "updated": "2026-10-30T22:14:19+08:00",
+    "notes": "输入已就绪：3 个 macho 函数全量反编译 + 两侧数据段常量已读取 | 重要订正：FUN_00009b50=normalize（非点积）；PTR+0x44=上一帧 dt 缓存（非固定步长）；game+0xf0=切割半径²",
+    "note": "slash_geometry.md 落盘：两段式切割判定（引擎 intersect + 球体截面±极值点二次确认）、近失=半径×1.5、命中公式可直落代码；常量 5 项闭合（轨迹 0.05s/combo 窗口 0.1/0.095/K=-0.2/SCALE=100）；exe 侧 2 个读数异常+OnSliced 反查未做，列入 T-007"
+  },
+  {
+    "id": "T-007",
+    "title": "残余常量闭合 + exe OnSliced 虚表反查 + 碰撞层同体比对",
+    "desc": "承接 slash_geometry.md §7 与 pending_constants.md §3：\n1) exe 侧 0x16F2028(应15.0)/0x16F2018(应0.05) 读数异常根因排查：先用 DumpData bytes 模式 dump 两个地址 ±16 字节邻域，再在 .rdata 段按目标 float 值(0x41700000/0x3D4CCCCD)全段反查实际地址；\n2) DAT_004d90b4 二次解引用（读 ptr:0x4d90b4:0x0:f32，即 0x5d4cd0 处的值）；\n3) FUN_002ed344 vs ctx->vtable+0x0C 是否同一函数体（DumpByName 导出 0x2ed344 比对签名与体）；\n4) exe RTTI .?AVFruit@@ → vftable 读 +0x20/+0x24/+0x28 三槽地址并反查函数名，与 macho OnSliced(+0x24) 对齐；\n5) Globals 单例 PTR_DAT_004d9048 结构 +0x00..+0x48 一次性 dump（闭合开关 0x18/0x0A、dt 槽 0x44）。\n\n【Kimi 已完成的取数结论，直接采用】\nA) exe 读数异常根因=Debug 版浮点常量存为 double（8 字节）：0x16f2018=0.05、0x16f2028=15.0、0x16f29f0=0.5、0x197f47c=0.0(初值)，与 macho 全合 → exe 侧全部闭合。\nB) macho DAT_004d90b4 与 PTR_DAT_004d9048 的 GOT 槽均指向 ARM 代码桩（懒绑定），静态不可解 → 结论写「运行时求值」。\nC) 0x52bfe0/e4/e8 = 12 字节全 0 → off 默认零向量确认。\nD) exe RTTI：COL 已批量定位（rtti_vtables_exe.md），但 vftable[-1]→COL 反查无命中，需你分析原因并给出结论（可能：vftable 运行时构建/段遗漏/布局差异）。\nE) FUN_002ed344 全量反编译在 deep_collide_2ed344.md，与 slash_geometry.md §5 的 vtable+0x0C 契约比对同体性。",
+    "acceptance": "pending_constants.md 更新版：遗留项全部闭合或有明确结论；新增 findings/on_sliced_exe.md 虚表对齐表",
+    "extra_files": [
+      "shared_context/findings/slash_geometry.md",
+      "shared_context/findings/pending_constants.md",
+      "shared_context/findings/t007_exe_f64.md",
+      "shared_context/findings/t007_exe_neighborhood.md",
+      "shared_context/findings/t007_macho_globals.md",
+      "shared_context/findings/deep_collide_2ed344.md",
+      "shared_context/findings/rtti_vtables_exe.md"
+    ],
+    "finding_cap": 20000,
+    "status": "done",
+    "created": "2026-10-30T23:10:00+08:00",
+    "updated": "2026-10-30T22:32:12+08:00",
+    "notes": "输入已就绪（7 份 findings），含 Kimi 取数结论 A-E",
+    "note": "pending_constants.md 更新版落盘：exe 全常量闭合（double 根因）；0x52bfe0 零向量确认；2 项定性结论（懒绑定运行时求值、0x2ed344 导出错配已诊断）；on_sliced_exe.md 因 32K 上限截断未落盘，核心契约已在 slash_geometry，残余转 T-008"
+  },
+  {
+    "id": "T-008",
+    "title": "on_sliced_exe.md 截断补齐（低优先）",
+    "desc": "T-007 因 thinking 占用 23K/32K token 导致 on_sliced_exe.md 在 §1 处截断未落盘。任务：基于 rtti_vtables_exe.md 的 COL 数据 + vtables_fruit.md（0 符号，RTTI 分析器未跑），给出 exe 侧 Fruit/SlashEntity 虚表槽位对齐的三条可行路径评估（重跑 RTTI 分析/扫 ARM literal pool/Frida），并给出推荐；同时完成 FUN_002ed344(=0x2ee2a0) 与 vtable+0x0C 同体性比对（deep_collide_2ed344.md 已导出）。输出 findings/on_sliced_exe.md，≤4000 字符。",
+    "acceptance": "on_sliced_exe.md 落盘：三条路径评估+推荐、同体性结论",
+    "extra_files": [
+      "shared_context/findings/rtti_vtables_exe.md",
+      "shared_context/findings/deep_collide_2ed344.md",
+      "shared_context/findings/slash_geometry.md"
+    ],
+    "finding_cap": 15000,
+    "status": "pending",
+    "created": "2026-10-30T23:30:00+08:00",
+    "updated": "2026-10-30T23:30:00+08:00",
+    "notes": "低优先：核心契约（vtable+0x24=OnSliced）已在 slash_geometry 定案，本任务为锦上添花"
+  },
+  {
+    "id": "T-009",
+    "title": "Phase 2 重建蓝图：工程结构 + GameState + 核心系统接口",
+    "desc": "基于逆向结论起草 iOS 27 重建蓝图。【Kimi 的架构约束，必须遵守】\n1) 渲染：SpriteKit（SKEmitterNode 粒子/SKShapeNode 刀光/纹理 atlas），不复刻 OpenGL ES；120Hz 由 CADisplayLink+SpriteKit 自动适配；\n2) 语言：Swift 6 (Strict Concurrency)，模块划分用 Swift Package 子模块；\n3) 架构：Entity-Component 轻量自研（参照原 EntityManager 语义，不引入第三方 ECS）；\n4) 逻辑帧：可变 dt + 上一帧 dt 缓存兜底（原逻辑如此，core_logic_notes §6），不做固定步长；\n5) 数值一律以 core_logic_notes/slash_geometry 的 macho 列为准；\n6) 存档：原 XML 键名保留（findings 中 macho 侧键名），用 Codable+JSON 或 PropertyList，需给出迁移映射表。\n【蓝图内容】a) 工程目录树（target/package 划分）；b) GameState 结构体（22 字段表→Swift，含语义注释）；c) 核心协议/类接口：GameLoop、Entity/EntityManager、SlashTracker（8 槽环形缓冲）、HitTest（两段式公式直译）、ComboSystem（窗口 0.1/0.095、双档 clamp）、ScoreSystem（溢出保护、命中率公式 K=-0.2*SCALE=100）、WaveManager（WaveInfo/Spawner 默认值表）、BombSystem（3.2/1.6/2.0/9.0、哨兵-2）、FreezeSystem；d) Constants.swift 草案（全部已闭合常量）；e) 资产清单（从 ipa/assets 可提取项：贴图/xml/mmd→转换策略）；f) 风险与开放问题清单。\n所有结论标注来源（core_logic_notes §x / slash_geometry §x / function_classification §x）。",
+    "acceptance": "blueprint/REBUILD_BLUEPRINT.md（≤3万字符）+ blueprint/Constants.swift + blueprint/GameState.swift 三个文件块",
+    "extra_files": [
+      "shared_context/findings/core_logic_notes.md",
+      "shared_context/findings/slash_geometry.md",
+      "shared_context/findings/function_classification.md",
+      "shared_context/findings/pending_constants.md"
+    ],
+    "finding_cap": 60000,
+    "status": "done",
+    "created": "2026-10-30T22:50:00+08:00",
+    "updated": "2026-10-30T22:44:27+08:00",
+    "notes": "Constants.swift(11.5K)+GameState.swift(5.7K) 已落盘；REBUILD_BLUEPRINT.md 因 32K 上限截断，转 T-010 重写"
+  },
+  {
+    "id": "T-010",
+    "title": "REBUILD_BLUEPRINT.md 重写（仅主文档）",
+    "desc": "T-009 的蓝图主文档因输出上限截断。本轮只写 blueprint/REBUILD_BLUEPRINT.md 一个文件，已落盘的 blueprint/Constants.swift 与 blueprint/GameState.swift 不要再重复输出。内容按 T-009 任务卡的 a/c/d/e/f 项（工程结构、核心系统接口、资产清单、风险清单），其中 GameState 结构体一节只写「见 GameState.swift + 字段语义速查表」即可，避免重复。总长度 ≤ 14000 字符，宁可压缩文字分析也要把接口签名写全。",
+    "acceptance": "REBUILD_BLUEPRINT.md 完整落盘（含工程结构树、7 个核心系统接口签名、资产策略、风险清单）",
+    "extra_files": [
+      "shared_context/findings/core_logic_notes.md",
+      "shared_context/findings/slash_geometry.md",
+      "blueprint/GameState.swift"
+    ],
+    "finding_cap": 50000,
+    "status": "done",
+    "created": "2026-10-30T22:58:00+08:00",
+    "updated": "2026-10-30T22:49:51+08:00",
+    "notes": "输出纪律：单文件、≤14K 字符、不重复已落盘内容",
+    "note": "REBUILD_BLUEPRINT.md 落盘（工程结构/7系统接口/资产策略/风险清单），Phase 2 蓝图三件套齐了"
+  },
+  {
+    "id": "T-011",
+    "title": "project.yml + FNPBCore 可编译骨架",
+    "desc": "基于 blueprint/ 三件套生成可编译骨架。【不要重复输出】Constants.swift / GameState.swift / REBUILD_BLUEPRINT.md——它们已在工作区 blueprint/ 下，骨架文件直接 import 引用即可（本轮把 Constants.swift/GameState.swift 视为已存在）。\n只输出 3 个文件块（总 ≤20K 字符，宁可省文字）：\n1) project.yml：XcodeGen 定义（App target iOS deployment 26.0、FNPBCore/FNPBRender/FNPBPlatform/FNPBUI 四模块、FNPBCoreTests；源文件路径映射蓝图目录树）；\n2) Sources/FNPBCore/Loop/GameWorld.swift：GameTicking 协议的默认实现骨架——tick 内按 core_logic_notes §1.2 的 10 步顺序写方法桩（每步一个 private func 空实现+注释锚点），GameServices 依赖容器定义放这里；\n3) Sources/FNPBCore/Time/TimeDriver.swift：FrameStamp/FrameDriving/FixedStepDriver 完整实现（advance 的 alpha 插值 + maxSubsteps 防死循环）。\n要求：Swift 6 严格并发可编译（Sendable 标注齐全）；不臆造 API；import 只用 Foundation/simd。",
+    "acceptance": "3 个文件块解析落盘；GameWorld.tick 的 10 步桩与 §1.2 一一对应",
+    "extra_files": [
+      "blueprint/REBUILD_BLUEPRINT.md"
+    ],
+    "finding_cap": 40000,
+    "status": "done",
+    "created": "2026-10-30T23:15:00+08:00",
+    "updated": "2026-10-30T23:12:53+08:00",
+    "notes": "Constants/GameState 已落盘，禁止重复输出",
+    "note": "project.yml + GameWorld(10步桩) + TimeDriver 落盘；GameWorld 含过渡占位类型（ECS 任务卡落盘后须迁移）"
+  },
+  {
+    "id": "T-012",
+    "title": "Slice 模块实现：两段式切割判定 + 对账测试",
+    "desc": "直译 slash_geometry.md 的切割判定公式为 Swift，并写黄金值对账测试。\n输出 4 个文件块：\n1) Sources/FNPBCore/Slice/SliceGeometry.swift —— SlashTrail（8 槽环形缓冲、0.05s 采样）+ SliceQuery + HitTest 门控；\n2) Sources/FNPBCore/Slice/ShapeIntersect.swift —— ShapeRef（sphere/line/triangle/aabb）与 ShapeIntersecting 实现：线-球/线-三角/球-球相交，contact 输出交点 vec3（对应引擎 vtable+0x0C 多态分发）；\n3) Sources/FNPBCore/Slice/SliceTesting.swift —— SliceTesting 协议实现：两段式（①intersect ②球体二次确认：球心距离²、截面圆 k=sqrtf(r²-|pt|²)、±极值点 vs 切割半径²）+ isNearMiss（半径×1.5）；门控条件按 slash_geometry §1.1（radiusSquared>0 等）；normalize 处理零向量兜底；\n4) Tests/FNPBCoreTests/SliceGeometryTests.swift —— 黄金值测试：直接命中(球心在切割半径内)、截面±极值两分支、近失 1.5× 边界、门控全假、轨迹缓冲 8 槽环绕。\n类型复用 GameWorld.swift 的过渡 Entity/EntityID/EntityKind（本轮不迁移 ECS，只 import 同模块直接用）；数值常量引用 Constants.swift 的条目（若该文件无对应条目则在本模块内定义并注释 [macho H] 来源）；Swift 6 可编译，import 只用 Foundation/simd。",
+    "acceptance": "4 文件块落盘；测试覆盖判定两分支+近失+门控；每函数注释锚定 slash_geometry §x",
+    "extra_files": [
+      "shared_context/findings/slash_geometry.md",
+      "Sources/FNPBCore/Loop/GameWorld.swift",
+      "blueprint/Constants.swift"
+    ],
+    "finding_cap": 40000,
+    "status": "done",
+    "created": "2026-10-30T23:20:00+08:00",
+    "updated": "2026-10-30T23:18:57+08:00",
+    "notes": "",
+    "note": "Slice 模块 4 文件落盘：SlashTrail/ShapeIntersect(6种相交)/SliceTester(两段式+近失1.5×)+黄金值测试；极值轴构造为 [待验证]（暂用 pt×cutDirection，待 Frida 逐分量确认）；max_tokens 已提至 65536 根治思考挤占输出"
+  },
+  {
+    "id": "T-013",
+    "title": "Combo + Score 模块实现（带黄金值测试）",
+    "desc": "直译 core_logic_notes §2（连击）与 §3（计分/统计）为 Swift。\n输出 5 个文件块：\n1) Sources/FNPBCore/Combo/ComboTracker.swift —— ComboTracking 协议实现：registerSlice（窗口内计数、comboFruitTypes 记录、rhythmFactor 递减公式 -combo*(0.5*rand/8+0.75)、特殊果 +0x1ba 分支、同一实体防重复 +0x180）、tickWindow（+0x174 推进：>=0.095 封顶、到期结算派发 settle 事件、结算后 memset 0xff 语义、combo>9 窗口置 0.095）、reset；\n2) Sources/FNPBCore/Combo/ComboTier.swift —— visual=clamp(combo-3,0,2)、text=clamp(combo-2,1,5)、isEffectActive(combo>2) [both 双源]；\n3) Sources/FNPBCore/Score/ScoreSystem.swift —— ScoreDispatching 实现：事件序号、延迟回调队列(delay==0 或 delay<seq&&mode==1 出队)、总分累加、溢出保护(mode==4 不归零；其余 mode!=5 超 0x7fffffff 归零)；\n4) Sources/FNPBCore/Score/StatsRecorder.swift —— StatsRecording 实现 + Accuracy 命中率公式：(total+X+K*misses*total)/total，K=-0.2、SCALE=100，负值归零；\n5) Tests/FNPBCoreTests/ComboScoreTests.swift —— 黄金值测试：combo 窗口推进/到期结算/0.095 封顶/combo>9 收紧、双档 clamp 边界、溢出保护两模式、命中率手算用例。\n协议签名以 GameWorld.swift 的过渡声明为准（该文件未落盘类型不得出现在签名里）；数值引用 Constants.swift 或本模块内定义并标 [macho H]；GameState 字段用 GameState.swift 的真实字段名；Swift 6 可编译。",
+    "acceptance": "5 文件块落盘；测试覆盖窗口结算+溢出保护+命中率；每函数注释锚定 core_logic_notes §x",
+    "extra_files": [
+      "shared_context/findings/core_logic_notes.md",
+      "Sources/FNPBCore/Loop/GameWorld.swift",
+      "blueprint/GameState.swift",
+      "blueprint/Constants.swift"
+    ],
+    "finding_cap": 60000,
+    "status": "done",
+    "created": "2026-10-30T23:25:00+08:00",
+    "updated": "2026-10-30T23:24:09+08:00",
+    "notes": "",
+    "note": "Combo/ComboTier/ScoreSystem/StatsRecorder+14 个测试落盘；常量与字段引用已核对一致（Constants.Combo.windowBase/Cap、Scoring；GameState.comboWindowTimer 等）"
+  },
+  {
+    "id": "T-014",
+    "title": "Wave 模块：内容类型 + WaveDirector + 生成器（带测试）",
+    "desc": "直译 core_logic_notes §4/§5 与 function_classification M10/M19 为 Swift。\n输出 4 个文件块：\n1) Sources/FNPBCore/Content/ContentTypes.swift —— WaveInfo/Spawner/SpawnerFruit/FruitInfo 的 Codable 定义，默认值逐项对齐 core_logic_notes §4.1/§4.2/§4.5（chanceRegrowth 0.25、criticalChance 1.0(float 概率)、beforeDelay 2.0、overridePoolID 10、overrideChance 100、FruitInfo scale 25.0/collision 1.0/hitInfluence 0.75、bomb.size/collision）；until 语义后处理（'forever'→-2；atoi 后仅 >=waveNo 采纳；末尾 -1→-2）做成静态函数并注释 [macho] 独有；\n2) Sources/FNPBCore/Wave/SpawnTable.swift —— 按 chance 累计和的权重抽取（M19：param_1[1] 累加、二分或线性抽取），使用 RandomSource 协议；炸弹哨兵 -2/空槽 -1 语义；\n3) Sources/FNPBCore/Wave/WaveDirector.swift —— WaveDirecting 实现（签名必须与 GameWorld.swift 的过渡协议一致：tick(dt:state:world:)）：beginGame 载入 waves、freeze 倒计时（>0 递减、归零触发 OnFreeze 语义与 +0x208 计数）、生成循环（遍历 spawner、+0x18<2 走概率池、ID==-2 炸弹触发爆炸、计时 max(0,x+speed*dt)）、炸弹状态机 0→1→2（+0x17c=rand*10+10）、forceSpawn；\n4) Tests/FNPBCoreTests/WaveTests.swift —— 黄金值测试：默认值表全项、until 三种输入后处理、权重抽取分布（固定 RandomSource 种子可复现）、freeze 归零触发一次、炸弹状态机迁移。\n数值引用 Constants.swift 或本模块定义并标 [macho H]；协议/类型复用 GameWorld.swift 过渡定义；Swift 6 可编译。",
+    "acceptance": "4 文件块落盘；测试覆盖默认值/until/权重/freeze/炸弹状态机",
+    "extra_files": [
+      "shared_context/findings/core_logic_notes.md",
+      "Sources/FNPBCore/Loop/GameWorld.swift",
+      "blueprint/Constants.swift"
+    ],
+    "finding_cap": 60000,
+    "status": "done",
+    "created": "2026-10-30T23:30:00+08:00",
+    "updated": "2026-10-30T23:28:58+08:00",
+    "notes": "",
+    "note": "ContentTypes(默认值表+until后处理)/SpawnTable(权重抽取)/WaveDirector(freeze/炸弹状态机/forceSpawn)+20测试落盘；常量引用核对一致"
+  },
+  {
+    "id": "T-015",
+    "title": "ECS 迁移转正 + 实体运动（水果抛物线）",
+    "desc": "把 GameWorld.swift 的过渡占位类型迁移为正式 ECS 模块，并实现水果运动。\n输出 5 个文件块：\n1) Sources/FNPBCore/ECS/Entity.swift —— 正式 Entity/EntityID/EntityKind/EntityTransform/EntityPrototype（从 GameWorld.swift 迁移并扩展：EntityPrototype 含 kind+初始 transform+fruit 可选 FruitInfo；状态槽三字段保留 Int32 不 enum 化）；\n2) Sources/FNPBCore/ECS/EntityStore.swift —— 正式 EntityStore 协议（蓝图 S2 全签名：spawn/despawn/entity/forEach/aliveCount/clear）+ GenerationOrderStore 实现（数组存储、生成序遍历，禁止 Dictionary 无序遍历）；\n3) Sources/FNPBCore/Entities/FruitMotion.swift —— 抛物线运动积分器：gravity 加速度、初速、旋转、离屏判定回收；⚠️ 重力/初速真值未从 macho 提取（ FruitInfo 只有 disappear_speed/scale 等部分键）→ 用 Constants.Physics 占位并逐条标 [待验证]，把参数全部注入化便于后续 Frida 闭合后只改常量；\n4) Sources/FNPBCore/Loop/GameWorld.swift —— 【完整重写该文件】删除过渡类型节（Entity/EntityStore/EntityKind/EntityID/EntityTransform），改为 import 引用 ECS 模块；10 步桩保留不动；协议节（SliceTesting/ComboTracking/ScoreDispatching/StatsRecording/WaveDirecting/AudioPlaying/EffectEmitting/RandomSource/ComboEvent/StatsKey/GameServices/GameTicking）保留在原地；\n5) Tests/FNPBCoreTests/EntityStoreTests.swift —— 生成序遍历、spawn/despawn 后 id 稳定、clear；FruitMotion 积分器手算用例（已知重力下 1/60 步的位置/速度）。\n关键约束：迁移后全工程只能有一份 Entity 定义；GameWorld 重写不得改动 10 步桩的任何注释锚点；Swift 6 可编译。",
+    "acceptance": "5 文件块落盘；GameWorld 过渡类型节消失且 10 步桩原样；测试通过生成序与积分器手算",
+    "extra_files": [
+      "Sources/FNPBCore/Loop/GameWorld.swift",
+      "Sources/FNPBCore/Content/ContentTypes.swift",
+      "blueprint/Constants.swift",
+      "shared_context/findings/core_logic_notes.md"
+    ],
+    "finding_cap": 60000,
+    "status": "done",
+    "created": "2026-10-30T23:35:00+08:00",
+    "updated": "2026-10-30T23:33:52+08:00",
+    "notes": "",
+    "note": "ECS 转正（Entity/EntityStore/GenerationOrderStore）+ FruitMotion 注入化积分器 + GameWorld 过渡节清除（10 步桩保留）+ 测试落盘"
+  },
+  {
+    "id": "T-016",
+    "title": "FNPBPlatform 平台层 + App 壳",
+    "desc": "实现蓝图 S1/S7 的平台胶合层与 App 入口。\n输出 5 个文件块：\n1) Sources/FNPBPlatform/DisplayLinkDriver.swift —— FrameDriving 完整实现：CADisplayLink 包装、CAFrameRateRange(min:60,max:preferred:) 120Hz 设置、targetTimestamp 算 dt、start/stop、actualFrameRate；@MainActor；\n2) Sources/FNPBPlatform/TouchRouter.swift —— TouchRouting 实现：UIKit touch（UIKit  import 仅限本文件）→ SIMD3 世界坐标，坐标换算依赖注入（logicalSize 提供者闭包），began/moved/ended 时间戳用 hostTime；\n3) Sources/FNPBPlatform/AudioEngine.swift —— AudioPlaying 实现：AVAudioEngine 或 AVAudioPlayer 简单实现，按 key 从 ContentBundle 取音效文件，音量/同时播放数上限参数化；\n4) Sources/FNPBPlatform/Persistence.swift —— 存档读写：键名保留原版（macho M08/M09：version/highscore/%shighscore/critical_chance/rated/challengeData 等），Codable+JSON 存 ApplicationSupport，给出原 XML 键→新 JSON 键的迁移映射表注释；\n5) App/FNPBApp.swift + App/Info.plist（两个文件块或合并为一个 FILE 块用目录前缀分开均可——分开更稳）——SwiftUI App 入口：组装 GameWorld+GameServices+FixedStepDriver+DisplayLinkDriver+TouchRouter，ContentView 占位（Metal 渲染接入点留 TODO 注释）。\n约束：import UIKit/SwiftUI 仅限 FNPBPlatform 与 App；FNPBCore 协议签名以 GameWorld.swift 为准；不臆造 API，不确定标 [待验证]。",
+    "acceptance": "5-6 文件块落盘；App 入口能把 FrameStamp 驱动到 GameWorld.tick；存档键名与 macho 一致",
+    "extra_files": [
+      "Sources/FNPBCore/Loop/GameWorld.swift",
+      "Sources/FNPBCore/Time/TimeDriver.swift",
+      "shared_context/findings/core_logic_notes.md"
+    ],
+    "finding_cap": 40000,
+    "status": "done",
+    "created": "2026-10-30T23:40:00+08:00",
+    "updated": "2026-10-30T23:39:29+08:00",
+    "notes": "",
+    "note": "DisplayLinkDriver(120Hz)/TouchRouter/AudioEngine/Persistence(原版键名迁移表)/FNPBApp/Info.plist 六件套落盘"
+  },
+  {
+    "id": "T-017",
+    "title": "资产管线：.tex→PNG、xml→json、mmd 结构分析",
+    "desc": "用 Python（工作区自带 Pillow/numpy）写构建期资产转换 CLI。【Kimi 已完成的格式侦察，直接采用】\n- IPA 内层 assets.zip 含：tex×264、ogg×227（无需转换）、xml×68、mmd×60(HBR0 分块)、binmodel×46、uiscreen×20、str×12、vs/fs 着色器×6+6(GLSL ES)、ttf×4；\n- .tex 头部 12 字节：[type u8][? u8][? u16][width u16][height u16][ff ff ff ff]，其后像素数据；样例 64×32 文件 4108B=12+64*32*2 → 16bpp（候选 LA88 或 RGBA4444，用样例字节 '40 ff' 重复模式判定，写转换器时做尺寸公式校验：size-12 == w*h*2 不成立则尝试 4bpp/8bpp 变体并在 manifest 标 warning）；\n- .mmd：'HBR0' magic + 版本号 u32 + 块长 u32 的嵌套分块（02/01/00 层级样例见侦察）。\n输出 4 个文件块：\n1) tools/AssetPipeline/extract.py —— ipa→assets.zip→Raw/ 解包 + 全量清点报告（按扩展名计数、尺寸范围）；\n2) tools/AssetPipeline/tex_convert.py —— .tex→PNG（Pillow）+ manifest.json（原路径/输出路径/宽高/格式判定置信）；CLI 参数 in_dir/out_dir，可单文件调试；\n3) tools/AssetPipeline/xml_convert.py —— xml→json（保留属性/文本/层级； fruitlist.xml/wave 相关 xml 输出后人工抽检样例写进文件头注释）；\n4) tools/AssetPipeline/MMD_FORMAT.md —— 基于样例字节与 binmodel/mmd 数量给出 HBR0 容器格式分析报告（chunk 头布局、已确认/推测标注、下一步完整解析器的接口建议）；不实现 mmd 解析器本体（后续任务）。\n约束：只用标准库+Pillow+numpy；Windows 可跑；每个转换器带 --selftest（用合成 .tex 样例验证往返）。",
+    "acceptance": "4 文件块落盘；tex_convert 有尺寸校验与 selftest；manifest 覆盖全部 264 个 tex",
+    "extra_files": [],
+    "finding_cap": 20000,
+    "status": "done",
+    "created": "2026-10-30T23:45:00+08:00",
+    "updated": "2026-10-30T23:41:24+08:00",
+    "notes": "管线落盘并已实跑：解包成功(assets_raw/inventory)；tex 72/264 成功（LA88/RGBA4444/ABGR4444/RGBA8888）；192 失败暴露 .tex 家族真实复杂度（4 变体），转 T-018"
+  },
+  {
+    "id": "T-018",
+    "title": ".tex 全格式谱系分析 + tex_convert 扩展",
+    "desc": "扩展 tools/AssetPipeline/tex_convert.py 覆盖全部 264 个 .tex。【Kimi 实跑侦察结论，直接采用】\n1) 变体 A（已成功 72 个）：传统二进制头 [type u8][b1 u8][field u16][w u16][h u16][ff ff ff ff] + 16bpp 像素（type 06=LA88、另有 RGBA4444/ABGR4444/RGBA8888 子型，现有代码已覆盖）；\n2) 变体 B（78 个）：type∈{4,5,6,7,8,9,10} 且 payload 恰 == w*h/2 → 4bpp 纯索引，调色板不在文件内——转换器先输出索引灰度图（palette=灰度16级）并在 manifest 标 needs_external_palette，同时给出调色板来源的候选调查思路（fruitlist.xml colour 键/binmodel 伴随文件/全局默认调色板）；\n3) 变体 C（107 个）：ASCII 魔数 'TEX\u0001\u0000\u0000\u0000' 扩展容器，样例 hud_cross.tex 32820B：magic 后 [u32=3][7 字节 08 01 08 04 08 03 08 疑为通道描述][u32=2][尺寸域含 0x80/0x40][256?×64?] + 32bpp 像素（'#3Q\u0000' 重复模式，疑 RGBA32，128×64×4=32768≈payload）；需你解析头布局（给出字段偏移假设表+尺寸校验），支持 RGBA32 输出；\n4) 变体 D（少数）：payload 比 w*h/2 多 16424/4136/65576 等字节——疑似 mipmap 链或内嵌调色板，给出判定逻辑（尝试把多余字节解释为 mip 链：w/2×h/2 递推校验）。\n输出 2 个文件块：tools/AssetPipeline/tex_convert.py（完整重写，覆盖 A-D + selftest 覆盖每变体合成样例）、tools/AssetPipeline/TEX_FORMAT.md（格式谱系文档：每变体头部布局表、判定决策树、未决问题清单）。\n验收硬指标：assets_raw 全量 264 个转换后 ok+external_palette 计数 == 264（跑 python tex_convert.py assets_raw assets_png 验证）。",
+    "acceptance": "tex_convert.py 重写 + TEX_FORMAT.md；全量转换 ok 率 100%（external_palette 灰度兜底计入 ok）",
+    "extra_files": [],
+    "finding_cap": 20000,
+    "status": "done",
+    "created": "2026-10-30T23:55:00+08:00",
+    "updated": "2026-10-30T23:53:13+08:00",
+    "notes": "Kimi 已实跑现有管线并侦察 4 变体特征；样例字节在任务卡里",
+    "note": "tex_convert 重写（候选枚举+全局一致性投票，零依赖 PNG）；实跑 264/264：A=72/B=78(灰度待调色板)/C=107/?=7；TEX_FORMAT.md 谱系文档；fruit_atlas 肉眼验证通过；harness 解析器兼容空行"
+  },
+  {
+    "id": "T-019",
+    "title": "FNPBRender Metal 渲染层",
+    "desc": "实现蓝图 S7 的 Metal 渲染层，素材用 assets_png 的真实图集。\n输出 5 个文件块：\n1) Sources/FNPBRender/MetalContext.swift —— 设备/命令队列/渲染管线描述符缓存；MTKView 包装（UIViewRepresentable 供 SwiftUI 用，import SwiftUI/UIKit 仅限本文件）；\n2) Sources/FNPBRender/SpriteBatch.swift —— SpriteInstance（位置/尺寸/旋转/色调/UV 子矩形）、SpriteBatch、BlendMode（opaque/alpha/additive）；实例数据用 MTLBuffer 每帧上传的队列设计；\n3) Sources/FNPBRender/RenderSurface.swift —— 蓝图 S7 RenderSurface 协议完整实现：configure(SurfaceRequest)（drawableSize 变化重建 viewport 与逻辑坐标系，注释锚定原 glViewport+15.0 归一化语义）、beginFrame/submit(按 texture+blend 分桶)/endFrame；logicalSize 参与切片半径换算的注释说明；\n4) Sources/FNPBRender/Shaders/sprite.metal —— 顶点（实例变换+UV）+ 片元（纹理采样×色调）着色器，支持 additive 混合的编译时常量或双管线；\n5) Sources/FNPBRender/TextureLoader.swift —— TextureLoading 实现：PNG→MTLTexture（纹理图集整页加载，UV 子矩形由调用方给出），缓存去重。\n约束：渲染层不 import FNPBCore 以外的游戏逻辑（FNPBCore 仅取 SurfaceRequest 等纯值类型——若蓝图里 SurfaceRequest 定义在渲染层则保持）；120Hz 下无阻塞（命令提交不占主线程超 1ms 的注释说明）；不臆造 Metal API，不确定标 [待验证]。",
+    "acceptance": "5 文件块落盘；MTKView 可嵌入 SwiftUI；submit 分桶逻辑完整",
+    "extra_files": [
+      "blueprint/REBUILD_BLUEPRINT.md"
+    ],
+    "finding_cap": 40000,
+    "status": "done",
+    "created": "2026-10-31T00:00:00+08:00",
+    "updated": "2026-10-30T23:58:32+08:00",
+    "notes": "",
+    "note": "Metal 五件套落盘：MTKView(SwiftUI 桥)/SpriteBatch(三分桶)/RenderSurface(logicalSize 语义)/sprite.metal/TextureLoader"
+  },
+  {
+    "id": "T-020",
+    "title": "CI 验证链：GitHub Actions macOS 编译+测试",
+    "desc": "设计本工程第一条验证链。【Kimi 的架构约束】\n- 触发：push/PR 到 main + workflow_dispatch；\n- runner：macos-15（Xcode 26）；步骤：checkout → brew 装 xcodegen（锁版本）→ xcodegen generate → xcodebuild build（FNPIB scheme，Debug）→ xcodebuild test（FNPBCoreTests，iPhone 17 模拟器）→ 上传 xcresult/xcpretty 日志产物（失败时）；\n- 资产步骤：不需要真机资源即可编译（ContentBundle 加载失败应降级为占位，检查现有 ContentTypes 代码是否编译期依赖资产文件——如依赖，workflow 里加一步从 Raw 生成最小 ContentBundle 或用空目录）；\n- 并发/矩阵：单矩阵即可，加 timeout-minutes: 40。\n输出 2 个文件块：\n1) .github/workflows/ios.yml —— 完整 workflow；\n2) docs/CI_FIRST_BUILD.md —— 首次编译排障清单：基于对现有代码的审查，列出 10 个最可能的编译错误（Swift 6 严格并发的 Sendable 违例、any 协议、GameServices 非 Sendable 跨 actor、FNPBCoreTests 的 @testable import、blueprint/ 编入模块的路径、Metal shader 编译期检查、Info.plist 与 GENERATE_INFOPLIST_FILE 冲突等），每条给症状+修法；\n并在文件头说明：本仓库尚未推 GitHub 时的本地替代命令（xcodegen generate && xcodebuild 一行命令）。",
+    "acceptance": "workflow 语法合法（可被 actionlint 思路人工检查）；排障清单 ≥8 条具体可操作",
+    "extra_files": [
+      "project.yml",
+      "App/Info.plist",
+      "Sources/FNPBCore/Loop/GameWorld.swift"
+    ],
+    "finding_cap": 30000,
+    "status": "done",
+    "created": "2026-10-31T00:05:00+08:00",
+    "updated": "2026-10-31T00:05:06+08:00",
+    "notes": "",
+    "note": "DeepSeek 产出 .github/workflows/ios.yml（macos-15 + Xcode26 探测 + xcodegen 版本断言 + simulator 编译/测试 + 失败诊断 + pbxproj 防回归检查）与 docs/CI_FIRST_BUILD.md（14 条排障清单）。终审确认其发现的真实缺陷①（Info.plist 双写）成立并已修复：删除 project.yml FNPIB 的 info: 块，plist 改横屏为唯一来源；缺陷②（blueprint 双来源）维持监控。"
+  }
+]

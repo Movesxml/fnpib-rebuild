@@ -1,0 +1,82 @@
+# 游戏逻辑字符串线索（853 条命中关键词）
+
+- `  KeyframeEvents:`
+- `  } // KeyframeEvents`
+- ` UNHANDLED FRUIT ACTION - %s`
+- `%d, %s :Wave`
+- `%s_combos`
+- `%shighscore`
+- `(score & 0xFFFFFFFFL) == score`
+- `----HIGHSCORE:%i`
+- `.?AUBaseDelegate@?$Delegate1@XPAVFruit@@@Mortar@@`
+- `.?AUBaseDelegate@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@`
+- `.?AV?$Callee@UGlobalProbabilityOveride@@@?$Delegate1@XPAVFruit@@@Mortar@@`
+- `.?AV?$Callee@VChallengeUIScore@@@?$Delegate2@XPAVComponent@Mortar@@AA_N@Mortar@@`
+- `.?AV?$Callee@VComboBox@@@?$Delegate0@X@Mortar@@`
+- `.?AV?$Callee@VComboModifier@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@`
+- `.?AV?$Callee@VComboModifier@@@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@`
+- `.?AV?$Callee@VComponentChallengeScore@@@?$Delegate2@XPAVComponent@Mortar@@AA_N@Mortar@@`
+- `.?AV?$Callee@VComponentChallengeScore@@@?$Delegate3@XPAVComponent@Mortar@@ABVAsciiString@2@AA_N@Mortar@@`
+- `.?AV?$Callee@VComponentFruit@@@?$Delegate3@XPAVComponent@Mortar@@ABV?$_Vector2@M@@AA_N@Mortar@@`
+- `.?AV?$Callee@VComponentScore@@@?$Delegate2@XPAVComponent@Mortar@@AA_N@Mortar@@`
+- `.?AV?$Callee@VExplodyFruitModifier@@@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@`
+- `.?AV?$Callee@VFNHighscoreList@@@?$Delegate2@XW4SocialNetworkErrorType@Mortar@@PAVILeaderboardView@2@@Mortar@@`
+- `.?AV?$Callee@VFruit@@@?$Delegate1@XPAVFruit@@@Mortar@@`
+- `.?AV?$Callee@VFruitSplosion@ExplodyFruitModifier@@@?$Delegate1@XPAVFruit@@@Mortar@@`
+- `.?AV?$Callee@VFruitSplosion@ExplodyFruitModifier@@@?$Delegate1@XPAVHUDControl@@@Mortar@@`
+- `.?AV?$Callee@VScoreModifier@@@?$Delegate1@HH@Mortar@@`
+- `.?AV?$Callee@VSuperFruitChest@@@?$Delegate0@X@Mortar@@`
+- `.?AV?$Callee@VSuperFruitChest@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@`
+- `.?AV?$Callee@VSuperFruitControl@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@`
+- `.?AV?$Callee@VSuperFruitGlow@@@?$Delegate1@XPAVFruit@@@Mortar@@`
+- `.?AV?$Callee@VSuperFruitPinata@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@`
+- `.?AV?$ComponentBuilder@VComponentChallengeScore@@@Mortar@@`
+- `.?AV?$ComponentBuilder@VComponentChallengeTotalScore@@@Mortar@@`
+- `.?AV?$ComponentBuilder@VComponentFruit@@@Mortar@@`
+- `.?AV?$ComponentBuilder@VComponentScore@@@Mortar@@`
+- `.?AVChallengeUIScore@@`
+- `.?AVComboBox@@`
+- `.?AVComboModifier@@`
+- `.?AVComponentChallengeScore@@`
+- `.?AVComponentChallengeTotalScore@@`
+- `.?AVComponentFruit@@`
+- `.?AVComponentScore@@`
+- `.?AVConditionScore@@`
+- `.?AVExplodyFruitModifier@@`
+- `.?AVFruit@@`
+- `.?AVFruitCamera@@`
+- `.?AVFruitRay@@`
+- `.?AVFruitSplosion@ExplodyFruitModifier@@`
+- `.?AVGlobal@?$Delegate1@XPAVFruit@@@Mortar@@`
+- `.?AVGlobal@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@`
+- `.?AVScoreModifier@@`
+- `.?AVScoreMultiplyerBoard@@`
+- `.?AVSuperFruitChest@@`
+- `.?AVSuperFruitControl@@`
+- `.?AVSuperFruitGlow@@`
+- `.?AVSuperFruitHitControl@@`
+- `.?AVSuperFruitPinata@@`
+- `.?AVWaveModifier@@`
+- `/Dmodels/Fruit/%s_%c_piece_%d.mmd`
+- `1fruit`
+- `3_FRUIT`
+- `4AArcadeMode_33`
+- `4_FRUIT`
+- `5_FRUIT`
+- `6_FRUIT`
+- `7_FRUIT_PLUS`
+- `:@scoreContainer.scoreCounterTotal`
+- `:@scoreContainer.scoreCounterTotalDelay`
+- `<Critical`
+- `>combo-%i`
+- `>forceWave`
+- `>super_fruit_hits`
+- `@bonusScoreCounter`
+- `@combo`
+- `@comboAmount`
+- `@critical`
+- `@finaleScore`
+- `@fruitNumber`
+- `@fruitScore`
+- `@lifeScore`
+- `@reflexScore`
