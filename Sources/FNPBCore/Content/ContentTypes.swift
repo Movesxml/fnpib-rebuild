@@ -156,7 +156,7 @@ public extension WaveInfo {
     }
 
     /// 就地应用后处理结果（辅助入口：读取 `until` 值时可批处理）。
-    static func applyUntilPostProcess(to waves: [inout WaveInfo], waveNumbers: [Int32]) {
+    static func applyUntilPostProcess(to waves: inout [WaveInfo], waveNumbers: [Int32]) {
         let tokens = waves.map { String($0.until) }
         let processed = postProcessUntil(rawTokens: tokens, waveNumbers: waveNumbers)
         for i in 0..<min(waves.count, processed.count) {

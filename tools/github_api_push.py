@@ -8,6 +8,7 @@
 流程: 逐文件建 blob（8 线程并行）→ 嵌套 tree → commit → 更新 heads/main。
 """
 import base64
+import hashlib
 import json
 import os
 import subprocess
@@ -82,10 +83,17 @@ def main() -> None:
                            check=True).stdout.splitlines()
     print(f"待推送文件: {len(files)}")
 
+    def git_sha(path: str) -> str:
+        """本地计算 git blob sha（内容寻址，与 GitHub 返回的 blob sha 一致）。"""
+        data = open(path, "rb").read()
+        return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
     blobs: dict[str, str] = {}
     if os.path.exists(CHECKPOINT):
         blobs = json.load(open(CHECKPOINT, encoding="utf-8"))
-        print(f"断点恢复: 已跳过 {len(blobs)} 个 blob")
+        # 内容校验：仅当本地内容未变时才跳过（防陈旧缓存漏推）
+        blobs = {p: s for p, s in blobs.items() if p in files and git_sha(p) == s}
+    print(f"断点恢复: 已跳过 {len(blobs)} 个未变更 blob")
     todo = [f for f in files if f not in blobs]
     print(f"还需创建: {len(todo)}")
 

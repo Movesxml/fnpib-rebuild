@@ -25,20 +25,9 @@
 import Foundation
 
 // MARK: - 前置类型
-
-/// 实体句柄。
-/// 最终落位 `Sources/FNPBCore/ECS/EntityID.swift`；此处内联以便蓝图自洽。
-public struct EntityID: Hashable, Sendable, Comparable {
-    public let rawValue: UInt32
-
-    public init(rawValue: UInt32) {
-        self.rawValue = rawValue
-    }
-
-    public static func < (lhs: EntityID, rhs: EntityID) -> Bool {
-        lhs.rawValue < rhs.rawValue
-    }
-}
+// EntityID 不在此重复声明：blueprint 文件直接编入 FNPBCore（project.yml），
+// 与 Sources/FNPBCore/ECS/Entity.swift 中的唯一权威定义同模块共享（T-020 修复，
+// 首跑 #41094655636 报 invalid redeclaration / ambiguous type lookup）。
 
 // MARK: - GameState
 
