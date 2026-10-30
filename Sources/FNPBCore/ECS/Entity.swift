@@ -142,6 +142,8 @@ public struct Entity: Sendable {
     public init(id: EntityID, kind: EntityKind) {
         self.id = id
         self.kind = kind
+        self.transform = EntityTransform()
+        self.fruit = nil
     }
 }
 
