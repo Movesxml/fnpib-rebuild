@@ -380,4 +380,6 @@ final class StubEntityStore: EntityStore {
     func entity(_ id: EntityID) -> Entity? {
         entities[id]
     }
+
+    var aliveCount: Int { entities.count }
 }
