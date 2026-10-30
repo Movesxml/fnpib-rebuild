@@ -68,6 +68,10 @@ public struct TouchCoordinateMapper {
 
     /// 世界坐标约定：原点屏幕中心，X 向右、Y 向上、Z = 0（与 GLES→Metal 的 NDC 同向）。
     /// UIKit 的 y 向下，故翻转 y。安全区裁剪由渲染层负责（本层不夹取）。
+    /// 隔离说明：logicalSize 闭包是 @MainActor（由 @MainActor 的 RenderSurface 提供），
+    /// 故本方法也必须是 @MainActor；触摸事件本就只在主线程派发（TouchRouter 全类
+    /// @MainActor），此处不存在跨线程调用路径。
+    @MainActor
     public func worldPoint(forViewPoint point: CGPoint, in viewSize: CGSize) -> SIMD3<Float> {
         guard viewSize.width > 0, viewSize.height > 0 else { return .zero }
         let logical = logicalSize()

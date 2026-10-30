@@ -83,7 +83,7 @@ public final class TextureLoader: TextureLoading, @unchecked Sendable {
             return cached
         }
 
-        var options: [MTKTextureLoader.Option: Any] = [
+        let options: [MTKTextureLoader.Option: Any] = [
             .SRGB: NSNumber(value: asset.srgb),
             .textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue),
             // [待验证] MTKTextureLoader.Option.textureStorageMode 在 iOS 27 的行为；
