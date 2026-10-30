@@ -292,36 +292,6 @@ public enum Constants {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // MARK: - 物理占位区（⚠️ 全体 [待验证]，非已闭合常量）
-    //
-    // 例外说明：本区违反文件头部「只允许已闭合常量」的规则，属显式豁免。
-    // 理由：FruitMotionTuning 需要编译期默认值（init 默认参数不可走注入），
-    // 且「原版重力/初速需 Frida 真机打点闭合」是已记录未闭合项；
-    // 将占位值集中在此（而非散落在调用点字面量）可保证 Frida 实测后单点替换。
-    // 闭合后：本区数值经 binary_equivalence 核对，移入正文并删除豁免说明。
-    public enum Physics {
-
-        /// 重力加速度（pt/s²，负值向下）。[待验证] Frida 打点
-        public static let gravity: Float = -1800.0
-
-        /// 初速大小范围（pt/s）。[待验证]
-        public static let minLaunchSpeed: Float = 800.0
-        public static let maxLaunchSpeed: Float = 1400.0
-
-        /// 发射角范围（弧度，相对 +X 轴；90°=正上方）。[待验证]
-        public static let minLaunchAngleRadians: Float = .pi / 3      // 60°
-        public static let maxLaunchAngleRadians: Float = 2 * .pi / 3   // 120°
-
-        /// 自转角速度范围（弧度/秒，绕 z 轴）。[待验证]
-        public static let minSpinRadiansPerSecond: Float = -6.0
-        public static let maxSpinRadiansPerSecond: Float = 6.0
-
-        /// 离屏回收阈值（pt，超出即 despawn）。[待验证]
-        public static let offscreenBottomMargin: Float = -250.0
-        public static let offscreenHorizontalLimit: Float = 700.0
-        public static let offscreenTopLimit: Float = 1200.0
-    }
-
     // MARK: - Pending：未闭合 / 静态不可解 / 语义未定位
     //
     // ⚠️ 以下一律不得在实现中写成字面量，必须走配置注入或运行时测量。
