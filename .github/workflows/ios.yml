@@ -27,7 +27,7 @@ concurrency:
 
 env:
   # brew 无版本化 formula：安装后做严格版本断言，漂移即显式失败（见 docs §3.13）
-  XCODEGEN_VERSION: "2.44.1"
+  XCODEGEN_VERSION: "2.46.0"
   PROJECT: FNPIB.xcodeproj
   SCHEME: FNPIB
   DERIVED_DATA: build/DerivedData
