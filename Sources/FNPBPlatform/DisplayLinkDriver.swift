@@ -34,7 +34,7 @@ public final class DisplayLinkDriver: NSObject, FrameDriving {
 
     public var onFrame: ((FrameStamp) -> Void)?
 
-    /// CADisplayLink.actualFrameRate（iOS 15+）；未启动或系统未给出时为 0
+    /// 实测帧率（由 link.duration 反推）；未启动或 duration 无效时为 0
     public private(set) var actualFrameRate: Float = 0
 
     // MARK: 状态
@@ -142,10 +142,10 @@ public final class DisplayLinkDriver: NSObject, FrameDriving {
 
     // MARK: - 工具
 
-    /// CADisplayLink.actualFrameRate 是 iOS 15+（部署目标远高于此，无需 #available）
+    /// CADisplayLink 没有 actualFrameRate 属性（那是 Qt/QML 的 API，此前属幻觉），
+    /// 实际帧率只能从 duration 反推：1 / duration。duration 在帧率被系统钳制后
+    /// 反映真实间隔，故作为 targetFPS 的兜底来源。
     private static func measuredFrameRate(of link: CADisplayLink) -> Float {
-        let reported = link.actualFrameRate
-        if reported > 0 { return Float(reported) }
         let duration = link.duration
         return duration > 0 ? Float(1.0 / duration) : 0
     }
