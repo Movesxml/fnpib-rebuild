@@ -92,7 +92,7 @@ public final class TextureLoader: TextureLoading, @unchecked Sendable {
             .generateMipmaps: NSNumber(value: asset.generateMipmaps),
             // 图集通常按左上原点导出；MTKTextureLoader 默认也是 top-left，
             // 这里显式写出以防默认值变化 [待验证 Option 可用性]。
-            .origin: NSNumber(value: MTKTextureLoader.Origin.topLeft.rawValue)
+            .origin: MTKTextureLoader.Origin.topLeft.rawValue
         ]
 
         let texture: MTLTexture
