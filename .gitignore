@@ -31,3 +31,4 @@ reverse/fnpiB/
 
 # 原版游戏资产（版权 + 74MB，由 ipa/ 经 tools/AssetPipeline 重建）
 assets_raw/
+build/

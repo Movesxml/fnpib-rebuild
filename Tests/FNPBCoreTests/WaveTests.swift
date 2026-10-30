@@ -349,10 +349,29 @@ final class MockWaveEventSink: WaveEventSink {
 /// 空世界实现（本卡测试不依赖实体遍历）。
 final class StubEntityStore: EntityStore {
     private(set) var entities: [EntityID: Entity] = [:]
+    private var nextRaw: UInt32 = 1
 
-    func forEach(kind: EntityKind, _ body: (inout Entity) -> Bool) {
+    func spawn(_ prototype: EntityPrototype) -> EntityID {
+        let id = EntityID(rawValue: nextRaw)
+        nextRaw += 1
+        var entity = Entity(id: id, kind: prototype.kind)
+        entity.transform = prototype.transform
+        entity.fruit = prototype.fruit
+        entities[id] = entity
+        return id
+    }
+
+    func despawn(_ id: EntityID) {
+        entities.removeValue(forKey: id)
+    }
+
+    func clear() {
+        entities.removeAll()
+    }
+
+    func forEach(_ body: (inout Entity) -> Bool) {
         // 保持生成序遍历（这里用插入序）
-        for (_, entity) in entities where entity.kind == kind {
+        for (_, entity) in entities {
             var copy = entity
             if !body(&copy) { return }
         }

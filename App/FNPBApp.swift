@@ -119,8 +119,8 @@ final class GameHost: ObservableObject {
 
         // [待验证-A] GameState 默认构造
         self.state = GameState()
-        // [待验证-B] EntityStore 的具体实现类型名
-        self.store = WorldStore()
+        // [验证-B] EntityStore 具体实现 = GenerationOrderStore（ECS/EntityStore.swift）
+        self.store = GenerationOrderStore()
 
         // [待验证-C] 以下 4 个占位实现待 Core 服务落盘后替换（见文件末尾脚手架）
         self.services = GameServices(
