@@ -2,24 +2,19 @@ import XCTest
 @testable import FNPBCore
 
 // ============================================================================
-// WaveTests — T-014 黄金值测试（T-027 大幅修订）
+// WaveTests — T-014 黄金值测试（T-027 / T-029 修订）
 //
 // 覆盖：
 //   1) 默认值全项（WaveInfo / Spawner / SpawnerFruit / FruitInfo / BombInfo）
-//      T-027 新增：waveNo / chance / min / max / minInc / maxInc / delay / delayInc
-//   2) until 后处理（T-027 精修，精确符合 FUN_00053cb8 末尾循环）
-//      - forever / atoi 采纳 / atoi 未采纳 / 非法 → 后处理
-//      - 显式有效值不变（绝不做旧 step3 改写）
-//      - 缺省取最近后续 waveNo - 1
-//      - 无后续 → forever(-2)
-//      - 重复 waveNo 被跳过
-//      - 取所有严格更大波次的最小值（不限于数组后续索引）
-//   3) 权重抽取分布（固定 LCG 种子可复现）
+//      T-029：Spawner 的 bombTriggerRemaining / fruitSpawnRemaining 已删除
+//   2) until 后处理（T-027 精修）
+//   3) 权重抽取组件（SpawnTable 作为独立组件保留）
 //   4) freeze 归零触发一次（+0x208 += 1）
 //   5) 炸弹状态机 0 → 1 → 2
 //
+// 调度行为（批次数量 / random 一次解析 / 选波 / timer）见 WaveSchedulerTests。
+//
 // ⚠️ 依赖假设：GameState 具备无参 init()（blueprint/GameState.swift 未在本卡注入）。
-//    若编译失败需 Kimi 在最终审查时补充测试桩或 GameState 提供测试 init。
 // ============================================================================
 
 final class WaveTests: XCTestCase {
@@ -79,8 +74,6 @@ final class WaveTests: XCTestCase {
         // §4.1 spawner 元素 +0x2c = -1.0
         XCTAssertEqual(s.dontSpawnBeforeWave, -1.0)
         XCTAssertTrue(s.fruits.isEmpty)
-        XCTAssertEqual(s.bombTriggerRemaining, 0)
-        XCTAssertEqual(s.fruitSpawnRemaining, 0)
     }
 
     func test_SpawnerFruit_defaults() {
@@ -155,7 +148,6 @@ final class WaveTests: XCTestCase {
     // MARK: - T-027 新增黄金值（旧实现会失败的关键场景）
 
     /// 显式有效值绝不被后续更小 waveNo 改写。
-    /// 旧实现会把 5 改写为 2-1=1；新实现保持 5（FUN_00053cb8 末尾循环只处理 -1）。
     func test_until_显式有效值不变_即使有更小后续波次() {
         let result = WaveInfo.postProcessUntil(
             rawTokens: ["5", "forever"],
@@ -215,7 +207,7 @@ final class WaveTests: XCTestCase {
         XCTAssertEqual(result, [12, 0, 0])
     }
 
-    // MARK: - 权重抽取分布（固定 RandomSource 种子可复现）
+    // MARK: - 权重抽取组件（SpawnTable 独立组件保留）
 
     func test_SpawnTable_总权重与基本结构() {
         let table = SpawnTable(entries: [
@@ -286,7 +278,7 @@ final class WaveTests: XCTestCase {
     func test_freezes_归零触发一次() {
         let rng = SeededRandomSource(seed: 1)
         let director = WaveDirector(playerCount: 1, rng: rng)
-        director.beginGame(waves: [WaveInfo()])   // 空 spawners，forceSpawn 安全
+        director.beginGame(waves: [WaveInfo()])   // 空 spawners / 无候选
 
         let sink = MockWaveEventSink()
         director.events = sink
@@ -304,7 +296,7 @@ final class WaveTests: XCTestCase {
         director.tick(dt: 0.3, state: &state, world: world)
         XCTAssertEqual(sink.freezeCount, 1)
 
-        // 第 3 次：before=0，guard 跳过，不再触发
+        // 第 3 次：freezeTriggered 已置位，不再触发
         director.tick(dt: 0.3, state: &state, world: world)
         XCTAssertEqual(sink.freezeCount, 1)
 

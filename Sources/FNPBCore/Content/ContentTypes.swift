@@ -16,10 +16,12 @@ import Foundation
 // T-027 变更：
 //   - WaveInfo 新增原始 waveNo / chance 字段（禁用下标兜底；真实文件从 0 起且可重复）
 //   - Spawner 新增原始 min/max/mininc/maxinc/delay/delayinc 字段
-//     （不可继续用 minWait/maxWait 冒充；本卡不改调度器）
-//   - WaveInfo.postProcessUntil 按 FUN_00053cb8 末尾循环精确复刻：
-//       * 只有解析后仍为 -1 的条目才走「最近后续 waveNo - 1」覆盖
-//       * 显式且有效的 until 绝不做旧 step3 改写
+//   - WaveInfo.postProcessUntil 按 FUN_00053cb8 末尾循环精确复刻
+//
+// T-029 变更：
+//   - 删除 Spawner.bombTriggerRemaining / fruitSpawnRemaining（错误映射）：
+//     +0x68 已由 FUN_000537ec 证实为数量增量槽，+0x6c 为 delay。
+//   - Spawner 的 min/max/minInc/maxInc/delay/delayInc 由 WaveDirector 直接消费。
 // ============================================================================
 
 // MARK: - WaveInfo
@@ -269,8 +271,9 @@ extension SpawnKind: Codable {
 // MARK: - Spawner
 
 /// 生成器（macho FUN_00053388 + Spawn 特化 FUN_000537ec；结构大小 0x90 字节）。
-/// T-027：补入 Spawn 原始字段；**不可**用 `minWait/maxWait` 冒充数量与延迟。
-/// 本卡不改调度器，旧运行时字段暂时保留，下一阶段按完整生成循环移除错误映射。
+///
+/// T-029：`bombTriggerRemaining` / `fruitSpawnRemaining` 两个错误映射已删除
+/// （原 `+0x68` 是数量增量槽、`+0x6c` 是 delay，见 FUN_000537ec）。
 public struct Spawner: Codable, Equatable, Sendable {
 
     /// name（原 `+0x14` 堆拷贝）。[macho H] §4.2
@@ -287,11 +290,12 @@ public struct Spawner: Codable, Equatable, Sendable {
     /// 每次生成的数量上限，XML `max` → 原 `+0x64`。
     public var max: Float = 0
 
-    /// XML `mininc` → 原 `+0x68`；应用时机由生成循环任务闭合。
+    /// XML `mininc` → 原 `+0x68`；**加载器会把 XML `maxinc` 覆盖进本槽**，
+    /// 调度器运行时只使用本字段（T-029）。
     public var minInc: Float = 0
 
     /// 保留 XML `maxinc` 原值。完整反编译显示原版也写入 `+0x68`（与 mininc 同槽），
-    /// 并非独立运行时槽；调度器必须复现该行为，不能把本字段当作另一个原版偏移。
+    /// 并非独立运行时槽；调度器不得把本字段当作第二个增量。
     public var maxInc: Float = 0
 
     /// XML `delay` → 原 `+0x6c`，不是“剩余水果数”。
@@ -316,12 +320,6 @@ public struct Spawner: Codable, Equatable, Sendable {
 
     /// Spawn.type 按逗号拆分并 trim 后的保序结果。
     public var types: [SpawnKind] = []
-
-    /// [错误映射 待移除] 原 `+0x68` 已由 FUN_000537ec 证实为数量增量槽。
-    public var bombTriggerRemaining: Int32 = 0
-
-    /// [错误映射 待移除] 原 `+0x6c` 已由 FUN_000537ec 证实为 delay。
-    public var fruitSpawnRemaining: Int32 = 0
 
     public init() {}
 

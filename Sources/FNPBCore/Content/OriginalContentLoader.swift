@@ -300,7 +300,8 @@ public enum OriginalContentLoader {
         -> (wave: WaveInfo, untilToken: String) {
         var wave = WaveInfo()
         wave.waveNo = try int32Value(node, "waveNo", path) ?? documentIndex
-        wave.chance = try int32Value(node, "chance", path)
+        // FUN_00058ee4：WaveInfo 的缺省权重来自 defaults.waveChance。
+        wave.chance = try int32Value(node, "chance", path) ?? defaults.waveChance
         if let value = defaults.waveChanceRegrowth { wave.chanceRegrowth = value }
         if let value = defaults.criticalChance { wave.criticalChance = value }
         if let value = try floatValue(node, "criticalChance", path) { wave.criticalChance = value }

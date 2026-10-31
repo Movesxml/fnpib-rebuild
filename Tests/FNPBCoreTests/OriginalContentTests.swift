@@ -241,6 +241,7 @@ final class OriginalContentTests: XCTestCase {
             wavesData: contentData("originalWaveList.json"))
         let wave0 = content.waves.waves[0]
         XCTAssertEqual(wave0.waveNo, 0)
+        XCTAssertEqual(wave0.chance, 90, "缺省波次权重继承 defaults.waveChance")
         XCTAssertEqual(wave0.dt, 0.7, accuracy: 1e-5)
         XCTAssertEqual(wave0.chanceRegrowth, 0.25, accuracy: 1e-5,
                        "真实 waveChanceGrowth 不是原解析器的 waveChanceRegrowth")

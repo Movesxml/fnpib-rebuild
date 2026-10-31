@@ -31,7 +31,7 @@ final class SpawnMotionTests: XCTestCase {
         let bridge = WaveSpawnBridge(store: store,
                                      rng: DeterministicTestRandom(seed: 0xB0B1),
                                      tuning: FruitMotionTuning())
-        bridge.triggerExplosion(from: Spawner(), wave: WaveInfo())
+        bridge.spawnBomb(from: Spawner(), wave: WaveInfo())
         XCTAssertEqual(store.aliveCount, 1)
         let id = try XCTUnwrap(firstID(in: store))
         XCTAssertEqual(store.entity(id)?.kind, .bomb)
@@ -111,7 +111,7 @@ final class SpawnMotionTests: XCTestCase {
         let bridge = WaveSpawnBridge(store: store,
                                      rng: DeterministicTestRandom(seed: 0x0FF3),
                                      tuning: tuning)
-        bridge.triggerExplosion(from: Spawner(), wave: WaveInfo())
+        bridge.spawnBomb(from: Spawner(), wave: WaveInfo())
         pushOutOfBounds(store, tuning: tuning)
         var world: any EntityStore = store
         var state = runnableState()

@@ -2,8 +2,8 @@ import Foundation
 import simd
 
 // T-025：WaveDirector 的生成出口。此前 spawnSink 为 nil，波次不会创建任何实体。
-// 本文件只负责把波次抽取结果转换为 ECS 实体；生成位置、初速和数量上限均为
-// 重建占位参数 [待验证]，不能视为已闭合的原版行为。
+// T-029：只把 triggerExplosion 改名为 spawnBomb（对齐 FUN_000568f4 实际创建炸弹实体），
+//        生成位置/初速/数量上限仍为重建占位参数 [待验证]，本卡不改几何。
 
 extension Constants {
     /// Classic 三次漏切的重建辅助规则 [待验证 原版失败条件]。
@@ -16,7 +16,7 @@ extension Constants {
     /// 临时生成几何与防爆量护栏 [待验证]。
     public enum SpawnGeometry {
         public static let horizontalSpreadHalfWidth: Float = 4.0
-        /// WaveDirector 的 spawner 计时尚未闭合；真实调度接入后应移除此护栏。
+        /// 临时防护；真实调度已接入（T-029），此上限待实体管理任务卡复核。
         public static let maxLiveFruitCount: Int = 24
     }
 
@@ -53,8 +53,8 @@ public final class WaveSpawnBridge: WaveSpawnSink {
         store.spawn(makePrototype(kind: .fruit, typeID: kind))
     }
 
-    /// 占位：原 FUN_000568f4 的语义疑为触发爆炸而非生成炸弹 [待验证]。
-    public func triggerExplosion(from spawner: Spawner, wave: WaveInfo) {
+    /// 对应原 FUN_000568f4：创建炸弹实体（几何仍为重建占位）。
+    public func spawnBomb(from spawner: Spawner, wave: WaveInfo) {
         _ = spawner
         _ = wave
         guard store.aliveCount < Constants.SpawnGeometry.maxLiveFruitCount else { return }
