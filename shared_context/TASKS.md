@@ -379,9 +379,15 @@ d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通
 
 真实 assets_raw/xml/*.xml 全部是 Halfbrick bxml，不是文本 XML；现有 xml_convert 60/60 失败。Kimi 已实证格式：头 12 字节='bxml'+u16 headerAttrCount+u16 unknown+u32 stringTableByteSize；随后字符串表为 NUL 结尾 UTF-8，可后缀复用（引用偏移可落在另一字符串内部，必须按偏移取到下一 NUL，不要求等于字符串起点）。字节码从 12+size 开始：u32 rootCount；每个元素为 u8 marker=1、u32 nameOffset、u32 attrCount、attrCount 个(u32 nameOffset,u32 valueOffset)、u32 childCount、依序 childCount 个子节点；文本叶节点为独立 u8 marker=4+u32 textOffset（只有 5 字节，后面不再跟元素体）。已验证 settings.xml/originalModeInfo.xml/fruitList.xml/originalWaveList.xml 全字节精确消费；fruitList 根 fruitInfoFile 26 子节点、24 个 FruitInfo；originalWaveList 根 waveManagerFile 39 子节点。交付：1) 新 tools/AssetPipeline/bxml_decode.py，严格 bounds/offset/marker/root 检查、递归深度与节点数防爆、返回 xml.etree.ElementTree 元素或清晰异常；2) 修改 xml_convert.py，parse_xml 先识别 bxml 并走解码，文本叶按 ET 语义合并到父节点 text/tail，encoding 标 bxml；保留原文本 XML 与 selftest；新增合成 bxml 自测（属性、文本、后缀引用、截断/非法 offset/未知 marker）；3) tools/AssetPipeline/BXML_FORMAT.md 记录已实证结构与限制。不要猜其他 marker；遇未知 marker 明确报错。只改这 3 个文件。
 
-### [T-027] doing :: T-027 波次内容模型与 until 原版语义修正
-- 创建: 2026-10-31T23:45:44+08:00　更新: 2026-10-31T23:52:32+08:00
+### [T-027] done :: T-027 波次内容模型与 until 原版语义修正
+- 创建: 2026-10-31T23:45:44+08:00　更新: 2026-11-01T00:11:13+08:00
 - 验收: Swift 6严格并发编译；WaveTests及现有测试全过；until精确符合FUN_00053cb8末尾循环；新增原始Spawn字段不影响既有默认值；无数组下标冒充waveNo
-- 备注: Kimi将原大型任务拆小；真实JSON加载器移到下一任务。
+- 备注: CI success(run 41217623304, remote 2c86ee7e)；until/atoi/重复waveNo及内容模型按完整反编译终审
 
 只做 ContentTypes.swift 与 WaveTests.swift，避免超大任务超时。完整反编译 shared_context/findings/fruit_id_mapping_macho.md 的 FUN_00053cb8/FUN_000537ec 已证明：1) WaveInfo 需保留原始 waveNo 和 chance 字段；2) Spawn 的 min/max/mininc/maxinc/delay/delayinc 是独立原始字段，不能用 Spawner.minWait/maxWait 冒充；为下一阶段添加清晰字段，但本任务不改调度器；3) 修正 WaveInfo.postProcessUntil：仅对解析后仍为 -1 的条目先设为 -2，再从所有 waveNo 严格更大的波次中取最小(waveNo-1)，找到则覆盖；无后续则保持 -2。已显式且有效的 until 绝不做旧实现的 step3 改写。使用原始 waveNo（真实文件从0开始且允许重复），不是数组下标或强制1基。更新 WaveTests 中所有与完整反编译冲突的旧预期，并增加：显式有效值不变、缺省取最近后续waveNo-1、无后续为forever、重复waveNo被跳过。不要改其他文件，不新增占位行为。
+
+### [T-028] doing :: T-028 真实水果与波次 JSON 严格加载器
+- 创建: 2026-11-01T00:02:45+08:00　更新: 2026-11-01T00:05:14+08:00
+- 验收: Swift 6严格并发编译及全部测试通过；真实24水果/38波次完整加载；所有类型序列与关键数值精确；错误数据明确throw；无占位波次、无数组下标伪造官方ID之外的映射（水果零基索引已有原版证据）
+
+实现真实内容加载，输入是T-026转换器JSON，不改原始资产。可改 Sources/FNPBCore/Content/OriginalContentLoader.swift(新)、ContentTypes.swift(仅补必要模型)、Tests/FNPBCoreTests/OriginalContentTests.swift(新)、project.yml(仅App资源加入Content)。权威证据已在shared_context/findings/fruit_id_mapping_macho.md与spawn_parser_macho.md。要求：1) 通用ContentNode Codable匹配tag/attrs/text/tail/children；严格root校验、数字/布尔解析、必需name/type，错误throw且带路径，不静默兜底。2) 水果按FruitInfo文档顺序赋零基typeID（apple0/watermelon3/pear_gold23），解析name/chance/score/scale/collision/hitInfluence/onSide或onside/onlySprinkle/noCritical，派生noScore=(score==0)；读取critical全局配置与bomb size/collision，不能把critical字段填到每个水果。3) Spawn.type按逗号拆分并trim，保留顺序；用明确SpawnKind枚举fruit(Int32)/bomb/random表示，不得用0或EntityKindValue.bomb冒充；普通名称必须存在于水果表，未知throw。4) 映射Spawn min/max/mininc/maxinc/delay/delayinc到T-027字段；原版maxinc最后也写+0x68，因此minInc运行时值要被maxinc覆盖，同时maxInc保留原始值。5) WaveInfo保留原始waveNo/chance；waveNo缺失时按文档序号，until原始tokens交给修正后的postProcessUntil；Wave_dt映射dt/inc/spinc；NextWaveDelay映射delay/inc/wait/waitSpinc/speedLoss/waitForEntities/waitForProcessing。若当前模型缺nextWait/nextWaitSpInc则新增，不得把wait冒充delay或inc。defaults只按原二进制实际键名读取，不要把真实waveChanceGrowth擅自别名成waveChanceRegrowth。6) 测试含内联样本的合法/非法数字/未知水果/类型顺序/maxinc覆盖，并从#filePath定位仓库Content真实JSON，验证24水果38波次、apple0/watermelon3/pear_gold23、wave0 watermelon数量1 dt0.7、重复waveNo和until结果、真实type均成功解析。不要改WaveDirector、GameHost或WaveSpawnBridge，下一阶段接入。不要手写或修改Content下JSON。
