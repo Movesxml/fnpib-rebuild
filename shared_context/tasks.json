@@ -463,10 +463,10 @@
     "title": "原版波次选择、批次数量与生成计时",
     "desc": "依据完整反编译重写WaveDirector的真实调度，禁止每帧无条件抽一次。证据：spawn_parser_macho.md FUN_00054dd8/FUN_00056098，新导出wave_spawn_init_macho.md、wave_spawn_count_types_macho.md、wave_scheduler_helpers_macho.md、wave_info_init_macho.md、fruit_random_weight_macho.md。范围：WaveDirector.swift、ContentTypes.swift(仅必要运行时模型)、WaveTests.swift、可新增WaveSchedulerTests.swift；WaveSpawnBridge.swift仅允许把triggerExplosion改名spawnBomb以符合FUN_000568f4实际创建炸弹实体，不改几何。要求：1) beginGame保留旧重载并新增beginGame(waves:fruits:)接收真实水果池；选中波次后初始化每玩家每spawner批次。2) 数量严格按FUN_00057af0：min+minInc*spInc与max+minInc*spInc向零取整并分别钳到>=0；max>min时rng.nextInt(max-min)+min，否则min。remaining与total均初始化为该数量；timer=max(0,delay+delayInc*spInc)。maxinc已在加载器覆盖minInc，不可再重复加maxInc。3) 每波次的random在FUN_00057b84/FUN_00055670对应初始化阶段解析一次，普通模式按FruitInfo.chance累计权重抽取并保持文档顺序；不要把random留到每次生成，也不要用水果0兜底。显式fruit/bomb保序。4) 生成时从初始化后的类型序列抽取；.bomb调用spawnBomb，.fruit调用spawnFruit。每实体remaining减1，timer += max(0,delay+delayInc*当前waveSpInc)，禁止再用bombTriggerRemaining/fruitSpawnRemaining；删除这两个错误字段及旧SpawnTable路径（若其他编译调用需同步）。5) 波次选择按FUN_00054dd8：激活计数递增；候选waveNo<=count且(count<=until或until==-2)；缺省chance已由加载器继承90；选择前chanceRegrowth>0时currentChance=min(maxChance,currentChance+regrowth)，currentChance初始0；多候选按currentChance*10权重，单候选无需随机；选中后该波currentChance=0。重复waveNo合法，不能当下标。6) 当前波spInc初始0；非首次选择时旧波spInc+=1；选择后按证据设置spawnFreeze与freezeRemaining(nextDelay/nextWait及inc/spInc)，不要再用forceSpawn冒充立即出果，freeze结束调用selectNextWave。7) waitForEntities/waitForProcessing若EntityStore真实接口不能闭合，明确标[待验证]并只保留有证据的等待计时，不编造处理中计数。8) 测试覆盖数量公式/区间端点/负值钳制、random批次只解析一次、类型顺序、timer、候选until/forever/重复编号、权重增长与选中清零、freeze结束选择下一波；真实JSON开局应wave0 watermelon生成1而不是占位fruit。保留现有冻结/炸弹状态测试中确有证据部分，但修正step6每帧spawnFlag=1的错误（原版仅生成时置1）。不要改App开局、渲染、资源或其他系统。",
     "acceptance": "Swift 6严格并发与全部CI测试通过；真实38波次可初始化；数量/类型/计时/选波符合上述函数；无每帧无条件出果、无占位水果0兜底、无错误remaining字段；未闭合等待条件明确待验证",
-    "notes": "",
-    "status": "doing",
+    "notes": "CI success(run 41225866144, remote dfbb1985)；FUN_000547ec直接确认激活计数重置-1；首波wave0 watermelon、候选/until及freeze换波测试通过；waitForEntities/waitForProcessing、override池、多玩家交互仍待验证",
+    "status": "done",
     "created": "2026-11-01T00:36:34+08:00",
-    "updated": "2026-11-01T01:03:31+08:00",
+    "updated": "2026-11-01T01:49:56+08:00",
     "extra_files": [
       "Sources/FNPBCore/Wave/WaveDirector.swift",
       "Sources/FNPBCore/Content/ContentTypes.swift",
