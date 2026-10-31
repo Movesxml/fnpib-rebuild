@@ -12,6 +12,14 @@ import Foundation
 // 取数协议：类结构/命名 ← exe；数值/行为 ← macho 为准（binary_equivalence.md）。
 // 本文件所有默认值均来自 Constants.WaveDefaults / Constants.FruitDefaults，
 // 不写散落的 float 字面量 —— 便于日后数据段常量二次闭合时集中修订。
+//
+// T-027 变更：
+//   - WaveInfo 新增原始 waveNo / chance 字段（禁用下标兜底；真实文件从 0 起且可重复）
+//   - Spawner 新增原始 min/max/mininc/maxinc/delay/delayinc 字段
+//     （不可继续用 minWait/maxWait 冒充；本卡不改调度器）
+//   - WaveInfo.postProcessUntil 按 FUN_00053cb8 末尾循环精确复刻：
+//       * 只有解析后仍为 -1 的条目才走「最近后续 waveNo - 1」覆盖
+//       * 显式且有效的 until 绝不做旧 step3 改写
 // ============================================================================
 
 // MARK: - WaveInfo
@@ -22,9 +30,20 @@ import Foundation
 ///    不可用 exe 交叉验证 —— 见 core_logic_notes §4.5 裁决。
 public struct WaveInfo: Codable, Equatable, Sendable {
 
+    // -- 原始标识（T-027 新增）------------------------------------------------
+    /// 原始波次编号（XML `waveNo`；真实文件从 0 开始且**允许重复**）[macho]。
+    /// - 用作 `until` 后处理的比较基准（见 `postProcessUntil`）
+    /// - 严禁用数组下标或强制 1 基冒充
+    /// - `-1` 表示尚未赋值；原版文件加载器会在缺省时填文档序号
+    public var waveNo: Int32 = -1
+
+    /// 原始波次权重（XML `chance` → 原 `+0x7c`，整数）[macho]。
+    /// nil 表示 XML 未提供；它不是 `chanceRegrowth`（+0xb4）。
+    public var chance: Int32? = nil
+
     // -- until（后处理语义见 `postProcessUntil`）--------------------------------
     /// 该波持续到第几波结束。
-    /// - `-1`：解析占位（XML 空串 / 非法值），解析末尾统一推为 -2
+    /// - `-1`：解析占位（XML 空串 / 非法值 / 数值 0<waveNo 不采纳），解析末尾统一后处理
     /// - `-2`：forever（持续到关卡结束）
     /// - `>= waveNo`：正常有效区间
     /// core_logic_notes §4.4 [macho 独有]
@@ -98,67 +117,106 @@ public struct WaveInfo: Codable, Equatable, Sendable {
 
 public extension WaveInfo {
 
-    /// `until` 语义后处理（core_logic_notes §4.4，**[macho] 独有**，exe 未见）。
+    /// `until` 语义后处理（core_logic_notes §4.4 + T-027 精修；
+    /// **[macho] 独有**，exe 未见；精确符合 `FUN_00053cb8` 末尾循环）。
     ///
     /// 规则（按序执行，顺序不可交换）：
-    ///  1. `"forever"`（大小写不敏感）→ `-2`（`Constants.WaveDefaults.untilForever`）
-    ///  2. `atoi(token)` 得到数值 `v`，仅当 `v >= waveNo[i]` 时采纳；否则保留 `-1`
-    ///  3. 对已采纳的 `until >= 0`：若严格小于某个后续 waveNo，则改写为「该后续 waveNo - 1」
-    ///     用于保证当前波覆盖区间不越过下一个波的起点 [macho M —— 语义含字面含「小于」
-    ///     但结合原句「until 小于后续 waveNo」实现为「保证不提前结束」，见风险 2]
-    ///  4. 末尾残余 `-1`（未解析 / 未采纳）统一推为 `-2`
+    ///  1. 非空且精确等于小写 `"forever"` → `-2`；原版使用 `strcmp`，不忽略大小写。
+    ///  2. 其他非空串按 C `atoi` 读取数字前缀；结果 `>= 0 && >= waveNo[i]` 才采纳。
+    ///  3. 仅对**仍为 -1**（空串 / 未采纳）的条目：
+    ///     a. 先设为 `-2`（forever 兜底）
+    ///     b. 从**所有** `waveNo[j] > waveNo[i]` 中取最小 `waveNo - 1`
+    ///     c. 若无严格更大的 waveNo（当前是最大 / 全部重复），保持 `-2`
+    ///  4. **显式有效的 `until` 绝不做旧 step3 改写**。
+    ///
+    /// 注意：`atoi("garbage") == 0`。因此 waveNo=0 的非空非法串会采纳 0，
+    /// 这与空串缺省不同；不能用 Swift 的严格 `Int32(token)` 替代。
     ///
     /// - Parameters:
-    ///   - rawTokens: XML `until` 原始串数组（顺序即波次顺序）
-    ///   - waveNumbers: 每波从 1 起的编号（不足时按索引 +1 兜底）
+    ///   - rawTokens: XML `until` 原始串数组（空串表示属性缺失）
+    ///   - waveNos:   每波原始 `waveNo`（严格与 rawTokens 等长；可重复）
     /// - Returns: 与 `rawTokens` 等长的后处理结果
-    static func postProcessUntil(rawTokens: [String], waveNumbers: [Int32]) -> [Int32] {
+    static func postProcessUntil(rawTokens: [String], waveNos: [Int32]) -> [Int32] {
         let n = rawTokens.count
         guard n > 0 else { return [] }
+        precondition(waveNos.count == n,
+                     "postProcessUntil: waveNos 必须与 rawTokens 等长（禁止下标兜底）")
 
-        // 步骤 1 / 2：forever + atoi 比较
         var result = [Int32](repeating: Constants.WaveDefaults.untilUnparsed, count: n)
         for i in 0..<n {
-            let token = rawTokens[i].trimmingCharacters(in: .whitespaces)
-            if token.lowercased() == "forever" {
+            let token = rawTokens[i]
+            guard !token.isEmpty else { continue }
+            if token == "forever" {
                 result[i] = Constants.WaveDefaults.untilForever
                 continue
             }
-            guard let parsed = Int32(token) else { continue }
-            let waveNo = i < waveNumbers.count ? waveNumbers[i] : Int32(i + 1)
-            if parsed >= waveNo {
+            let parsed = cAtoi(token)
+            if parsed >= 0 && parsed >= waveNos[i] {
                 result[i] = parsed
             }
         }
 
-        // 步骤 3：until 非负且小于后续 waveNo → 后续 waveNo - 1
-        // 说明：字面读法 → "until 严格小于 nextNo 时取 nextNo - 1"（保底覆盖到下一波之前）
-        for i in 0..<n where result[i] >= 0 {
-            var j = i + 1
-            while j < n {
-                let nextNo = j < waveNumbers.count ? waveNumbers[j] : Int32(j + 1)
-                if result[i] >= nextNo {
-                    j += 1
-                } else {
-                    result[i] = nextNo - 1
-                    break
-                }
-            }
-            // j >= n：无后续波，保留原值
-        }
-
-        // 步骤 4：剩余 -1 → -2
         for i in 0..<n where result[i] == Constants.WaveDefaults.untilUnparsed {
             result[i] = Constants.WaveDefaults.untilForever
+            let currentNo = waveNos[i]
+            var minGreater: Int32?
+            for otherNo in waveNos where otherNo > currentNo {
+                if minGreater == nil || otherNo < minGreater! {
+                    minGreater = otherNo
+                }
+            }
+            if let g = minGreater {
+                result[i] = g - 1
+            }
         }
-
         return result
     }
 
-    /// 就地应用后处理结果（辅助入口：读取 `until` 值时可批处理）。
-    static func applyUntilPostProcess(to waves: inout [WaveInfo], waveNumbers: [Int32]) {
-        let tokens = waves.map { String($0.until) }
-        let processed = postProcessUntil(rawTokens: tokens, waveNumbers: waveNumbers)
+    /// 本任务所需的 C `atoi` 语义：ASCII 空白、可选符号、数字前缀；无数字返回 0。
+    /// 超出 Int32 时做饱和保护；原版 C 溢出属未定义行为，不把它宣称为官方规则。
+    private static func cAtoi(_ token: String) -> Int32 {
+        let bytes = Array(token.utf8)
+        var index = 0
+        while index < bytes.count {
+            switch bytes[index] {
+            case 9, 10, 11, 12, 13, 32: index += 1
+            default: break
+            }
+            if index >= bytes.count || !(9...13).contains(bytes[index]) && bytes[index] != 32 {
+                break
+            }
+        }
+
+        var negative = false
+        if index < bytes.count, bytes[index] == 45 || bytes[index] == 43 {
+            negative = bytes[index] == 45
+            index += 1
+        }
+
+        let limit = negative ? Int64(Int32.max) + 1 : Int64(Int32.max)
+        var value: Int64 = 0
+        while index < bytes.count, bytes[index] >= 48 && bytes[index] <= 57 {
+            let digit = Int64(bytes[index] - 48)
+            value = value > (limit - digit) / 10 ? limit : value * 10 + digit
+            index += 1
+        }
+        if negative {
+            return value >= Int64(Int32.max) + 1 ? .min : Int32(-value)
+        }
+        return Int32(value)
+    }
+
+    /// 就地应用后处理结果（辅助入口）。
+    ///
+    /// - Parameters:
+    ///   - waves:     待后处理的 WaveInfo 数组（要求每项 `waveNo >= 0` 已由解析层填好）
+    ///   - rawTokens: XML `until` 原始串数组（与 `waves` 顺序一致）
+    ///
+    /// ⚠️ 本 API 不再用 `String($0.until)` 反推 token —— Int32 → String 会丢失原始字面量
+    ///    （如 `forever` / 前导空串），必须由调用方持有原始串。
+    static func applyUntilPostProcess(to waves: inout [WaveInfo], rawTokens: [String]) {
+        let waveNos = waves.map { $0.waveNo }
+        let processed = postProcessUntil(rawTokens: rawTokens, waveNos: waveNos)
         for i in 0..<min(waves.count, processed.count) {
             waves[i].until = processed[i]
         }
@@ -167,11 +225,9 @@ public extension WaveInfo {
 
 // MARK: - Spawner
 
-/// 生成器（macho FUN_00053388；结构大小 0x90 字节）。
-///
-/// ⚠️ 部分偏移→字段映射未导出（`Constants.Pending` 第 6 条）：
-///    `+0x50/+0x54=1.0、+0x58=-1.0、+0x5c=1.0` 值已直读，但字段名未定，
-///    本结构暂不收录（不臆造），待 T-01x 解码 exe 字符串表 `UNK_01709c68` 后补。
+/// 生成器（macho FUN_00053388 + Spawn 特化 FUN_000537ec；结构大小 0x90 字节）。
+/// T-027：补入 Spawn 原始字段；**不可**用 `minWait/maxWait` 冒充数量与延迟。
+/// 本卡不改调度器，旧运行时字段暂时保留，下一阶段按完整生成循环移除错误映射。
 public struct Spawner: Codable, Equatable, Sendable {
 
     /// name（原 `+0x14` 堆拷贝）。[macho H] §4.2
@@ -181,6 +237,27 @@ public struct Spawner: Codable, Equatable, Sendable {
     /// [待验证] §4.1 又记为默认 1.0；本结构按 §4.2 字段表处理，默认 0 由 XML 侧填充。
     public var mode: Int32 = 0
 
+    // -- Spawn 数量与延迟（FUN_000537ec）---------------------------------------
+    /// 每次生成的数量下限，XML `min` → 原 `+0x5c`（浮点存储，不是等待秒数）。
+    public var min: Float = 0
+
+    /// 每次生成的数量上限，XML `max` → 原 `+0x64`（浮点存储）。
+    public var max: Float = 0
+
+    /// XML `mininc` → 原 `+0x68`；应用时机由生成循环任务闭合。
+    public var minInc: Float = 0
+
+    /// 保留 XML `maxinc` 原值。完整反编译显示原版也写入 `+0x68`（与 mininc 同槽），
+    /// 并非独立运行时槽；调度器必须复现该行为，不能把本字段当作另一个原版偏移。
+    public var maxInc: Float = 0
+
+    /// XML `delay` → 原 `+0x6c`，不是“剩余水果数”。
+    public var delay: Float = 0
+
+    /// XML `delayinc` → 原 `+0x70`。
+    public var delayInc: Float = 0
+
+    // -- 旧字段（仅为本阶段编译兼容，不表示以下旧命名已获原版证实）---------------
     /// minWait / maxWait（原 `+0x20/+0x24`）。[macho H] §4.2
     public var minWait: Float = 0
     public var maxWait: Float = 0
@@ -194,11 +271,10 @@ public struct Spawner: Codable, Equatable, Sendable {
     /// fruit 候选列表（原 `+0x8`）[macho H] §4.2
     public var fruits: [SpawnerFruit] = []
 
-    /// 炸弹触发剩余次数（原 `+0x68`）。[待验证] §5.3「+0x68 > 0 → FUN_000568f4 触发爆炸」
-    /// ⚠️ 语义由分支结构反推，未见字段名；命名沿用候选语义。
+    /// [错误映射 待移除] 原 `+0x68` 已由 FUN_000537ec 证实为数量增量槽。
     public var bombTriggerRemaining: Int32 = 0
 
-    /// 普通水果触发剩余次数（原 `+0x6c`）。[待验证] §5.3「+0x6c > 0 → FUN_00057000 建水果」
+    /// [错误映射 待移除] 原 `+0x6c` 已由 FUN_000537ec 证实为 delay。
     public var fruitSpawnRemaining: Int32 = 0
 
     public init() {}

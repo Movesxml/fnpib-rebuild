@@ -429,5 +429,19 @@
     "extra_files": [
       "tools/AssetPipeline/xml_convert.py"
     ]
+  },
+  {
+    "id": "T-027",
+    "title": "T-027 波次内容模型与 until 原版语义修正",
+    "desc": "只做 ContentTypes.swift 与 WaveTests.swift，避免超大任务超时。完整反编译 shared_context/findings/fruit_id_mapping_macho.md 的 FUN_00053cb8/FUN_000537ec 已证明：1) WaveInfo 需保留原始 waveNo 和 chance 字段；2) Spawn 的 min/max/mininc/maxinc/delay/delayinc 是独立原始字段，不能用 Spawner.minWait/maxWait 冒充；为下一阶段添加清晰字段，但本任务不改调度器；3) 修正 WaveInfo.postProcessUntil：仅对解析后仍为 -1 的条目先设为 -2，再从所有 waveNo 严格更大的波次中取最小(waveNo-1)，找到则覆盖；无后续则保持 -2。已显式且有效的 until 绝不做旧实现的 step3 改写。使用原始 waveNo（真实文件从0开始且允许重复），不是数组下标或强制1基。更新 WaveTests 中所有与完整反编译冲突的旧预期，并增加：显式有效值不变、缺省取最近后续waveNo-1、无后续为forever、重复waveNo被跳过。不要改其他文件，不新增占位行为。",
+    "acceptance": "Swift 6严格并发编译；WaveTests及现有测试全过；until精确符合FUN_00053cb8末尾循环；新增原始Spawn字段不影响既有默认值；无数组下标冒充waveNo",
+    "notes": "Kimi将原大型任务拆小；真实JSON加载器移到下一任务。",
+    "status": "doing",
+    "created": "2026-10-31T23:45:44+08:00",
+    "updated": "2026-10-31T23:52:32+08:00",
+    "extra_files": [
+      "Sources/FNPBCore/Content/ContentTypes.swift",
+      "Tests/FNPBCoreTests/WaveTests.swift"
+    ]
   }
 ]

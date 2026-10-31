@@ -2,11 +2,18 @@ import XCTest
 @testable import FNPBCore
 
 // ============================================================================
-// WaveTests — T-014 黄金值测试
+// WaveTests — T-014 黄金值测试（T-027 大幅修订）
 //
 // 覆盖：
 //   1) 默认值全项（WaveInfo / Spawner / SpawnerFruit / FruitInfo / BombInfo）
-//   2) until 三种输入后处理（forever / atoi 采纳 / atoi 未采纳 / 非法 → -2）
+//      T-027 新增：waveNo / chance / min / max / minInc / maxInc / delay / delayInc
+//   2) until 后处理（T-027 精修，精确符合 FUN_00053cb8 末尾循环）
+//      - forever / atoi 采纳 / atoi 未采纳 / 非法 → 后处理
+//      - 显式有效值不变（绝不做旧 step3 改写）
+//      - 缺省取最近后续 waveNo - 1
+//      - 无后续 → forever(-2)
+//      - 重复 waveNo 被跳过
+//      - 取所有严格更大波次的最小值（不限于数组后续索引）
 //   3) 权重抽取分布（固定 LCG 种子可复现）
 //   4) freeze 归零触发一次（+0x208 += 1）
 //   5) 炸弹状态机 0 → 1 → 2
@@ -21,6 +28,10 @@ final class WaveTests: XCTestCase {
 
     func test_WaveInfo_defaults() {
         let w = WaveInfo()
+
+        // T-027 原始标识（未赋值占位）
+        XCTAssertEqual(w.waveNo, -1)
+        XCTAssertNil(w.chance)
 
         // until 缺省 -1（未解析处，后处理推 -2）
         XCTAssertEqual(w.until, Constants.WaveDefaults.untilUnparsed)
@@ -51,8 +62,19 @@ final class WaveTests: XCTestCase {
         let s = Spawner()
         XCTAssertEqual(s.name, "")
         XCTAssertEqual(s.mode, 0)
+
+        // T-027 新增原始字段默认值全 0（不影响既有默认值）
+        XCTAssertEqual(s.min, 0.0)
+        XCTAssertEqual(s.max, 0.0)
+        XCTAssertEqual(s.minInc, 0.0)
+        XCTAssertEqual(s.maxInc, 0.0)
+        XCTAssertEqual(s.delay, 0.0)
+        XCTAssertEqual(s.delayInc, 0.0)
+
+        // 旧字段保留
         XCTAssertEqual(s.minWait, 0.0)
         XCTAssertEqual(s.maxWait, 0.0)
+
         XCTAssertTrue(s.canSpawnWithPowers)
         // §4.1 spawner 元素 +0x2c = -1.0
         XCTAssertEqual(s.dontSpawnBeforeWave, -1.0)
@@ -95,47 +117,102 @@ final class WaveTests: XCTestCase {
         XCTAssertEqual(b.collision, Constants.FruitDefaults.collision) // 1.0
     }
 
-    // MARK: - until 三种输入后处理
+    // MARK: - until 后处理（FUN_00053cb8 末尾循环精确复刻）
 
     func test_until_forever_直接转负二() {
-        let result = WaveInfo.postProcessUntil(rawTokens: ["forever"], waveNumbers: [1])
+        let result = WaveInfo.postProcessUntil(rawTokens: ["forever"], waveNos: [0])
         XCTAssertEqual(result, [-2])
     }
 
-    func test_until_atoi小于waveNo不采纳_推为负二() {
-        // "1" < waveNo=2 → 不采纳（保留 -1）→ 末尾推 -2
-        let result = WaveInfo.postProcessUntil(rawTokens: ["1"], waveNumbers: [2])
+    func test_until_atoi小于waveNo不采纳_无后续推为负二() {
+        // "1" < waveNo=2 → 未解析 → -2 → 无严格更大 → 保持 -2
+        let result = WaveInfo.postProcessUntil(rawTokens: ["1"], waveNos: [2])
         XCTAssertEqual(result, [-2])
     }
 
     func test_until_atoi大于等于waveNo采纳() {
-        let result = WaveInfo.postProcessUntil(rawTokens: ["5"], waveNumbers: [2])
+        let result = WaveInfo.postProcessUntil(rawTokens: ["5"], waveNos: [2])
         XCTAssertEqual(result, [5])
     }
 
-    func test_until_非法输入推为负二() {
-        let result = WaveInfo.postProcessUntil(rawTokens: ["garbage"], waveNumbers: [1])
+    func test_until_非法输入无后续推为负二() {
+        let result = WaveInfo.postProcessUntil(rawTokens: ["garbage"], waveNos: [5])
         XCTAssertEqual(result, [-2])
     }
 
     func test_until_多波次正常() {
+        // waveNos 真实 0 基 [0, 1, 2]
         let result = WaveInfo.postProcessUntil(
             rawTokens: ["1", "2", "forever"],
-            waveNumbers: [1, 2, 3]
+            waveNos: [0, 1, 2]
         )
-        // i=0: "1">=1 → 1；步骤3：「1 < 2」→ 取 2-1 = 1（形同原值）
-        // i=1: "2">=2 → 2；步骤3：「2 < 3」→ 取 3-1 = 2
+        // i=0: "1">=0 → 显式 1（不改写）
+        // i=1: "2">=1 → 显式 2（不改写）
         // i=2: forever → -2
         XCTAssertEqual(result, [1, 2, -2])
     }
 
-    func test_until_步骤三跨波覆盖() {
-        // until=0 且 waveNo=1 → 原 atoi 步不采纳(0<1)；转 -2 后不参与步骤3
+    // MARK: - T-027 新增黄金值（旧实现会失败的关键场景）
+
+    /// 显式有效值绝不被后续更小 waveNo 改写。
+    /// 旧实现会把 5 改写为 2-1=1；新实现保持 5（FUN_00053cb8 末尾循环只处理 -1）。
+    func test_until_显式有效值不变_即使有更小后续波次() {
         let result = WaveInfo.postProcessUntil(
-            rawTokens: ["0", "0", "forever"],
-            waveNumbers: [1, 2, 3]
+            rawTokens: ["5", "forever"],
+            waveNos: [0, 2]
         )
-        XCTAssertEqual(result, [-2, -2, -2])
+        XCTAssertEqual(result, [5, -2])
+    }
+
+    /// 空串表示 XML 缺省，取「所有严格更大 waveNo」的最小值 - 1。
+    func test_until_缺省取最近后续waveNo减一() {
+        let result = WaveInfo.postProcessUntil(
+            rawTokens: ["", "forever"],
+            waveNos: [0, 3]
+        )
+        XCTAssertEqual(result, [2, -2])
+    }
+
+    /// 无严格更大波次 → forever(-2)。
+    func test_until_无后续保持forever() {
+        let result = WaveInfo.postProcessUntil(rawTokens: ["garbage"], waveNos: [5])
+        XCTAssertEqual(result, [-2])
+    }
+
+    /// 重复 waveNo 不构成「严格更大」，应被跳过。
+    func test_until_重复waveNo被跳过() {
+        let result = WaveInfo.postProcessUntil(
+            rawTokens: ["", ""],
+            waveNos: [2, 2]
+        )
+        XCTAssertEqual(result, [-2, -2])
+    }
+
+    /// 重复 waveNo 且存在后续更大：重复项彼此跳过，但主项取真实更大值。
+    func test_until_重复waveNo被跳过_但有后续更大() {
+        let result = WaveInfo.postProcessUntil(
+            rawTokens: ["", "", ""],
+            waveNos: [0, 2, 2]
+        )
+        XCTAssertEqual(result, [1, -2, -2])
+    }
+
+    /// 「所有严格更大波次」不限于数组后续索引 —— 前面的 waveNo 也要算入。
+    func test_until_取所有严格更大波次的最小值() {
+        let result = WaveInfo.postProcessUntil(
+            rawTokens: ["", "", "forever"],
+            waveNos: [2, 0, 3]
+        )
+        XCTAssertEqual(result, [2, 1, -2])
+    }
+
+    /// 原版 atoi 接受数字前缀，且 strcmp 只识别精确小写 forever。
+    func test_until_atoi数字前缀与大小写敏感() {
+        let result = WaveInfo.postProcessUntil(
+            rawTokens: [" 12xyz", "Forever", "garbage"],
+            waveNos: [0, 0, 0]
+        )
+        XCTAssertEqual(result, [12, 0, 0])
     }
 
     // MARK: - 权重抽取分布（固定 RandomSource 种子可复现）
