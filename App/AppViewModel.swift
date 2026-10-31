@@ -128,13 +128,15 @@ final class AppViewModel: FNPBUIViewModel {
 
     // MARK: - 流程（供 send 与 GameHost 调用）
 
-    /// 开局。重置由 GameHost 负责（GameState/EntityStore/Score/Combo/Wave/DisplayLink）。
+    /// 只有真实内容开局成功才进入 playing；失败保留当前界面与诊断。
     func startGame(mode selected: GameMode) {
-        guard let host else { return }
+        guard let host, host.startGame(mode: selected) else {
+            refreshSnapshot()
+            return
+        }
         self.mode = selected
         self.maxComboSeen = 0
         self.result = nil
-        host.startGame(mode: selected)
         phase = .playing
         refreshSnapshot()
     }
@@ -155,12 +157,14 @@ final class AppViewModel: FNPBUIViewModel {
         refreshSnapshot()
     }
 
-    /// 重开：全套状态重置（等价于以当前模式重新开局）。
+    /// 重开成功后才清理结算并进入 playing；失败保留当前会话。
     func restartGame() {
-        guard let host else { return }
+        guard let host, host.restart() else {
+            refreshSnapshot()
+            return
+        }
         maxComboSeen = 0
         result = nil
-        host.restart()
         phase = .playing
         refreshSnapshot()
     }

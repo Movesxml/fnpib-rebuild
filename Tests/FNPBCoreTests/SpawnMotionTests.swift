@@ -2,22 +2,22 @@ import XCTest
 import simd
 @testable import FNPBCore
 
-/// T-025：生成 → 抛物线运动 → 出界回收；漏切计数与原 +0x3c 分离。
+/// 生成桥必须使用真实 Content；运动与出界参数仍按 T-025 标注为 [待验证]。
 final class SpawnMotionTests: XCTestCase {
+    private static let appleTypeID: Int32 = 0
+    private static let watermelonTypeID: Int32 = 3
+
     func testSpawnFruitCreatesEntityWithLaunchSpeedInRange() throws {
         let store = GenerationOrderStore()
         let tuning = FruitMotionTuning()
-        let bridge = WaveSpawnBridge(store: store,
-                                     rng: DeterministicTestRandom(seed: 0x5EED_1234),
-                                     tuning: tuning)
-        bridge.spawnFruit(kind: Constants.EntityKindValue.fruit,
-                          from: Spawner(), wave: WaveInfo())
+        let bridge = try makeBridge(store: store, seed: 0x5EED_1234, tuning: tuning)
+        bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
 
         XCTAssertEqual(store.aliveCount, 1)
         let id = try XCTUnwrap(firstID(in: store))
         let entity = try XCTUnwrap(store.entity(id))
         XCTAssertEqual(entity.kind, .fruit)
-        XCTAssertEqual(entity.fruit?.typeID, Constants.EntityKindValue.fruit)
+        XCTAssertEqual(entity.fruit?.typeID, Self.appleTypeID)
         XCTAssertEqual(entity.transform.position.y, tuning.offscreenBottomMargin, accuracy: 1e-5)
         XCTAssertEqual(entity.transform.velocity.z, 0, accuracy: 1e-6)
         let speed = simd_length(SIMD2<Float>(entity.transform.velocity.x,
@@ -26,25 +26,80 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertLessThanOrEqual(speed, tuning.maxLaunchSpeed + 1e-4)
     }
 
-    func testTriggerExplosionSpawnsBombPlaceholder() throws {
+    func testSpawnFruitUsesRealAppleMetadata() throws {
         let store = GenerationOrderStore()
-        let bridge = WaveSpawnBridge(store: store,
-                                     rng: DeterministicTestRandom(seed: 0xB0B1),
-                                     tuning: FruitMotionTuning())
+        let bridge = try makeBridge(store: store, seed: 0xA991E)
+        bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
+
+        let id = try XCTUnwrap(firstID(in: store))
+        let entity = try XCTUnwrap(store.entity(id))
+        let fruit = try XCTUnwrap(entity.fruit)
+        XCTAssertEqual(fruit.name, "apple")
+        XCTAssertEqual(fruit.typeID, 0)
+        XCTAssertEqual(fruit.score, 0)
+        XCTAssertTrue(fruit.noScore)
+        XCTAssertEqual(fruit.chance, 100)
+        XCTAssertEqual(fruit.scale, 60, accuracy: 1e-6)
+        XCTAssertEqual(fruit.collision, 5, accuracy: 1e-6)
+        XCTAssertEqual(fruit.hitInfluence, 0.75, accuracy: 1e-6)
+        XCTAssertTrue(fruit.onlySprinkle)
+        XCTAssertEqual(entity.transform.scale, 60, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.radius, 5, accuracy: 1e-6)
+    }
+
+    func testSpawnFruitMatchesExactTypeID() throws {
+        let store = GenerationOrderStore()
+        let bridge = try makeBridge(store: store, seed: 0xA77E)
+        bridge.spawnFruit(kind: Self.watermelonTypeID, from: Spawner(), wave: WaveInfo())
+
+        let id = try XCTUnwrap(firstID(in: store))
+        let entity = try XCTUnwrap(store.entity(id))
+        XCTAssertEqual(entity.fruit?.name, "watermelon")
+        XCTAssertEqual(entity.fruit?.typeID, 3)
+        XCTAssertEqual(entity.fruit?.score, 0)
+        XCTAssertEqual(entity.transform.scale, 75, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.radius, 5, accuracy: 1e-6)
+    }
+
+    func testSpawnUnknownTypeIDDoesNotCreateEntity() throws {
+        let store = GenerationOrderStore()
+        let bridge = try makeBridge(store: store, seed: 0xBAD)
+        bridge.spawnFruit(kind: 99, from: Spawner(), wave: WaveInfo())
+        bridge.spawnFruit(kind: -1, from: Spawner(), wave: WaveInfo())
+        bridge.spawnFruit(kind: Constants.EntityKindValue.bomb, from: Spawner(), wave: WaveInfo())
+        XCTAssertEqual(store.aliveCount, 0)
+    }
+
+    func testSpawnBombUsesLoadedBombInfo() throws {
+        let store = GenerationOrderStore()
+        let bridge = try makeBridge(store: store, seed: 0xB0B1)
         bridge.spawnBomb(from: Spawner(), wave: WaveInfo())
+
         XCTAssertEqual(store.aliveCount, 1)
         let id = try XCTUnwrap(firstID(in: store))
-        XCTAssertEqual(store.entity(id)?.kind, .bomb)
+        let entity = try XCTUnwrap(store.entity(id))
+        XCTAssertEqual(entity.kind, .bomb)
+        XCTAssertEqual(entity.transform.scale, 55, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.radius, 35, accuracy: 1e-6)
+        let bomb = try XCTUnwrap(entity.fruit?.bomb)
+        XCTAssertEqual(bomb.size, 55, accuracy: 1e-6)
+        XCTAssertEqual(bomb.collision, 35, accuracy: 1e-6)
+    }
+
+    func testSpawnBeyondTwentyFourIsNotTruncated() throws {
+        let store = GenerationOrderStore()
+        let bridge = try makeBridge(store: store, seed: 0x24_24)
+        for _ in 0..<30 {
+            bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
+        }
+        XCTAssertEqual(store.aliveCount, 30)
     }
 
     func testIntegrateFollowsParabolicMotion() throws {
         let store = GenerationOrderStore()
         let tuning = FruitMotionTuning()
-        let bridge = WaveSpawnBridge(store: store,
-                                     rng: DeterministicTestRandom(seed: 0x5EED_5678),
-                                     tuning: tuning)
-        bridge.spawnFruit(kind: Constants.EntityKindValue.fruit,
-                          from: Spawner(), wave: WaveInfo())
+        let bridge = try makeBridge(store: store, seed: 0x5EED_5678, tuning: tuning)
+        bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
         let id = try XCTUnwrap(firstID(in: store))
         var entity = try XCTUnwrap(store.entity(id))
         let p0 = entity.transform.position
@@ -64,11 +119,8 @@ final class SpawnMotionTests: XCTestCase {
     func testOutOfBoundsFruitIsDespawnedByTick() throws {
         let store = GenerationOrderStore()
         let tuning = FruitMotionTuning()
-        let bridge = WaveSpawnBridge(store: store,
-                                     rng: DeterministicTestRandom(seed: 0x0FF1),
-                                     tuning: tuning)
-        bridge.spawnFruit(kind: Constants.EntityKindValue.fruit,
-                          from: Spawner(), wave: WaveInfo())
+        let bridge = try makeBridge(store: store, seed: 0x0FF1, tuning: tuning)
+        bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
         let id = try XCTUnwrap(firstID(in: store))
         pushOutOfBounds(store, tuning: tuning)
 
@@ -82,20 +134,17 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(store.aliveCount, 0)
     }
 
-    func testMissedFruitUsesIndependentCountAndPreservesOriginalOffsetCounter() {
+    func testMissedFruitUsesIndependentCountAndPreservesOriginalOffsetCounter() throws {
         let store = GenerationOrderStore()
         let tuning = FruitMotionTuning()
-        let bridge = WaveSpawnBridge(store: store,
-                                     rng: DeterministicTestRandom(seed: 0x0FF2),
-                                     tuning: tuning)
+        let bridge = try makeBridge(store: store, seed: 0x0FF2, tuning: tuning)
         for _ in 0..<3 {
-            bridge.spawnFruit(kind: Constants.EntityKindValue.fruit,
-                              from: Spawner(), wave: WaveInfo())
+            bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
         }
         pushOutOfBounds(store, tuning: tuning)
         var world: any EntityStore = store
         var state = runnableState()
-        state.missPenaltyCount = 2 // 模拟原切中分支已有写入，不能被漏切逻辑复用。
+        state.missPenaltyCount = 2
         GameWorld(motionTuning: tuning).tick(dt: 1.0 / 60.0,
                                              state: &state,
                                              world: &world,
@@ -105,12 +154,10 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(store.aliveCount, 0)
     }
 
-    func testBombOutOfBoundsDoesNotIncrementMissCount() {
+    func testBombOutOfBoundsDoesNotIncrementMissCount() throws {
         let store = GenerationOrderStore()
         let tuning = FruitMotionTuning()
-        let bridge = WaveSpawnBridge(store: store,
-                                     rng: DeterministicTestRandom(seed: 0x0FF3),
-                                     tuning: tuning)
+        let bridge = try makeBridge(store: store, seed: 0x0FF3, tuning: tuning)
         bridge.spawnBomb(from: Spawner(), wave: WaveInfo())
         pushOutOfBounds(store, tuning: tuning)
         var world: any EntityStore = store
@@ -122,6 +169,27 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(state.missedFruitCount, 0)
         XCTAssertEqual(state.missPenaltyCount, 0)
         XCTAssertEqual(store.aliveCount, 0)
+    }
+
+    private func makeBridge(store: GenerationOrderStore,
+                            seed: UInt64,
+                            tuning: FruitMotionTuning = FruitMotionTuning()) throws -> WaveSpawnBridge {
+        let content = try loadRealContent()
+        return WaveSpawnBridge(store: store,
+                               rng: DeterministicTestRandom(seed: seed),
+                               fruits: content.fruits.fruits,
+                               bomb: content.fruits.bomb,
+                               tuning: tuning)
+    }
+
+    private func loadRealContent() throws -> OriginalContent {
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+        return try OriginalContentLoader.load(
+            fruitsData: Data(contentsOf: root.appendingPathComponent("Content/fruitList.json")),
+            wavesData: Data(contentsOf: root.appendingPathComponent("Content/originalWaveList.json")))
     }
 
     private func firstID(in store: GenerationOrderStore) -> EntityID? {

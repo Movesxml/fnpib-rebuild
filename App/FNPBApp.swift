@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import OSLog
 
 import FNPBCore
 import FNPBPlatform
@@ -158,8 +159,8 @@ final class GameHost: ObservableObject {
     // MARK: 核心
     private let gameWorld: GameWorld
     private let motionTuning: FruitMotionTuning
-    /// spawnSink 是 weak，GameHost 必须强持有生成桥。
-    private let waveSpawnBridge: WaveSpawnBridge
+    /// spawnSink 是 weak，GameHost 必须强持有生成桥；内容不可用时保持 nil。
+    private var waveSpawnBridge: WaveSpawnBridge?
     private let fixedStep = FixedStepDriver(step: 1.0 / 60.0, maxSubsteps: 4)
 
     // MARK: 真实服务（T-022：替换 T-011 的 5 个占位）
@@ -172,6 +173,12 @@ final class GameHost: ObservableObject {
 
     /// 唯一保留的占位：特效模块（原 FUN_00033ca0 / FUN_00035a08）待特效任务卡。
     private let effects: PlaceholderEffectEmitter
+
+    // MARK: 真实内容（T-030）
+    private(set) var originalContent: OriginalContent?
+    private(set) var contentLoadError: String?
+    private static let contentLogger = Logger(subsystem: "com.example.fnpib",
+                                              category: "original-content")
 
     // MARK: 运行时状态
     private var state: GameState
@@ -262,12 +269,35 @@ final class GameHost: ObservableObject {
         self.store = entityStore
         self.saveData = saveStore.load()
 
+        let contentResult = OriginalContentBundle.load()
+        let resolvedContent: OriginalContent?
+        let resolvedError: String?
+        switch contentResult {
+        case .success(let loaded):
+            resolvedContent = loaded
+            resolvedError = nil
+        case .failure(let failure):
+            resolvedContent = nil
+            resolvedError = failure.errorDescription ?? String(describing: failure)
+        }
+        self.originalContent = resolvedContent
+        self.contentLoadError = resolvedError
+
         let tuning = FruitMotionTuning()
         self.motionTuning = tuning
         self.gameWorld = GameWorld(motionTuning: tuning)
-        let spawnBridge = WaveSpawnBridge(store: entityStore, rng: rng, tuning: tuning)
+
+        var spawnBridge: WaveSpawnBridge?
+        if let resolvedContent {
+            let bridge = WaveSpawnBridge(store: entityStore,
+                                         rng: rng,
+                                         fruits: resolvedContent.fruits.fruits,
+                                         bomb: resolvedContent.fruits.bomb,
+                                         tuning: tuning)
+            spawnBridge = bridge
+            waves.spawnSink = bridge
+        }
         self.waveSpawnBridge = spawnBridge
-        waves.spawnSink = spawnBridge
 
         // [Kimi 修正 T-022 审查] GameServices 字段表以 GameWorld.swift 为准：末尾还有 rng。
         self.services = GameServices(
@@ -296,6 +326,9 @@ final class GameHost: ObservableObject {
 
         // T-024：回填渲染数据源（放最后：此时 self 的全部存储属性已初始化）。
         renderer?.host = self
+        if let resolvedError {
+            Self.contentLogger.error("原始内容加载失败：\(resolvedError, privacy: .public)")
+        }
     }
 
     // MARK: 只读投影（供 AppViewModel 组装快照）
@@ -379,10 +412,17 @@ final class GameHost: ObservableObject {
         }
     }
 
-    // MARK: 流程方法（T-022）
+    // MARK: 流程方法（T-022 / T-030）
 
-    /// 开局：重置全套状态并启动 DisplayLink。
-    func startGame(mode: GameMode) {
+    /// 只有真实内容可用才重置并开局；失败保留当前状态并返回 false。
+    @discardableResult
+    func startGame(mode: GameMode) -> Bool {
+        guard let content = ensureContent() else {
+            Self.contentLogger.error(
+                "开局被拒绝：原始内容不可用 — \(self.contentLoadError ?? "unknown", privacy: .public)")
+            return false
+        }
+
         currentMode = mode
         state = GameState()
 
@@ -391,34 +431,24 @@ final class GameHost: ObservableObject {
         // 暂取 15² = 225；归一化语义闭合后应改为按 logicalSize 换算。
         state.sliceRadiusSquared = 225.0
 
-        // [Kimi 裁决 T-023 风险点 2] levelTier 默认 0 < 4 → step4 门控永不通过、
-        // 实体遍历被永久跳过。原版开局必把 +0xb4 写成 ≥4（写入点未从反编译定位）。
-        // v1 在开局显式置为阈值，闭合后由关卡加载逻辑接管。
-        state.levelTier = Constants.Simulation.lowLevelEffectCutoff   // [待验证 写入点]
+        // [待验证] 原版 levelTier 开局写入点尚未闭合。
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
 
         store.clear()
         scoreSystem.reset()
         comboTracker.reset(state: &state)
         statsRecorder.reset()
-
-        // [待验证] 内容加载前的最小占位波次；不是原版 XML 数据。
-        var spawner = Spawner()
-        spawner.name = "placeholder"
-        spawner.minWait = Constants.PlaceholderWave.minWait
-        spawner.maxWait = Constants.PlaceholderWave.maxWait
-        spawner.fruits = [SpawnerFruit(kind: Constants.PlaceholderWave.fruitKind,
-                                       chance: Constants.PlaceholderWave.chance)]
-        let wave = WaveInfo(until: Constants.WaveDefaults.untilForever,
-                            spawners: [spawner])
-        waveDirector.beginGame(waves: [wave])
+        waveDirector.beginGame(waves: content.waves.waves, fruits: content.fruits.fruits)
 
         saveData = saveStore.load()
         shouldRunDisplayLink = true
         displayLink.start()
+        return true
     }
 
-    /// 重开：以当前模式重新开局。
-    func restart() {
+    /// 重开：以当前模式重新开局，复用已验证内容。
+    @discardableResult
+    func restart() -> Bool {
         startGame(mode: currentMode)
     }
 
@@ -449,6 +479,35 @@ final class GameHost: ObservableObject {
         shouldRunDisplayLink = false
         displayLink.stop()
         persist()
+    }
+
+    // MARK: 内容（T-030）
+
+    private func ensureContent() -> OriginalContent? {
+        if let originalContent { return originalContent }
+
+        switch OriginalContentBundle.load() {
+        case .success(let content):
+            originalContent = content
+            contentLoadError = nil
+            installSpawnBridge(with: content)
+            return content
+        case .failure(let failure):
+            let message = failure.errorDescription ?? String(describing: failure)
+            contentLoadError = message
+            Self.contentLogger.error("原始内容重载失败：\(message, privacy: .public)")
+            return nil
+        }
+    }
+
+    private func installSpawnBridge(with content: OriginalContent) {
+        let bridge = WaveSpawnBridge(store: store,
+                                     rng: rng,
+                                     fruits: content.fruits.fruits,
+                                     bomb: content.fruits.bomb,
+                                     tuning: motionTuning)
+        waveSpawnBridge = bridge
+        waveDirector.spawnSink = bridge
     }
 
     // MARK: 触摸（macho §1.2 语义）
