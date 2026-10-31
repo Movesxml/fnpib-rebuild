@@ -399,10 +399,10 @@
     "title": "T-025 实体生成与运动闭环：WaveSpawnSink 实现 + 抛物线积分 + 漏切",
     "desc": "打通「波次生成→水果抛起→可切→出界回收/漏切」的实体生命周期。T-024 之后画面链路已通，但水果永不生成、永不运动，本卡补齐。\n\n【Kimi 已核准的缺口与事实】\n1. **WaveSpawnSink 全工程无实现**：WaveDirector.spawnSink（weak）为 nil → spawnFruit/triggerExplosion 永不发生。协议（WaveDirector.swift:89）：`spawnFruit(kind: Int32, from spawner: Spawner, wave: WaveInfo)` / `triggerExplosion(from spawner: Spawner, wave: WaveInfo)`。\n2. **FruitMotion.integrate(_ entity: inout Entity, ...)**（FruitMotion.swift:135，静态）已实现抛物线/自旋/出界判定，但**主循环没有任何调用点**。FruitMotionTuning 字段与 Constants.Physics 默认值均已落盘。\n3. GameHost 现状：持有 store/state/waveDirector；startGame 重置全套；渲染经 currentEntities 提取。\n4. 原主循环实体更新语义（core_logic_notes §1.2）：循环 A/B 内实体先运动再判定（具体顺序以 FUN_00016214 反编译为准，[待验证] 若未直读则注明）。\n\n【交付】\n1) App/WaveSpawnBridge.swift（新）：final class WaveSpawnBridge: WaveSpawnSink——持有 EntityStore（引用 GenerationOrderStore 实例）与 FruitMotionTuning；\n   - spawnFruit(kind:from:wave:)：构造 EntityPrototype(kind: .fruit, transform: 初始位置在屏幕下缘（y = offscreenBottomMargin 附近，x 由 spawner 位置或 rng 决定 [待验证]），初速度按 FruitMotion 的发射角/速度区间采样（用注入的 RandomSource）)，fruit: FruitInfo(typeID: kind)（FruitInfo 其余字段默认，score 暂 0 → 待 fruitList 内容任务卡）→ store.spawn；\n   - triggerExplosion(from:wave:)：v1 只生成 kind=.bomb 实体（占位，[待验证] 原语义为爆炸特效而非生成）。\n   - GameHost.init 创建 bridge 并赋给 waveDirector.spawnSink；startGame 时 bridge 的 store 引用不变（store.clear() 保留实例）。\n2) GameWorld 主循环补运动：在 step6 循环A 与 step7 循环B 的 forEach 开头，对每个实体调 FruitMotion.integrate（签名以 FruitMotion.swift 为准）——注意独占访问：forEach 的 inout entity 直接传给 integrate 合法；\n   - 出界判定（integrate 返回值或字段，以真实 API 为准）→ 收集 pendingDespawn 统一回收（同 T-023 模式）；\n   - 漏切：水果未切且出屏 → state.missPenaltyCount 增量（原 +0x3c 语义 [待验证]，若 findings 有明确漏切分支按其执行）；\n   - 若 integrate 不含出界判定，用 FruitMotionTuning 的 offscreen 阈值在 GameWorld 判定。\n3) 新增 Tests/FNPBCoreTests/SpawnMotionTests.swift ≥4 用例：bridge.spawnFruit 后 store 有实体且初速度在 tuning 区间内；运动两帧后位置按抛物线变化；出界后回收；漏切计数。测试替身复用现有 SeededRandomSource（WaveTests.swift）与 SpyStats 模式（自行在本文件定义私有 spy，不要改他人文件）。\n4) AppViewModel 快照 lives：原版 Classic 漏切三振（missPenaltyCount 阈值 [待验证]），v1 在 refreshSnapshot 里用 `max(0, 3 - Int(state.missPenaltyCount))` 近似并标 [待验证]；GameHost.handleFrame 的结束判定增加「missPenaltyCount >= 3 → finishGame」（[待验证] 原版结束条件，与 isFaulted 并列）。\n\n【硬约束】不改 WaveDirector/FruitMotion 的公开签名；不臆造 API；Swift 6 独占访问纪律同 T-023；裸数字进 Constants（查重）；所有 [待验证] 单列。",
     "acceptance": "WaveSpawnSink 有真实实现并挂到 WaveDirector.spawnSink；水果按 FruitMotion.integrate 逐帧运动；出界回收；漏切计 missPenalty；新增 ≥4 测试；CI 全绿",
-    "notes": "",
-    "status": "doing",
+    "notes": "CI success(run 41170247080, remote ce299814)；生成/运动/出界回收/6项测试全绿；Kimi裁决漏切使用独立missedFruitCount，保留原+0x3c切中分支；非法hex字面量已预审修正",
+    "status": "done",
     "created": "2026-10-31T11:53:57+08:00",
-    "updated": "2026-10-31T11:54:06+08:00",
+    "updated": "2026-10-31T23:09:33+08:00",
     "extra_files": [
       "Sources/FNPBCore/Wave/WaveDirector.swift",
       "Sources/FNPBCore/Wave/SpawnTable.swift",
@@ -415,6 +415,19 @@
       "App/AppViewModel.swift",
       "blueprint/GameState.swift",
       "blueprint/Constants.swift"
+    ]
+  },
+  {
+    "id": "T-026",
+    "title": "T-026 bxml 二进制 XML 解码与转换修复",
+    "desc": "真实 assets_raw/xml/*.xml 全部是 Halfbrick bxml，不是文本 XML；现有 xml_convert 60/60 失败。Kimi 已实证格式：头 12 字节='bxml'+u16 headerAttrCount+u16 unknown+u32 stringTableByteSize；随后字符串表为 NUL 结尾 UTF-8，可后缀复用（引用偏移可落在另一字符串内部，必须按偏移取到下一 NUL，不要求等于字符串起点）。字节码从 12+size 开始：u32 rootCount；每个元素为 u8 marker=1、u32 nameOffset、u32 attrCount、attrCount 个(u32 nameOffset,u32 valueOffset)、u32 childCount、依序 childCount 个子节点；文本叶节点为独立 u8 marker=4+u32 textOffset（只有 5 字节，后面不再跟元素体）。已验证 settings.xml/originalModeInfo.xml/fruitList.xml/originalWaveList.xml 全字节精确消费；fruitList 根 fruitInfoFile 26 子节点、24 个 FruitInfo；originalWaveList 根 waveManagerFile 39 子节点。交付：1) 新 tools/AssetPipeline/bxml_decode.py，严格 bounds/offset/marker/root 检查、递归深度与节点数防爆、返回 xml.etree.ElementTree 元素或清晰异常；2) 修改 xml_convert.py，parse_xml 先识别 bxml 并走解码，文本叶按 ET 语义合并到父节点 text/tail，encoding 标 bxml；保留原文本 XML 与 selftest；新增合成 bxml 自测（属性、文本、后缀引用、截断/非法 offset/未知 marker）；3) tools/AssetPipeline/BXML_FORMAT.md 记录已实证结构与限制。不要猜其他 marker；遇未知 marker 明确报错。只改这 3 个文件。",
+    "acceptance": "自测全过；实跑 assets_raw/xml 60/60 转 JSON 成功且每文件完整消费；fruitList/originalWaveList 根和子节点数符合任务卡；原文本 XML 回归测试不退化",
+    "notes": "",
+    "status": "doing",
+    "created": "2026-10-31T23:10:02+08:00",
+    "updated": "2026-10-31T23:10:23+08:00",
+    "extra_files": [
+      "tools/AssetPipeline/xml_convert.py"
     ]
   }
 ]

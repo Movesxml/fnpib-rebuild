@@ -11,12 +11,27 @@ Swift 解码时能否失败得清清楚楚，也便于和反编译常量逐字�
     {"tag": "fruit",
      "attrs": {"chance": "0.12", "name": "watermelon"},
      "text": "可选，去首尾空白，纯空白丢弃",
+     "tail": "可选，去首尾空白，纯空白丢弃",
      "children": [ ...文档顺序... ]}
 
   * 属性顺序不保证（ElementTree 语义），需要顺序请用 attrs 之外的 children
   * 注释 / 处理指令丢弃（ElementTree 默认行为）
   * 命名空间保留为 `{uri}local` 形式；原版资源应无命名空间，若有会在 index 里列 warning
   * `--max-depth N` 可截断（N=0 表示不限制），被截断节点记 `children_omitted: <数量>`
+  * `tail` 是 T-026 新增：bxml 文本叶可能出现在某个子元素之后，按 ET 语义
+    会挂到该子元素的 `.tail`；纯空白 tail 丢弃。普通文本 XML 若有尾随文本也会保留。
+
+【bxml 二进制 XML（T-026 新增）】
+assets_raw/xml/*.xml 实际不是文本 XML，而是 Halfbrick bxml 容器（magic=bxml）。
+parse_xml 会先按 magic 识别，命中后交给 bxml_decode.decode_bxml 解码，得到同一
+种 ElementTree 元素树；index.json 中这类文件 encoding 标记为 "bxml"。
+
+bxml 的文本叶（marker=4）在解码阶段按 ElementTree 语义合并：
+  * 位于所有元素子节点之前 → 父元素 text
+  * 位于某个元素子节点之后 → 该子元素 tail
+  * 连续文本叶直接拼接
+解码器对未知 marker / 非法 offset / 越界 / 截断 / 尾部多余字节一律报
+BxmlError，不做猜测性回退。格式细节见 BXML_FORMAT.md。
 
 【编码兜底】
 先按 XML 声明的编码解析（ET 对 bytes 输入自动处理）；
@@ -24,6 +39,7 @@ Swift 解码时能否失败得清清楚楚，也便于和反编译常量逐字�
 `encoding: gb18030-fallback` + `warning: encoding_fallback`。
 ⚠️ 兜底有把「真正的语法损坏」误判成「编码问题」的风险，所以只作为第二方案，
    且两条错误信息都会写进 index.json。
+bxml 是二进制容器，不参与 gb18030 兜底：解码失败就是 bxml 结构错误。
 
 【fruitlist.xml / wave 相关 xml —— 人工抽检样例】
 ⚠️ TODO（未填）：T-017 执行环境没有真实 assets.zip 可读，为避免臆造数据，
@@ -59,12 +75,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import struct
 import sys
 import tempfile
 import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
+
+try:  # 作为包模块导入（python -m tools.AssetPipeline.xml_convert）
+    from .bxml_decode import BxmlError, decode_bxml, is_bxml
+except ImportError:  # 作为脚本直接运行（python tools/AssetPipeline/xml_convert.py）
+    from bxml_decode import BxmlError, decode_bxml, is_bxml
 
 MAX_PREVIEW_ATTRS = 16
 
@@ -74,7 +96,19 @@ MAX_PREVIEW_ATTRS = 16
 # --------------------------------------------------------------------------- #
 
 def parse_xml(data: bytes) -> tuple[ET.Element | None, str | None, str | None]:
-    """返回 (root, error, encoding_tag)。"""
+    """返回 (root, error, encoding_tag)。
+
+    encoding_tag:
+      * "as-declared"      —— 文本 XML，按声明编码解析
+      * "gb18030-fallback" —— 文本 XML，gb18030 兜底
+      * "bxml"             —— Halfbrick bxml 二进制 XML（T-026）
+    """
+    if is_bxml(data):
+        try:
+            return decode_bxml(data), None, "bxml"
+        except BxmlError as exc:
+            return None, f"BxmlError: {exc}", None
+
     try:
         return ET.fromstring(data), None, "as-declared"
     except ET.ParseError as first_err:
@@ -99,6 +133,10 @@ def elem_to_obj(el: ET.Element, depth_limit: int | None, depth: int = 0) -> dict
     text = (el.text or "").strip()
     if text:
         obj["text"] = text
+
+    tail = (el.tail or "").strip()
+    if tail:
+        obj["tail"] = tail
 
     kids = list(el)
     if kids:
@@ -237,7 +275,7 @@ def write_index(path: Path, entries: list[dict], summary: dict, *,
                 in_path: Path, out_root: Path) -> None:
     doc = {
         "tool": "xml_convert.py",
-        "tool_version": 1,
+        "tool_version": 2,
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "in_path": str(in_path),
         "out_dir": str(out_root),
@@ -250,10 +288,201 @@ def write_index(path: Path, entries: list[dict], summary: dict, *,
             "input*.xml: 触摸坐标是否归一化",
             "buildNumber.xml: 版本应为 1.0.4",
             "检查浮点数是否为句点小数、布尔量写法是否统一",
+            "bxml: assets_raw/xml 下为二进制 bxml；encoding=bxml 表示已走 "
+            "bxml_decode；若出现 BxmlError 请对照 tools/AssetPipeline/BXML_FORMAT.md",
         ],
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+# --------------------------------------------------------------------------- #
+# bxml 合成样本（仅 selftest 使用）
+# --------------------------------------------------------------------------- #
+
+def _bxml_elem(name_offset: int, attrs: list[tuple[int, int]],
+               children: list[bytes]) -> bytes:
+    out = bytearray()
+    out.append(0x01)
+    out += struct.pack("<I", name_offset)
+    out += struct.pack("<I", len(attrs))
+    for attr_name_offset, attr_value_offset in attrs:
+        out += struct.pack("<II", attr_name_offset, attr_value_offset)
+    out += struct.pack("<I", len(children))
+    for child in children:
+        out += child
+    return bytes(out)
+
+
+def _bxml_text(text_offset: int) -> bytes:
+    return b"\x04" + struct.pack("<I", text_offset)
+
+
+def _bxml_sample() -> tuple[bytes, dict[str, int], int]:
+    """合成一份覆盖 属性/文本叶/后缀引用 的 bxml。
+
+    结构：
+      <fruitInfoFile version="1.0.4">
+        <fruitInfo name="watermelon">12</fruitInfo>
+        <InfoFile>hello<note/>tail</InfoFile>   # InfoFile 是 "fruitInfoFile" 的后缀引用
+      </fruitInfoFile>
+    """
+    strings = [
+        "fruitInfoFile",
+        "version",
+        "1.0.4",
+        "fruitInfo",
+        "name",
+        "watermelon",
+        "note",
+        "hello",
+        "tail",
+        "12",
+    ]
+    strtab = bytearray()
+    offsets: dict[str, int] = {}
+    for text in strings:
+        offsets[text] = len(strtab)
+        strtab += text.encode("utf-8") + b"\x00"
+
+    # 后缀复用：offset 指向 "fruitInfoFile" 内部的 "InfoFile"
+    suffix_offset = offsets["fruitInfoFile"] + len("fruit")
+
+    fruit_info = _bxml_elem(
+        offsets["fruitInfo"],
+        [(offsets["name"], offsets["watermelon"])],
+        [_bxml_text(offsets["12"])],
+    )
+    info_file = _bxml_elem(
+        suffix_offset,
+        [],
+        [
+            _bxml_text(offsets["hello"]),
+            _bxml_elem(offsets["note"], [], []),
+            _bxml_text(offsets["tail"]),
+        ],
+    )
+    root = _bxml_elem(
+        offsets["fruitInfoFile"],
+        [(offsets["version"], offsets["1.0.4"])],
+        [fruit_info, info_file],
+    )
+
+    data = (
+        b"bxml"
+        + struct.pack("<HHI", 1, 0, len(strtab))
+        + bytes(strtab)
+        + struct.pack("<I", 1)  # rootCount
+        + root
+    )
+    return data, offsets, len(strtab)
+
+
+def _selftest_bxml(check, tmp: Path) -> None:
+    data, offsets, strtab_size = _bxml_sample()
+    body_start = 12 + strtab_size
+
+    # ---- 1. 合成 bxml 基础解码 ----
+    try:
+        root = decode_bxml(data)
+    except BxmlError as exc:
+        check(False, f"bxml 合成样例解码失败：{exc}")
+        return
+
+    check(root.tag == "fruitInfoFile", f"bxml 根 tag（got {root.tag!r}）")
+    check(root.attrib == {"version": "1.0.4"},
+          f"bxml 根属性（got {root.attrib!r}）")
+    check([c.tag for c in root] == ["fruitInfo", "InfoFile"],
+          f"bxml 子元素顺序 + 后缀引用（got {[c.tag for c in root]}）")
+    check(root[0].attrib == {"name": "watermelon"},
+          f"bxml 子元素属性（got {root[0].attrib!r}）")
+    check(root[0].text == "12",
+          f"bxml 首个文本叶 → 父 text（got {root[0].text!r}）")
+    check(root[1].text == "hello",
+          f"bxml 文本叶 → 父 text（got {root[1].text!r}）")
+    check(root[1][0].tag == "note", "bxml 元素子节点")
+    check(root[1][0].tail == "tail",
+          f"bxml 尾随文本叶 → 前兄弟 tail（got {root[1][0].tail!r}）")
+    check(root[1][0].text is None, "bxml note 无前导文本")
+
+    root2, err2, encoding2 = parse_xml(data)
+    check(root2 is not None and err2 is None and encoding2 == "bxml",
+          f"parse_xml 识别 bxml（encoding={encoding2!r}, err={err2!r}）")
+
+    # ---- 2. 异常路径 ----
+    def expect_error(label: str, bad: bytes, **kwargs) -> None:
+        try:
+            decode_bxml(bad, **kwargs)
+        except BxmlError as exc:
+            check(True, f"{label} 被拒绝（{exc}）")
+        except Exception as exc:  # noqa: BLE001 - selftest 需暴露非预期异常
+            check(False, f"{label} 抛非 BxmlError：{type(exc).__name__}: {exc}")
+        else:
+            check(False, f"{label} 未被拒绝")
+
+    expect_error("截断文件", data[:-1])
+
+    bad = bytearray(data)
+    struct.pack_into("<I", bad, body_start + 4 + 1, 0xFFFFFFFF)
+    expect_error("非法元素名 offset", bytes(bad))
+
+    bad = bytearray(data)
+    bad[body_start + 4] = 0x02
+    expect_error("未知 marker=0x02", bytes(bad))
+
+    bad = bytearray(data)
+    struct.pack_into("<I", bad, body_start, 0)
+    expect_error("rootCount=0", bytes(bad))
+
+    root_bytes = data[body_start + 4:]
+    multi_root = data[:body_start] + struct.pack("<I", 2) + root_bytes + root_bytes
+    try:
+        multi = decode_bxml(multi_root)
+        check(multi.tag == "bxmlDocument" and len(multi) == 2,
+              "rootCount=2 由 bxmlDocument 完整保留")
+    except BxmlError as exc:
+        check(False, f"rootCount=2 解码失败：{exc}")
+
+    expect_error("尾部多余字节", data + b"\x00")
+
+    bad = bytearray(data)
+    struct.pack_into("<I", bad, 8, len(data))
+    expect_error("字符串表越界", bytes(bad))
+
+    bad = bytearray(data)
+    bad[12 + offsets["hello"]] = 0xFF
+    expect_error("非法 UTF-8", bytes(bad))
+
+    expect_error("递归深度上限", data, max_depth=1)
+    expect_error("节点总数上限", data, max_nodes=2)
+
+    # ---- 3. 文件级：bxml 内容 + .xml 后缀，走完整转换管线 ----
+    raw_bx = tmp / "RawBxml"
+    out_bx = tmp / "OutBxml"
+    (raw_bx / "xml").mkdir(parents=True, exist_ok=True)
+    (raw_bx / "xml" / "fruitList.xml").write_bytes(data)
+
+    entries, summary = convert_tree(raw_bx, out_bx, quiet=True, force=True)
+    check(len(entries) == 1 and entries[0]["status"] == "ok",
+          f"bxml 文件转换成功（entries={entries!r}）")
+
+    if entries and entries[0]["status"] == "ok":
+        check(entries[0]["encoding"] == "bxml",
+              f"index 中 encoding=bxml（got {entries[0].get('encoding')!r}）")
+
+        json_path = out_bx / "xml" / "fruitList.json"
+        doc = json.loads(json_path.read_text(encoding="utf-8"))
+        root_obj = doc["root"]
+        check(root_obj["tag"] == "fruitInfoFile", "bxml JSON 根 tag")
+        check(root_obj["children"][1]["tag"] == "InfoFile",
+              "bxml JSON 后缀引用 tag")
+        check(root_obj["children"][1]["text"] == "hello",
+              "bxml JSON text 字段")
+        check(root_obj["children"][1]["children"][0]["tail"] == "tail",
+              "bxml JSON tail 字段")
+
+    check(summary["encodings"].get("bxml") == 1,
+          f"summary 编码统计（got {summary['encodings']!r}）")
 
 
 # --------------------------------------------------------------------------- #
@@ -372,6 +601,9 @@ def selftest(verbose: bool = True) -> int:
     skipped = sum(1 for e in entries2 if e["status"] == "skipped")
     check(skipped == 1, f"已存在且无 --force 时跳过（got {skipped}）")
 
+    # ---- 7. bxml 二进制 XML（T-026） ----
+    _selftest_bxml(check, tmp)
+
     print("")
     if failures:
         print(f"[selftest] 失败 {len(failures)}/{checks}")
@@ -397,7 +629,7 @@ def _setup_console() -> None:
 def main(argv=None) -> int:
     _setup_console()
     ap = argparse.ArgumentParser(
-        description="游戏配置 xml → json（T-017）",
+        description="游戏配置 xml/bxml → json（T-017/T-026）",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
