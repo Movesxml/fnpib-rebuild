@@ -288,9 +288,10 @@ b) ObservableObject(GameHost) 与 @Observable(AppViewModel) 混用：统一走 A
 c) FNPBUIViewModel 要求 class 类型且 @MainActor——实现头照抄协议声明；
 d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通过，开局时在 startGame 写入 Constants.Slash 系的合理初值（15.0² 归一化语义见 RenderSurface 注释），标注 [待验证]。
 
-### [T-023] doing :: GameWorld 十步实装（R1 主循环全链）
-- 创建: 2026-10-31T11:24:03+08:00　更新: 2026-10-31T11:27:40+08:00
+### [T-023] done :: GameWorld 十步实装（R1 主循环全链）
+- 创建: 2026-10-31T11:24:03+08:00　更新: 2026-10-31T11:43:12+08:00
 - 验收: 十步全部有实现或显式 [待验证] 守卫（step8 允许留桩）；SlashTrail 入 GameState；新增 ≥5 个单测覆盖步骤 2/3/4/9/10；CI 全绿
+- 备注: CI success(0ac40ace)；13 测试全过；控制流修正已裁决接受；levelTier=4 开局写入 [待验证]；harness extra_files 截断 bug 已修（根因）
 
 实装 GameWorld 的十步主循环（Sources/FNPBCore/Loop/GameWorld.swift）。step1 已完成；step2~step10 现为桩。本卡完成后「切中水果→连击→计分→波次→结束」在纯逻辑层可测。
 
@@ -319,3 +320,26 @@ d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通
 10. 新增 Tests/FNPBCoreTests/GameWorldTests.swift ≥5 测试：step2 半径归一化（d=0/7.5/30 三值）、step3 轨迹写槽与超时（advance 0.05 边界严格大于）、step4 levelTier<4 跳过、step9 tickWindow 到期分发（用真实 ComboTracker）、step10 waves 被调用（StubWaveDirector 计数）。测试用例里的 Stub 需满足 EntityStore 全协议（含 aliveCount，T-020 教训）。
 
 【硬约束】不改 GameServices/GameWorld.tick 的公开签名；step6/7 的 forEach 用 inout 写回；不臆造任何 API——注入文件没有的签名不许调用；新常量进 Constants.swift 对应 enum（查重，Physics 区已存在）；输出纪律紧凑。
+
+### [T-024] doing :: 渲染接入 T-024：Metal 视图挂载 + 实体→精灵提取 + 刀光轨迹
+- 创建: 2026-10-31T11:43:46+08:00　更新: 2026-10-31T11:43:53+08:00
+- 验收: RenderAnchorView 被真实 Metal 视图替换；局内每帧提交水果精灵与刀光；GameHost 渲染链 beginFrame/submit/endFrame 接通；CI 全绿
+
+把 FNPBRender 真实接入 App，让局内画面不再黑屏（蓝图 S7 收口 + S8 的最后一公里）。
+
+【已核准事实】
+- FNPBRender 四件套已编译验证：MetalContext（含 UIViewRepresentable 桥接 MetalCanvasView，typealias UIViewType = MetalCanvasView）、RenderSurface（@MainActor 协议+实现，configure(SurfaceRequest)/beginFrame/submit/endFrame、logicalSize）、SpriteBatch（SpriteInstance/BlendMode 实例批渲染）、TextureLoader（TextureLoading，load(TextureAsset)）。
+- App 现状：FNPBApp.swift 的 gameplay ZStack 里 RenderAnchorView 是 Color.black 占位（T-022），GameHost 有 displayLink/touchRouter/audio/saveStore/gameWorld/fixedStep/state/store/services，handleFrame 末尾 viewModel.refreshSnapshot()。
+- 刀光轨迹数据在 state.slashTrail（SlashTrail，points 数组 8 槽 SIMD3 世界坐标）。
+- 水果实体：Entity.transform.position（SIMD3 世界坐标）/ fruit?.typeID；实体从 GenerationOrderStore 按生成序取。
+- 世界坐标约定：原点屏幕中心、X 右 Y 上（TouchRouter 注释）；SpriteBatch 由 RenderSurface.logicalSize 做 NDC 映射（RenderSurface.swift 注释）。
+- 贴图：assets_png/ 已全量转换（264 个 PNG，其中 192 个 4bpp 索引为灰度兜底图）；确证文件名仅 fruit_atlas.png 一张。UV 子矩形映射未闭合 → v1 允许整图集拉伸渲染 + [待验证] 注释；贴图缺失时用 TextureLoader 加载失败回落纯色四边形（SpriteInstance 色调），不得崩溃。
+- 音效/特效事件已在 T-023 接线；本卡不碰逻辑。
+
+【交付】
+1) App/GameRenderer.swift（新）：@MainActor final class GameRenderer——持有 RenderSurface 实现与 TextureLoader；提供 mtkView 桥接视图结构（直接复用 FNPBRender 的 UIViewRepresentable 类型，不要另写桥）；实现帧回调（MTKView 的 draw 或 MetalContext 提供的帧入口，以 MetalContext.swift 实际 API 为准）：beginFrame → 从 GameHost 拉当前 (state, store) 快照 → 提水果精灵（每实体一个 SpriteInstance，位置=transform.position，尺寸按水果类型给默认占位 0.1 逻辑单位 [待验证]，色调按 typeID 哈希着色占位）→ 提交刀光（slashTrail.points 相邻点对连成线段精灵， additive 混合 [待验证]）→ endFrame。
+2) 改 App/FNPBApp.swift：GameHost 增 renderDriver 属性（构造期创建 GameRenderer）；gameplay ZStack 把 RenderAnchorView 换成 GameRenderer 的桥接视图（.ignoresSafeArea()）；handleFrame 末尾在 refreshSnapshot 之前通知渲染层本帧数据就绪（或渲染层在 draw 时直接读 host.currentState/currentEntities——选注入文件里实际支持的通路，禁止臆造）。
+3) GameHost 增加只读投影：currentEntities（按生成序数组快照）供渲染提取；现有 currentState 直接用。
+4) 分辨率：configure(SurfaceRequest) 在视图尺寸变化时调用（桥接内部若已处理则复用），logicalSize 变化需回写 TouchCoordinateMapper.logicalSize 闭包的数据源——当前 GameHost.currentLogicalSize 是屏幕物理像素，与渲染 logicalSize 不一致属已知 [待验证]，本卡把 TouchCoordinateMapper 的 logicalSize 闭包改接到 RenderSurface.logicalSize（若该属性在协议上公开；不公开则在 GameRenderer 暴露只读投影）。
+
+【硬约束】全部接线只能调用注入文件里真实存在的 API；Swift 6 隔离——Metal/MTKView 全部 @MainActor；不引入新 target 依赖（App 已依赖 FNPBRender）；CI 必须过编译+全部测试；每处 [待验证] 单列风险清单。

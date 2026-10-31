@@ -3,10 +3,11 @@ import UIKit
 
 import FNPBCore
 import FNPBPlatform
+import FNPBRender
 import FNPBUI
 
 // ============================================================================
-// FNPBApp — SwiftUI 入口 + 装配层（蓝图 S1 收口 / S8 接线 / T-022）
+// FNPBApp — SwiftUI 入口 + 装配层（蓝图 S1 收口 / S8 接线 / T-022 / T-024）
 //
 // 数据流：
 //   CADisplayLink(DisplayLinkDriver, 120Hz)
@@ -15,17 +16,21 @@ import FNPBUI
 //     → GameWorld.tick(1/60)                ← 逻辑帧
 //     → AppViewModel.refreshSnapshot()      ← UI 帧（等值去抖后进 Observation）
 //
+//   渲染帧（独立于逻辑帧，T-024）：
+//   MetalCanvasView.draw(in:) → GameRenderer.drawFrame()
+//     → beginFrame → 读 currentState/currentEntities → submit → endFrame
+//
 // 五屏闭环（T-022）：
 //   mainMenu ──send──▶ modeSelect ──selectMode(mode)──▶ playing
 //   playing ──pause──▶ paused ──resume──▶ playing
 //   playing/paused ──finishGame──▶ results ──restart──▶ playing
 //   任意 ──quitToMenu──▶ mainMenu
 //
-// ⚠️ 【注入缺口说明 · 必须审】本轮注入的 FNPBApp.swift 在 init 的 GameServices(...) 处被截断，
-//    handleFrame / start / persist / handleScenePhase 的原文不可见。以下为按可验证签名的重建，
-//    每处猜测已收敛为单点并标 [待验证]；若与前版不一致，**以前版为准**，
-//    只保留本版新增的三件事：①真实服务构造 ②handleFrame 末尾 refreshSnapshot
-//    ③startGame/restart/quitToMenu/pause/resume/endGame 流程方法。
+// T-024 变更点（其余与 T-023 版一致）：
+//   ① GameHost 新增 `renderDriver: GameRenderer?`（构造期创建，Metal 不可用时降级）
+//   ② gameplay 的 RenderAnchorView 换为真实 Metal 视图
+//   ③ TouchCoordinateMapper.logicalSize 改接渲染层 logicalSize（点，非物理像素）
+//   ④ GameHost 新增只读投影 `currentEntities`（见该属性的 [待验证] 说明）
 // ============================================================================
 
 @main
@@ -85,7 +90,14 @@ struct ContentView: View {
     @ViewBuilder
     private func gameplay(vm: AppViewModel) -> some View {
         ZStack {
-            RenderAnchorView()
+            // T-024：真实 Metal 渲染层。
+            // `MetalContext` 创建失败（无 GPU 环境）时降级回黑屏占位，App 不崩。
+            if let renderer = host.renderDriver {
+                renderer.canvasView
+                    .ignoresSafeArea()
+            } else {
+                RenderAnchorView()
+            }
 
             // 触摸层仅在真正游玩时挂载：paused 下若仍接收触摸，
             // began 会写入 GameState（slashTrailActive / hitPoint），逻辑态被污染。
@@ -103,13 +115,10 @@ struct ContentView: View {
     }
 }
 
-/// 渲染锚点占位。
+/// 渲染降级占位。
 ///
-/// TODO(渲染层)：FNPBRender 提供 MTKView 包装后在此替换：
-///   RendererSurface(surface: host.renderSurface,
-///                   interpolationAlpha: host.renderInterpolationAlpha)
-///       .ignoresSafeArea()
-/// 渲染层从 GameHost 读取 alpha 做位置插值（FixedStepDriver.advance 返回值）。
+/// T-024 起仅在 `GameHost.renderDriver == nil`（`MetalContext()` 返回 nil）时使用；
+/// 正常路径由 `GameRenderer.canvasView`（FNPBRender.MetalViewRepresentable）接管。
 struct RenderAnchorView: View {
     var body: some View {
         Color.black.ignoresSafeArea()
@@ -141,6 +150,11 @@ final class GameHost: ObservableObject {
     let audio: AudioEngine
     let saveStore: SaveStore
 
+    // MARK: 渲染（T-024）
+    /// 渲染驱动。构造期创建；`MetalContext()` 为 failable，失败时为 nil
+    ///（游戏逻辑照常运行，画面降级为黑屏占位）。
+    let renderDriver: GameRenderer?
+
     // MARK: 核心
     private let gameWorld = GameWorld()
     private let fixedStep = FixedStepDriver(step: 1.0 / 60.0, maxSubsteps: 4)
@@ -165,6 +179,7 @@ final class GameHost: ObservableObject {
     private(set) var currentMode: GameMode = .classic
 
     /// FixedStepDriver.advance 返回的渲染插值系数 ∈ [0,1)
+    /// [待验证] T-024 渲染层暂未消费该值（直接读逻辑帧，不做插值）。
     private(set) var renderInterpolationAlpha: Float = 0
 
     /// DisplayLink 的「期望运行」状态：区分「因暂停而停」与「因后台而停」。
@@ -176,11 +191,32 @@ final class GameHost: ObservableObject {
     // MARK: 初始化
 
     init() {
+        // ── T-024：渲染层最先创建，触摸映射需要读它的 logicalSize ──────────────
+        let renderer: GameRenderer?
+        if let metalContext = MetalContext() {
+            renderer = GameRenderer(metalContext: metalContext)
+        } else {
+            renderer = nil
+        }
+
         let saveStore = SaveStore()
         let audioEngine = AudioEngine(configuration: AudioEngine.Configuration())
         let displayLink = DisplayLinkDriver()
         let touchRouter = TouchRouter(
-            mapper: TouchCoordinateMapper(logicalSize: { GameHost.currentLogicalSize() })
+            mapper: TouchCoordinateMapper(logicalSize: {
+                // T-024：改接渲染层逻辑尺寸（点）。
+                // 原实现返回屏幕物理像素（bounds × scale），与 RenderSurface.logicalSize
+                // 不同量纲（任务卡已知项）。
+                // 触摸事件必在主线程；assumeIsolated 而非 Task { }，避免异步化破坏
+                // “同步读取尺寸”的语义（AppViewModel 已有同款用法）。
+                MainActor.assumeIsolated { () -> SIMD2<Float> in
+                    if let size = renderer?.logicalSize, size.x > 2, size.y > 2 {
+                        return size
+                    }
+                    // 视图首次布局完成前 logicalSize 为 (1,1)，退回物理像素兜底。
+                    return GameHost.currentLogicalSize()
+                }
+            })
         )
 
         // [Kimi 修正 T-022 审查] PRNG 序列 [待验证]，勿改动算法
@@ -203,6 +239,7 @@ final class GameHost: ObservableObject {
         )
         let effects = PlaceholderEffectEmitter()
 
+        self.renderDriver = renderer
         self.saveStore = saveStore
         self.audio = audioEngine
         self.displayLink = displayLink
@@ -244,6 +281,9 @@ final class GameHost: ObservableObject {
                 self?.touchEnded()
             }
         }
+
+        // T-024：回填渲染数据源（放最后：此时 self 的全部存储属性已初始化）。
+        renderer?.host = self
     }
 
     // MARK: 只读投影（供 AppViewModel 组装快照）
@@ -256,6 +296,22 @@ final class GameHost: ObservableObject {
     /// 在 settings.xml，映射未闭合。v1 用内存态，不持久化，标 [待验证]。
     private(set) var soundEnabled = true
     var isSoundEnabled: Bool { soundEnabled }
+
+    // MARK: 只读投影（渲染层，T-024）
+
+    /// 当前实体快照（按生成序），供 `GameRenderer` 提取精灵。
+    ///
+    /// [Kimi 修正 T-024 审查] 真实 API 是 `EntityStore.forEach(_:)`（inout Entity，
+    /// 返回 Bool 控制续停）——收集值拷贝即得生成序快照。
+    var currentEntities: [Entity] {
+        var collected: [Entity] = []
+        collected.reserveCapacity(store.aliveCount)
+        store.forEach { entity in
+            collected.append(entity)
+            return true
+        }
+        return collected
+    }
 
     // MARK: 生命周期
 
@@ -288,7 +344,11 @@ final class GameHost: ObservableObject {
             viewModel.finishGame()
         }
 
-        // T-022：每帧末尾刷新 UI 快照（等值去抖在 AppViewModel 内）
+        // T-024：渲染层不走「帧末通知」通路——`MTKView` 以 `isPaused = false` 自驱
+        // （preferredFramesPerSecond = 120），每次 draw 时直接读
+        // `currentState` / `currentEntities`。因此这里只刷新 UI 快照。
+        // 选该通路的理由：注入文件里 `MetalCanvasView.onDraw` 是唯一帧入口，
+        // 不存在「由逻辑层主动触发一次渲染」的 API。
         viewModel.refreshSnapshot()
     }
 
@@ -427,9 +487,11 @@ final class GameHost: ObservableObject {
 
     // MARK: 逻辑坐标
 
-    /// 逻辑像素尺寸（触摸坐标映射用）。TouchCoordinateMapper 要求 SIMD2<Float>。
-    /// [待验证] 原版按固定设计分辨率渲染再缩放；渲染层接入后应改由
-    /// RenderSurface.logicalSize 直接提供（见 RenderSurface 注释）。
+    /// 逻辑像素尺寸（兜底用）。TouchCoordinateMapper 要求 SIMD2<Float>。
+    ///
+    /// T-024：正常路径已改接 `RenderSurface.logicalSize`（逻辑点）；
+    /// 本函数仅作为「渲染视图尚未布局」时的兜底（返回屏幕物理像素）。
+    /// [待验证] 两套量纲混用是否符合原版归一化语义——闭合后应删除本兜底。
     static func currentLogicalSize() -> SIMD2<Float> {
         let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
         let scene = scenes.first { $0.activationState == .foregroundActive } ?? scenes.first
