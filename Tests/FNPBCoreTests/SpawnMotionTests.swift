@@ -66,7 +66,7 @@ final class SpawnMotionTests: XCTestCase {
         let bridge = try makeBridge(store: store, seed: 0xBAD)
         bridge.spawnFruit(kind: 99, from: Spawner(), wave: WaveInfo())
         bridge.spawnFruit(kind: -1, from: Spawner(), wave: WaveInfo())
-        bridge.spawnFruit(kind: Constants.EntityKindValue.bomb, from: Spawner(), wave: WaveInfo())
+        // EntityKindValue.bomb == 2 是实体类别，不是非法水果 ID；真实 typeID 2 必须可生成。
         XCTAssertEqual(store.aliveCount, 0)
     }
 
