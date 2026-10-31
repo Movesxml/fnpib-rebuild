@@ -449,10 +449,10 @@
     "title": "T-028 真实水果与波次 JSON 严格加载器",
     "desc": "实现真实内容加载，输入是T-026转换器JSON，不改原始资产。可改 Sources/FNPBCore/Content/OriginalContentLoader.swift(新)、ContentTypes.swift(仅补必要模型)、Tests/FNPBCoreTests/OriginalContentTests.swift(新)、project.yml(仅App资源加入Content)。权威证据已在shared_context/findings/fruit_id_mapping_macho.md与spawn_parser_macho.md。要求：1) 通用ContentNode Codable匹配tag/attrs/text/tail/children；严格root校验、数字/布尔解析、必需name/type，错误throw且带路径，不静默兜底。2) 水果按FruitInfo文档顺序赋零基typeID（apple0/watermelon3/pear_gold23），解析name/chance/score/scale/collision/hitInfluence/onSide或onside/onlySprinkle/noCritical，派生noScore=(score==0)；读取critical全局配置与bomb size/collision，不能把critical字段填到每个水果。3) Spawn.type按逗号拆分并trim，保留顺序；用明确SpawnKind枚举fruit(Int32)/bomb/random表示，不得用0或EntityKindValue.bomb冒充；普通名称必须存在于水果表，未知throw。4) 映射Spawn min/max/mininc/maxinc/delay/delayinc到T-027字段；原版maxinc最后也写+0x68，因此minInc运行时值要被maxinc覆盖，同时maxInc保留原始值。5) WaveInfo保留原始waveNo/chance；waveNo缺失时按文档序号，until原始tokens交给修正后的postProcessUntil；Wave_dt映射dt/inc/spinc；NextWaveDelay映射delay/inc/wait/waitSpinc/speedLoss/waitForEntities/waitForProcessing。若当前模型缺nextWait/nextWaitSpInc则新增，不得把wait冒充delay或inc。defaults只按原二进制实际键名读取，不要把真实waveChanceGrowth擅自别名成waveChanceRegrowth。6) 测试含内联样本的合法/非法数字/未知水果/类型顺序/maxinc覆盖，并从#filePath定位仓库Content真实JSON，验证24水果38波次、apple0/watermelon3/pear_gold23、wave0 watermelon数量1 dt0.7、重复waveNo和until结果、真实type均成功解析。不要改WaveDirector、GameHost或WaveSpawnBridge，下一阶段接入。不要手写或修改Content下JSON。",
     "acceptance": "Swift 6严格并发编译及全部测试通过；真实24水果/38波次完整加载；所有类型序列与关键数值精确；错误数据明确throw；无占位波次、无数组下标伪造官方ID之外的映射（水果零基索引已有原版证据）",
-    "notes": "",
-    "status": "doing",
+    "notes": "CI success(run 41219497153, remote 6de49b4c)；严格加载真实24水果/38波次，修正文档root包装、defaults键、noCritical及NextWaveDelay顺序",
+    "status": "done",
     "created": "2026-11-01T00:02:45+08:00",
-    "updated": "2026-11-01T00:05:14+08:00",
+    "updated": "2026-11-01T00:31:07+08:00",
     "extra_files": [
       "Sources/FNPBCore/Content/ContentTypes.swift",
       "project.yml"
