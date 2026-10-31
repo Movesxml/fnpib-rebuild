@@ -70,6 +70,12 @@ public struct WaveInfo: Codable, Equatable, Sendable {
     public var nextDelayInc: Float = Constants.WaveDefaults.nextDelayInc
     public var nextDelaySpInc: Float = Constants.WaveDefaults.nextDelaySpInc
 
+    /// NextWaveDelay.wait → 原 WaveInfo +0x68。[macho H]
+    public var nextWait: Float = 0
+
+    /// NextWaveDelay.waitSpinc → 原 WaveInfo +0x70。[macho H]
+    public var nextWaitSpInc: Float = 0
+
     /// 默认 true（byte 1）。[macho H] §4.1 `+0xdc` / `+0xdd`
     public var waitForEntities: Bool = Constants.WaveDefaults.waitForEntities
     public var waitForProcessing: Bool = Constants.WaveDefaults.waitForProcessing
@@ -223,6 +229,43 @@ public extension WaveInfo {
     }
 }
 
+// MARK: - SpawnKind
+
+/// Spawn.type 的显式类型；水果 ID 使用 FruitInfo 文档零基序号。
+/// bomb/random 不使用水果 ID 或 EntityKindValue 冒充。
+public enum SpawnKind: Equatable, Sendable {
+    case fruit(Int32)
+    case bomb
+    case random
+}
+
+extension SpawnKind: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let raw = try container.decode(String.self)
+        switch raw {
+        case "bomb": self = .bomb
+        case "random": self = .random
+        default:
+            let prefix = "fruit:"
+            guard raw.hasPrefix(prefix), let id = Int32(raw.dropFirst(prefix.count)) else {
+                throw DecodingError.dataCorruptedError(
+                    in: container, debugDescription: "未知 SpawnKind 字面量: \(raw)")
+            }
+            self = .fruit(id)
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .fruit(let id): try container.encode("fruit:\(id)")
+        case .bomb: try container.encode("bomb")
+        case .random: try container.encode("random")
+        }
+    }
+}
+
 // MARK: - Spawner
 
 /// 生成器（macho FUN_00053388 + Spawn 特化 FUN_000537ec；结构大小 0x90 字节）。
@@ -238,10 +281,10 @@ public struct Spawner: Codable, Equatable, Sendable {
     public var mode: Int32 = 0
 
     // -- Spawn 数量与延迟（FUN_000537ec）---------------------------------------
-    /// 每次生成的数量下限，XML `min` → 原 `+0x5c`（浮点存储，不是等待秒数）。
-    public var min: Float = 0
+    /// 每次生成的数量下限，XML `min` → 原 `+0x5c`；原版缺省 1。
+    public var min: Float = 1
 
-    /// 每次生成的数量上限，XML `max` → 原 `+0x64`（浮点存储）。
+    /// 每次生成的数量上限，XML `max` → 原 `+0x64`。
     public var max: Float = 0
 
     /// XML `mininc` → 原 `+0x68`；应用时机由生成循环任务闭合。
@@ -271,6 +314,9 @@ public struct Spawner: Codable, Equatable, Sendable {
     /// fruit 候选列表（原 `+0x8`）[macho H] §4.2
     public var fruits: [SpawnerFruit] = []
 
+    /// Spawn.type 按逗号拆分并 trim 后的保序结果。
+    public var types: [SpawnKind] = []
+
     /// [错误映射 待移除] 原 `+0x68` 已由 FUN_000537ec 证实为数量增量槽。
     public var bombTriggerRemaining: Int32 = 0
 
@@ -285,7 +331,8 @@ public struct Spawner: Codable, Equatable, Sendable {
                 maxWait: Float = 0,
                 canSpawnWithPowers: Bool = true,
                 dontSpawnBeforeWave: Float = -1.0,
-                fruits: [SpawnerFruit] = []) {
+                fruits: [SpawnerFruit] = [],
+                types: [SpawnKind] = []) {
         self.name = name
         self.mode = mode
         self.minWait = minWait
@@ -293,6 +340,7 @@ public struct Spawner: Codable, Equatable, Sendable {
         self.canSpawnWithPowers = canSpawnWithPowers
         self.dontSpawnBeforeWave = dontSpawnBeforeWave
         self.fruits = fruits
+        self.types = types
     }
 }
 
@@ -343,20 +391,37 @@ public struct BombInfo: Codable, Equatable, Sendable {
     }
 }
 
+// MARK: - CriticalConfig
+
+/// fruitList.xml 的全局 critical 配置；不得复制到每个 FruitInfo。
+public struct CriticalConfig: Codable, Equatable, Sendable {
+    public var newLifeAt: Int32? = nil
+    public var score: Int32? = nil
+    public var chance: Int32? = nil
+    public var chanceInc: Int32? = nil
+    public var splats: Int32? = nil
+    public var scale: Float? = nil
+    public var spread: Float? = nil
+    public var disappearSpeed: Float? = nil
+    /// 原版为四个 atoi 分量；此处保留原始字符串，颜色消费逻辑后续闭合。
+    public var colour: String? = nil
+    public var raw: [String: String] = [:]
+
+    public init() {}
+}
+
 // MARK: - FruitInfo
 
 /// 水果 / 炸弹条目元数据（macho FUN_0001267c）。
 ///
 /// ⚠️ 单源风险：本结构默认值为 macho 单源（exe 侧 `fruitlist.xml` 无交叉验证）。
-///    critical 全局参数（new_life_at / chance / chance_inc / splats / scale / spread /
-///    disappear_speed）在 §4.5 只列名不列值 → 本结构保留为 Optional，由内容加载侧填值，
-///    **禁止**在此写死 [macho L] 尚未直读的数值。
+///    critical 全局参数由 CriticalConfig 单独保存，不填入每个水果。
 public struct FruitInfo: Codable, Equatable, Sendable {
 
     /// 显示名 / XML 键。非二进制字段。
     public var name: String = ""
 
-    /// 类型 ID（对应 Constants.EntityKindValue）。非二进制字段。
+    /// 真实加载时为 FruitInfo 文档零基序号（apple 0 / watermelon 3 / pear_gold 23）。
     public var typeID: Int32 = 0
 
     // -- §4.5 已闭合字段（置信 H）-----------------------------------------------
@@ -366,7 +431,7 @@ public struct FruitInfo: Codable, Equatable, Sendable {
     /// 无分标记（原 `+0x330`，由 score==0 派生）。[macho H]
     public var noScore: Bool = false
 
-    /// noCritical（原 `+0x318`）。[macho H]
+    /// noCritical（原 `+0x318`）。原版显式属性使用 strcmp("true") != 0，加载器保留该反向分支。
     public var noCritical: Bool = false
 
     /// onside（原 `+0x26c`）。[macho H]

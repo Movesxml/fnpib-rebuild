@@ -1,0 +1,1129 @@
+{
+  "source": "fruitList.xml",
+  "bytes": 8278,
+  "encoding": "bxml",
+  "root": {
+    "tag": "fruitInfoFile",
+    "attrs": {
+      "version": "1.0.0"
+    },
+    "children": [
+      {
+        "tag": "critical",
+        "attrs": {
+          "chance": "50",
+          "chance_inc": "30",
+          "score": "10",
+          "colour": "0,140,245,170",
+          "scale": "1.25",
+          "splats": "15",
+          "spread": "1.25",
+          "disappear_speed": "1"
+        }
+      },
+      {
+        "tag": "bomb",
+        "attrs": {
+          "size": "55",
+          "collision": "35"
+        }
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "apple",
+          "chance": "100",
+          "scale": "60",
+          "collision": "5",
+          "onSide": "true",
+          "factTexture": "sml_ap",
+          "onlySprinkle": "true"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_APPLE",
+              "plural": "FRUITNAME_PLURAL_APPLE",
+              "singularEnglish": "apple",
+              "pluralEnglish": "apples"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "factColour": "189,238,58",
+              "colour": "248,255,164,130"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_00"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_01"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_02"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_03"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_04"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_05"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_06"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_07"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_08"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_09"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_10"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_11"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "banana",
+          "chance": "100",
+          "scale": "60",
+          "collision": "5",
+          "factTexture": "sml_bn"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_BANANA",
+              "plural": "FRUITNAME_PLURAL_BANANA",
+              "singularEnglish": "banana",
+              "pluralEnglish": "bananas"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "0,0,0,0",
+              "factColour": "245,237,16"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_30"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_31"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_32"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_33"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_34"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_35"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_36"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_37"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "orange",
+          "chance": "100",
+          "scale": "60",
+          "collision": "5",
+          "factTexture": "sml_or"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_ORANGE",
+              "plural": "FRUITNAME_PLURAL_ORANGE",
+              "singularEnglish": "orange",
+              "pluralEnglish": "oranges"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,115,0,158",
+              "factColour": "255,198,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_177"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_178"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_179"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_180"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_181"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "watermelon",
+          "chance": "100",
+          "scale": "75",
+          "collision": "5",
+          "factTexture": "sml_wm"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_WATERMELON",
+              "plural": "FRUITNAME_PLURAL_WATERMELON",
+              "singularEnglish": "watermelon",
+              "pluralEnglish": "watermelons"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "200,52,52,140",
+              "factColour": "255,31,31"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_292"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_293"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_294"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_295"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_296"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_297"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "strawberry",
+          "chance": "100",
+          "scale": "50",
+          "collision": "5",
+          "onSide": "true",
+          "factTexture": "sml_st"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_STRAWBERRY",
+              "plural": "FRUITNAME_PLURAL_STRAWBERRY",
+              "singularEnglish": "strawberry",
+              "pluralEnglish": "strawberries"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "200,0,0,190",
+              "factColour": "199,27,27"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_270"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_271"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_272"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_273"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_274"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_275"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "kiwifruit",
+          "chance": "100",
+          "scale": "50",
+          "collision": "5",
+          "factTexture": "sml_kw"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_KIWIFRUIT",
+              "plural": "FRUITNAME_PLURAL_KIWIFRUIT",
+              "singularEnglish": "kiwifruit",
+              "pluralEnglish": "kiwifruits"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "150,217,17,145",
+              "factColour": "80,141,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_116"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_117"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_118"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_119"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_120"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_121"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "pineapple",
+          "chance": "100",
+          "scale": "65",
+          "collision": "5",
+          "factTexture": "sml_pn"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_PINEAPPLE",
+              "plural": "FRUITNAME_PLURAL_PINEAPPLE",
+              "singularEnglish": "pineapple",
+              "pluralEnglish": "pineapples"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "235,175,14,155",
+              "factColour": "255,210,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_214"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_215"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_216"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_217"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_218"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "plum",
+          "scale": "55",
+          "chance": "100",
+          "collision": "5",
+          "factTexture": "sml_pl"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_PLUM",
+              "plural": "FRUITNAME_PLURAL_PLUM",
+              "singularEnglish": "plum",
+              "pluralEnglish": "plums"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "247,141,10,160",
+              "factColour": "130,40,91"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_230"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_231"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_232"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_233"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "pear",
+          "scale": "60",
+          "chance": "100",
+          "collision": "5",
+          "factTexture": "sml_pr",
+          "onlySprinkle": "true"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_PEAR",
+              "plural": "FRUITNAME_PLURAL_PEAR",
+              "singularEnglish": "pear",
+              "pluralEnglish": "pears"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "248,255,164,130",
+              "factColour": "212,239,34"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_204"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_205"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_206"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_207"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_208"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Apple"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "mango",
+          "scale": "65",
+          "chance": "100",
+          "collision": "5",
+          "factTexture": "sml_mn"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_MANGO",
+              "plural": "FRUITNAME_PLURAL_MANGO",
+              "singularEnglish": "mango",
+              "pluralEnglish": "mangoes"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,174,0,170",
+              "factColour": "255,198,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_160"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_161"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_162"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_163"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_164"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Watermelon"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "apple_red",
+          "chance": "100",
+          "scale": "60",
+          "collision": "5",
+          "onSide": "true",
+          "factTexture": "sml_ap",
+          "onlySprinkle": "true"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_RED_APPLE",
+              "plural": "FRUITNAME_PLURAL_RED_APPLE",
+              "singularEnglish": "apple",
+              "pluralEnglish": "apples"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "248,255,164,130",
+              "factColour": "89,238,58"
+            }
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Apple"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "lime",
+          "chance": "100",
+          "scale": "51",
+          "collision": "5",
+          "factTexture": "sml_lm"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_LIME",
+              "plural": "FRUITNAME_PLURAL_LIME",
+              "singularEnglish": "lime",
+              "pluralEnglish": "limes"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "150,217,17,145",
+              "factColour": "80,141,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_148"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_149"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_150"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_151"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Orange"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "coconut",
+          "chance": "0",
+          "scale": "70",
+          "collision": "5",
+          "hitInfluence": "0.9",
+          "factTexture": "sml_co"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_COCONUT",
+              "plural": "FRUITNAME_PLURAL_COCONUT",
+              "singularEnglish": "coconut",
+              "pluralEnglish": "coconuts"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,255,255,145",
+              "factColour": "255,255,255"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_53"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_54"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_55"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_56"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Coconut-More-Attack"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Banana"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "passionfruit",
+          "chance": "70",
+          "scale": "55",
+          "collision": "5",
+          "hasSplatSeeds": "1",
+          "factTexture": "sml_pas"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_PASSIONFRUIT",
+              "plural": "FRUITNAME_PLURAL_PASSIONFRUIT",
+              "singularEnglish": "passion fruit",
+              "pluralEnglish": "passion fruits"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,184,0,170",
+              "factColour": "212,239,34"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_190"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_191"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_192"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_193"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-watermelon"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "lemon",
+          "chance": "80",
+          "scale": "55",
+          "collision": "5",
+          "onSide": "true",
+          "factTexture": "sml_lmn"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_LEMON",
+              "plural": "FRUITNAME_PLURAL_LEMON",
+              "singularEnglish": "lemon",
+              "pluralEnglish": "lemons"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,252,0,130",
+              "factColour": "255,210,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_130"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_131"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_132"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_133"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_134"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Orange"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "bean",
+          "chance": "0",
+          "scale": "60",
+          "collision": "5",
+          "factTexture": "sml_kw"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_KIWIFRUIT",
+              "plural": "FRUITNAME_PLURAL_KIWIFRUIT",
+              "singularEnglish": "kiwifruit",
+              "pluralEnglish": "kiwifruits"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "150,217,17,145",
+              "factColour": "80,141,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_116"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_117"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_118"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_119"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_120"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_121"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-watermelon"
+          },
+          {
+            "tag": "power",
+            "attrs": {
+              "name": "extralife"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "tomato",
+          "chance": "100",
+          "scale": "60",
+          "collision": "5",
+          "onSide": "true",
+          "factTexture": "sml_st"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_TOMATO",
+              "plural": "FRUITNAME_PLURAL_TOMATO",
+              "singularEnglish": "tomato",
+              "pluralEnglish": "tomatoes"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "200,0,0,190",
+              "factColour": "199,27,27"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_270"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_271"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_272"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_273"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_274"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_275"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "super_pomegranate",
+          "chance": "0",
+          "score": "0",
+          "scale": "165",
+          "collision": "30",
+          "factTexture": "sml_df",
+          "modelName": "pomegranate"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_DRAGON",
+              "plural": "FRUITNAME_PLURAL_DRAGON",
+              "singularEnglish": "pomegranate",
+              "pluralEnglish": "pomegranates"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "200,3,40,225",
+              "factColour": "200,3,40"
+            }
+          },
+          {
+            "tag": "impact_sound",
+            "text": "dragonfruit"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "super_chest",
+          "chance": "0",
+          "score": "0",
+          "scale": "70",
+          "collision": "30",
+          "factTexture": "sml_df",
+          "modelName": "chest"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_DRAGON",
+              "plural": "FRUITNAME_PLURAL_DRAGON",
+              "singularEnglish": "pomegranate",
+              "pluralEnglish": "pomegranates"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "200,3,40,225",
+              "factColour": "200,3,40"
+            }
+          },
+          {
+            "tag": "impact_sound",
+            "text": "dragonfruit"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "peach",
+          "scale": "58",
+          "chance": "100",
+          "collision": "5",
+          "factTexture": "sml_mn"
+        },
+        "children": [
+          {
+            "tag": "titles",
+            "attrs": {
+              "singular": "FRUITNAME_PEACH",
+              "plural": "FRUITNAME_PLURAL_PEACH",
+              "singularEnglish": "peach",
+              "pluralEnglish": "peaches"
+            }
+          },
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,174,0,170",
+              "factColour": "255,198,0"
+            }
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_160"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_161"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_162"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_163"
+          },
+          {
+            "tag": "fact",
+            "text": "FRUIT_FACT_164"
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Watermelon"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "black_pineapple",
+          "scale": "60",
+          "collision": "-105"
+        },
+        "children": [
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,255,255,150"
+            }
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Pineapple"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "apple_center",
+          "scale": "60",
+          "collision": "5",
+          "onlySprinkle": "true"
+        },
+        "children": [
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "235,175,14,155"
+            }
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Apple"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "skynet",
+          "scale": "60",
+          "collision": "5",
+          "onlySprinkle": "true"
+        },
+        "children": [
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,255,255,150"
+            }
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Apple"
+          }
+        ]
+      },
+      {
+        "tag": "FruitInfo",
+        "attrs": {
+          "name": "pear_gold",
+          "chance": "0",
+          "score": "1",
+          "scale": "65",
+          "collision": "5"
+        },
+        "children": [
+          {
+            "tag": "colours",
+            "attrs": {
+              "colour": "255,255,255,145"
+            }
+          },
+          {
+            "tag": "impact_sound",
+            "text": "Impact-Apple"
+          }
+        ]
+      }
+    ]
+  }
+}

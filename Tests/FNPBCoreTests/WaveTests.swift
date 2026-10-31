@@ -63,8 +63,8 @@ final class WaveTests: XCTestCase {
         XCTAssertEqual(s.name, "")
         XCTAssertEqual(s.mode, 0)
 
-        // T-027 新增原始字段默认值全 0（不影响既有默认值）
-        XCTAssertEqual(s.min, 0.0)
+        // FUN_00053cb8 的 Spawn 元素初始化：min(+0x5c)=1，其余相关字段为 0。
+        XCTAssertEqual(s.min, 1.0)
         XCTAssertEqual(s.max, 0.0)
         XCTAssertEqual(s.minInc, 0.0)
         XCTAssertEqual(s.maxInc, 0.0)

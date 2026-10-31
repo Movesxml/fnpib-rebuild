@@ -1,0 +1,1252 @@
+{
+  "source": "originalWaveList.xml",
+  "bytes": 5757,
+  "encoding": "bxml",
+  "root": {
+    "tag": "waveManagerFile",
+    "attrs": {
+      "version": "1.0.0"
+    },
+    "children": [
+      {
+        "tag": "defaults",
+        "attrs": {
+          "waveChance": "90",
+          "waveChanceGrowth": "0.33",
+          "criticalChance": "1.0"
+        }
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "0"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "watermelon",
+              "min": "1",
+              "max": "1"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.7",
+              "inc": "0"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "1"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "2"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.7",
+              "inc": "0"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "1.25",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "2"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "3",
+              "max": "3"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.7"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "1.4",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "3"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "bomb",
+              "min": "1",
+              "max": "1"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.7"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "1.55",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "4"
+        },
+        "children": [
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.75"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "wait": "1.8"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "5"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "6",
+              "max": "7",
+              "delay": "0.45"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "bomb",
+              "min": "1",
+              "max": "1",
+              "delay": "4"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.75"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.85",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "6",
+          "until": "13"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "4",
+              "max": "6",
+              "delay": "0.5"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.75"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.8",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "6",
+          "until": "13"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "bomb",
+              "min": "1",
+              "max": "2"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.75"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.9",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "6",
+          "until": "13"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "3"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.75"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.8",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "6",
+          "until": "13"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "3",
+              "delay": "0.27"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.75"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.8",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "6",
+          "until": "13"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "4",
+              "delay": "0.36"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.75"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.8",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "13"
+        },
+        "children": [
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "wait": "1.8"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "1",
+              "max": "3"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb",
+              "min": "1",
+              "max": "2",
+              "delay": "0.7"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random",
+              "min": "6",
+              "max": "7",
+              "delay": "0.44"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, random, bomb",
+              "min": "2",
+              "max": "5",
+              "delay": "0.47"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "1",
+              "max": "2",
+              "delay": "0.5"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "1",
+              "max": "3",
+              "delay": "0.35"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb",
+              "min": "1",
+              "max": "3"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "1",
+              "max": "4",
+              "delay": "0.6"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "6",
+              "max": "10",
+              "delay": "0.38"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "bomb",
+              "min": "1",
+              "max": "4",
+              "delay": "0.4"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "14",
+          "until": "18"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "3",
+              "delay": "0.6"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "3",
+              "max": "4",
+              "delay": "0.4"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.8"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.7",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "19"
+        },
+        "children": [
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "1"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "wait": "0.1"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "20"
+        },
+        "children": [
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "1"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "wait": "0.1"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "21"
+        },
+        "children": [
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "1"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "wait": "0.1"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "22",
+          "chance": "135",
+          "chanceRegrowth": "0.2"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "5",
+              "max": "7",
+              "delay": "0.41"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.85"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.6",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "22"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, random, bomb",
+              "min": "3",
+              "max": "7",
+              "delay": "0.29"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.85"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.65",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "22"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "5",
+              "delay": "0.17"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.85"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.6",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "22"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, random, random, bomb",
+              "min": "3",
+              "max": "5"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.85"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.65",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "22"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "3",
+              "max": "5",
+              "delay": "0.27"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.85"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.6",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "22"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "bomb",
+              "min": "1",
+              "max": "3",
+              "delay": "0.37"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.85"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.6",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "26",
+          "until": "forever",
+          "chance": "300",
+          "chanceRegrowth": "0.05"
+        },
+        "children": [
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "1",
+              "inc": "0.06"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "wait": "1.55"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "67"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb",
+              "min": "5",
+              "max": "12",
+              "mininc": "0.3",
+              "maxinc": "0.5",
+              "delay": "0.34",
+              "delayinc": "-0.02"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.025"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.45",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "65"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, random, bomb",
+              "min": "4",
+              "max": "6",
+              "mininc": "0.1",
+              "maxinc": "0.3",
+              "delay": "0.65",
+              "delayinc": "-0.02"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "5",
+              "max": "7",
+              "mininc": "0.2",
+              "maxinc": "0.3",
+              "delay": "0.5",
+              "delayinc": "-0.02"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.025"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.45",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "69"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb",
+              "min": "2",
+              "max": "4",
+              "mininc": "0.1",
+              "maxinc": "0.3",
+              "delay": "0.6",
+              "delayinc": "-0.02"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "4",
+              "mininc": "0.2",
+              "maxinc": "0.3",
+              "delay": "0.4",
+              "delayinc": "-0.01"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.03"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.55",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "68"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random",
+              "min": "2",
+              "max": "5",
+              "mininc": "0.2",
+              "maxinc": "0.4",
+              "delay": "0.24",
+              "delayinc": "-0.008"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb",
+              "min": "3",
+              "max": "7",
+              "mininc": "0.3",
+              "maxinc": "0.5",
+              "delay": "0.57",
+              "delayinc": "-0.015"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.025"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.45",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "40"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb, bomb",
+              "min": "3",
+              "max": "5",
+              "mininc": "0.2",
+              "maxinc": "0.4",
+              "delay": "0.23",
+              "delayinc": "-0.007"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.035"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.25",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "40"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "bomb",
+              "min": "1",
+              "max": "2",
+              "mininc": "0.2",
+              "maxinc": "0.4",
+              "delay": "0.23",
+              "delayinc": "-0.007"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.035"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.6",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "40"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, random, bomb",
+              "min": "3",
+              "max": "5",
+              "mininc": "0.3",
+              "maxinc": "0.5",
+              "delay": "0.6",
+              "delayinc": "-0.03"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb",
+              "min": "2",
+              "max": "4",
+              "mininc": "0.3",
+              "maxinc": "0.5",
+              "delay": "0.7",
+              "delayinc": "-0.04"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.035"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.45",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      },
+      {
+        "tag": "WaveInfo",
+        "attrs": {
+          "waveNo": "27",
+          "chance": "40"
+        },
+        "children": [
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, random, bomb",
+              "min": "3",
+              "max": "4",
+              "mininc": "0.3",
+              "maxinc": "0.5",
+              "delay": "0.6",
+              "delayinc": "-0.03"
+            }
+          },
+          {
+            "tag": "Spawn",
+            "attrs": {
+              "type": "random, random, bomb",
+              "min": "2",
+              "max": "3",
+              "mininc": "0.3",
+              "maxinc": "0.5",
+              "delay": "0.7",
+              "delayinc": "-0.04"
+            }
+          },
+          {
+            "tag": "Wave_dt",
+            "attrs": {
+              "dt": "0.9",
+              "inc": "0.03"
+            }
+          },
+          {
+            "tag": "NextWaveDelay",
+            "attrs": {
+              "delay": "0.45",
+              "waitForEntities": "false"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
