@@ -255,9 +255,10 @@ v1 只做 5 个：mainscreen、gamemode、inGameClassic（HUD）、pause、resul
 4) Sources/FNPBUI/Screens/InGameHUDScreen.swift + PauseScreen.swift + ResultsScreen.swift；
 约束：不臆造 FNPBCore/FNPBRender 的 API（拿不准的写 [待验证] 并在文件头列出疑问清单）；Swift 6 并发模式——ViewModel 协议标 @MainActor；每个屏幕文件头注明锚定的 uiscreen 名与主要元素（分数/暂停按钮/生命图标/连击横幅…）。
 
-### [T-022] doing :: App 装配层 T-022：GameHost 真实服务接线 + UI 五屏闭环
-- 创建: 2026-10-31T02:51:24+08:00　更新: 2026-10-31T02:52:05+08:00
+### [T-022] done :: App 装配层 T-022：GameHost 真实服务接线 + UI 五屏闭环
+- 创建: 2026-10-31T02:51:24+08:00　更新: 2026-10-31T11:23:02+08:00
 - 验收: FNPBApp.swift 重写后 CI 绿；占位服务仅剩 EffectEmitting；触摸写入 GameState 真实字段；五屏随 UIPhase 切换
+- 备注: CI success(4de799d6)；注入截断导致 10 处猜测，Kimi 已逐点修正（UIActions 无标签 init/TouchRouter 单回调/SaveData 无 soundEnabled/FixedStepDriver.advance(delta:)/GameServices.rng/GameSnapshot 参数顺序等）；SliceQuery provider=prevSlashPos→hitPoint 线段占位 [待验证]
 
 重写 App 装配层，打通「菜单→开局→游玩→暂停→结算→重开」闭环（蓝图 S1 收口 + S8 接线）。
 
@@ -286,3 +287,35 @@ a) GameHost 持有 AppViewModel、AppViewModel 持有 GameHost → 用 weak 或�
 b) ObservableObject(GameHost) 与 @Observable(AppViewModel) 混用：统一走 AppViewModel 暴露 @Published 等价物（@Observable 的 @Observable 宏属性即可）；
 c) FNPBUIViewModel 要求 class 类型且 @MainActor——实现头照抄协议声明；
 d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通过，开局时在 startGame 写入 Constants.Slash 系的合理初值（15.0² 归一化语义见 RenderSurface 注释），标注 [待验证]。
+
+### [T-023] doing :: GameWorld 十步实装（R1 主循环全链）
+- 创建: 2026-10-31T11:24:03+08:00　更新: 2026-10-31T11:27:40+08:00
+- 验收: 十步全部有实现或显式 [待验证] 守卫（step8 允许留桩）；SlashTrail 入 GameState；新增 ≥5 个单测覆盖步骤 2/3/4/9/10；CI 全绿
+
+实装 GameWorld 的十步主循环（Sources/FNPBCore/Loop/GameWorld.swift）。step1 已完成；step2~step10 现为桩。本卡完成后「切中水果→连击→计分→波次→结束」在纯逻辑层可测。
+
+【事实底账（Kimi 已核准，勿再存疑）】
+- GameServices 字段：slice/combo/score/stats/waves/audio/effects/rng，全协议存在体（GameWorld.swift:104）。
+- GameState 真实字段表在 blueprint/GameState.swift（已注入）：hitPoint/slashTrailActive/slashTrailTimer/comboCount/comboWindowTimer/comboFruitTypes/missPenaltyCount/specialFruitBonusEnabled/specialOrBombMarked/isFaulted/sliceRadiusSquared 等。
+- SlashTrail 已实现（SliceGeometry.swift 已注入）：struct，advance(dt:point:) 严格复刻原环形缓冲（isActive 时 elapsed+=dt；elapsed>0.05 写槽并清 active/elapsed），begin()/clear()/reset()。**把 SlashTrail 实例放进 GameState**（新增 `public var slashTrail: SlashTrail = SlashTrail()`，GameState 已 Equatable → 给 SlashTrail 补 Equatable），step3 改为驱动它并同步 slashTrailActive/slashTrailTimer 两个镜像字段。
+- 切割判定两段式：SliceTesting.isSliced(game:entity:)（queryProvider 已在 App 层注入，逻辑层直接用），炸弹近失 isNearMiss（半径 ×1.5，L4 仅限炸弹循环）。
+- ComboTracker（已注入）：registerSlice(fruitType:entity:state:rng:) -> ComboEvent?（内部处理窗口/档位/近失计数）；tickWindow(dt:state:) -> [ComboEvent]；reset(state:)。ComboTier 档位常量见 ComboTier.swift。
+- ScoreSystem.dispatch(score:comboType:isScoring:mode:) -> Int32；StatsRecorder.add(_:_:)/report(_:_:)；StatsKey 枚举含 slashes/slashesScoring/totalfruit/combos/nearMiss/bomb/freeze 等。
+- AudioPlaying.play(_ key: String)（占位音效 key，注释 [待验证]）；EffectEmitting.emit(_ kind: Int32, at: SIMD3<Float>)（占位实现，直接调用即可）。
+- WaveDirector.tick(dt:state:world:) 已实现（步骤 10 第一步）。
+- 实体：Entity/EntityPrototype/EntityKind/GenerationOrderStore（已注入 ECS 文件）；水果运动 FruitMotion.swift（T-015）已有 advance 函数，step6 的水果位移若原逻辑含在循环 A 内则调用它，否则注明位移在何处推进 [待验证]。
+- Entity 的 kind 判定：EntityKind.fruit ↔ 原 type=1；EntityKind.bomb ↔ type=2；特殊果 kind 见枚举（若缺失特殊果 kind，在 EntityKind 增 case 并注释）。
+
+【逐步要求】
+1. step2 碰撞半径归一化：d=|hitPoint|（vec3 长度）；w = (d/15.0 <= 1.0) ? 0.5*(d/15.0)+0.5 : 1.0；state.sliceRadiusSquared = w*w（[待验证] 原式输出到全局最大值，重建直接写状态字段并注明差异）；常量用 Constants 里已有的值，禁止裸数字（15.0/0.5/1.0 查 Constants.swift）。
+2. step3：驱动 state.slashTrail.advance(dt:point:state.hitPoint)；注意原语义 isActive==0 时 elapsed=0（SlashTrail.advance 已含）——镜像字段 slashTrailTimer 赋 slashTrail.elapsed、slashTrailActive 赋 isActive。
+3. step4：state.levelTier < 4 → state.levelEffectParam = 0 并返回 false（跳过实体遍历），否则 true；levelTier 默认 0 → 默认永远跳过遍历——⚠️ 这会锁死游戏，需核对 [待验证]：原 +0xb4 语义是否「levelTier」默认值在开局时被写为 ≥4。处理方案：在 step4 注释说明，并在 GameHost.startGame 已把 state 重置为 GameState() 的前提下，**本卡只实现判定本身**，默认值问题在风险点列出，Kimi 裁决。
+4. step5 遍历门控：爆炸/冻结计时与全局位掩码属未闭合字段——冻结计时器在 WaveDirector.runtime，逻辑层读取 services.waves 无法访问 runtime（协议没有）→ 本步保持返回 true 并注释 [待验证] 三项门控来源，禁止臆造字段。
+5. step6 循环A：world.forEach(kind: .fruit) 按生成序；逐实体——(a) 跳过已切标记（用 Entity 已有字段；无对应字段则读 state.specialOrBombMarked 前先查语义，不臆造）；(b) services.slice.isSliced(game: state, entity:) → 命中：state.slashTrail.begin()；调用 services.combo.registerSlice(fruitType: <实体 fruit 类型 id>, entity: entity.id, state: &state, rng: services.rng)，返回的 ComboEvent 若为档位升级→ services.score.dispatch(...)/stats.add(.combos, 1)/audio.play("combo_<tier>")/effects.emit；首切发 stats.add(.slashes,1)/.slashesScoring 语义对照 findings；(c) 特殊果：state.specialFruitBonusEnabled → 计分加 specialBonus（ComboTracker init 的 specialFruitBonus 已在 App 注入 0，此处只做状态标记判定，[待验证]）；(d) 切中后 despawn 实体 + effects.emit(0, at: entity 位置) + audio.play("splash")（音效 key [待验证]）。
+6. step7 循环B：world.forEach(kind: .bomb)；isNearMiss → state.isFaulted = true + stats.add(.nearMiss, 1)（仅此处，L4 禁令不可推广）；炸弹被 isSliced 的爆炸结算在 step8 前的 [待验证] 段，本卡只做近失与 isFaulted 置位。
+7. step8 循环C：保留桩，注释写清 L3 语义未闭合，不做任何逻辑。
+8. step9：let events = services.combo.tickWindow(dt: dt, state: &state)；逐 event 分发 score/stats/audio/effects（档位事件对应 ComboTier）。
+9. step10：services.waves.tick(dt:state:world:)（生成水果）；其余子系统顺序（score/stats/audio/effects）目前无逐帧 API → 只调 waves，其余注释 [待验证] 原调用点。
+10. 新增 Tests/FNPBCoreTests/GameWorldTests.swift ≥5 测试：step2 半径归一化（d=0/7.5/30 三值）、step3 轨迹写槽与超时（advance 0.05 边界严格大于）、step4 levelTier<4 跳过、step9 tickWindow 到期分发（用真实 ComboTracker）、step10 waves 被调用（StubWaveDirector 计数）。测试用例里的 Stub 需满足 EntityStore 全协议（含 aliveCount，T-020 教训）。
+
+【硬约束】不改 GameServices/GameWorld.tick 的公开签名；step6/7 的 forEach 用 inout 写回；不臆造任何 API——注入文件没有的签名不许调用；新常量进 Constants.swift 对应 enum（查重，Physics 区已存在）；输出纪律紧凑。

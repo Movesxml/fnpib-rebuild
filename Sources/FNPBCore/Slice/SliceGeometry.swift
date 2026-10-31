@@ -13,6 +13,9 @@
 //
 //  【取数口径】binary_equivalence.md：数值/行为以 Mach-O 发售版为准。
 //
+//  【T-023 变更】`SlashTrail` 补 `Equatable`（`GameState` 为 `Equatable`，
+//  新增 `slashTrail` 字段后必须满足合成条件）。
+//
 
 import Foundation
 import simd
@@ -42,7 +45,10 @@ import simd
 ///
 /// ⚠️ 现代 120Hz 提示：`dt≈8.3ms` 时 0.05s 内最多 6 次采样，超出才写槽；
 ///    与原 30/60Hz 环境的采样密度不同，渲染侧刀光长度需另行评估（T-012 风险点）。
-public struct SlashTrail: Sendable {
+///
+/// 【T-023】Equatable 合成：`GameState` 是 `Equatable`，本类型收入其字段后必须可比较
+/// （存储属性均为 Equatable：`[SIMD3<Float>]` / `Int` / `Bool` / `Float`）。
+public struct SlashTrail: Sendable, Equatable {
 
     /// 环形缓冲槽（原 `DAT_00557468 + slot*4`，8 槽 vec3）
     public private(set) var samples: [SIMD3<Float>]

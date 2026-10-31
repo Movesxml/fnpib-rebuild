@@ -80,6 +80,7 @@ public struct GameState: Sendable, Equatable {
 
     /// 原 `+0xa5` byte
     /// slash 轨迹计时活跃标志（切中且 `DAT_005d4d80 != 0` 时置 1）。§1.2 步骤 6.3.1。
+    /// T-023：为 `slashTrail.isActive` 的**镜像字段**，由 GameWorld 步骤 3 同步。
     public var slashTrailActive: Bool = false
 
     /// 原 `+0xb4` int
@@ -96,6 +97,7 @@ public struct GameState: Sendable, Equatable {
 
     /// 原 `+0x104` / `+0x108` / `+0x10c` vec3
     /// 命中点（切中时记录实体位置）。§1.2 步骤 6.3.3。
+    /// T-023：GameWorld 步骤 2/3 把它当作本帧切割点（`|hitPoint|` 归一化 + 轨迹采样点）。
     public var hitPoint: SIMD3<Float> = .zero
 
     /// 原 `+0x110` int
@@ -112,6 +114,7 @@ public struct GameState: Sendable, Equatable {
 
     /// 原 `+0x17c` float
     /// slash 轨迹持续计时（`+= dt`，超过 0.05 触发环形缓冲写入并清活跃标志）。§1.2 步骤 3。
+    /// T-023：为 `slashTrail.elapsed` 的**镜像字段**，由 GameWorld 步骤 3 同步。
     public var slashTrailTimer: Float = 0
 
     /// 原 `+0x180` ptr
@@ -132,7 +135,19 @@ public struct GameState: Sendable, Equatable {
     /// 切割半径平方：`FUN_00017d74` 入口门控 `0.0 < *(float*)(game + 0xf0)`，
     /// 且作为二次确认的半径² 使用（DECISIONS T-006）。
     /// 来源：deep_slash_macho.md（FUN_00017d74 函数体）
+    /// T-023：由 GameWorld 步骤 2 每帧写入（= `w²`）。
     public var sliceRadiusSquared: Float = 0
+
+    /// slash 轨迹环形缓冲（T-023 新增）。
+    ///
+    /// 原版把 8 槽轨迹存在全局 `DAT_00557468 + slot*4`、槽位指针在 `DAT_005573b4`，
+    /// 与 game 实例解耦；重建将其收入 `GameState`，使逻辑层可完全值语义化
+    /// （存档/回放/单测不需要全局单例）。
+    ///
+    /// 与镜像字段的关系：`slashTrail.isActive` ↔ `slashTrailActive`(+0xa5)、
+    /// `slashTrail.elapsed` ↔ `slashTrailTimer`(+0x17c)；由 GameWorld 步骤 3 单向同步
+    /// （轨迹缓冲为真源，镜像字段仅供对账/历史调用点读取）。
+    public var slashTrail: SlashTrail = SlashTrail()
 
     // MARK: - 生命周期
 

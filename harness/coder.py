@@ -65,8 +65,9 @@ def build_user_prompt(task: dict) -> str:
                 ftxt.append(f"--- {rel} ---\n[缺失]")
                 continue
             text = p.read_text(encoding="utf-8")
-            chunk = text[:finding_cap]
-            ftxt.append(f"--- {rel} ---\n{chunk}")
+            # extra_files 必须完整注入（T-021~T-023 三轮皆因截断产生 API 猜测）；
+            # finding_cap 只作用于下方 findings，不作用于任务卡显式点名的文件。
+            ftxt.append(f"--- {rel} ---\n{text}")
         extra_names = {Path(rel).name for rel in extra_files}
         for name, text in findings.items():
             if name in extra_names:

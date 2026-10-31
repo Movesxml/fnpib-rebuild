@@ -318,6 +318,11 @@ final class GameHost: ObservableObject {
         // 暂取 15² = 225；归一化语义闭合后应改为按 logicalSize 换算。
         state.sliceRadiusSquared = 225.0
 
+        // [Kimi 裁决 T-023 风险点 2] levelTier 默认 0 < 4 → step4 门控永不通过、
+        // 实体遍历被永久跳过。原版开局必把 +0xb4 写成 ≥4（写入点未从反编译定位）。
+        // v1 在开局显式置为阈值，闭合后由关卡加载逻辑接管。
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff   // [待验证 写入点]
+
         store.clear()
         scoreSystem.reset()
         comboTracker.reset(state: &state)
