@@ -148,15 +148,15 @@ jobs:
         run: |
           set -euo pipefail
           SIM_ID="$(xcrun simctl list devices available --json | python3 -c '
-import json, sys
-runtimes = json.load(sys.stdin)["devices"]
-devices = [device for runtime in sorted(runtimes, reverse=True)
-           for device in runtimes[runtime]
-           if device.get("isAvailable", False) and device["name"].startswith("iPhone")]
-if not devices:
-    raise SystemExit("没有可用的 iPhone 模拟器")
-print(devices[0]["udid"])
-')"
+          import json, sys
+          runtimes = json.load(sys.stdin)["devices"]
+          devices = [device for runtime in sorted(runtimes, reverse=True)
+                     for device in runtimes[runtime]
+                     if device.get("isAvailable", False) and device["name"].startswith("iPhone")]
+          if not devices:
+              raise SystemExit("没有可用的 iPhone 模拟器")
+          print(devices[0]["udid"])
+          ')"
           echo "SIM_ID=$SIM_ID" >> "$GITHUB_ENV"
           echo "使用模拟器 UDID: $SIM_ID"
 
