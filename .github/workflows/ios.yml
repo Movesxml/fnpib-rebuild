@@ -31,8 +31,6 @@ env:
   PROJECT: FNPIB.xcodeproj
   SCHEME: FNPIB
   DERIVED_DATA: build/DerivedData
-  SIM_NAME: "iPhone 17"
-  SIM_OS: "latest"
 
 jobs:
   build-and-test:
@@ -145,6 +143,23 @@ jobs:
             2>&1 | tee build.log | (xcpretty --color || cat)
 
       # ------------------------------------------------------------------ 测试
+      # 不绑定会随 runner 镜像变化的具体机型；从当前 Xcode 可用设备中选 iPhone。
+      - name: Select available iPhone simulator
+        run: |
+          set -euo pipefail
+          SIM_ID="$(xcrun simctl list devices available --json | python3 -c '
+import json, sys
+runtimes = json.load(sys.stdin)["devices"]
+devices = [device for runtime in sorted(runtimes, reverse=True)
+           for device in runtimes[runtime]
+           if device.get("isAvailable", False) and device["name"].startswith("iPhone")]
+if not devices:
+    raise SystemExit("没有可用的 iPhone 模拟器")
+print(devices[0]["udid"])
+')"
+          echo "SIM_ID=$SIM_ID" >> "$GITHUB_ENV"
+          echo "使用模拟器 UDID: $SIM_ID"
+
       - name: Test (FNPBCoreTests)
         run: |
           set -o pipefail
@@ -153,7 +168,7 @@ jobs:
             -project "$PROJECT" \
             -scheme "$SCHEME" \
             -configuration Debug \
-            -destination "platform=iOS Simulator,name=$SIM_NAME,OS=$SIM_OS" \
+            -destination "platform=iOS Simulator,id=$SIM_ID" \
             -derivedDataPath "$DERIVED_DATA" \
             -enableCodeCoverage YES \
             -resultBundlePath build/TestResults.xcresult \
@@ -216,5 +231,5 @@ jobs:
             echo "| XcodeGen | \`$(xcodegen --version 2>/dev/null | awk '{print $NF}' || echo n/a)\` |"
             echo "| Xcode | \`$(xcodebuild -version 2>/dev/null | tr '\n' ' ')\` |"
             echo "| scheme | \`$SCHEME\` |"
-            echo "| destination | \`platform=iOS Simulator,name=$SIM_NAME,OS=$SIM_OS\` |"
+            echo "| destination | \`platform=iOS Simulator,id=${SIM_ID:-unavailable}\` |"
           } >> "$GITHUB_STEP_SUMMARY"
