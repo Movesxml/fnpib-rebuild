@@ -105,8 +105,9 @@ public struct WaveRuntime: Sendable {
 
     // -- T-029 ----------------------------------------------------------------
 
-    /// 激活计数：每次 `selectNextWave` 先 +1，候选条件用 `waveNo <= count`。
-    public var waveActivationCount: Int32 = 0
+    /// 激活计数：FUN_000547ec 开局重置为 -1；每次 `selectNextWave` 先 +1，
+    /// 因而首轮用于候选条件的 count=0（`waveNo <= count`）。
+    public var waveActivationCount: Int32 = -1
 
     /// 是否已经完成过至少一次选波（控制 spInc 的非首次递增语义）。
     public var hasSelectedWave: Bool = false

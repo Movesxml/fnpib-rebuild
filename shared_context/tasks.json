@@ -475,5 +475,27 @@
       "Tests/FNPBCoreTests/WaveTests.swift",
       "Tests/FNPBCoreTests/OriginalContentTests.swift"
     ]
+  },
+  {
+    "id": "T-030",
+    "title": "真实内容开局与水果/炸弹实体原型",
+    "desc": "接入T-028真实Content，删除占位开局。范围仅App/FNPBApp.swift、App/AppViewModel.swift、Sources/FNPBCore/Entities/WaveSpawnBridge.swift、Tests/FNPBCoreTests/SpawnMotionTests.swift（确有必要可新增App侧资源加载辅助，但不要改WaveDirector/加载器/几何/渲染）。1) GameHost初始化时从Bundle.main读取fruitList.json与originalWaveList.json，用OriginalContentLoader.load；资源或解析失败必须保留错误并禁止进入假开局，不得try!崩溃、不得回退占位。可将GameHost.startGame改为@discardableResult Bool，并让AppViewModel仅在实际成功后切到playing；正常重开复用已验证内容。2) startGame使用content.waves.waves与content.fruits.fruits调用beginGame(waves:fruits:)，彻底删除PlaceholderWave及placeholder Spawner。3) WaveSpawnBridge构造时接收真实水果表和BombInfo并强持有值数据；spawnFruit按typeID精确取得对应FruitInfo，把完整元数据放入EntityPrototype.fruit，transform.scale/radius取真实scale/collision，未知typeID不生成且不得水果0兜底。spawnBomb只创建炸弹实体，transform.scale=55、radius=35（必须来自加载后的BombInfo，不写死），不得触发爆炸结算。4) 删除SpawnGeometry.maxLiveFruitCount及两处人造24上限，不新增替代上限；真实实体管理门控仍属后续。5) 保持当前随机位置、发射速度、自旋和gravity不变并标[待验证]，不得在的本卡猜官方几何。6) 更新全部编译调用与测试：真实apple scale60/collision5及元数据、未知ID不生成、bomb55/35、连续生成超过24不截断；现有运动/出界/漏切测试继续通过。不要改Content JSON。",
+    "acceptance": "App只以真实38波次和24水果开局；无占位波次/24上限/水果0兜底；水果与炸弹原型使用真实元数据；内容错误可诊断且无try！或静默假开局；Swift 6完整CI通过；几何仍明确待验证",
+    "notes": "",
+    "status": "pending",
+    "created": "2026-11-01T01:28:31+08:00",
+    "updated": "2026-11-01T01:28:31+08:00",
+    "extra_files": [
+      "App/FNPBApp.swift",
+      "App/AppViewModel.swift",
+      "Sources/FNPBCore/Entities/WaveSpawnBridge.swift",
+      "Sources/FNPBCore/Content/OriginalContentLoader.swift",
+      "Sources/FNPBCore/Content/ContentTypes.swift",
+      "Sources/FNPBCore/Entities/FruitMotion.swift",
+      "Sources/FNPBCore/ECS/Entity.swift",
+      "Sources/FNPBCore/ECS/EntityStore.swift",
+      "Tests/FNPBCoreTests/SpawnMotionTests.swift",
+      "project.yml"
+    ]
   }
 ]

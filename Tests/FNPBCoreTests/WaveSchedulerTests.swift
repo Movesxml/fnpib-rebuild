@@ -218,24 +218,31 @@ final class WaveSchedulerTests: XCTestCase {
         let director = WaveDirector(playerCount: 1, rng: SeededRandomSource(seed: 8))
         director.beginGame(waves: [a, b, c], fruits: [])
 
-        // count=1：a(0<=1,1<=1)、b(1<=1,1<=1)、c(1<=1,forever) 均候选 → 首个 a
+        // FUN_000547ec 将计数重置为 -1；首次选波递增到 0，仅 a 候选。
+        XCTAssertEqual(director.runtime.waveActivationCount, 0)
         XCTAssertEqual(director.runtime.currentWaveIndex, 0)
 
-        // count=2：a 超出 until；b 超出 until；c(forever) 单候选
+        // count=1：a、b、c 均候选；全零权重按文档顺序仍选 a。
         director.selectNextWave()
+        XCTAssertEqual(director.runtime.waveActivationCount, 1)
+        XCTAssertEqual(director.runtime.currentWaveIndex, 0)
+
+        // count=2：a、b 超出 until；c(forever) 单候选。
+        director.selectNextWave()
+        XCTAssertEqual(director.runtime.waveActivationCount, 2)
         XCTAssertEqual(director.runtime.currentWaveIndex, 2)
     }
 
     func testDuplicateWaveNumbersAreNotIndices() {
-        // 两波同 waveNo=1；重复编号合法，按数组下标区分
-        let first = makeWave(waveNo: 1, until: -2, chanceRegrowth: 0,
+        // 两波同 waveNo=0；重复编号合法，按数组下标区分。
+        let first = makeWave(waveNo: 0, until: -2, chanceRegrowth: 0,
                              spawners: [makeSpawner(name: "first")])
-        let second = makeWave(waveNo: 1, until: -2, chanceRegrowth: 0,
+        let second = makeWave(waveNo: 0, until: -2, chanceRegrowth: 0,
                               spawners: [makeSpawner(name: "second")])
         let director = WaveDirector(playerCount: 1, rng: SeededRandomSource(seed: 4))
         director.beginGame(waves: [first, second], fruits: [])
 
-        XCTAssertEqual(director.runtime.waveActivationCount, 1)
+        XCTAssertEqual(director.runtime.waveActivationCount, 0)
         XCTAssertEqual(director.runtime.currentWaveIndex, 0)
         XCTAssertEqual(director.runtime.spawnBatches[0][0].kinds, [1])
     }
@@ -304,7 +311,7 @@ final class WaveSchedulerTests: XCTestCase {
     // MARK: - 7) freeze 结束选择下一波
 
     func testFreezeEndSelectsNextWave() {
-        let wave0 = makeWave(waveNo: 0, until: 1, chanceRegrowth: 0,
+        let wave0 = makeWave(waveNo: 0, until: 0, chanceRegrowth: 0,
                              nextWait: 0.5, spawners: [makeSpawner(name: "w0")])
         let wave1 = makeWave(waveNo: 1, until: -2, chanceRegrowth: 0,
                              nextWait: 0.5, spawners: [makeSpawner(name: "w1")])
@@ -315,17 +322,17 @@ final class WaveSchedulerTests: XCTestCase {
         director.beginGame(waves: [wave0, wave1], fruits: [])
 
         XCTAssertEqual(director.runtime.currentWaveIndex, 0)
+        XCTAssertEqual(director.runtime.waveActivationCount, 0)
 
         var state = GameState()
         let world = StubEntityStore()
-        // nextWait=0.5 → 5 × 0.1 归零触发一次
-        for _ in 0..<5 {
-            director.tick(dt: 0.1, state: &state, world: world)
-        }
+        // 两次精确的 0.25，避免 Float 累加五次 0.1 后留下微小正余量。
+        director.tick(dt: 0.25, state: &state, world: world)
+        director.tick(dt: 0.25, state: &state, world: world)
 
         XCTAssertEqual(events.freezeCount, 1)
         XCTAssertEqual(director.runtime.currentWaveIndex, 1, "freeze 结束调用 selectNextWave")
-        XCTAssertEqual(director.runtime.waveActivationCount, 2)
+        XCTAssertEqual(director.runtime.waveActivationCount, 1)
     }
 
     // MARK: - 8) 真实内容开局
