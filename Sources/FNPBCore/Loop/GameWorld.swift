@@ -150,6 +150,9 @@ public final class GameWorld: GameTicking {
     /// [待验证] 具体数值未闭合（T-007 遗留），暂按逻辑帧 1/60
     private let fallbackDelta: Float = 1.0 / 60.0
 
+    /// T-025：实体运动参数。装配层须把同一份值同时传给 WaveSpawnBridge。
+    public let motionTuning: FruitMotionTuning
+
     /// combo 计分事件的分发模式（原 `FUN_0001cb08` 的 mode 参数）。
     /// mode 0 = 常规：参与 32 位溢出保护（Constants.Scoring.overflowSkippedMode / overflowKeepMode 之外）。
     /// [待验证] 原主循环命中计分传入的 mode 值未从反编译直读。
@@ -159,7 +162,9 @@ public final class GameWorld: GameTicking {
     /// [待验证] kind 语义待特效任务卡定名，0 为「普通命中」占位。
     private static let hitEffectKind: Int32 = 0
 
-    public init() {}
+    public init(motionTuning: FruitMotionTuning = FruitMotionTuning()) {
+        self.motionTuning = motionTuning
+    }
 
     /// R7：由 GameLoop 在 `FrameDriving.start()` 后调用一次，使首帧 dt==0 也能推进
     public func prime() {
@@ -304,14 +309,22 @@ public final class GameWorld: GameTicking {
     ///   本步不重复加分 [待验证]。
     private func step6_processFruits(dt: Float, state: inout GameState,
                                      world: inout any EntityStore, services: GameServices) {
-        _ = dt
+        let tuning = motionTuning
 
         // 闭包内不访问 `world`（它是 inout，闭包内再访问会触发独占访问冲突），
         // 收集后统一 despawn。
         var pendingDespawn: [EntityID] = []
         var hitPositions: [SIMD3<Float>] = []
+        var missedFruitCount: Int32 = 0
 
         world.forEach(kind: .fruit) { (entity: inout Entity) -> Bool in
+            // T-025：先运动、后判定；出界水果不进入切割判定。
+            guard FruitMotion.integrate(&entity, dt: dt, tuning: tuning) else {
+                missedFruitCount &+= 1
+                pendingDespawn.append(entity.id)
+                return true
+            }
+
             // 6.2 参与判定门控（子集，见方法注释）
             guard !entity.isMarked else { return true }      // +0x6f（极性 [待验证]）
             guard entity.isVisible else { return true }      // +0x30 != 0
@@ -374,6 +387,10 @@ public final class GameWorld: GameTicking {
         for id in pendingDespawn {
             world.despawn(id)
         }
+        // 漏切使用独立的本局辅助字段，保留原 +0x3c 的切中分支语义。
+        if missedFruitCount > 0 {
+            state.missedFruitCount &+= missedFruitCount * Constants.MissPenalty.perMissedFruit
+        }
         for position in hitPositions {
             services.effects.emit(Self.hitEffectKind, at: position)
             services.audio.play("splash")                            // 音效 key [待验证]
@@ -390,14 +407,23 @@ public final class GameWorld: GameTicking {
     /// ⚠️ 炸弹「被切中」的爆炸结算在 §1.2 截断段，本卡**不实现**（见 step8 注释）。
     private func step7_processBombs(dt: Float, state: inout GameState,
                                     world: inout any EntityStore, services: GameServices) {
-        _ = dt
+        let tuning = motionTuning
+        var pendingDespawn: [EntityID] = []
         world.forEach(kind: .bomb) { (entity: inout Entity) -> Bool in
+            // 炸弹出界只回收，不计水果漏切。
+            guard FruitMotion.integrate(&entity, dt: dt, tuning: tuning) else {
+                pendingDespawn.append(entity.id)
+                return true
+            }
             guard services.slice.isNearMiss(game: state, entity: entity) else { return true }
             if !state.isFaulted {
                 state.isFaulted = true                              // +0xa4
                 services.stats.add(.nearMiss, 1)                    // L4：仅炸弹循环
             }
             return true
+        }
+        for id in pendingDespawn {
+            world.despawn(id)
         }
     }
 

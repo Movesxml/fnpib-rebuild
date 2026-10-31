@@ -149,6 +149,10 @@ public struct GameState: Sendable, Equatable {
     /// （轨迹缓冲为真源，镜像字段仅供对账/历史调用点读取）。
     public var slashTrail: SlashTrail = SlashTrail()
 
+    /// 本局未切且出界的水果数（T-025 重建辅助字段，默认 0，随 GameState 开局重置）。
+    /// 原版映射 [待验证]；刻意不复用 +0x3c，因为该偏移在切中分支也会 += 2。
+    public var missedFruitCount: Int32 = 0
+
     // MARK: - 生命周期
 
     public static let comboSlotCount: Int = Constants.Combo.fruitTypeSlotCount

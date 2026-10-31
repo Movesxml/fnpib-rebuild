@@ -321,9 +321,10 @@ d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通
 
 【硬约束】不改 GameServices/GameWorld.tick 的公开签名；step6/7 的 forEach 用 inout 写回；不臆造任何 API——注入文件没有的签名不许调用；新常量进 Constants.swift 对应 enum（查重，Physics 区已存在）；输出纪律紧凑。
 
-### [T-024] doing :: 渲染接入 T-024：Metal 视图挂载 + 实体→精灵提取 + 刀光轨迹
-- 创建: 2026-10-31T11:43:46+08:00　更新: 2026-10-31T11:43:53+08:00
+### [T-024] done :: 渲染接入 T-024：Metal 视图挂载 + 实体→精灵提取 + 刀光轨迹
+- 创建: 2026-10-31T11:43:46+08:00　更新: 2026-10-31T11:53:09+08:00
 - 验收: RenderAnchorView 被真实 Metal 视图替换；局内每帧提交水果精灵与刀光；GameHost 渲染链 beginFrame/submit/endFrame 接通；CI 全绿
+- 备注: CI success(b4007b42)；GameRenderer+canvasView 挂载；currentEntities=forEach 收集；logicalSize 改接渲染层；占位项集中清单 10 条
 
 把 FNPBRender 真实接入 App，让局内画面不再黑屏（蓝图 S7 收口 + S8 的最后一公里）。
 
@@ -343,3 +344,29 @@ d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通
 4) 分辨率：configure(SurfaceRequest) 在视图尺寸变化时调用（桥接内部若已处理则复用），logicalSize 变化需回写 TouchCoordinateMapper.logicalSize 闭包的数据源——当前 GameHost.currentLogicalSize 是屏幕物理像素，与渲染 logicalSize 不一致属已知 [待验证]，本卡把 TouchCoordinateMapper 的 logicalSize 闭包改接到 RenderSurface.logicalSize（若该属性在协议上公开；不公开则在 GameRenderer 暴露只读投影）。
 
 【硬约束】全部接线只能调用注入文件里真实存在的 API；Swift 6 隔离——Metal/MTKView 全部 @MainActor；不引入新 target 依赖（App 已依赖 FNPBRender）；CI 必须过编译+全部测试；每处 [待验证] 单列风险清单。
+
+### [T-025] doing :: T-025 实体生成与运动闭环：WaveSpawnSink 实现 + 抛物线积分 + 漏切
+- 创建: 2026-10-31T11:53:57+08:00　更新: 2026-10-31T11:54:06+08:00
+- 验收: WaveSpawnSink 有真实实现并挂到 WaveDirector.spawnSink；水果按 FruitMotion.integrate 逐帧运动；出界回收；漏切计 missPenalty；新增 ≥4 测试；CI 全绿
+
+打通「波次生成→水果抛起→可切→出界回收/漏切」的实体生命周期。T-024 之后画面链路已通，但水果永不生成、永不运动，本卡补齐。
+
+【Kimi 已核准的缺口与事实】
+1. **WaveSpawnSink 全工程无实现**：WaveDirector.spawnSink（weak）为 nil → spawnFruit/triggerExplosion 永不发生。协议（WaveDirector.swift:89）：`spawnFruit(kind: Int32, from spawner: Spawner, wave: WaveInfo)` / `triggerExplosion(from spawner: Spawner, wave: WaveInfo)`。
+2. **FruitMotion.integrate(_ entity: inout Entity, ...)**（FruitMotion.swift:135，静态）已实现抛物线/自旋/出界判定，但**主循环没有任何调用点**。FruitMotionTuning 字段与 Constants.Physics 默认值均已落盘。
+3. GameHost 现状：持有 store/state/waveDirector；startGame 重置全套；渲染经 currentEntities 提取。
+4. 原主循环实体更新语义（core_logic_notes §1.2）：循环 A/B 内实体先运动再判定（具体顺序以 FUN_00016214 反编译为准，[待验证] 若未直读则注明）。
+
+【交付】
+1) App/WaveSpawnBridge.swift（新）：final class WaveSpawnBridge: WaveSpawnSink——持有 EntityStore（引用 GenerationOrderStore 实例）与 FruitMotionTuning；
+   - spawnFruit(kind:from:wave:)：构造 EntityPrototype(kind: .fruit, transform: 初始位置在屏幕下缘（y = offscreenBottomMargin 附近，x 由 spawner 位置或 rng 决定 [待验证]），初速度按 FruitMotion 的发射角/速度区间采样（用注入的 RandomSource）)，fruit: FruitInfo(typeID: kind)（FruitInfo 其余字段默认，score 暂 0 → 待 fruitList 内容任务卡）→ store.spawn；
+   - triggerExplosion(from:wave:)：v1 只生成 kind=.bomb 实体（占位，[待验证] 原语义为爆炸特效而非生成）。
+   - GameHost.init 创建 bridge 并赋给 waveDirector.spawnSink；startGame 时 bridge 的 store 引用不变（store.clear() 保留实例）。
+2) GameWorld 主循环补运动：在 step6 循环A 与 step7 循环B 的 forEach 开头，对每个实体调 FruitMotion.integrate（签名以 FruitMotion.swift 为准）——注意独占访问：forEach 的 inout entity 直接传给 integrate 合法；
+   - 出界判定（integrate 返回值或字段，以真实 API 为准）→ 收集 pendingDespawn 统一回收（同 T-023 模式）；
+   - 漏切：水果未切且出屏 → state.missPenaltyCount 增量（原 +0x3c 语义 [待验证]，若 findings 有明确漏切分支按其执行）；
+   - 若 integrate 不含出界判定，用 FruitMotionTuning 的 offscreen 阈值在 GameWorld 判定。
+3) 新增 Tests/FNPBCoreTests/SpawnMotionTests.swift ≥4 用例：bridge.spawnFruit 后 store 有实体且初速度在 tuning 区间内；运动两帧后位置按抛物线变化；出界后回收；漏切计数。测试替身复用现有 SeededRandomSource（WaveTests.swift）与 SpyStats 模式（自行在本文件定义私有 spy，不要改他人文件）。
+4) AppViewModel 快照 lives：原版 Classic 漏切三振（missPenaltyCount 阈值 [待验证]），v1 在 refreshSnapshot 里用 `max(0, 3 - Int(state.missPenaltyCount))` 近似并标 [待验证]；GameHost.handleFrame 的结束判定增加「missPenaltyCount >= 3 → finishGame」（[待验证] 原版结束条件，与 isFaulted 并列）。
+
+【硬约束】不改 WaveDirector/FruitMotion 的公开签名；不臆造 API；Swift 6 独占访问纪律同 T-023；裸数字进 Constants（查重）；所有 [待验证] 单列。

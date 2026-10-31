@@ -73,7 +73,7 @@ final class AppViewModel: FNPBUIViewModel {
             mode: .classic,
             score: 0,
             bestScore: 0,
-            lives: 0,        // [待验证] Classic 剩余机会数无真实来源计数，v1 填 0（UI 只显示 0，不崩）
+            lives: Int(Constants.MissPenalty.threshold), // Classic 三振近似 [待验证]
             elapsed: 0,      // [待验证] 本局计时未接线，v1 HUD 不显示
             pauseVisible: false,
             combo: ComboBanner(count: 0, text: Self.comboText(textTier: 1), visualTier: 0, opacity: 0),
@@ -183,8 +183,8 @@ final class AppViewModel: FNPBUIViewModel {
 
     /// 结算入口。由 GameHost 在判定本局结束（core_logic_notes §1.2 步骤 7 的 `+0xa4` 失灵标志）时调用。
     ///
-    /// [待验证] 结束条件：任务卡未规定触发点；此处采用 `GameState.isFaulted`（炸弹近失置位的
-    /// 「失灵/结束标志」），闭合后若发现另有生命/计时条件，只需改 GameHost 的调用点。
+    /// [待验证] 结束条件：`GameState.isFaulted` 或独立漏切计数达到三振阈值；
+    /// 两条均未从反编译完全闭合，闭合后只需改 GameHost 的调用点。
     func finishGame() {
         guard phase == .playing || phase == .paused, let host else { return }
 
@@ -227,6 +227,7 @@ final class AppViewModel: FNPBUIViewModel {
         next.mode = mode
         next.score = Int(host.currentScore)
         next.bestScore = Int(host.bestScore(for: mode))
+        next.lives = max(0, Int(Constants.MissPenalty.threshold) - Int(state.missedFruitCount))
         next.combo = comboBanner(count: comboCount, windowTimer: state.comboWindowTimer)
         next.pauseVisible = (phase == .paused)
         if phase == .results {

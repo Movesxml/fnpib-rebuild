@@ -156,7 +156,10 @@ final class GameHost: ObservableObject {
     let renderDriver: GameRenderer?
 
     // MARK: 核心
-    private let gameWorld = GameWorld()
+    private let gameWorld: GameWorld
+    private let motionTuning: FruitMotionTuning
+    /// spawnSink 是 weak，GameHost 必须强持有生成桥。
+    private let waveSpawnBridge: WaveSpawnBridge
     private let fixedStep = FixedStepDriver(step: 1.0 / 60.0, maxSubsteps: 4)
 
     // MARK: 真实服务（T-022：替换 T-011 的 5 个占位）
@@ -254,8 +257,17 @@ final class GameHost: ObservableObject {
         self.effects = effects
 
         self.state = GameState()
-        self.store = GenerationOrderStore()
+        // bridge 固定捕获此实例；重开局只能 clear()，不能替换 store。
+        let entityStore = GenerationOrderStore()
+        self.store = entityStore
         self.saveData = saveStore.load()
+
+        let tuning = FruitMotionTuning()
+        self.motionTuning = tuning
+        self.gameWorld = GameWorld(motionTuning: tuning)
+        let spawnBridge = WaveSpawnBridge(store: entityStore, rng: rng, tuning: tuning)
+        self.waveSpawnBridge = spawnBridge
+        waves.spawnSink = spawnBridge
 
         // [Kimi 修正 T-022 审查] GameServices 字段表以 GameWorld.swift 为准：末尾还有 rng。
         self.services = GameServices(
@@ -339,8 +351,9 @@ final class GameHost: ObservableObject {
         }
         renderInterpolationAlpha = alpha
 
-        // 本局结束判定：+0xa4 失灵/结束标志 [待验证 触发条件]
-        if state.isFaulted {
+        // 本局结束判定均为 [待验证]：原 +0xa4 标志；Classic 三次漏切近似。
+        // missedFruitCount 是重建辅助字段，不能与原 +0x3c 的切中分支计数混用。
+        if state.isFaulted || state.missedFruitCount >= Constants.MissPenalty.threshold {
             viewModel.finishGame()
         }
 
@@ -388,9 +401,16 @@ final class GameHost: ObservableObject {
         comboTracker.reset(state: &state)
         statsRecorder.reset()
 
-        // [待验证] 占位波次：自由练习用的 WaveInfo 默认构造；
-        // [待验证] WaveDirector.beginGame(waves:) 的签名以 Wave 模块为准。
-        waveDirector.beginGame(waves: [WaveInfo()])
+        // [待验证] 内容加载前的最小占位波次；不是原版 XML 数据。
+        var spawner = Spawner()
+        spawner.name = "placeholder"
+        spawner.minWait = Constants.PlaceholderWave.minWait
+        spawner.maxWait = Constants.PlaceholderWave.maxWait
+        spawner.fruits = [SpawnerFruit(kind: Constants.PlaceholderWave.fruitKind,
+                                       chance: Constants.PlaceholderWave.chance)]
+        let wave = WaveInfo(until: Constants.WaveDefaults.untilForever,
+                            spawners: [spawner])
+        waveDirector.beginGame(waves: [wave])
 
         saveData = saveStore.load()
         shouldRunDisplayLink = true

@@ -377,10 +377,10 @@
     "title": "渲染接入 T-024：Metal 视图挂载 + 实体→精灵提取 + 刀光轨迹",
     "desc": "把 FNPBRender 真实接入 App，让局内画面不再黑屏（蓝图 S7 收口 + S8 的最后一公里）。\n\n【已核准事实】\n- FNPBRender 四件套已编译验证：MetalContext（含 UIViewRepresentable 桥接 MetalCanvasView，typealias UIViewType = MetalCanvasView）、RenderSurface（@MainActor 协议+实现，configure(SurfaceRequest)/beginFrame/submit/endFrame、logicalSize）、SpriteBatch（SpriteInstance/BlendMode 实例批渲染）、TextureLoader（TextureLoading，load(TextureAsset)）。\n- App 现状：FNPBApp.swift 的 gameplay ZStack 里 RenderAnchorView 是 Color.black 占位（T-022），GameHost 有 displayLink/touchRouter/audio/saveStore/gameWorld/fixedStep/state/store/services，handleFrame 末尾 viewModel.refreshSnapshot()。\n- 刀光轨迹数据在 state.slashTrail（SlashTrail，points 数组 8 槽 SIMD3 世界坐标）。\n- 水果实体：Entity.transform.position（SIMD3 世界坐标）/ fruit?.typeID；实体从 GenerationOrderStore 按生成序取。\n- 世界坐标约定：原点屏幕中心、X 右 Y 上（TouchRouter 注释）；SpriteBatch 由 RenderSurface.logicalSize 做 NDC 映射（RenderSurface.swift 注释）。\n- 贴图：assets_png/ 已全量转换（264 个 PNG，其中 192 个 4bpp 索引为灰度兜底图）；确证文件名仅 fruit_atlas.png 一张。UV 子矩形映射未闭合 → v1 允许整图集拉伸渲染 + [待验证] 注释；贴图缺失时用 TextureLoader 加载失败回落纯色四边形（SpriteInstance 色调），不得崩溃。\n- 音效/特效事件已在 T-023 接线；本卡不碰逻辑。\n\n【交付】\n1) App/GameRenderer.swift（新）：@MainActor final class GameRenderer——持有 RenderSurface 实现与 TextureLoader；提供 mtkView 桥接视图结构（直接复用 FNPBRender 的 UIViewRepresentable 类型，不要另写桥）；实现帧回调（MTKView 的 draw 或 MetalContext 提供的帧入口，以 MetalContext.swift 实际 API 为准）：beginFrame → 从 GameHost 拉当前 (state, store) 快照 → 提水果精灵（每实体一个 SpriteInstance，位置=transform.position，尺寸按水果类型给默认占位 0.1 逻辑单位 [待验证]，色调按 typeID 哈希着色占位）→ 提交刀光（slashTrail.points 相邻点对连成线段精灵， additive 混合 [待验证]）→ endFrame。\n2) 改 App/FNPBApp.swift：GameHost 增 renderDriver 属性（构造期创建 GameRenderer）；gameplay ZStack 把 RenderAnchorView 换成 GameRenderer 的桥接视图（.ignoresSafeArea()）；handleFrame 末尾在 refreshSnapshot 之前通知渲染层本帧数据就绪（或渲染层在 draw 时直接读 host.currentState/currentEntities——选注入文件里实际支持的通路，禁止臆造）。\n3) GameHost 增加只读投影：currentEntities（按生成序数组快照）供渲染提取；现有 currentState 直接用。\n4) 分辨率：configure(SurfaceRequest) 在视图尺寸变化时调用（桥接内部若已处理则复用），logicalSize 变化需回写 TouchCoordinateMapper.logicalSize 闭包的数据源——当前 GameHost.currentLogicalSize 是屏幕物理像素，与渲染 logicalSize 不一致属已知 [待验证]，本卡把 TouchCoordinateMapper 的 logicalSize 闭包改接到 RenderSurface.logicalSize（若该属性在协议上公开；不公开则在 GameRenderer 暴露只读投影）。\n\n【硬约束】全部接线只能调用注入文件里真实存在的 API；Swift 6 隔离——Metal/MTKView 全部 @MainActor；不引入新 target 依赖（App 已依赖 FNPBRender）；CI 必须过编译+全部测试；每处 [待验证] 单列风险清单。",
     "acceptance": "RenderAnchorView 被真实 Metal 视图替换；局内每帧提交水果精灵与刀光；GameHost 渲染链 beginFrame/submit/endFrame 接通；CI 全绿",
-    "notes": "",
-    "status": "doing",
+    "notes": "CI success(b4007b42)；GameRenderer+canvasView 挂载；currentEntities=forEach 收集；logicalSize 改接渲染层；占位项集中清单 10 条",
+    "status": "done",
     "created": "2026-10-31T11:43:46+08:00",
-    "updated": "2026-10-31T11:43:53+08:00",
+    "updated": "2026-10-31T11:53:09+08:00",
     "extra_files": [
       "App/FNPBApp.swift",
       "App/AppViewModel.swift",
@@ -392,6 +392,29 @@
       "blueprint/GameState.swift",
       "Sources/FNPBCore/ECS/Entity.swift",
       "Sources/FNPBCore/Slice/SliceGeometry.swift"
+    ]
+  },
+  {
+    "id": "T-025",
+    "title": "T-025 实体生成与运动闭环：WaveSpawnSink 实现 + 抛物线积分 + 漏切",
+    "desc": "打通「波次生成→水果抛起→可切→出界回收/漏切」的实体生命周期。T-024 之后画面链路已通，但水果永不生成、永不运动，本卡补齐。\n\n【Kimi 已核准的缺口与事实】\n1. **WaveSpawnSink 全工程无实现**：WaveDirector.spawnSink（weak）为 nil → spawnFruit/triggerExplosion 永不发生。协议（WaveDirector.swift:89）：`spawnFruit(kind: Int32, from spawner: Spawner, wave: WaveInfo)` / `triggerExplosion(from spawner: Spawner, wave: WaveInfo)`。\n2. **FruitMotion.integrate(_ entity: inout Entity, ...)**（FruitMotion.swift:135，静态）已实现抛物线/自旋/出界判定，但**主循环没有任何调用点**。FruitMotionTuning 字段与 Constants.Physics 默认值均已落盘。\n3. GameHost 现状：持有 store/state/waveDirector；startGame 重置全套；渲染经 currentEntities 提取。\n4. 原主循环实体更新语义（core_logic_notes §1.2）：循环 A/B 内实体先运动再判定（具体顺序以 FUN_00016214 反编译为准，[待验证] 若未直读则注明）。\n\n【交付】\n1) App/WaveSpawnBridge.swift（新）：final class WaveSpawnBridge: WaveSpawnSink——持有 EntityStore（引用 GenerationOrderStore 实例）与 FruitMotionTuning；\n   - spawnFruit(kind:from:wave:)：构造 EntityPrototype(kind: .fruit, transform: 初始位置在屏幕下缘（y = offscreenBottomMargin 附近，x 由 spawner 位置或 rng 决定 [待验证]），初速度按 FruitMotion 的发射角/速度区间采样（用注入的 RandomSource）)，fruit: FruitInfo(typeID: kind)（FruitInfo 其余字段默认，score 暂 0 → 待 fruitList 内容任务卡）→ store.spawn；\n   - triggerExplosion(from:wave:)：v1 只生成 kind=.bomb 实体（占位，[待验证] 原语义为爆炸特效而非生成）。\n   - GameHost.init 创建 bridge 并赋给 waveDirector.spawnSink；startGame 时 bridge 的 store 引用不变（store.clear() 保留实例）。\n2) GameWorld 主循环补运动：在 step6 循环A 与 step7 循环B 的 forEach 开头，对每个实体调 FruitMotion.integrate（签名以 FruitMotion.swift 为准）——注意独占访问：forEach 的 inout entity 直接传给 integrate 合法；\n   - 出界判定（integrate 返回值或字段，以真实 API 为准）→ 收集 pendingDespawn 统一回收（同 T-023 模式）；\n   - 漏切：水果未切且出屏 → state.missPenaltyCount 增量（原 +0x3c 语义 [待验证]，若 findings 有明确漏切分支按其执行）；\n   - 若 integrate 不含出界判定，用 FruitMotionTuning 的 offscreen 阈值在 GameWorld 判定。\n3) 新增 Tests/FNPBCoreTests/SpawnMotionTests.swift ≥4 用例：bridge.spawnFruit 后 store 有实体且初速度在 tuning 区间内；运动两帧后位置按抛物线变化；出界后回收；漏切计数。测试替身复用现有 SeededRandomSource（WaveTests.swift）与 SpyStats 模式（自行在本文件定义私有 spy，不要改他人文件）。\n4) AppViewModel 快照 lives：原版 Classic 漏切三振（missPenaltyCount 阈值 [待验证]），v1 在 refreshSnapshot 里用 `max(0, 3 - Int(state.missPenaltyCount))` 近似并标 [待验证]；GameHost.handleFrame 的结束判定增加「missPenaltyCount >= 3 → finishGame」（[待验证] 原版结束条件，与 isFaulted 并列）。\n\n【硬约束】不改 WaveDirector/FruitMotion 的公开签名；不臆造 API；Swift 6 独占访问纪律同 T-023；裸数字进 Constants（查重）；所有 [待验证] 单列。",
+    "acceptance": "WaveSpawnSink 有真实实现并挂到 WaveDirector.spawnSink；水果按 FruitMotion.integrate 逐帧运动；出界回收；漏切计 missPenalty；新增 ≥4 测试；CI 全绿",
+    "notes": "",
+    "status": "doing",
+    "created": "2026-10-31T11:53:57+08:00",
+    "updated": "2026-10-31T11:54:06+08:00",
+    "extra_files": [
+      "Sources/FNPBCore/Wave/WaveDirector.swift",
+      "Sources/FNPBCore/Wave/SpawnTable.swift",
+      "Sources/FNPBCore/Entities/FruitMotion.swift",
+      "Sources/FNPBCore/ECS/Entity.swift",
+      "Sources/FNPBCore/ECS/EntityStore.swift",
+      "Sources/FNPBCore/Loop/GameWorld.swift",
+      "Sources/FNPBCore/Content/ContentTypes.swift",
+      "App/FNPBApp.swift",
+      "App/AppViewModel.swift",
+      "blueprint/GameState.swift",
+      "blueprint/Constants.swift"
     ]
   }
 ]
