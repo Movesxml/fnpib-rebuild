@@ -52,7 +52,7 @@ final class GameWorldTests: XCTestCase {
     func test_step2_碰撞半径归一化三值() {
         let rig = Rig()
         var state = GameState()
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         // d = 0 → ratio = 0 → w = 0.5 → w² = 0.25
         state.hitPoint = SIMD3<Float>(0, 0, 0)
@@ -72,7 +72,7 @@ final class GameWorldTests: XCTestCase {
         // 三维长度（非单轴）：|(3,4,0)| = 5 → ratio = 1/3 → w = 0.5/3 + 0.5 = 0.6666..
         state.hitPoint = SIMD3<Float>(3, 4, 0)
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
-        let expectedW = 0.5 * (5.0 / 15.0) + 0.5
+        let expectedW: Float = 0.5 * (5.0 / 15.0) + 0.5
         XCTAssertEqual(state.sliceRadiusSquared, expectedW * expectedW, accuracy: 1e-6)
     }
 
@@ -81,7 +81,7 @@ final class GameWorldTests: XCTestCase {
     func test_step3_轨迹0点05边界不写槽且镜像同步() {
         let rig = Rig()
         var state = GameState()
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         state.hitPoint = SIMD3<Float>(1, 2, 3)
         state.slashTrail.begin()                 // 原 +0xa5 = 1
@@ -100,7 +100,7 @@ final class GameWorldTests: XCTestCase {
     func test_step3_超过0点05写槽并清活跃() {
         let rig = Rig()
         var state = GameState()
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         state.hitPoint = SIMD3<Float>(1, 2, 3)
         state.slashTrail.begin()
@@ -122,7 +122,7 @@ final class GameWorldTests: XCTestCase {
     func test_step3_未开启时不写槽且计时归零() {
         let rig = Rig()
         var state = GameState()
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         state.hitPoint = SIMD3<Float>(9, 9, 9)
         // 不调用 begin()：isActive == false
@@ -141,7 +141,7 @@ final class GameWorldTests: XCTestCase {
         state.levelEffectParam = 9.0
         rig.slice.sliceResult = true
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
         let id = world.spawn(EntityPrototype(kind: .fruit))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
@@ -157,7 +157,7 @@ final class GameWorldTests: XCTestCase {
         state.levelTier = Constants.Simulation.lowLevelEffectCutoff        // 4
         rig.slice.sliceResult = true
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
         let id = world.spawn(EntityPrototype(kind: .fruit))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
@@ -178,7 +178,7 @@ final class GameWorldTests: XCTestCase {
         state.comboWindowTimer = 0
         state.lastComboEntity = EntityID(rawValue: 99)
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         // dt = 0.1 → timer 0 → 0.1 ≥ windowCap(0.095) → 结算
         rig.world.tick(dt: Constants.Combo.windowBase,
@@ -202,7 +202,7 @@ final class GameWorldTests: XCTestCase {
         state.comboCount = 0
         state.comboWindowTimer = 0
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
         rig.world.tick(dt: Constants.Combo.windowBase,
                        state: &state, world: &world, services: rig.services)
 
@@ -216,7 +216,7 @@ final class GameWorldTests: XCTestCase {
     func test_step10_波次子系统每帧被调用() {
         let rig = Rig()
         var state = GameState()
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         // levelTier 默认 0（实体遍历被跳过）→ step10 仍必须执行（T-023 控制流修正）
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
@@ -230,7 +230,7 @@ final class GameWorldTests: XCTestCase {
         let rig = Rig()
         var state = GameState()
         state.levelTier = 0     // 明确的门控关闭
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
         XCTAssertEqual(rig.waves.tickCalls, 1, "实体遍历门控不得阻断子系统更新")
@@ -244,7 +244,7 @@ final class GameWorldTests: XCTestCase {
         state.levelTier = Constants.Simulation.lowLevelEffectCutoff
         rig.slice.sliceResult = true
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
         var fruit = FruitInfo()
         fruit.typeID = 1
         fruit.score = 10
@@ -267,7 +267,7 @@ final class GameWorldTests: XCTestCase {
         state.levelTier = Constants.Simulation.lowLevelEffectCutoff
         rig.slice.sliceResult = false
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
         let id = world.spawn(EntityPrototype(kind: .fruit))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
@@ -284,7 +284,7 @@ final class GameWorldTests: XCTestCase {
         state.levelTier = Constants.Simulation.lowLevelEffectCutoff
         rig.slice.nearMissResult = true
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
         world.spawn(EntityPrototype(kind: .bomb))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
@@ -303,7 +303,7 @@ final class GameWorldTests: XCTestCase {
         rig.slice.nearMissResult = true
         rig.slice.sliceResult = false
 
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
         world.spawn(EntityPrototype(kind: .fruit))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
@@ -318,7 +318,7 @@ final class GameWorldTests: XCTestCase {
         let rig = Rig()
         var state = GameState()
         state.hitPoint = SIMD3<Float>(30, 0, 0)
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         rig.world.tick(dt: 0, state: &state, world: &world, services: rig.services)
 
@@ -331,7 +331,7 @@ final class GameWorldTests: XCTestCase {
         rig.world.prime()
         var state = GameState()
         state.hitPoint = SIMD3<Float>(30, 0, 0)
-        var world = GenerationOrderStore()
+        var world: any EntityStore = GenerationOrderStore()
 
         rig.world.tick(dt: 0, state: &state, world: &world, services: rig.services)
 
