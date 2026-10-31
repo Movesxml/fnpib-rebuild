@@ -75,9 +75,9 @@ final class AppViewModel: FNPBUIViewModel {
             bestScore: 0,
             lives: 0,        // [待验证] Classic 剩余机会数无真实来源计数，v1 填 0（UI 只显示 0，不崩）
             elapsed: 0,      // [待验证] 本局计时未接线，v1 HUD 不显示
+            pauseVisible: false,
             combo: ComboBanner(count: 0, text: Self.comboText(textTier: 1), visualTier: 0, opacity: 0),
-            result: nil,
-            pauseVisible: false
+            result: nil
         )
     }
 
