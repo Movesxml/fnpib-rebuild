@@ -372,8 +372,9 @@ d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通
 
 【硬约束】不改 WaveDirector/FruitMotion 的公开签名；不臆造 API；Swift 6 独占访问纪律同 T-023；裸数字进 Constants（查重）；所有 [待验证] 单列。
 
-### [T-026] doing :: T-026 bxml 二进制 XML 解码与转换修复
-- 创建: 2026-10-31T23:10:02+08:00　更新: 2026-10-31T23:10:23+08:00
+### [T-026] done :: T-026 bxml 二进制 XML 解码与转换修复
+- 创建: 2026-10-31T23:10:02+08:00　更新: 2026-10-31T23:26:31+08:00
 - 验收: 自测全过；实跑 assets_raw/xml 60/60 转 JSON 成功且每文件完整消费；fruitList/originalWaveList 根和子节点数符合任务卡；原文本 XML 回归测试不退化
+- 备注: CI success(run 41214503438, remote 7e6ef06d)；53项自测全过，真实bxml 60/60完整消费；多根globalProbabilities保留3个顶层节点
 
 真实 assets_raw/xml/*.xml 全部是 Halfbrick bxml，不是文本 XML；现有 xml_convert 60/60 失败。Kimi 已实证格式：头 12 字节='bxml'+u16 headerAttrCount+u16 unknown+u32 stringTableByteSize；随后字符串表为 NUL 结尾 UTF-8，可后缀复用（引用偏移可落在另一字符串内部，必须按偏移取到下一 NUL，不要求等于字符串起点）。字节码从 12+size 开始：u32 rootCount；每个元素为 u8 marker=1、u32 nameOffset、u32 attrCount、attrCount 个(u32 nameOffset,u32 valueOffset)、u32 childCount、依序 childCount 个子节点；文本叶节点为独立 u8 marker=4+u32 textOffset（只有 5 字节，后面不再跟元素体）。已验证 settings.xml/originalModeInfo.xml/fruitList.xml/originalWaveList.xml 全字节精确消费；fruitList 根 fruitInfoFile 26 子节点、24 个 FruitInfo；originalWaveList 根 waveManagerFile 39 子节点。交付：1) 新 tools/AssetPipeline/bxml_decode.py，严格 bounds/offset/marker/root 检查、递归深度与节点数防爆、返回 xml.etree.ElementTree 元素或清晰异常；2) 修改 xml_convert.py，parse_xml 先识别 bxml 并走解码，文本叶按 ET 语义合并到父节点 text/tail，encoding 标 bxml；保留原文本 XML 与 selftest；新增合成 bxml 自测（属性、文本、后缀引用、截断/非法 offset/未知 marker）；3) tools/AssetPipeline/BXML_FORMAT.md 记录已实证结构与限制。不要猜其他 marker；遇未知 marker 明确报错。只改这 3 个文件。
