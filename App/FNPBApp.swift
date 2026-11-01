@@ -296,6 +296,7 @@ final class GameHost: ObservableObject {
             stats.configureFruitNames(Dictionary(uniqueKeysWithValues: fruits.fruits.map {
                 ($0.typeID, $0.name)
             }))
+            stats.configureComboBonuses(resolvedContent.comboBonuses)
             onSliced = FruitOnSliced(
                 critical: fruits.critical,
                 fruitTypeCount: fruits.fruits.count,
@@ -533,6 +534,7 @@ final class GameHost: ObservableObject {
         statsRecorder.configureFruitNames(Dictionary(uniqueKeysWithValues: fruits.fruits.map {
             ($0.typeID, $0.name)
         }))
+        statsRecorder.configureComboBonuses(content.comboBonuses)
         gameWorld = GameWorld(
             motionTuning: motionTuning,
             onSliced: FruitOnSliced(

@@ -51,6 +51,7 @@ public enum OriginalContentError: Error, Equatable, Sendable {
     case duplicateNode(tag: String, path: String)
     case emptySpawnTypeToken(index: Int, path: String)
     case unknownSpawnType(raw: String, path: String)
+    case emptyComboBonuses(path: String)
 }
 
 extension OriginalContentError: LocalizedError {
@@ -74,6 +75,8 @@ extension OriginalContentError: LocalizedError {
             return "\(path): Spawn.type 第 \(index) 个 token 为空"
         case let .unknownSpawnType(raw, path):
             return "\(path): Spawn.type 未知水果名 `\(raw)`"
+        case let .emptyComboBonuses(path):
+            return "\(path): 缺少 combo 奖励档位，拒绝使用占位值"
         }
     }
 }
@@ -123,18 +126,43 @@ public struct OriginalWaveList: Equatable, Sendable {
 public struct OriginalContent: Equatable, Sendable {
     public var fruits: OriginalFruitList
     public var waves: OriginalWaveList
+    /// bonusAwards.xml 中 combo 节点按文档顺序排列的 bonus 值。
+    public var comboBonuses: [Int32]
 
-    public init(fruits: OriginalFruitList, waves: OriginalWaveList) {
+    public init(fruits: OriginalFruitList, waves: OriginalWaveList, comboBonuses: [Int32]) {
         self.fruits = fruits
         self.waves = waves
+        self.comboBonuses = comboBonuses
     }
 }
 
 public enum OriginalContentLoader {
-    public static func load(fruitsData: Data, wavesData: Data) throws -> OriginalContent {
+    public static func load(fruitsData: Data,
+                            wavesData: Data,
+                            bonusAwardsData: Data) throws -> OriginalContent {
         let fruitList = try loadFruits(from: fruitsData)
         let waveList = try loadWaves(from: wavesData, fruits: fruitList.fruits)
-        return OriginalContent(fruits: fruitList, waves: waveList)
+        let comboBonuses = try loadComboBonuses(from: bonusAwardsData)
+        return OriginalContent(fruits: fruitList, waves: waveList, comboBonuses: comboBonuses)
+    }
+
+    /// FUN_0002c8f0 只读取根节点直接子级 combo 的 bonus，length 不参与数组索引。
+    public static func loadComboBonuses(from data: Data) throws -> [Int32] {
+        let root = try decodeRoot(from: data, expected: "bonusAwardsFile", source: "bonusAwards.json")
+        var bonuses: [Int32] = []
+        for (index, child) in root.children.enumerated() where child.tag == "combo" {
+            let path = "\(root.tag)/\(child.tag)[\(index)]"
+            guard let bonus = try int32Value(child, "bonus", path) else {
+                throw OriginalContentError.missingAttribute(node: child.tag,
+                                                            attribute: "bonus",
+                                                            path: path)
+            }
+            bonuses.append(bonus)
+        }
+        guard !bonuses.isEmpty else {
+            throw OriginalContentError.emptyComboBonuses(path: root.tag)
+        }
+        return bonuses
     }
 
     public static func loadFruits(from data: Data) throws -> OriginalFruitList {

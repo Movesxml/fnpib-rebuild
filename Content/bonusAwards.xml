@@ -1,0 +1,33 @@
+<bonusAwardsFile version="1.0.0">
+  <combo length="3" bonus="3" />
+  <combo length="4" bonus="4" />
+  <combo length="5" bonus="5" />
+  <combo length="6" bonus="7" />
+  <combo length="7" bonus="9" />
+  <combo length="8" bonus="12" />
+  <combo length="9" bonus="14" />
+  <combo length="10" bonus="17" />
+  <bonusType total="combo_bonus" texture="bonus_icon_total_combo">
+    <bonus min="3" points="5" colour="255,255,0,255">GAME_TEXTURE_13</bonus>
+    <bonus min="7" points="10" colour="255,255,0,255">GAME_TEXTURE_14</bonus>
+    <bonus min="13" points="15" colour="255,255,0,255">GAME_TEXTURE_15</bonus>
+    <bonus min="20" points="20" colour="255,255,0,255">GAME_TEXTURE_16</bonus>
+  </bonusType>
+  <bonusType total="quick_slice" texture="bonus_icon_total_combo">
+    <bonus min="1" points="5" colour="0,255,0,255">FN_PUSS_CHALLENGE_BONUS_QUICK_DRAW</bonus>
+  </bonusType>
+  <bonusType total="just_in_time" texture="bonus_icon_total_combo">
+    <bonus min="1" points="5" colour="0,255,0,255">FN_PUSS_CHALLENGE_BONUS_JUST_IN_TIME</bonus>
+  </bonusType>
+  <bonusType total="crit" texture="bonus_icon_total_combo">
+    <bonus min="1" points="10" colour="0,0,255,255">FN_PUSS_CHALLENGE_BONUS_CRITICAL</bonus>
+  </bonusType>
+  <bonusType total="slashes" texture="bonus_icon_first_last_fruit">
+    <bonus max="1" points="5" colour="0,255,255,255">FN_PUSS_CHALLENGE_BONUS_ONE_HIT</bonus>
+    <bonus max="3" points="3" colour="0,255,255,255">FN_PUSS_CHALLENGE_BONUS_TWO_HIT</bonus>
+    <bonus max="5" points="1" colour="0,255,255,255">FN_PUSS_CHALLENGE_BONUS_THREE_HIT</bonus>
+  </bonusType>
+  <bonusType total="near_miss" texture="bonus_icon_first_last_fruit">
+    <bonus min="1" points="5" colour="255,0,0,255">FN_PUSS_CHALLENGE_BONUS_NEAR_MISS</bonus>
+  </bonusType>
+</bonusAwardsFile>

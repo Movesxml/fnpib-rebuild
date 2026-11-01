@@ -189,7 +189,8 @@ final class SpawnMotionTests: XCTestCase {
             .deletingLastPathComponent()
         return try OriginalContentLoader.load(
             fruitsData: Data(contentsOf: root.appendingPathComponent("Content/fruitList.json")),
-            wavesData: Data(contentsOf: root.appendingPathComponent("Content/originalWaveList.json")))
+            wavesData: Data(contentsOf: root.appendingPathComponent("Content/originalWaveList.json")),
+            bonusAwardsData: Data(contentsOf: root.appendingPathComponent("Content/bonusAwards.json")))
     }
 
     private func firstID(in store: GenerationOrderStore) -> EntityID? {

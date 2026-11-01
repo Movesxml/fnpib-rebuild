@@ -3,7 +3,7 @@
 //  FNPBCore
 //
 //  统计计数、命中率及发售版 combo 结算统计。
-//  排名算法直接对应 Mach-O FUN_0002e030；combo_bonus 档位表尚未闭合，禁止臆造。
+//  排名算法对应 FUN_0002e030；奖励档位对应 FUN_0002c8f0 / FUN_0002ca24。
 //
 
 import Foundation
@@ -13,18 +13,25 @@ public final class StatsRecorder: StatsRecording {
     private var counters: [StatsKey: Int32] = [:]
     private var dynamicCounters: [String: Int32] = [:]
     private var fruitNames: [Int32: String]
+    private var comboBonuses: [Int32]
 
     /// 原 Stats +0x2e4 / +0x2e8 与全局 DAT_0052bfdc。
     public private(set) var bestComboCount: Int32 = 0
     public private(set) var bestComboFruitTypes = GameState.emptyComboSlots
     public private(set) var bestComboRank: Int32 = -1
 
-    public init(fruitNames: [Int32: String] = [:]) {
+    public init(fruitNames: [Int32: String] = [:], comboBonuses: [Int32] = []) {
         self.fruitNames = fruitNames
+        self.comboBonuses = comboBonuses
     }
 
     public func configureFruitNames(_ names: [Int32: String]) {
         fruitNames = names
+    }
+
+    public func configureComboBonuses(_ bonuses: [Int32]) {
+        precondition(!bonuses.isEmpty, "combo 奖励档位不能为空")
+        comboBonuses = bonuses
     }
 
     public func add(_ key: StatsKey, _ value: Int32) {
@@ -41,6 +48,7 @@ public final class StatsRecorder: StatsRecording {
         let types = Array(fruitTypes.prefix(Int(count)))
 
         if count >= 3 {
+            precondition(!comboBonuses.isEmpty, "结算 combo 前必须加载原版奖励档位")
             if let modePrefix {
                 report("\(modePrefix)_combos", 1)
             }
@@ -52,7 +60,10 @@ public final class StatsRecorder: StatsRecording {
             // FUN_0002ca24 的 best_combo 是“新值减旧值，负值归零”的增量。
             let previous = value(forDynamicKey: "best_combo")
             report("best_combo", max(0, count - previous))
-            // combo_bonus 还需要 FUN_0002c450 的档位数组；未读取前不上报假值。
+
+            // 数组按 combo-3 索引，超过最后一项后持续使用末项。
+            let bonusIndex = min(Int(count) - 3, comboBonuses.count - 1)
+            report("combo_bonus", comboBonuses[bonusIndex])
         }
 
         if count > bestComboCount {
@@ -113,9 +124,14 @@ public enum ComboPatternRank {
     public static func rank(_ types: [Int32], fruitNames: [Int32: String]) -> Int32 {
         var orderedTypes: [Int32] = []
         var counts: [Int] = []
+        // 原 bVar3：每次重复都必须命中“最近新增的种类”，否则后续两类序列
+        // 才进入交替检查。这个状态不能由最终 counts 反推。
+        var repeatsOnlyMostRecentType = true
         for type in types {
             if let index = orderedTypes.firstIndex(of: type) {
                 counts[index] += 1
+                repeatsOnlyMostRecentType = repeatsOnlyMostRecentType
+                    && index == orderedTypes.count - 1
             } else {
                 orderedTypes.append(type)
                 counts.append(1)
@@ -133,10 +149,12 @@ public enum ComboPatternRank {
             return rank
         }
         if distinct == 2 {
-            let alternating = types.indices.allSatisfy { index in
-                types[index] == orderedTypes[index % 2]
+            if !repeatsOnlyMostRecentType {
+                let alternating = types.indices.allSatisfy { index in
+                    types[index] == orderedTypes[index % 2]
+                }
+                if alternating { return 24 }
             }
-            if alternating { return 24 }
             if types.count == 5 && counts.prefix(2).contains(2) {
                 return 20
             }

@@ -1,0 +1,222 @@
+{
+  "source": "bonusAwards.xml",
+  "bytes": 1780,
+  "encoding": "as-declared",
+  "root": {
+    "tag": "bonusAwardsFile",
+    "attrs": {
+      "version": "1.0.0"
+    },
+    "children": [
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "3",
+          "bonus": "3"
+        }
+      },
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "4",
+          "bonus": "4"
+        }
+      },
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "5",
+          "bonus": "5"
+        }
+      },
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "6",
+          "bonus": "7"
+        }
+      },
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "7",
+          "bonus": "9"
+        }
+      },
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "8",
+          "bonus": "12"
+        }
+      },
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "9",
+          "bonus": "14"
+        }
+      },
+      {
+        "tag": "combo",
+        "attrs": {
+          "length": "10",
+          "bonus": "17"
+        }
+      },
+      {
+        "tag": "bonusType",
+        "attrs": {
+          "total": "combo_bonus",
+          "texture": "bonus_icon_total_combo"
+        },
+        "children": [
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "3",
+              "points": "5",
+              "colour": "255,255,0,255"
+            },
+            "text": "GAME_TEXTURE_13"
+          },
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "7",
+              "points": "10",
+              "colour": "255,255,0,255"
+            },
+            "text": "GAME_TEXTURE_14"
+          },
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "13",
+              "points": "15",
+              "colour": "255,255,0,255"
+            },
+            "text": "GAME_TEXTURE_15"
+          },
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "20",
+              "points": "20",
+              "colour": "255,255,0,255"
+            },
+            "text": "GAME_TEXTURE_16"
+          }
+        ]
+      },
+      {
+        "tag": "bonusType",
+        "attrs": {
+          "total": "quick_slice",
+          "texture": "bonus_icon_total_combo"
+        },
+        "children": [
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "1",
+              "points": "5",
+              "colour": "0,255,0,255"
+            },
+            "text": "FN_PUSS_CHALLENGE_BONUS_QUICK_DRAW"
+          }
+        ]
+      },
+      {
+        "tag": "bonusType",
+        "attrs": {
+          "total": "just_in_time",
+          "texture": "bonus_icon_total_combo"
+        },
+        "children": [
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "1",
+              "points": "5",
+              "colour": "0,255,0,255"
+            },
+            "text": "FN_PUSS_CHALLENGE_BONUS_JUST_IN_TIME"
+          }
+        ]
+      },
+      {
+        "tag": "bonusType",
+        "attrs": {
+          "total": "crit",
+          "texture": "bonus_icon_total_combo"
+        },
+        "children": [
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "1",
+              "points": "10",
+              "colour": "0,0,255,255"
+            },
+            "text": "FN_PUSS_CHALLENGE_BONUS_CRITICAL"
+          }
+        ]
+      },
+      {
+        "tag": "bonusType",
+        "attrs": {
+          "total": "slashes",
+          "texture": "bonus_icon_first_last_fruit"
+        },
+        "children": [
+          {
+            "tag": "bonus",
+            "attrs": {
+              "max": "1",
+              "points": "5",
+              "colour": "0,255,255,255"
+            },
+            "text": "FN_PUSS_CHALLENGE_BONUS_ONE_HIT"
+          },
+          {
+            "tag": "bonus",
+            "attrs": {
+              "max": "3",
+              "points": "3",
+              "colour": "0,255,255,255"
+            },
+            "text": "FN_PUSS_CHALLENGE_BONUS_TWO_HIT"
+          },
+          {
+            "tag": "bonus",
+            "attrs": {
+              "max": "5",
+              "points": "1",
+              "colour": "0,255,255,255"
+            },
+            "text": "FN_PUSS_CHALLENGE_BONUS_THREE_HIT"
+          }
+        ]
+      },
+      {
+        "tag": "bonusType",
+        "attrs": {
+          "total": "near_miss",
+          "texture": "bonus_icon_first_last_fruit"
+        },
+        "children": [
+          {
+            "tag": "bonus",
+            "attrs": {
+              "min": "1",
+              "points": "5",
+              "colour": "255,0,0,255"
+            },
+            "text": "FN_PUSS_CHALLENGE_BONUS_NEAR_MISS"
+          }
+        ]
+      }
+    ]
+  }
+}

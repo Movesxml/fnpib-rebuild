@@ -340,7 +340,8 @@ final class WaveSchedulerTests: XCTestCase {
     func testRealContentOpensWithWave0Watermelon() throws {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
-            wavesData: contentData("originalWaveList.json"))
+            wavesData: contentData("originalWaveList.json"),
+            bonusAwardsData: contentData("bonusAwards.json"))
 
         XCTAssertEqual(content.waves.waves.count, 38)
         XCTAssertEqual(content.fruits.fruits.count, 24)

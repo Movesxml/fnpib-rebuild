@@ -328,31 +328,62 @@ final class ComboScoreTests: XCTestCase {
         let names: [Int32: String] = [1: "apple", 2: "orange", 3: "banana"]
         XCTAssertEqual(ComboPatternRank.rank([1, 1, 1], fruitNames: names), 6)
         XCTAssertEqual(ComboPatternRank.rank([1, 2, 1, 2, 1], fruitNames: names), 24)
-        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2, 3], fruitNames: names), 20)
-        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2, 3, 3], fruitNames: names), 22)
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2, 3], fruitNames: names), 21,
+                       "三类五个且前两类之一出现两次，优先返回 21")
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2, 3, 3], fruitNames: names), 3,
+                       "六个 2/2/2 没有三连，走小 combo 默认表")
         XCTAssertEqual(ComboPatternRank.rank([1, 2, 3, 4, 5], fruitNames: names), 4)
         XCTAssertEqual(ComboPatternRank.rank([1, 2, 3, 1, 2], fruitNames: names), 21)
-        XCTAssertEqual(ComboPatternRank.rank([1, 2, 1], fruitNames: names), 0)
-        XCTAssertEqual(ComboPatternRank.rank([1, 2, 3, 1, 2, 3, 1], fruitNames: names), 5)
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 1], fruitNames: names), 24,
+                       "原 bVar3 已被打断，短交替序列同样返回 24")
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 1, 2, 1, 2], fruitNames: names), 24)
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2], fruitNames: names), -1,
+                       "重复始终命中最近新增种类时不进入交替分支")
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 1, 2], fruitNames: names), 20)
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 1, 2], fruitNames: names), 22)
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 1, 1, 2], fruitNames: names), 23)
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 3, 1, 2, 3, 1], fruitNames: names), 22)
     }
 
     func testBestComboUsesCountThenPatternRankAndIncrementalStat() {
-        let stats = StatsRecorder(fruitNames: [1: "apple", 2: "orange", 3: "banana"])
+        let stats = StatsRecorder(fruitNames: [1: "apple", 2: "orange", 3: "banana"],
+                                  comboBonuses: [3, 4, 5, 7, 9, 12, 14, 17])
         stats.recordCombo(count: 3, fruitTypes: [1, 1, 1], modePrefix: "CLASSIC")
         XCTAssertEqual(stats.bestComboRank, 6)
         XCTAssertEqual(stats.value(forDynamicKey: "best_combo"), 3)
         XCTAssertEqual(stats.value(forDynamicKey: "CLASSIC_combos"), 1)
 
         stats.recordCombo(count: 3, fruitTypes: [1, 2, 1], modePrefix: "CLASSIC")
-        XCTAssertEqual(stats.bestComboFruitTypes, [1, 1, 1] + [Int32](repeating: -1, count: 8),
-                       "同数且排名更低时保留旧序列")
+        XCTAssertEqual(stats.bestComboFruitTypes, [1, 2, 1] + [Int32](repeating: -1, count: 8),
+                       "同数且原排名更高时替换旧序列")
+        XCTAssertEqual(stats.bestComboRank, 24)
         stats.recordCombo(count: 3, fruitTypes: [2, 2, 2], modePrefix: "CLASSIC")
-        XCTAssertEqual(stats.bestComboFruitTypes, [2, 2, 2] + [Int32](repeating: -1, count: 8))
-        XCTAssertEqual(stats.bestComboRank, 7)
+        XCTAssertEqual(stats.bestComboFruitTypes, [1, 2, 1] + [Int32](repeating: -1, count: 8),
+                       "同数且排名更低时保留旧序列")
+        XCTAssertEqual(stats.bestComboRank, 24)
         XCTAssertEqual(stats.value(forDynamicKey: "best_combo"), 3, "同数不重复增加最佳值")
 
         stats.recordCombo(count: 2, fruitTypes: [1, 2], modePrefix: nil)
         XCTAssertEqual(stats.value(for: .combos), 3, "2 连只更新最高连击，不上报 combos")
+        XCTAssertEqual(stats.value(forDynamicKey: "combo_bonus"), 9)
+    }
+
+    func testComboBonusUsesEveryOriginalTierAndClampsAtTen() {
+        let stats = StatsRecorder(comboBonuses: [3, 4, 5, 7, 9, 12, 14, 17])
+        let expected = [3, 4, 5, 7, 9, 12, 14, 17, 17, 17]
+        var accumulated: Int32 = 0
+        for (offset, bonus) in expected.enumerated() {
+            let count = Int32(offset + 3)
+            stats.recordCombo(count: count,
+                              fruitTypes: [Int32](repeating: 1, count: Int(count)),
+                              modePrefix: nil)
+            accumulated += bonus
+            XCTAssertEqual(stats.value(forDynamicKey: "combo_bonus"), accumulated,
+                           "combo=\(count) 的奖励档位错误")
+            XCTAssertEqual(stats.value(forDynamicKey: "best_combo"), count,
+                           "combo_bonus 不能替代 best_combo")
+        }
+        XCTAssertEqual(stats.value(for: .combos), Int32(expected.count))
     }
 
     func testStatsRecorderAccuracyFromKeys() {

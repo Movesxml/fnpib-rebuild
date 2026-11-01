@@ -195,11 +195,43 @@ final class OriginalContentTests: XCTestCase {
         }
     }
 
+    func testComboBonusesFollowDocumentOrderAndRejectMissingData() throws {
+        let json = """
+        {"root":{"tag":"bonusAwardsFile","children":[
+          {"tag":"combo","attrs":{"length":"3","bonus":"3"}},
+          {"tag":"bonusType","attrs":{"total":"combo_bonus"},"children":[]},
+          {"tag":"combo","attrs":{"length":"4","bonus":"7"}}
+        ]}}
+        """
+        XCTAssertEqual(try OriginalContentLoader.loadComboBonuses(from: Data(json.utf8)), [3, 7],
+                       "length 只是原始元数据，数组严格按 combo 文档顺序")
+
+        let missingBonus = #"{"root":{"tag":"bonusAwardsFile","children":[{"tag":"combo","attrs":{"length":"3"}}]}}"#
+        XCTAssertThrowsError(try OriginalContentLoader.loadComboBonuses(from: Data(missingBonus.utf8))) { error in
+            guard case OriginalContentError.missingAttribute(_, let attribute, _) = error else {
+                return XCTFail("缺少 bonus 必须报错，实际 \(error)")
+            }
+            XCTAssertEqual(attribute, "bonus")
+        }
+
+        let invalidBonus = #"{"root":{"tag":"bonusAwardsFile","children":[{"tag":"combo","attrs":{"bonus":"x"}}]}}"#
+        XCTAssertThrowsError(try OriginalContentLoader.loadComboBonuses(from: Data(invalidBonus.utf8)))
+
+        let empty = #"{"root":{"tag":"bonusAwardsFile","children":[]}}"#
+        XCTAssertThrowsError(try OriginalContentLoader.loadComboBonuses(from: Data(empty.utf8))) { error in
+            guard case OriginalContentError.emptyComboBonuses = error else {
+                return XCTFail("空奖励表必须报错，实际 \(error)")
+            }
+        }
+    }
+
     func testRealContentFilesLoadExactly() throws {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
-            wavesData: contentData("originalWaveList.json"))
+            wavesData: contentData("originalWaveList.json"),
+            bonusAwardsData: contentData("bonusAwards.json"))
 
+        XCTAssertEqual(content.comboBonuses, [3, 4, 5, 7, 9, 12, 14, 17])
         XCTAssertEqual(content.fruits.fruits.count, 24)
         XCTAssertEqual(content.fruits.fruits[0].name, "apple")
         XCTAssertEqual(content.fruits.fruits[0].typeID, 0)
@@ -238,7 +270,8 @@ final class OriginalContentTests: XCTestCase {
     func testRealWave0ValuesAndRealDefaultsAreNotAliased() throws {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
-            wavesData: contentData("originalWaveList.json"))
+            wavesData: contentData("originalWaveList.json"),
+            bonusAwardsData: contentData("bonusAwards.json"))
         let wave0 = content.waves.waves[0]
         XCTAssertEqual(wave0.waveNo, 0)
         XCTAssertEqual(wave0.chance, 90, "缺省波次权重继承 defaults.waveChance")
