@@ -107,6 +107,8 @@ public final class GenerationOrderStore: EntityStore {
         entity.fallDelay = prototype.fallDelay
         entity.dropState = prototype.dropState
         entity.specialOrBombMarked = prototype.specialOrBombMarked
+        entity.skipsNormalFruitPath = prototype.skipsNormalFruitPath
+        entity.isCriticalHit = prototype.isCriticalHit
         entity.bombState = prototype.bombState
         entity.isBombSliceEnabled = prototype.isBombSliceEnabled
         entity.isFaultingBomb = prototype.isFaultingBomb

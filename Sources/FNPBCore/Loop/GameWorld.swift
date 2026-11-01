@@ -43,8 +43,7 @@ import simd
 public enum ComboEvent: Equatable, Sendable {
     case started(fruitType: Int32)
     case incremented(count: Int32, visualTier: Int32, textTier: Int32)
-    case settled(count: Int32, fruitTypes: [Int32])
-    case specialBonusApplied(delta: Float)      // 原 +0x1ba 分支
+    case settled(count: Int32, fruitTypes: [Int32], comboType: Int32)
 }
 
 public protocol SliceTesting: AnyObject {
@@ -93,6 +92,8 @@ public protocol StatsRecording: AnyObject {
     func add(_ key: StatsKey, _ value: Int32)
     /// 动态键（"%s_combos" / "strawberry_combo_total"）走字符串通道
     func report(_ dynamicKey: String, _ value: Int32)
+    /// combo 快照必须包含水果类型；模式未闭合时 modePrefix 为 nil。
+    func recordCombo(count: Int32, fruitTypes: [Int32], modePrefix: String?)
 }
 
 public protocol WaveDirecting: AnyObject {
@@ -162,17 +163,17 @@ public final class GameWorld: GameTicking {
     /// T-025：实体运动参数。装配层须把同一份值同时传给 WaveSpawnBridge。
     public let motionTuning: FruitMotionTuning
 
-    /// combo 计分事件的分发模式（原 `FUN_0001cb08` 的 mode 参数）。
-    /// mode 0 = 常规：参与 32 位溢出保护（Constants.Scoring.overflowSkippedMode / overflowKeepMode 之外）。
-    /// [待验证] 原主循环命中计分传入的 mode 值未从反编译直读。
-    private static let scoringDispatchMode: Int32 = 0
+    /// 发售版水果 OnSliced 的已闭合计分/统计子链。
+    private let onSliced: FruitOnSliced
 
     /// 命中特效的 kind 占位（原 FUN_00033ca0 / FUN_00035a08 的类别参数）。
     /// [待验证] kind 语义待特效任务卡定名，0 为「普通命中」占位。
     private static let hitEffectKind: Int32 = 0
 
-    public init(motionTuning: FruitMotionTuning = FruitMotionTuning()) {
+    public init(motionTuning: FruitMotionTuning = FruitMotionTuning(),
+                onSliced: FruitOnSliced = FruitOnSliced()) {
         self.motionTuning = motionTuning
+        self.onSliced = onSliced
     }
 
     /// R7：由 GameLoop 在 `FrameDriving.start()` 后调用一次，使首帧 dt==0 也能推进
@@ -307,13 +308,10 @@ public final class GameWorld: GameTicking {
     ///   真实 `Entity.stateSlot0`，不能用水果 typeID 代替。
     /// • 首发 `slashes` / `slashesScoring` 统计：**已由 ComboTracker 内部上报**
     ///   （其 `stats` 注入 = `services.stats`），本步不重复上报，避免双倍计数。
-    /// • 计分基数：取 `entity.fruit?.score`（`FruitInfo.score ↔ +0x314`，§4.5 [macho H]）。
-    ///   ⚠️ [待验证] `state.lastSliceScore`(+0x110) 被 `recordSliceHit` 写为「水果类型」，
-    ///   与 blueprint 注释「水果类型 ID / 加成后的分值」存在双解；若后续确认 +0x110
-    ///   才是计分基数，只需改此一处。
-    /// • 6.5 特殊果：只读 `state.specialFruitBonusEnabled` 标记，实际加成由
-    ///   `ComboTracker.registerSlice` 内部完成（`specialFruitBonus` 已在 App 注入 0），
-    ///   本步不重复加分 [待验证]。
+    /// • 单果得分由 `FruitOnSliced` 每次命中独立执行，不绑定 combo 事件；
+    ///   杨桃、noScore 与暴击加分按发售版 OnSliced 的已闭合分支处理。
+    /// • `state.lastSliceScore`(+0x110) 先写水果 typeID；实体 +0x1ba 后处理再加
+    ///   `PTR_DAT_004d90b4 -> DAT_005d4cd0` 指向的水果类型总数，不是额外得分。
     private func step6_processFruits(dt: Float, state: inout GameState,
                                      world: inout any EntityStore, services: GameServices) {
         let tuning = motionTuning
@@ -360,34 +358,29 @@ public final class GameWorld: GameTicking {
                 state.missPenaltyCount &+= 2
             }
 
-            // 6.4 combo 计数（窗口/档位/节奏因子/首发统计均由 ComboTracker 内部处理）
-            let previousVisualTier = ComboTier.visual(for: state.comboCount)
-            let event = services.combo.registerSlice(fruitType: fruitType,
-                                                     entity: entity.id,
-                                                     stateSlot0: entity.stateSlot0,
-                                                     state: &state,
-                                                     rng: services.rng)
+            // +0x6e==0 才进入普通 combo / 主循环命中特效路径。
+            if !entity.skipsNormalFruitPath {
+                let previousVisualTier = ComboTier.visual(for: state.comboCount)
+                let event = services.combo.registerSlice(fruitType: fruitType,
+                                                         entity: entity.id,
+                                                         stateSlot0: entity.stateSlot0,
+                                                         state: &state,
+                                                         rng: services.rng)
 
-            if case let .incremented(_, visualTier, _)? = event {
-                // 「档位升级」才播连击音效 / 特效（原 combo > 2 进入特效分支，§2.2）
-                if visualTier > previousVisualTier {
-                    services.audio.play("combo_\(visualTier)")      // 音效 key [待验证]
-                    services.effects.emit(visualTier, at: entityPosition)
+                if case let .incremented(_, visualTier, _)? = event {
+                    if visualTier > previousVisualTier {
+                        services.audio.play("combo_\(visualTier)")  // 音效 key [待验证]
+                        services.effects.emit(visualTier, at: entityPosition)
+                    }
                 }
-                // 命中计分（基础分来源见方法注释）
-                let baseScore = entity.fruit?.score ?? 0
-                services.score.dispatch(score: baseScore,
-                                        comboType: visualTier,
-                                        isScoring: true,
-                                        mode: Self.scoringDispatchMode)
+                hitPositions.append(entityPosition)
             }
 
-            // 6.5 特殊果加成：只做标记读取，实际加成在 ComboTracker 内部完成（不重复加分）。
-            //     原 +0x1ba != 0 → +0x110 += DAT_004d90b4；+0x54 += -3.0*(...) [macho H]
-            //     [待验证] 原版是否另有独立分支未被 ComboTracker 覆盖。
+            // 原顺序是先实体 vtable+0x24，再消费实体 +0x1ba。单果得分不依赖
+            // combo 是否递增，也不依赖 stateSlot0 或 +0x6e 的普通路径门控。
+            onSliced.apply(entity: &entity, state: &state, services: services)
 
             pendingDespawn.append(entity.id)
-            hitPositions.append(entityPosition)
             return true
         }
 
@@ -473,22 +466,31 @@ public final class GameWorld: GameTicking {
     /// §1.2 步骤 9：+0x174 推进（触发重置 0.1；>9 封顶 0.095）→ 到期结算 →
     /// clearComboTracking（comboArr memset 0xff）→ 分发 ComboEvent 到计分/统计/特效。
     ///
-    /// 分工：窗口推进、统一清零、`combos` 统计均由 `ComboTracker.tickWindow` 内部完成
-    /// （其 `stats` 注入 = `services.stats`），本步**只消费事件**做音效/特效分发，
-    /// 避免统计重复计数。
+    /// 分工：ComboTracker 只保存清零前快照；本步消费完整快照，避免计分、统计
+    /// 分别读取已清零的 GameState。2 连起更新最高连击，3 连起计分和上报 combos。
     private func step9_settleCombo(dt: Float, state: inout GameState, services: GameServices) {
         let events = services.combo.tickWindow(dt: dt, state: &state)
 
         for event in events {
             switch event {
-            case let .settled(count, _):
-                // 档位对应 ComboTier（§2.3：visual = clamp(combo-3, 0, 2)）
+            case let .settled(count, fruitTypes, comboType):
+                if count >= 3 {
+                    // 发售版 FUN_0001cd6c 完整函数体为 return 0，当前路径无模式阻断。
+                    services.score.dispatch(score: count,
+                                            comboType: comboType,
+                                            isScoring: true,
+                                            mode: 0)
+                }
+                if count >= 2 {
+                    services.stats.recordCombo(count: count,
+                                               fruitTypes: fruitTypes,
+                                               modePrefix: state.comboStatsPrefix)
+                }
+
                 let tier = ComboTier.visual(for: count)
                 services.audio.play("combo_settle_\(tier)")         // 音效 key [待验证]
-                // 结算特效落点：最后一次命中点（原 +0x104）
                 services.effects.emit(tier, at: state.hitPoint)
-            case .started, .incremented, .specialBonusApplied:
-                // tickWindow 按 §1.2 步骤 9 只产出 .settled；其余为防御性忽略
+            case .started, .incremented:
                 break
             }
         }

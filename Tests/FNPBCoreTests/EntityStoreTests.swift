@@ -180,6 +180,8 @@ final class EntityStoreTests: XCTestCase {
             stateSlot2: 4,
             stateSlot0x32: 5,
             specialOrBombMarked: true,
+            skipsNormalFruitPath: true,
+            isCriticalHit: true,
             bombState: 6,
             isBombSliceEnabled: false,
             isFaultingBomb: false,
@@ -198,6 +200,8 @@ final class EntityStoreTests: XCTestCase {
         XCTAssertEqual(entity?.stateSlot2, 4)
         XCTAssertEqual(entity?.stateSlot0x32, 5)
         XCTAssertEqual(entity?.specialOrBombMarked, true)
+        XCTAssertEqual(entity?.skipsNormalFruitPath, true)
+        XCTAssertEqual(entity?.isCriticalHit, true)
         XCTAssertEqual(entity?.bombState, 6)
         XCTAssertEqual(entity?.isBombSliceEnabled, false)
         XCTAssertEqual(entity?.isFaultingBomb, false)

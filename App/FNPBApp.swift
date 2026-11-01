@@ -157,7 +157,7 @@ final class GameHost: ObservableObject {
     let renderDriver: GameRenderer?
 
     // MARK: 核心
-    private let gameWorld: GameWorld
+    private var gameWorld: GameWorld
     private let motionTuning: FruitMotionTuning
     /// spawnSink 是 weak，GameHost 必须强持有生成桥；内容不可用时保持 nil。
     private var waveSpawnBridge: WaveSpawnBridge?
@@ -233,7 +233,7 @@ final class GameHost: ObservableObject {
         let rng = SplitMix64Random(seed: 0x5DEE_CE66_D)
         let stats = StatsRecorder()
         let score = ScoreSystem()
-        let combo = ComboTracker(stats: stats, specialFruitBonus: 0)
+        let combo = ComboTracker(stats: stats)
         let waves = WaveDirector(playerCount: 1, rng: rng)
         // 刀形状只读触摸输入，不读 last-hit 字段：hitPoint(+0x104) 会在每个
         // 水果命中后被改写，previousSlashPosition(+0xf8) 也只是命中时保存的旧触摸点。
@@ -288,10 +288,18 @@ final class GameHost: ObservableObject {
 
         let tuning = FruitMotionTuning()
         self.motionTuning = tuning
-        self.gameWorld = GameWorld(motionTuning: tuning)
 
+        var onSliced = FruitOnSliced()
         var spawnBridge: WaveSpawnBridge?
         if let resolvedContent {
+            let fruits = resolvedContent.fruits
+            stats.configureFruitNames(Dictionary(uniqueKeysWithValues: fruits.fruits.map {
+                ($0.typeID, $0.name)
+            }))
+            onSliced = FruitOnSliced(
+                critical: fruits.critical,
+                fruitTypeCount: fruits.fruits.count,
+                starfruitTypeID: fruits.fruits.first(where: { $0.name == "starfruit" })?.typeID)
             let bridge = WaveSpawnBridge(store: entityStore,
                                          rng: rng,
                                          fruits: resolvedContent.fruits.fruits,
@@ -301,6 +309,7 @@ final class GameHost: ObservableObject {
             waves.spawnSink = bridge
         }
         self.waveSpawnBridge = spawnBridge
+        self.gameWorld = GameWorld(motionTuning: tuning, onSliced: onSliced)
 
         // [Kimi 修正 T-022 审查] GameServices 字段表以 GameWorld.swift 为准：末尾还有 rng。
         self.services = GameServices(
@@ -428,6 +437,14 @@ final class GameHost: ObservableObject {
 
         currentMode = mode
         state = GameState()
+        switch mode {
+        case .classic:
+            state.comboStatsPrefix = "CLASSIC"
+        case .adventure:
+            state.comboStatsPrefix = "NEW_MODE"
+        case .challenge:
+            state.comboStatsPrefix = nil // 原模式表索引未闭合，不猜成 ALL。
+        }
 
         // [待验证] 切割半径²：初值 0 会让 HitTest 门控（`0.0 < +0xf0`）永不通过。
         // 原式按 15.0 归一化碰撞半径（core_logic_notes §1.1 / RenderSurface 注释），
@@ -511,6 +528,17 @@ final class GameHost: ObservableObject {
                                      tuning: motionTuning)
         waveSpawnBridge = bridge
         waveDirector.spawnSink = bridge
+
+        let fruits = content.fruits
+        statsRecorder.configureFruitNames(Dictionary(uniqueKeysWithValues: fruits.fruits.map {
+            ($0.typeID, $0.name)
+        }))
+        gameWorld = GameWorld(
+            motionTuning: motionTuning,
+            onSliced: FruitOnSliced(
+                critical: fruits.critical,
+                fruitTypeCount: fruits.fruits.count,
+                starfruitTypeID: fruits.fruits.first(where: { $0.name == "starfruit" })?.typeID))
     }
 
     // MARK: 触摸（macho §1.2 语义）

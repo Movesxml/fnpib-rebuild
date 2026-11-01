@@ -145,6 +145,14 @@ public struct Entity: Sendable {
     /// 原实体 +0xc1；它是实体字段，不是 GameState 全局标记。
     public var specialOrBombMarked: Bool = false
 
+    /// 原水果 +0x6e：非零时跳过普通水果 combo/命中特效路径。
+    /// OnSliced 仍然执行；原全局遍历锁的持续状态尚未迁移。
+    public var skipsNormalFruitPath: Bool = false
+
+    /// 原水果 +0x1ba：由真实 OnSliced 暴击判定写入的实体状态。
+    /// 主循环在 OnSliced 返回后读取，不能放在 GameState。
+    public var isCriticalHit: Bool = false
+
     /// 炸弹布局 +0x30 的计时/状态值；普通炸弹生成后为 0，<=0 才参与切割。
     public var bombState: Float = 0
     /// 炸弹布局 +0x7d：是否允许被切。
@@ -182,6 +190,8 @@ public struct EntityPrototype: Sendable {
     public var fallDelay: Float
     public var dropState: Float
     public var specialOrBombMarked: Bool
+    public var skipsNormalFruitPath: Bool
+    public var isCriticalHit: Bool
     public var bombState: Float
     public var isBombSliceEnabled: Bool
     public var isFaultingBomb: Bool
@@ -200,6 +210,8 @@ public struct EntityPrototype: Sendable {
                 fallDelay: Float = 0,
                 dropState: Float = 0,
                 specialOrBombMarked: Bool = false,
+                skipsNormalFruitPath: Bool = false,
+                isCriticalHit: Bool = false,
                 bombState: Float = 0,
                 isBombSliceEnabled: Bool = true,
                 isFaultingBomb: Bool = true,
@@ -217,6 +229,8 @@ public struct EntityPrototype: Sendable {
         self.fallDelay = fallDelay
         self.dropState = dropState
         self.specialOrBombMarked = specialOrBombMarked
+        self.skipsNormalFruitPath = skipsNormalFruitPath
+        self.isCriticalHit = isCriticalHit
         self.bombState = bombState
         self.isBombSliceEnabled = isBombSliceEnabled
         self.isFaultingBomb = isFaultingBomb

@@ -115,7 +115,11 @@ public class LocateCore extends GhidraScript {
                 while (n < 8) {
                     int idx = lower.indexOf(kl, from);
                     if (idx < 0) break;
-                    Address strAddr = block.getStart().add(idx);
+                    // 关键词常位于完整路径/句子内部，但代码引用的是 NUL 字符串起点。
+                    // 向前找到起点，避免拿 "fruit.cpp" 的子串地址做无效 xref。
+                    int strStart = idx;
+                    while (strStart > 0 && bytes[strStart - 1] != 0) strStart--;
+                    Address strAddr = block.getStart().add(strStart);
                     stringHits++;
                     n++;
                     // 2a) 分析引用

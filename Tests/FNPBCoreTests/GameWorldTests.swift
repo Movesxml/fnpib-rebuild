@@ -24,7 +24,7 @@ final class GameWorldTests: XCTestCase {
     // MARK: - Rig（一次性装配 + 可断言替身）
 
     private final class Rig {
-        let world = GameWorld()
+        let world: GameWorld
         let slice = SpySliceTester()
         let score = ScoreSystem()
         let stats = SpyStats()
@@ -34,10 +34,11 @@ final class GameWorldTests: XCTestCase {
         let rng = SeededRandomSource(seed: 1)
         let services: GameServices
 
-        init() {
+        init(onSliced: FruitOnSliced = FruitOnSliced()) {
+            world = GameWorld(onSliced: onSliced)
             services = GameServices(
                 slice: slice,
-                combo: ComboTracker(stats: stats, specialFruitBonus: 0),
+                combo: ComboTracker(stats: stats),
                 score: score,
                 stats: stats,
                 waves: waves,
@@ -192,8 +193,10 @@ final class GameWorldTests: XCTestCase {
 
         // 结算事件分发到音频（tier = clamp(3-3,0,2) = 0）
         XCTAssertTrue(rig.audio.keys.contains("combo_settle_0"))
-        // combos 统计由 ComboTracker 内部上报（combo ≥ 3）
+        XCTAssertEqual(rig.score.total, 3, "3 连结算分发 combo 数和 comboType")
         XCTAssertEqual(rig.stats.adds[.combos], 1)
+        XCTAssertEqual(rig.stats.reports["CLASSIC_combos"], 1)
+        XCTAssertEqual(rig.stats.reports["best_combo"], 3)
     }
 
     func test_step9_无活动combo时到期只清零不派发事件() {
@@ -259,6 +262,104 @@ final class GameWorldTests: XCTestCase {
         XCTAssertTrue(rig.audio.keys.contains("splash"))
         XCTAssertEqual(rig.effects.emitted.count, 1)
         XCTAssertEqual(rig.effects.emitted.first?.kind, 0)
+    }
+
+    func test_step6_stateSlot0为2仍执行单果计分但不增加combo() {
+        let rig = Rig()
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        var fruit = FruitInfo()
+        fruit.typeID = 4
+        fruit.score = 12
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit, stateSlot0: 2))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.score.total, 12)
+        XCTAssertEqual(state.comboCount, 0)
+        XCTAssertEqual(rig.stats.adds[.totalfruit], 1)
+    }
+
+    func test_step6_noScore水果不进入标准计分和水果统计() {
+        let rig = Rig()
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        var fruit = FruitInfo()
+        fruit.typeID = 2
+        fruit.score = 0
+        fruit.noScore = true
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit, isCriticalHit: true))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.score.total, 0)
+        XCTAssertNil(rig.stats.adds[.totalfruit])
+        XCTAssertNil(rig.stats.reports["crit"])
+        XCTAssertEqual(state.lastSliceScore, 2)
+    }
+
+    func test_step6_杨桃跳过普通分但仍上报totalfruit() {
+        let rig = Rig(onSliced: FruitOnSliced(fruitTypeCount: 24, starfruitTypeID: 5))
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        var fruit = FruitInfo()
+        fruit.typeID = 5
+        fruit.name = "starfruit"
+        fruit.score = 50
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.score.total, 0)
+        XCTAssertEqual(rig.stats.adds[.totalfruit], 1)
+    }
+
+    func test_step6_暴击加内容配置分并执行实体后处理() {
+        var critical = CriticalConfig()
+        critical.score = 10
+        let rig = Rig(onSliced: FruitOnSliced(critical: critical,
+                                              fruitTypeCount: 24,
+                                              starfruitTypeID: 99))
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        var fruit = FruitInfo()
+        fruit.typeID = 5
+        fruit.name = "orange"
+        fruit.score = 8
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit, isCriticalHit: true))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.score.total, 18)
+        XCTAssertEqual(state.lastSliceScore, 29)
+        XCTAssertEqual(rig.stats.reports["crit"], 1)
+        XCTAssertEqual(rig.stats.reports["crits_total"], 1)
+        XCTAssertEqual(rig.stats.reports["orangecrit"], 1)
+        XCTAssertLessThan(state.rhythmFactor, -0.75, "combo 与暴击各消耗一次随机修正")
+    }
+
+    func test_step6_普通路径跳过标记保留OnSliced但不进combo和命中特效() {
+        let rig = Rig()
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        var fruit = FruitInfo()
+        fruit.typeID = 1
+        fruit.score = 9
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit, skipsNormalFruitPath: true))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.score.total, 9)
+        XCTAssertEqual(state.comboCount, 0)
+        XCTAssertEqual(rig.stats.adds[.totalfruit], 1)
+        XCTAssertTrue(rig.effects.emitted.isEmpty)
+        XCTAssertFalse(rig.audio.keys.contains("splash"))
+    }
+
+    private func runnableState() -> GameState {
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        return state
     }
 
     func test_step6_未命中时不回收不计数() {
@@ -503,5 +604,13 @@ private final class SpyStats: StatsRecording {
 
     func report(_ dynamicKey: String, _ value: Int32) {
         reports[dynamicKey, default: 0] += value
+    }
+
+    func recordCombo(count: Int32, fruitTypes: [Int32], modePrefix: String?) {
+        guard count >= 3 else { return }
+        add(.combos, 1)
+        if let modePrefix { report("\(modePrefix)_combos", 1) }
+        let previous = reports["best_combo", default: 0]
+        report("best_combo", max(0, count - previous))
     }
 }

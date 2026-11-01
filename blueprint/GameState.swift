@@ -122,11 +122,11 @@ public struct GameState: Sendable, Equatable {
     /// 上一个参与 combo 的实体（防同一实体重复计数）。§1.2 步骤 6.4。
     public var lastComboEntity: EntityID? = nil
 
-    /// 原 `+0x1ba` byte
-    /// 特殊果加成开关（为真时 `+0x110 += DAT_004d90b4`）。§1.2 步骤 6.4。
-    public var specialFruitBonusEnabled: Bool = false
-
     // MARK: 补充字段（不属 §0 表，来自其它函数，单独列出以便对账）
+
+    /// `FUN_000254b0` 模式名表用于 `"%s_combos"`。发售版表项为大写。
+    /// nil 表示当前重建模式尚未与原表索引闭合，此时只记录通用 combos，不猜前缀。
+    public var comboStatsPrefix: String? = "CLASSIC"
 
     /// 原 `game + 0xf0` float
     /// 切割半径平方：`FUN_00017d74` 入口门控 `0.0 < *(float*)(game + 0xf0)`，

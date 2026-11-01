@@ -22,109 +22,63 @@ public final class ComboTracker: ComboTracking {
     // MARK: - 注入配置
 
     /// 首发统计上报通道（GameState.slashesScoringEmitted 语义见 §1.2 步骤 6.4）。
-    /// 不进协议签名——ComboTracking 的签名由 GameWorld.swift 固定。
     private let stats: (any StatsRecording)?
-
-    /// 特殊果得分加成量（原 `DAT_004d90b4`，`+0x110 += DAT_004d90b4`）。
-    /// ⚠️ [待验证] ARM __stubs 懒绑定桩，静态镜像中不可解（Constants Pending #3）；
-    /// 默认 0 = 不改变分值，运行时实测后经初始化注入。
-    private let specialFruitBonus: Int32
 
     /// combo 随机项权重 0.5（公式 `0.5*rand/8+0.75` 内字面量）。[macho H] §1.1
     private static let rhythmRandomWeight: Float = 0.5
 
-    public init(stats: (any StatsRecording)? = nil, specialFruitBonus: Int32 = 0) {
+    public init(stats: (any StatsRecording)? = nil) {
         self.stats = stats
-        self.specialFruitBonus = specialFruitBonus
     }
 
     // MARK: - ComboTracking
 
-    /// §1.2 步骤 6.4：非炸弹命中后的 combo 计数。
-    ///
-    /// `stateSlot0` 是实体 int 下标 0x21：值 2 跳过窗口计数；原 +0x90
-    /// 也取自该槽是否非零，不是水果 typeID 是否非零。
+    /// §1.2 步骤 6.4：普通水果命中后的 combo 计数。
+    /// 单果 OnSliced 计分与实体 +0x1ba 后处理均不在这里执行。
     public func registerSlice(fruitType: Int32, entity: EntityID, stateSlot0: Int32,
                               state: inout GameState, rng: any RandomSource) -> ComboEvent? {
-        var event: ComboEvent?
+        guard stateSlot0 != 2 && state.lastComboEntity != entity else { return nil }
 
-        // stateSlot0==2 或同一实体均跳过 combo 计数；特殊果分支仍会执行。
-        if stateSlot0 != 2 && state.lastComboEntity != entity {
-            state.lastComboEntity = entity
-            state.comboWindowTimer = 0                              // +0x174 = 0
+        state.lastComboEntity = entity
+        state.comboWindowTimer = 0
 
-            // comboArr[+0x8c] = type（写入位置为当前计数，0 基）
-            let slot = Int(state.comboCount)
-            if slot >= 0 && slot < state.comboFruitTypes.count {
-                state.comboFruitTypes[slot] = fruitType
-            } else {
-                // 原 C 无边界检查；Swift 越界会 trap → 防御性写末槽
-                // [待验证] 理论上 combo ≤ 11（数组容量），此分支不应触发
-                if !state.comboFruitTypes.isEmpty {
-                    state.comboFruitTypes[state.comboFruitTypes.count - 1] = fruitType
-                }
-            }
-
-            state.comboTypeFlag = (stateSlot0 != 0) ? 1 : 0          // +0x90 = (entity[0x21] != 0)
-
-            // 原顺序：+0x51==0 时只发 slashesScoring；若 +0x51==1 且新窗口
-            // combo==0，则发 slashes + slashesScoring；窗口后续命中不重复发。
-            if state.slashesScoringEmitted && state.comboCount == 0 {
-                stats?.add(.slashes, 1)
-            }
-            if !state.slashesScoringEmitted || state.comboCount == 0 {
-                stats?.add(.slashesScoring, 1)
-            }
-            state.slashesScoringEmitted = true
-
-            state.comboCount &+= 1                                   // combo++（32 位回绕语义）
-            if state.comboCount > Constants.Combo.countThresholdForTightWindow {
-                state.comboWindowTimer = Constants.Combo.windowCap   // combo>9 → 0.095
-            }
-
-            // +0x54 -= combo * (0.5*rand/8 + 0.75)
-            state.rhythmFactor -= Float(state.comboCount) * rhythmTerm(rng)
-
-            event = .incremented(count: state.comboCount,
-                                 visualTier: ComboTier.visual(for: state.comboCount),
-                                 textTier: ComboTier.text(for: state.comboCount))
+        let slot = Int(state.comboCount)
+        if slot >= 0 && slot < state.comboFruitTypes.count {
+            state.comboFruitTypes[slot] = fruitType
+        } else if !state.comboFruitTypes.isEmpty {
+            // 原 C 无边界检查；Swift 防御性写末槽，正常路径 combo 不超过 11。
+            state.comboFruitTypes[state.comboFruitTypes.count - 1] = fruitType
         }
 
-        // 特殊果加成（+0x1ba）：与 combo 计数解耦，命中即生效。
-        if state.specialFruitBonusEnabled {
-            let term = rhythmTerm(rng)
-            state.lastSliceScore &+= specialFruitBonus                // +0x110 += DAT_004d90b4 [待验证]
-            let specialDelta = Constants.Combo.rhythmPenalty * term   // +0x54 += -3.0 * (...)
-            state.rhythmFactor += specialDelta
-            if event == nil {
-                event = .specialBonusApplied(delta: specialDelta)
-            }
+        state.comboTypeFlag = (stateSlot0 != 0) ? 1 : 0
+
+        if state.slashesScoringEmitted && state.comboCount == 0 {
+            stats?.add(.slashes, 1)
+        }
+        if !state.slashesScoringEmitted || state.comboCount == 0 {
+            stats?.add(.slashesScoring, 1)
+        }
+        state.slashesScoringEmitted = true
+
+        state.comboCount &+= 1
+        if state.comboCount > Constants.Combo.countThresholdForTightWindow {
+            state.comboWindowTimer = Constants.Combo.windowCap
         }
 
-        return event
+        state.rhythmFactor -= Float(state.comboCount) * rhythmTerm(rng)
+        return .incremented(count: state.comboCount,
+                            visualTier: ComboTier.visual(for: state.comboCount),
+                            textTier: ComboTier.text(for: state.comboCount))
     }
 
-    /// §1.2 步骤 9：combo 窗口推进与到期结算。
-    ///
-    /// 原文（macho FUN_00016214 步骤 9）：
-    ///   若 +0x174 < DAT_00017024 → +0x174 += dt
-    ///   若 +0x174 >= DAT_00017028 → 结算（+0x174=0.1、回调链、统计），随后统一清零
-    ///   若 +0x174 >= DAT_00017024 → 直接走清零分支
-    ///
-    /// 重建取值：DAT_00017024 视作 windowBase(0.1) 推进上限，
-    ///           DAT_00017028 视作 windowCap(0.095) 结算阈值
-    ///           （T-006「combo 窗口 0.1/0.095」+ §7 待读常量按此口径闭合）。
-    /// ⚠️ [待验证] 两个数据段常量精确值尚未直读；若后续读到不同值，只需改 Constants。
+    /// §1.2 步骤 9：只负责窗口推进、快照和统一清零。
+    /// 计分与统计由 GameWorld 消费快照，避免 clearComboTracking 丢失 comboType。
     public func tickWindow(dt: Float, state: inout GameState) -> [ComboEvent] {
-        // 推进：未达上限才累加（原 `+0x174 < DAT_00017024`）
         if state.comboWindowTimer < Constants.Combo.windowBase {
             state.comboWindowTimer += dt
         }
-
-        // 未到期
         guard state.comboWindowTimer >= Constants.Combo.windowCap else { return [] }
 
-        // 到期但无活动 combo：幂等清零（原「直接走清零分支」），不派发事件
         guard state.comboCount > 0 else {
             state.comboWindowTimer = Constants.Combo.windowBase
             state.clearComboTracking()
@@ -133,20 +87,13 @@ public final class ComboTracker: ComboTracking {
 
         let settledCount = state.comboCount
         let settledTypes = state.comboFruitTypes
+        let settledComboType = state.comboTypeFlag
 
-        // combo >= 3：统计 combos（原 `"%s_combos"` + `"combos"`）
-        // ⚠️ [待验证] 动态键 `"%s_combos"` 的 %s 语义未闭合（FUN_0000342c/000042b4），不臆造；
-        //     strawberry_combo_total 需要 fruitType ID 映射，亦未闭合。
-        if settledCount >= Constants.Combo.tierEffectStartCount {
-            stats?.add(.combos, 1)
-        }
-
-        // 结算后：+0x174 = 0.1（作为「已结算」标记，防同帧重复结算）
         state.comboWindowTimer = Constants.Combo.windowBase
-        // 统一清零：combo=0; +0x90=0; +0x180=0; +0x178=0; memset(+0x60, 0xff, 0x2c)
         state.clearComboTracking()
-
-        return [.settled(count: settledCount, fruitTypes: settledTypes)]
+        return [.settled(count: settledCount,
+                         fruitTypes: settledTypes,
+                         comboType: settledComboType)]
     }
 
     /// 复位：清计时器与 combo 状态。原 reset 路径未单独导出 → [M] 语义推断。

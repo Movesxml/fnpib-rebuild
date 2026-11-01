@@ -59,7 +59,7 @@ final class ComboScoreTests: XCTestCase {
         // 第 6 帧 timer ≈ 0.1 >= 0.095 → 结算
         let events = tracker.tickWindow(dt: frame, state: &state)
         XCTAssertEqual(events.count, 1)
-        guard case let .settled(count, fruitTypes) = events[0] else {
+        guard case let .settled(count, fruitTypes, _) = events[0] else {
             return XCTFail("第 6 帧应派发 settled 事件（timer≈0.1 >= 0.095）")
         }
         XCTAssertEqual(count, 1)
@@ -96,7 +96,7 @@ final class ComboScoreTests: XCTestCase {
         // timer 已 == cap，下一帧（dt=0 也足够）立即结算
         let events = tracker.tickWindow(dt: 0, state: &state)
         XCTAssertEqual(events.count, 1)
-        guard case let .settled(count, fruitTypes) = events[0] else {
+        guard case let .settled(count, fruitTypes, _) = events[0] else {
             return XCTFail("combo>9 应立即结算")
         }
         XCTAssertEqual(count, 10)
@@ -203,21 +203,40 @@ final class ComboScoreTests: XCTestCase {
         XCTAssertTrue(ComboTier.isEffectActive(for: 3))
     }
 
-    // MARK: - 特殊果 +0x1ba 分支
+    // MARK: - 暴击 +0x1ba 后处理
 
-    func testSpecialFruitBonusApplies() {
-        let tracker = ComboTracker(specialFruitBonus: 5)
+    func testCriticalHitUsesFruitTypeCountAndAddsRhythmPenalty() {
+        let stats = StatsRecorder()
+        let tracker = ComboTracker(stats: stats)
         let rng = FixedRandom(values: [0, 0])
         var state = GameState()
-        state.specialFruitBonusEnabled = true
+        state.recordSliceHit(entityPosition: .zero, slashPosition: .zero, fruitType: 2)
+        var entity = Entity(id: EntityID(rawValue: 1), kind: .fruit)
+        entity.isCriticalHit = true
+        entity.fruit = FruitInfo()
+        entity.fruit?.typeID = 2
+        entity.fruit?.score = 7
+        entity.fruit?.name = "orange"
 
-        let event = tracker.registerSlice(fruitType: 2, entity: EntityID(rawValue: 1),
-                                          state: &state, rng: rng)
-        XCTAssertEqual(event, ComboEvent.incremented(count: 1, visualTier: 0, textTier: 1))
-        XCTAssertEqual(state.lastSliceScore, 5, "特殊果应把加成写入 +0x110")
+        let score = ScoreSystem()
+        let services = GameServices(
+            slice: UnusedSlice(), combo: tracker, score: score, stats: stats,
+            waves: UnusedWaves(), audio: UnusedAudio(), effects: UnusedEffects(), rng: rng)
+        FruitOnSliced(critical: criticalConfig(score: 10), fruitTypeCount: 24)
+            .apply(entity: &entity, state: &state, services: services)
 
-        // -1*0.75（combo 递减）+ (-3.0*0.75)（特殊果修正）= -3.0
-        XCTAssertEqual(state.rhythmFactor, -3.0, accuracy: 1e-5)
+        XCTAssertEqual(score.total, 17)
+        XCTAssertEqual(state.lastSliceScore, 26, "+0x110 是 typeID 加水果类型总数")
+        XCTAssertEqual(state.rhythmFactor, -2.25, accuracy: 1e-5)
+        XCTAssertEqual(stats.value(forDynamicKey: "crit"), 1)
+        XCTAssertEqual(stats.value(forDynamicKey: "crits_total"), 1)
+        XCTAssertEqual(stats.value(forDynamicKey: "orangecrit"), 1)
+    }
+
+    private func criticalConfig(score: Int32) -> CriticalConfig {
+        var config = CriticalConfig()
+        config.score = score
+        return config
     }
 
     // MARK: - 计分溢出保护
@@ -305,6 +324,37 @@ final class ComboScoreTests: XCTestCase {
                                             externalCorrection: 1), 150)
     }
 
+    func testComboPatternRanksMatchOriginalBranches() {
+        let names: [Int32: String] = [1: "apple", 2: "orange", 3: "banana"]
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 1], fruitNames: names), 6)
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 1, 2, 1], fruitNames: names), 24)
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2, 3], fruitNames: names), 20)
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2, 3, 3], fruitNames: names), 22)
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 3, 4, 5], fruitNames: names), 4)
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 3, 1, 2], fruitNames: names), 21)
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 1], fruitNames: names), 0)
+        XCTAssertEqual(ComboPatternRank.rank([1, 2, 3, 1, 2, 3, 1], fruitNames: names), 5)
+    }
+
+    func testBestComboUsesCountThenPatternRankAndIncrementalStat() {
+        let stats = StatsRecorder(fruitNames: [1: "apple", 2: "orange", 3: "banana"])
+        stats.recordCombo(count: 3, fruitTypes: [1, 1, 1], modePrefix: "CLASSIC")
+        XCTAssertEqual(stats.bestComboRank, 6)
+        XCTAssertEqual(stats.value(forDynamicKey: "best_combo"), 3)
+        XCTAssertEqual(stats.value(forDynamicKey: "CLASSIC_combos"), 1)
+
+        stats.recordCombo(count: 3, fruitTypes: [1, 2, 1], modePrefix: "CLASSIC")
+        XCTAssertEqual(stats.bestComboFruitTypes, [1, 1, 1] + [Int32](repeating: -1, count: 8),
+                       "同数且排名更低时保留旧序列")
+        stats.recordCombo(count: 3, fruitTypes: [2, 2, 2], modePrefix: "CLASSIC")
+        XCTAssertEqual(stats.bestComboFruitTypes, [2, 2, 2] + [Int32](repeating: -1, count: 8))
+        XCTAssertEqual(stats.bestComboRank, 7)
+        XCTAssertEqual(stats.value(forDynamicKey: "best_combo"), 3, "同数不重复增加最佳值")
+
+        stats.recordCombo(count: 2, fruitTypes: [1, 2], modePrefix: nil)
+        XCTAssertEqual(stats.value(for: .combos), 3, "2 连只更新最高连击，不上报 combos")
+    }
+
     func testStatsRecorderAccuracyFromKeys() {
         let stats = StatsRecorder()
         stats.add(.slashes, 10)
@@ -316,4 +366,16 @@ final class ComboScoreTests: XCTestCase {
         stats.report("strawberry_combo_total", 2)
         XCTAssertEqual(stats.value(forDynamicKey: "strawberry_combo_total"), 5)
     }
+}
+
+private final class UnusedSlice: SliceTesting {
+    func isSliced(game: GameState, entity: Entity) -> Bool { false }
+    func isNearMiss(game: GameState, entity: Entity) -> Bool { false }
+}
+private final class UnusedWaves: WaveDirecting {
+    func tick(dt: Float, state: inout GameState, world: any EntityStore) {}
+}
+private final class UnusedAudio: AudioPlaying { func play(_ key: String) {} }
+private final class UnusedEffects: EffectEmitting {
+    func emit(_ kind: Int32, at position: SIMD3<Float>) {}
 }

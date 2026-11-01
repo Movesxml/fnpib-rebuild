@@ -265,6 +265,7 @@ private final class StubScore: ScoreDispatching {
 private final class StubStats: StatsRecording {
     func add(_ key: StatsKey, _ value: Int32) {}
     func report(_ dynamicKey: String, _ value: Int32) {}
+    func recordCombo(count: Int32, fruitTypes: [Int32], modePrefix: String?) {}
 }
 private final class StubWaves: WaveDirecting {
     func tick(dt: Float, state: inout GameState, world: any EntityStore) {}
