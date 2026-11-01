@@ -125,7 +125,8 @@ final class ChallengeConditionsTests: XCTestCase {
         runtime.select(conditionNames: [])
         XCTAssertEqual(runtime.timerDuration, 0)
         XCTAssertEqual(runtime.result, .pending)
-        XCTAssertEqual(runtime.condition(named: "timer")?.timeRemaining, 7)
+        XCTAssertEqual(runtime.condition(named: "timer")?.timeRemaining, 0,
+                       "FUN_0005ed54 只复位本次重新选中的条件，不复位已移出激活列表的条件")
     }
 
     func testConsecutiveUsesCurrentSlashCountAndOptionalType() {
