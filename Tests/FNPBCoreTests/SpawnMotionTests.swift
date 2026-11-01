@@ -19,6 +19,8 @@ final class SpawnMotionTests: XCTestCase {
         for (random, expectedX) in [(Float(0), Float(0)), (0.5, Float(0)), (1, Float(150))] {
             let rng = SequenceTestRandom([random, 0.5, 0.5])
             var spawner = Spawner()
+            spawner.horizMin = -1
+            spawner.horizMax = 1
             spawner.velocityScaleX = 1
             spawner.velocityScaleY = 1
             let state = FruitMotion.spawnState(rng: rng, spawner: spawner)
@@ -31,16 +33,19 @@ final class SpawnMotionTests: XCTestCase {
     func testDefaultSpawnConsumesHorizontalSpeedDirectionInOrder() {
         let rng = SequenceTestRandom([0.25, 0.75, 0.25])
         var spawner = Spawner()
+        spawner.horizMin = -1
+        spawner.horizMax = 1
         spawner.velocityScaleX = 1
         spawner.velocityScaleY = 1
 
         let state = FruitMotion.spawnState(rng: rng, spawner: spawner)
         let speed: Float = 9.5 + 1.5 * 0.75
         // 横向 -75 经 ARM 饱和为 0；direction=-0.25 → curve=.375 → angle=-7.5° → -7°。
-        let radians: Float = -7 * .pi / 180
         XCTAssertEqual(state.position, SIMD3<Float>(0, -215, 0))
-        XCTAssertEqual(state.velocity.x, speed * sin(radians), accuracy: 1e-5)
-        XCTAssertEqual(state.velocity.y, speed * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.x,
+                       speed * OriginalSpawnTrigonometry.sin(degrees: -7), accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.y,
+                       speed * OriginalSpawnTrigonometry.cos(degrees: -7) * 1.075, accuracy: 1e-5)
         XCTAssertEqual(state.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(rng.calls, 3)
     }
@@ -50,10 +55,12 @@ final class SpawnMotionTests: XCTestCase {
         let state = FruitMotion.spawnState(rng: rng, spawner: Spawner())
 
         let speed: Float = 9.5 + 1.5
-        let radians: Float = -65 * .pi / 180
+        // x=150 → -20*x/150=-20；direction=.5 → curve=.5，最终 -10°。
         XCTAssertEqual(state.position, SIMD3<Float>(150, -215, 0))
-        XCTAssertEqual(state.velocity.x, speed * sin(radians), accuracy: 1e-5)
-        XCTAssertEqual(state.velocity.y, speed * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.x,
+                       speed * OriginalSpawnTrigonometry.sin(degrees: -10), accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.y,
+                       speed * OriginalSpawnTrigonometry.cos(degrees: -10) * 1.075, accuracy: 1e-5)
         XCTAssertEqual(state.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(Constants.Physics.missingGravityCompatibility, SIMD3<Float>(0, -1, 0))
         XCTAssertEqual(state.acceleration, SIMD3<Float>(0, -12, 0))
@@ -63,6 +70,8 @@ final class SpawnMotionTests: XCTestCase {
     func testExplicitVelocityOverrideConsumesOnlyTwoRandomValues() {
         let rng = SequenceTestRandom([0.25, 0.75, 0.99])
         var spawner = Spawner()
+        spawner.horizMin = -1
+        spawner.horizMax = 1
         spawner.velocityX = 3
         spawner.velocityY = -4
         spawner.velocityScaleX = 2
@@ -88,9 +97,10 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(entity.fruit?.typeID, Self.appleTypeID)
         XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -215, 0))
         let speed: Float = 11
-        let radians: Float = -65 * .pi / 180
-        XCTAssertEqual(entity.transform.velocity.x, speed * sin(radians), accuracy: 1e-5)
-        XCTAssertEqual(entity.transform.velocity.y, speed * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.velocity.x,
+                       speed * OriginalSpawnTrigonometry.sin(degrees: -10), accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.velocity.y,
+                       speed * OriginalSpawnTrigonometry.cos(degrees: -10) * 1.075, accuracy: 1e-5)
         XCTAssertEqual(entity.transform.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(entity.transform.angularVelocity, .zero)
@@ -151,10 +161,12 @@ final class SpawnMotionTests: XCTestCase {
         let id = try XCTUnwrap(firstID(in: store))
         let entity = try XCTUnwrap(store.entity(id))
         XCTAssertEqual(entity.kind, .bomb)
-        XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -160, 32))
-        let radians: Float = 30 * .pi / 180
-        XCTAssertEqual(entity.transform.velocity.x, 5.5, accuracy: 1e-5)
-        XCTAssertEqual(entity.transform.velocity.y, 11 * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -260, 32))
+        // 测试整数随机源返回 20：trunc(10*150/-300)-10+20 = 15°。
+        XCTAssertEqual(entity.transform.velocity.x,
+                       11 * OriginalSpawnTrigonometry.sin(degrees: 15), accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.velocity.y,
+                       11 * OriginalSpawnTrigonometry.cos(degrees: 15) * 1.075, accuracy: 1e-5)
         XCTAssertEqual(entity.transform.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(entity.transform.angularVelocity, .zero)
@@ -173,11 +185,12 @@ final class SpawnMotionTests: XCTestCase {
         spawner.velocityScaleY = 1
 
         let state = BombMotion.spawnState(rng: rng, spawner: spawner)
-        // x=150 → trunc(20*x/-300)=-10；rng=.5 → -20+floor(40*.5)=0，合计 -10°。
-        let radians: Float = -10 * .pi / 180
-        XCTAssertEqual(state.position, SIMD3<Float>(150, -160, 32))
-        XCTAssertEqual(state.velocity.x, 10.25 * sin(radians), accuracy: 1e-5)
-        XCTAssertEqual(state.velocity.y, 10.25 * cos(radians) * 1.075, accuracy: 1e-5)
+        // x=150 → trunc(10*x/-300)=-5；整数随机为 10，合计 -5-10+10=-5°。
+        XCTAssertEqual(state.position, SIMD3<Float>(150, -260, 32))
+        XCTAssertEqual(state.velocity.x,
+                       10.25 * OriginalSpawnTrigonometry.sin(degrees: -5), accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.y,
+                       10.25 * OriginalSpawnTrigonometry.cos(degrees: -5) * 1.075, accuracy: 1e-5)
         XCTAssertEqual(state.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(rng.calls, 3)
     }
@@ -192,7 +205,7 @@ final class SpawnMotionTests: XCTestCase {
         spawner.gravity = SIMD3<Float>(2, 0, -3)
 
         let state = BombMotion.spawnState(rng: rng, spawner: spawner)
-        XCTAssertEqual(state.position, SIMD3<Float>(150, -160, 32))
+        XCTAssertEqual(state.position, SIMD3<Float>(150, -260, 32))
         XCTAssertEqual(state.velocity, SIMD3<Float>(6, -2, 0))
         XCTAssertEqual(state.acceleration, SIMD3<Float>(24, 0, -36))
         XCTAssertEqual(rng.calls, 2)

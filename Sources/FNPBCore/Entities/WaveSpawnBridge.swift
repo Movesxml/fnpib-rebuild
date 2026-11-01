@@ -3,7 +3,7 @@ import simd
 
 // WaveDirector 的真实内容生成出口。
 // 普通水果与炸弹分别由 FUN_00057000、FUN_000568f4 驱动，不消费随机自旋。
-// 特殊 placement 与缺省 gravity 的官方运行时初值仍未闭合。
+// 缺省 gravity 的官方运行时初值仍未闭合。
 
 extension Constants {
     /// Classic 控制器 +0x14 每次合格漏切 +1，状态 1 在计数 >2 时结束。[macho H]
@@ -45,7 +45,7 @@ public final class WaveSpawnBridge: WaveSpawnSink {
     public func spawnFruit(kind: Int32, from spawner: Spawner, wave: WaveInfo) {
         _ = wave
         guard let info = fruitByTypeID[kind] else { return }
-        let state = FruitMotion.spawnState(rng: rng, spawner: spawner)
+        let state = FruitMotion.spawnState(rng: rng, spawner: spawner, tuning: tuning)
         let transform = EntityTransform(position: state.position,
                                         velocity: state.velocity,
                                         acceleration: state.acceleration,
@@ -65,7 +65,7 @@ public final class WaveSpawnBridge: WaveSpawnSink {
         info.bomb = bomb
         info.scale = bomb.size
         info.collision = bomb.collision
-        let state = BombMotion.spawnState(rng: rng, spawner: spawner)
+        let state = BombMotion.spawnState(rng: rng, spawner: spawner, tuning: tuning)
         let transform = EntityTransform(position: state.position,
                                         velocity: state.velocity,
                                         acceleration: state.acceleration,

@@ -437,6 +437,7 @@ final class GameHost: ObservableObject {
             } else {
                 gameWorld.motionTuning.actualSize = GameHost.currentLogicalSize()
             }
+            waveSpawnBridge?.tuning.actualSize = gameWorld.motionTuning.actualSize
             // 先推进已有 UISF 时间线，再跑控制器并启动本帧新动画；新动画从 0 ms 开始，
             // 完成 game_over 时产生的 game_over_real 会在同一逻辑帧被消费。
             advanceClassicAnimations(deltaSeconds: step)

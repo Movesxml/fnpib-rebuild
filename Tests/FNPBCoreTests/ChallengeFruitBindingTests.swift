@@ -91,7 +91,8 @@ final class ChallengeFruitBindingTests: XCTestCase {
         XCTAssertTrue(challengeWaves.waves.allSatisfy { $0.name != nil && !$0.name!.isEmpty })
 
         let director = WaveDirector(playerCount: 1, rng: QueueRandomSource())
-        director.setChallengeFruit(0)
+        // 固定测试随机源总返回 0；注入非首项水果，避免原版排除重抽在本测试永不收敛。
+        director.setChallengeFruit(23)
         director.beginGame(waves: challengeWaves.waves, fruits: fruitList.fruits)
         XCTAssertTrue(director.configureChallengeWave(customWave: "FastFruit1", forceWave: true))
 
