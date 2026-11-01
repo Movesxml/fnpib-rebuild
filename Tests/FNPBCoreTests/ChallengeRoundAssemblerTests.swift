@@ -151,12 +151,12 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
     }
 
     func testSubsequentSmallOverridesFruitWithoutNewDefaultSelection() throws {
-        // 计划：第一次选 normal（39/40），洗牌保持顺序，第二次选 small（0/24）。
+        // 计划：第一次选 normal（0/40），洗牌保持顺序，第二次选 small（0/24）。
         let catalog = makeCatalog(challenges: [
             makeChallenge(name: "normal", size: .normal),
             makeChallenge(name: "small", size: .small),
         ], numRounds: 2)
-        let random = AssemblerRandom(planValues: [0, 0, 0, 39, 0])
+        let random = AssemblerRandom(planValues: [0, 0, 0, 0, 0])
         var assembler = try makeAssembler(
             catalog: catalog, fruits: makeFruits(), random: random)
 
