@@ -67,7 +67,7 @@ final class CriticalOnSlicedTests: XCTestCase {
         var state = GameState()
         var results: [Bool] = []
 
-        for rawID in 1...3 {
+        for rawID in Int32(1)...3 {
             var entity = Self.entity(id: rawID)
             onSliced.apply(entity: &entity, state: &state, services: services)
             results.append(entity.isCriticalHit)
