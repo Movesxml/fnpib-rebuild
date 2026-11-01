@@ -74,7 +74,8 @@ final class CriticalOnSlicedTests: XCTestCase {
         }
 
         XCTAssertEqual(results, [false, true, false])
-        XCTAssertEqual(rng.bounds, [3, 2, 79], "第二次命中重置为 50+30，第三次先递减到 79")
+        XCTAssertEqual(rng.bounds, [3, 2, 50],
+                       "第二次命中重置为 50+30；第三次先递减到 79，再与 chance=50 取较小值")
     }
 
     func testZeroWaveChanceDoesNotConsumeCriticalRandom() {
@@ -95,7 +96,7 @@ final class CriticalOnSlicedTests: XCTestCase {
         waves.chance = 1
         var second = Self.entity(id: 2)
         onSliced.apply(entity: &second, state: &state, services: services)
-        XCTAssertEqual(rng.bounds, [3], "零概率那次仍递减分母，但不抽随机")
+        XCTAssertEqual(rng.bounds, [2], "零概率那次仍递减分母，第二次使用递减后的 2")
     }
 
     func testFractionalRandomBoundTruncatesTowardZero() {

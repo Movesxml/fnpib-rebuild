@@ -330,6 +330,7 @@ final class GameWorldTests: XCTestCase {
         fruit.typeID = 5
         fruit.name = "orange"
         fruit.score = 8
+        fruit.noCritical = false
         world.spawn(EntityPrototype(kind: .fruit, fruit: fruit, isCriticalHit: true))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)

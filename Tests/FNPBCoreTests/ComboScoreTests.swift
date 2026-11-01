@@ -217,6 +217,7 @@ final class ComboScoreTests: XCTestCase {
         entity.fruit?.typeID = 2
         entity.fruit?.score = 7
         entity.fruit?.name = "orange"
+        entity.fruit?.noCritical = false
 
         let score = ScoreSystem()
         score.dispatch(score: 2, comboType: 0, isScoring: true, mode: 0)
