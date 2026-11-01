@@ -1,9 +1,9 @@
 import Foundation
 import simd
 
-// T-035：WaveDirector 的真实内容生成出口。
-// 普通默认水果的位置、初速、加速度由 FUN_00057000 驱动，不再消费随机自旋。
-// 特殊 placement 与炸弹 FUN_000568f4 的生成差异不在本卡扩张范围内。
+// WaveDirector 的真实内容生成出口。
+// 普通水果与炸弹分别由 FUN_00057000、FUN_000568f4 驱动，不消费随机自旋。
+// 特殊 placement 与缺省 gravity 的官方运行时初值仍未闭合。
 
 extension Constants {
     /// Classic 三次漏切的重建辅助规则 [待验证 原版失败条件]。
@@ -58,7 +58,6 @@ public final class WaveSpawnBridge: WaveSpawnSink {
 
     /// 对应 FUN_000568f4：只创建炸弹实体，不触发爆炸结算。
     public func spawnBomb(from spawner: Spawner, wave: WaveInfo) {
-        _ = spawner
         _ = wave
         var info = FruitInfo()
         info.name = "bomb"
@@ -66,26 +65,14 @@ public final class WaveSpawnBridge: WaveSpawnSink {
         info.bomb = bomb
         info.scale = bomb.size
         info.collision = bomb.collision
-        store.spawn(makeLegacyBombPrototype(fruit: info))
-    }
-
-    /// [兼容占位，官方生成未闭合]
-    /// 保留 T-025 炸弹生成参数，严禁把 FUN_00057000 的水果角度算法套到
-    /// FUN_000568f4。炸弹仍使用独立运动公式前，这些值不代表官方行为。
-    private func makeLegacyBombPrototype(fruit info: FruitInfo) -> EntityPrototype {
-        let spawnX = -4 + 8 * rng.nextFloat()
-        let speed = 14 + 8 * rng.nextFloat()
-        let degrees = 60 + 60 * rng.nextFloat()
-        let radians = degrees * Float.pi / 180
-        let spin = -4 + 8 * rng.nextFloat()
-        let transform = EntityTransform(
-            position: SIMD3<Float>(spawnX, -2, 0),
-            velocity: SIMD3<Float>(speed * cos(radians), speed * sin(radians), 0),
-            acceleration: SIMD3<Float>(0, -9.8, 0),
-            rotation: .zero,
-            angularVelocity: SIMD3<Float>(0, 0, spin),
-            scale: info.scale,
-            radius: info.collision)
-        return EntityPrototype(kind: .bomb, transform: transform, fruit: info)
+        let state = BombMotion.spawnState(rng: rng, spawner: spawner)
+        let transform = EntityTransform(position: state.position,
+                                        velocity: state.velocity,
+                                        acceleration: state.acceleration,
+                                        rotation: .zero,
+                                        angularVelocity: .zero,
+                                        scale: info.scale,
+                                        radius: info.collision)
+        store.spawn(EntityPrototype(kind: .bomb, transform: transform, fruit: info))
     }
 }

@@ -132,20 +132,58 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(store.aliveCount, 0)
     }
 
-    func testSpawnBombUsesLoadedBombInfoWithoutClaimingOfficialMotion() throws {
+    func testSpawnBombUsesLoadedInfoAndMachODefaultState() throws {
         let store = GenerationOrderStore()
-        let bridge = try makeBridge(store: store, seed: 0xB0B1)
+        let rng = SequenceTestRandom([1, 1, 1])
+        let bridge = try makeBridge(store: store, rng: rng)
         bridge.spawnBomb(from: Spawner(), wave: WaveInfo())
 
         XCTAssertEqual(store.aliveCount, 1)
         let id = try XCTUnwrap(firstID(in: store))
         let entity = try XCTUnwrap(store.entity(id))
         XCTAssertEqual(entity.kind, .bomb)
+        XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -160, 32))
+        XCTAssertEqual(entity.transform.velocity, .zero, "原 Spawn 构造器的两个速度缩放均为 0")
+        XCTAssertEqual(entity.transform.acceleration, SIMD3<Float>(0, -12, 0))
+        XCTAssertEqual(entity.transform.angularVelocity, .zero)
         XCTAssertEqual(entity.transform.scale, 55, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.radius, 35, accuracy: 1e-6)
         let bomb = try XCTUnwrap(entity.fruit?.bomb)
         XCTAssertEqual(bomb.size, 55, accuracy: 1e-6)
         XCTAssertEqual(bomb.collision, 35, accuracy: 1e-6)
+        XCTAssertEqual(rng.calls, 3, "不得再消费旧实现的第四次随机自旋")
+    }
+
+    func testBombDirectionUsesPositionAdjustmentAndIntegerRandomRange() {
+        let rng = SequenceTestRandom([1, 0.5, 0.5])
+        var spawner = Spawner()
+        spawner.velocityScaleX = 1
+        spawner.velocityScaleY = 1
+
+        let state = BombMotion.spawnState(rng: rng, spawner: spawner)
+        // x=150 → trunc(20*x/-300)=-10；rng=.5 → -20+floor(40*.5)=0，合计 -10°。
+        let radians: Float = -10 * .pi / 180
+        XCTAssertEqual(state.position, SIMD3<Float>(150, -160, 32))
+        XCTAssertEqual(state.velocity.x, 10.25 * sin(radians), accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.y, 10.25 * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(state.acceleration, SIMD3<Float>(0, -12, 0))
+        XCTAssertEqual(rng.calls, 3)
+    }
+
+    func testBombExplicitVelocityConsumesOnlyTwoRandomValues() {
+        let rng = SequenceTestRandom([1, 1, 1])
+        var spawner = Spawner()
+        spawner.velocityX = 3
+        spawner.velocityY = -4
+        spawner.velocityScaleX = 2
+        spawner.velocityScaleY = 0.5
+        spawner.gravity = SIMD3<Float>(2, 0, -3)
+
+        let state = BombMotion.spawnState(rng: rng, spawner: spawner)
+        XCTAssertEqual(state.position, SIMD3<Float>(150, -160, 32))
+        XCTAssertEqual(state.velocity, SIMD3<Float>(6, -2, 0))
+        XCTAssertEqual(state.acceleration, SIMD3<Float>(24, 0, -36))
+        XCTAssertEqual(rng.calls, 2)
     }
 
     func testSpawnBeyondTwentyFourIsNotTruncated() throws {
