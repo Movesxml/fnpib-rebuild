@@ -135,9 +135,15 @@ final class ClassicModeRuntimeTests: XCTestCase {
         XCTAssertEqual(rig.stats.value(forDynamicKey: "magic_bean_points"), 0)
         XCTAssertEqual(rig.audio.keys, ["bean-collect", "extra-life", "splash"])
         XCTAssertEqual(rig.audio.stoppedKeys, ["bean-lp"])
-        XCTAssertEqual(rig.world.drainClassicEvents(), [
-            .restoreCross(1), .magicBeanPopup(.extraLife, at: .zero)
-        ])
+        let events = rig.world.drainClassicEvents()
+        XCTAssertEqual(events.count, 2)
+        XCTAssertEqual(events.first, .restoreCross(1))
+        guard case let .magicBeanPopup(kind, at: position) = events[1] else {
+            return XCTFail("恢复生命必须同时发出原实体位置的弹窗事件")
+        }
+        XCTAssertEqual(kind, .extraLife)
+        XCTAssertTrue(position.x.isFinite && position.y.isFinite && position.z.isFinite,
+                      "GameWorld 会先推进运动；本测试不把弹窗位置误写成固定的世界原点")
 
         rig.world.completeClassicAnimation(state: &state)
         XCTAssertEqual(state.classicPhase, .running, "running 状态没有待完成结束动画")
@@ -160,7 +166,13 @@ final class ClassicModeRuntimeTests: XCTestCase {
         XCTAssertEqual(rig.stats.value(forDynamicKey: "bean_game_consecutive_total"), 1)
         XCTAssertEqual(rig.audio.keys, ["bean-collect", "splash"])
         XCTAssertEqual(rig.audio.stoppedKeys, ["bean-lp"])
-        XCTAssertEqual(rig.world.drainClassicEvents(), [.magicBeanPopup(.bonus, at: .zero)])
+        let events = rig.world.drainClassicEvents()
+        XCTAssertEqual(events.count, 1)
+        guard case let .magicBeanPopup(kind, at: position) = events[0] else {
+            return XCTFail("零漏切奖励必须发出原实体位置的弹窗事件")
+        }
+        XCTAssertEqual(kind, .bonus)
+        XCTAssertTrue(position.x.isFinite && position.y.isFinite && position.z.isFinite)
     }
 
     func testBeanConsecutiveBonusOnlyIncrementsOnFirstBean() {

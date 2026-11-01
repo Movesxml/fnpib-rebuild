@@ -125,7 +125,10 @@ public struct UIScreenAnimationPlayer: Sendable {
             guard var playback = playbacks[componentName], playback.isPlaying else { continue }
             let previous = playback.elapsedMS
             let end = Double(playback.animation.endTimeMS)
-            let next = min(end, previous + Double(deltaSeconds) * 1000)
+            // Keep the multiplication in the same Float time domain as the logical clock.
+            // Converting 0.35f to Double first produces 349.999994 ms and incorrectly
+            // withholds an event keyed at exactly 350 ms until the following frame.
+            let next = min(end, previous + Double(deltaSeconds * 1000))
             output.append(contentsOf: events(component: componentName,
                                              animation: playback.animation,
                                              fromMS: previous,
