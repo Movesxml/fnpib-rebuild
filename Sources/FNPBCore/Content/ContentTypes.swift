@@ -33,6 +33,10 @@ import Foundation
 public struct WaveInfo: Codable, Equatable, Sendable {
 
     // -- 原始标识（T-027 新增）------------------------------------------------
+    /// 原 WaveInfo +0x08 的名称。挑战 `customWave` 按该字段查找首项。
+    /// 普通 originalWaveList 未提供名称；Optional 也保持旧 Codable 数据可解码。
+    public var name: String? = nil
+
     /// 原始波次编号（XML `waveNo`；真实文件从 0 开始且**允许重复**）[macho]。
     /// - 用作 `until` 后处理的比较基准（见 `postProcessUntil`）
     /// - 严禁用数组下标或强制 1 基冒充

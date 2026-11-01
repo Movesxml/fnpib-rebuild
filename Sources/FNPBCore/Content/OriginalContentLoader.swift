@@ -451,6 +451,8 @@ public enum OriginalContentLoader {
                                   defaults: OriginalWaveDefaults) throws
         -> (wave: WaveInfo, untilToken: String) {
         var wave = WaveInfo()
+        // 保留内容中的名称元数据；普通 originalWaveList 没有该属性，不补造名称。
+        wave.name = node.attrs["name"]
         wave.waveNo = try int32Value(node, "waveNo", path) ?? documentIndex
         // FUN_00058ee4：WaveInfo 的缺省权重来自 defaults.waveChance。
         wave.chance = try int32Value(node, "chance", path) ?? defaults.waveChance

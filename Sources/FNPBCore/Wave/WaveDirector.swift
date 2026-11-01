@@ -121,6 +121,10 @@ public struct WaveRuntime: Sendable {
     /// 每波 currentChance（原 `WaveInfo +0x80`，Int32；与 waves 对齐，初值 0）。
     public var currentChances: [Int32] = []
 
+    /// 挑战 forceWave 的锁定波下标（原 WaveManager +0x228）。
+    /// FUN_00057c08 每次配置先清空；FUN_00054dd8 仅单玩家优先读取。
+    public var forcedWaveIndex: Int? = nil
+
     public init() {}
 }
 
@@ -220,6 +224,29 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
         }
     }
 
+    /// FUN_00057c08：挑战 reset 后配置 customWave。调用前必须已完成 beginGame。
+    ///
+    /// forceWave=true 走 FUN_000579c8：记录同名首波并立即选波，单玩家后续持续锁定。
+    /// forceWave=false 走 FUN_00057c90：把激活计数改为同名首波的 waveNo-1，
+    /// 然后走普通候选与权重选择，绝不按名称过滤或锁定。
+    /// 未知名称只清空 forced 并返回 false，不触发选波、不虚构替代波。
+    @discardableResult
+    public func configureChallengeWave(customWave: String?, forceWave: Bool) -> Bool {
+        runtime.forcedWaveIndex = nil
+        guard let customWave, !customWave.isEmpty,
+              let index = waves.firstIndex(where: { $0.name == customWave }) else {
+            return false
+        }
+
+        if forceWave {
+            runtime.forcedWaveIndex = index
+        } else {
+            runtime.waveActivationCount = waves[index].waveNo &- 1
+        }
+        selectNextWave()
+        return true
+    }
+
     // MARK: WaveDirecting
 
     /// 每帧推进（§1.2 步骤 10 的子路径；分支链见 core_logic_notes §5.3）。
@@ -270,11 +297,12 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
     /// 波次选择（FUN_00054dd8 重建）[macho]。
     ///
     ///  1. 激活计数 +1；非首次选择时旧波 spInc +1。
-    ///  2. 所有波先执行权重恢复，再筛选候选；未到激活编号或已过 until 的波也恢复。
-    ///  3. `currentChance` 是 Int32：增量为 `trunc(chanceRegrowth * maxChance)`，
+    ///  2. 单玩家 forced 波优先，绕过普通 regrow、候选和权重 RNG；此分支不清 currentChance。
+    ///  3. 否则所有波先执行权重恢复，再筛选候选；未到激活编号或已过 until 的波也恢复。
+    ///  4. `currentChance` 是 Int32：增量为 `trunc(chanceRegrowth * maxChance)`，
     ///     不是把浮点 regrowth 直接加到权重；结果钳到 maxChance。
-    ///  4. 候选：`waveNo <= count` 且（`count <= until` 或 `until == -2`）。
-    ///  5. 多候选按 `currentChance * 10` 权重随机；选中波清零，重复 waveNo 合法。
+    ///  5. 候选：`waveNo <= count` 且（`count <= until` 或 `until == -2`）。
+    ///  6. 多候选按 `currentChance * 10` 权重随机；选中波清零，重复 waveNo 合法。
     ///
     /// [待验证] 全零权重时取文档顺序候选（原版分支未在导出文本中直接体现）。
     public func selectNextWave() {
@@ -287,6 +315,17 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
         }
         runtime.hasSelectedWave = true
         ensureChanceArray()
+
+        // FUN_00054dd8 的单玩家 +0x228 分支：不清 currentChance，不恢复其它波权重。
+        if playerCount == 1, let forced = runtime.forcedWaveIndex,
+           waves.indices.contains(forced) {
+            runtime.currentWaveIndex = forced
+            let wave = waves[forced]
+            initializeBatches(wave: wave, spInc: runtime.currentWaveSpInc)
+            applyFreezeTimers(wave: wave, spInc: runtime.currentWaveSpInc)
+            events?.onWaveStart(waveIndex: forced, wave: wave)
+            return
+        }
 
         // 原函数在同一个完整 waves 遍历中先恢复权重，再判断候选资格。
         var candidates: [Int] = []
