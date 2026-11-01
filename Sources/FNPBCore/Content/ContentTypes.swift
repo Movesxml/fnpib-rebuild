@@ -90,8 +90,13 @@ public struct WaveInfo: Codable, Equatable, Sendable {
     public var speedLoss: Float = Constants.WaveDefaults.speedLoss
 
     // -- 概率池 ----------------------------------------------------------------
-    /// 默认 override 概率池 ID = 10。[macho H] §4.1 `+0xb0`
+    /// FUN_00058ee4 将 defaults.overideProbabiltyPool 复制到 WaveInfo +0xb0。
+    /// 构造缺省为 100；旧字段名仅为源码和 Codable 存储兼容。
     public var overridePoolID: Int32 = Constants.WaveDefaults.overridePoolID
+    public var overrideProbabilityPool: Int32 {
+        get { overridePoolID }
+        set { overridePoolID = newValue }
+    }
 
     /// override 概率池默认值 = 100。[macho H] §4.1 `+0xe4`
     public var overrideChance: Int32 = Constants.WaveDefaults.overridePoolDefault
@@ -243,6 +248,10 @@ public enum SpawnKind: Equatable, Sendable {
     case fruit(Int32)
     case bomb
     case random
+    /// XML `type="fruit"` 在水果表中未命中，原版得到 -1 空槽。
+    case empty
+    /// 原版直接读取挑战控制器 +0x88，不从波名推断水果。
+    case challengeFruit
 }
 
 extension SpawnKind: Codable {
@@ -252,6 +261,8 @@ extension SpawnKind: Codable {
         switch raw {
         case "bomb": self = .bomb
         case "random": self = .random
+        case "empty": self = .empty
+        case "challengeFruit": self = .challengeFruit
         default:
             let prefix = "fruit:"
             guard raw.hasPrefix(prefix), let id = Int32(raw.dropFirst(prefix.count)) else {
@@ -268,6 +279,8 @@ extension SpawnKind: Codable {
         case .fruit(let id): try container.encode("fruit:\(id)")
         case .bomb: try container.encode("bomb")
         case .random: try container.encode("random")
+        case .empty: try container.encode("empty")
+        case .challengeFruit: try container.encode("challengeFruit")
         }
     }
 }
@@ -290,52 +303,58 @@ public struct Spawner: Codable, Equatable, Sendable {
     // -- Spawn 数量与延迟（FUN_000537ec）---------------------------------------
     /// 每次生成的数量下限，XML `min` → 原 `+0x5c`；原版缺省 1。
     public var min: Float = 1
-
-    /// 每次生成的数量上限，XML `max` → 原 `+0x64`。
     public var max: Float = 0
-
-    /// XML `mininc` → 原 `+0x68`；**加载器会把 XML `maxinc` 覆盖进本槽**，
-    /// 调度器运行时只使用本字段（T-029）。
+    /// XML `mininc/maxinc` 依次写同一运行时槽；maxinc 存在时覆盖 mininc。
     public var minInc: Float = 0
-
-    /// 保留 XML `maxinc` 原值。完整反编译显示原版也写入 `+0x68`（与 mininc 同槽），
-    /// 并非独立运行时槽；调度器不得把本字段当作第二个增量。
+    /// 仅保留 XML maxinc 原值，不是独立运行时增量。
     public var maxInc: Float = 0
-
-    /// XML `delay` → 原 `+0x6c`，不是“剩余水果数”。
     public var delay: Float = 0
-
-    /// XML `delayinc` → 原 `+0x70`。
     public var delayInc: Float = 0
 
+    /// XML `horizmin/horizmax` → 原 `+0x50/+0x54`。
+    /// FUN_00053cb8 分配 Spawn 内存块时两项均初始化为 1。
+    public var horizMin: Float = 1
+    public var horizMax: Float = 1
+    /// XML `dt` → 原 `+0x14`。
+    public var dt: Float = 0
+
+    /// 这些字段由 FUN_0030c6c0 按整数读取；nil 表示 XML 未提供。
+    public var posX: Int32?
+    public var posY: Int32?
+    public var sin: Int32?
+    public var cos: Int32?
+    public var radius: Int32?
+
     // -- Spawn 初速与重力（FUN_000537ec / FUN_00057000）-------------------------
-    /// XML `velX/velY` → 原 `+0x40/+0x44`；构造缺省为 0。
     public var velocityX: Float = 0
     public var velocityY: Float = 0
 
     /// XML `velscale` 先同时写入两轴，再由 `velXscale/velYscale` 分别覆盖。
-    /// 原 Spawn 构造缺省确实为 0，不得为了“让水果飞起来”改成 1。
-    public var velocityScaleX: Float = 0
-    public var velocityScaleY: Float = 0
+    /// FUN_00053cb8 对真实波文件的 Spawn 块将两轴都初始化为 1。
+    public var velocityScaleX: Float = 1
+    public var velocityScaleY: Float = 1
 
     /// 非空 XML `gravity` 才覆盖原 `+0x20/+0x24/+0x28`。
-    /// nil 表示原构造器未写全三分量，官方缺省向量没有唯一确定值。
-    public var gravity: SIMD3<Float>? = nil
+    /// nil 表示原加载器未写全三分量，官方缺省向量仍未闭合。
+    public var gravity: SIMD3<Float>?
+
+    /// FUN_00058528：缺省/其他字符串 = 1，OVERRIDE_ANY/DONT_OVERRIDE = 2。
+    public var overrideMode: Int32 = 1
+    public var overrideRaw: String?
+    /// FUN_000531b8：BOTTOM=0/TOP=1/LEFT=2/RIGHT=3/LEFT_RIGHT=4。
+    /// 仅完成解析；运动语义尚未闭合。raw 用于区分未知与 BOTTOM。
+    public var placementCode: Int32 = 0
+    public var placementRaw: String?
+    public var replaceWithChallengeFruit: Int32 = 0
+    /// 原版仅对精确小写字符串 "true" 置位。
+    public var mirror: Bool = false
 
     // -- 旧字段（仅为本阶段编译兼容，不表示以下旧命名已获原版证实）---------------
-    /// minWait / maxWait（原 `+0x20/+0x24`）。[macho H] §4.2
     public var minWait: Float = 0
     public var maxWait: Float = 0
-
-    /// canSpawnWithPowers（原 `+0x28` byte，"true" 解析）。[macho H] §4.2
     public var canSpawnWithPowers: Bool = true
-
-    /// dontSpawnBeforeWave（原 `+0x2c`）。[macho H] §4.2
     public var dontSpawnBeforeWave: Float = -1.0
-
-    /// fruit 候选列表（原 `+0x8`）[macho H] §4.2
     public var fruits: [SpawnerFruit] = []
-
     /// Spawn.type 按逗号拆分并 trim 后的保序结果。
     public var types: [SpawnKind] = []
 
@@ -351,8 +370,8 @@ public struct Spawner: Codable, Equatable, Sendable {
                 types: [SpawnKind] = [],
                 velocityX: Float = 0,
                 velocityY: Float = 0,
-                velocityScaleX: Float = 0,
-                velocityScaleY: Float = 0,
+                velocityScaleX: Float = 1,
+                velocityScaleY: Float = 1,
                 gravity: SIMD3<Float>? = nil) {
         self.name = name
         self.mode = mode
@@ -367,6 +386,33 @@ public struct Spawner: Codable, Equatable, Sendable {
         self.velocityScaleX = velocityScaleX
         self.velocityScaleY = velocityScaleY
         self.gravity = gravity
+    }
+
+    /// FUN_002f69c4 的名称比较只折叠 ASCII A-Z，不扩展为 Unicode 大小写规则。
+    private static func asciiEqual(_ lhs: String, _ rhs: String) -> Bool {
+        let left = Array(lhs.utf8)
+        let right = Array(rhs.utf8)
+        guard left.count == right.count else { return false }
+        return left.indices.allSatisfy { index in
+            let a = (65...90).contains(left[index]) ? left[index] + 32 : left[index]
+            let b = (65...90).contains(right[index]) ? right[index] + 32 : right[index]
+            return a == b
+        }
+    }
+
+    public static func parseOverrideMode(for raw: String?) -> Int32 {
+        guard let raw else { return 1 }
+        return asciiEqual(raw, "OVERRIDE_ANY") || asciiEqual(raw, "DONT_OVERRIDE") ? 2 : 1
+    }
+
+    public static func parsePlacementCode(for raw: String?) -> Int32 {
+        guard let raw, !raw.isEmpty else { return 0 }
+        if asciiEqual(raw, "BOTTOM") { return 0 }
+        if asciiEqual(raw, "TOP") { return 1 }
+        if asciiEqual(raw, "LEFT") { return 2 }
+        if asciiEqual(raw, "RIGHT") { return 3 }
+        if asciiEqual(raw, "LEFT_RIGHT") { return 4 }
+        return 0
     }
 }
 

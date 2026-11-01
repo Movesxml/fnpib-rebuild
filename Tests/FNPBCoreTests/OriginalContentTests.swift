@@ -348,8 +348,8 @@ final class OriginalContentTests: XCTestCase {
         for spawn in allSpawns {
             XCTAssertEqual(spawn.velocityX, 0, accuracy: 1e-6)
             XCTAssertEqual(spawn.velocityY, 0, accuracy: 1e-6)
-            XCTAssertEqual(spawn.velocityScaleX, 0, accuracy: 1e-6)
-            XCTAssertEqual(spawn.velocityScaleY, 0, accuracy: 1e-6)
+            XCTAssertEqual(spawn.velocityScaleX, 1, accuracy: 1e-6)
+            XCTAssertEqual(spawn.velocityScaleY, 1, accuracy: 1e-6)
             XCTAssertNil(spawn.gravity, "真实 42 个 Spawn 均未提供 gravity")
         }
         let fruitCount = Int32(content.fruits.fruits.count)

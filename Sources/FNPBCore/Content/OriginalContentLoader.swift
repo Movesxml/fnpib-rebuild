@@ -99,16 +99,65 @@ public struct OriginalWaveDefaults: Equatable, Sendable {
     /// 原解析器实际读取的 defaults 键。
     public var waveChanceRegrowth: Float?
     public var criticalChance: Float?
+    public var dt: Float?
+    public var dtInc: Float?
+    public var dtSpInc: Float?
+    public var beforeDelay: Float?
+    public var beforeDelayInc: Float?
+    public var nextDelay: Float?
+    public var nextDelayInc: Float?
+    public var nextDelaySpInc: Float?
+    public var speedLoss: Float?
+    public var overrideProbabilityPool: Int32?
+    public var waitForEntities: Bool?
+    public var waitForProcessing: Bool?
+    public var playersRaw: String?
+    /// 以下三项属于 waveManager，不由 FUN_00058ee4 复制到每个 WaveInfo。
+    public var globalDtStart: Float?
+    public var globalDtInc: Float?
+    public var globalDtMax: Float?
     /// 保留全部原始键；真实文件的 waveChanceGrowth 不会被冒充为 Regrowth。
     public var raw: [String: String]
 
     public init(waveChance: Int32? = nil,
                 waveChanceRegrowth: Float? = nil,
                 criticalChance: Float? = nil,
+                dt: Float? = nil,
+                dtInc: Float? = nil,
+                dtSpInc: Float? = nil,
+                beforeDelay: Float? = nil,
+                beforeDelayInc: Float? = nil,
+                nextDelay: Float? = nil,
+                nextDelayInc: Float? = nil,
+                nextDelaySpInc: Float? = nil,
+                speedLoss: Float? = nil,
+                overrideProbabilityPool: Int32? = nil,
+                waitForEntities: Bool? = nil,
+                waitForProcessing: Bool? = nil,
+                playersRaw: String? = nil,
+                globalDtStart: Float? = nil,
+                globalDtInc: Float? = nil,
+                globalDtMax: Float? = nil,
                 raw: [String: String] = [:]) {
         self.waveChance = waveChance
         self.waveChanceRegrowth = waveChanceRegrowth
         self.criticalChance = criticalChance
+        self.dt = dt
+        self.dtInc = dtInc
+        self.dtSpInc = dtSpInc
+        self.beforeDelay = beforeDelay
+        self.beforeDelayInc = beforeDelayInc
+        self.nextDelay = nextDelay
+        self.nextDelayInc = nextDelayInc
+        self.nextDelaySpInc = nextDelaySpInc
+        self.speedLoss = speedLoss
+        self.overrideProbabilityPool = overrideProbabilityPool
+        self.waitForEntities = waitForEntities
+        self.waitForProcessing = waitForProcessing
+        self.playersRaw = playersRaw
+        self.globalDtStart = globalDtStart
+        self.globalDtInc = globalDtInc
+        self.globalDtMax = globalDtMax
         self.raw = raw
     }
 }
@@ -441,6 +490,23 @@ public enum OriginalContentLoader {
         defaults.waveChance = try int32Value(node, "waveChance", path)
         defaults.waveChanceRegrowth = try floatValue(node, "waveChanceRegrowth", path)
         defaults.criticalChance = try floatValue(node, "criticalChance", path)
+        defaults.dt = try floatValue(node, "dt", path)
+        defaults.dtInc = try floatValue(node, "dtInc", path)
+        defaults.dtSpInc = try floatValue(node, "dtSpInc", path)
+        defaults.beforeDelay = try floatValue(node, "beforeDelay", path)
+        defaults.beforeDelayInc = try floatValue(node, "beforeDelayInc", path)
+        defaults.nextDelay = try floatValue(node, "nextDelay", path)
+        defaults.nextDelayInc = try floatValue(node, "nextDelayInc", path)
+        defaults.nextDelaySpInc = try floatValue(node, "nextDelaySpInc", path)
+        defaults.speedLoss = try floatValue(node, "speedLoss", path)
+        // 保留官方 overideProbabiltyPool 拼写，不额外发明别名。
+        defaults.overrideProbabilityPool = try int32Value(node, "overideProbabiltyPool", path)
+        defaults.waitForEntities = try boolValue(node, keys: ["waitForEntities"], path: path)
+        defaults.waitForProcessing = try boolValue(node, keys: ["waitForProcessing"], path: path)
+        defaults.playersRaw = node.attrs["players"]
+        defaults.globalDtInc = try floatValue(node, "globalDtInc", path)
+        defaults.globalDtStart = try floatValue(node, "globalDtStart", path)
+        defaults.globalDtMax = try floatValue(node, "globalDtMax", path)
         return defaults
     }
 
@@ -451,13 +517,33 @@ public enum OriginalContentLoader {
                                   defaults: OriginalWaveDefaults) throws
         -> (wave: WaveInfo, untilToken: String) {
         var wave = WaveInfo()
-        // 保留内容中的名称元数据；普通 originalWaveList 没有该属性，不补造名称。
-        wave.name = node.attrs["name"]
+        // FUN_00053cb8 读取 debugName；缺失时使用的是文档序号，不是 waveNo。
+        wave.name = node.attrs["debugName"] ?? "waveNo. \(documentIndex)"
         wave.waveNo = try int32Value(node, "waveNo", path) ?? documentIndex
-        // FUN_00058ee4：WaveInfo 的缺省权重来自 defaults.waveChance。
-        wave.chance = try int32Value(node, "chance", path) ?? defaults.waveChance
-        if let value = defaults.waveChanceRegrowth { wave.chanceRegrowth = value }
-        if let value = defaults.criticalChance { wave.criticalChance = value }
+
+        // FUN_00058ee4 先复制 defaults；WaveInfo 属性和子节点随后覆盖。
+        wave.chance = defaults.waveChance ?? Constants.WaveDefaults.waveChance
+        wave.chanceRegrowth = defaults.waveChanceRegrowth ?? Constants.WaveDefaults.regrowthChance
+        wave.criticalChance = defaults.criticalChance ?? Constants.WaveDefaults.criticalChance
+        wave.dt = defaults.dt ?? Constants.WaveDefaults.dt
+        wave.dtInc = defaults.dtInc ?? Constants.WaveDefaults.dtInc
+        wave.dtSpInc = defaults.dtSpInc ?? Constants.WaveDefaults.dtSpInc
+        wave.beforeDelay = defaults.beforeDelay ?? Constants.WaveDefaults.beforeDelay
+        wave.beforeDelayInc = defaults.beforeDelayInc ?? Constants.WaveDefaults.beforeDelayInc
+        wave.nextDelay = defaults.nextDelay ?? Constants.WaveDefaults.nextDelay
+        wave.nextDelayInc = defaults.nextDelayInc ?? Constants.WaveDefaults.nextDelayInc
+        wave.nextDelaySpInc = defaults.nextDelaySpInc ?? Constants.WaveDefaults.nextDelaySpInc
+        wave.speedLoss = defaults.speedLoss ?? Constants.WaveDefaults.speedLoss
+        wave.waitForEntities = defaults.waitForEntities ?? Constants.WaveDefaults.waitForEntities
+        wave.waitForProcessing = defaults.waitForProcessing ?? Constants.WaveDefaults.waitForProcessing
+        wave.overridePoolID = defaults.overrideProbabilityPool ?? Constants.WaveDefaults.overridePoolID
+        if let value = try int32Value(node, "overideProbabiltyPool", path) {
+            wave.overridePoolID = value
+        }
+        // 显式 chance 优先；缺省 defaults 也没有时使用构造缺省 10，不能重置成 nil。
+        wave.chance = try int32Value(node, "chance", path)
+            ?? defaults.waveChance
+            ?? Constants.WaveDefaults.waveChance
         if let value = try floatValue(node, "criticalChance", path) { wave.criticalChance = value }
         if let value = try floatValue(node, "chanceRegrowth", path) { wave.chanceRegrowth = value }
 
@@ -471,8 +557,7 @@ public enum OriginalContentLoader {
                 if let value = try floatValue(child, "inc", childPath) { wave.dtInc = value }
                 if let value = try floatValue(child, "spinc", childPath) { wave.dtSpInc = value }
             case "NextWaveDelay":
-                // 保持 FUN_00053cb8 的写入顺序：wait > 0 先清零 delay/inc，
-                // 随后显式 delay/inc 仍可覆盖清零结果。
+                // wait > 0 先清零 delay/inc，随后显式 delay/inc 仍可覆盖清零结果。
                 if let value = try floatValue(child, "wait", childPath) { wave.nextWait = value }
                 if let value = try floatValue(child, "waitSpinc", childPath) { wave.nextWaitSpInc = value }
                 if let value = try floatValue(child, "speedLoss", childPath) { wave.speedLoss = value }
@@ -507,10 +592,10 @@ public enum OriginalContentLoader {
         spawner.maxInc = maxInc ?? 0
         if let value = try floatValue(node, "delay", path) { spawner.delay = value }
         if let value = try floatValue(node, "delayinc", path) { spawner.delayInc = value }
+        if let value = try floatValue(node, "horizmin", path) { spawner.horizMin = value }
+        if let value = try floatValue(node, "horizmax", path) { spawner.horizMax = value }
 
-        // FUN_000537ec：velscale 先同时写两轴，显式单轴缩放随后覆盖。
-        if let value = try floatValue(node, "velX", path) { spawner.velocityX = value }
-        if let value = try floatValue(node, "velY", path) { spawner.velocityY = value }
+        // 严格保持 FUN_000537ec 的字段顺序：velscale → 单轴 scale → dt → velX/velY。
         if let value = try floatValue(node, "velscale", path) {
             spawner.velocityScaleX = value
             spawner.velocityScaleY = value
@@ -519,6 +604,14 @@ public enum OriginalContentLoader {
         }
         if let value = try floatValue(node, "velXscale", path) { spawner.velocityScaleX = value }
         if let value = try floatValue(node, "velYscale", path) { spawner.velocityScaleY = value }
+        if let value = try floatValue(node, "dt", path) { spawner.dt = value }
+        if let value = try floatValue(node, "velX", path) { spawner.velocityX = value }
+        if let value = try floatValue(node, "velY", path) { spawner.velocityY = value }
+        if let value = try int32Value(node, "posX", path) { spawner.posX = value }
+        if let value = try int32Value(node, "posY", path) { spawner.posY = value }
+        if let value = try int32Value(node, "sin", path) { spawner.sin = value }
+        if let value = try int32Value(node, "cos", path) { spawner.cos = value }
+        if let value = try int32Value(node, "radius", path) { spawner.radius = value }
 
         // 原版只采纳非空 gravity；这里要求与 FUN_000394a0 对应的三分量逗号格式。
         if let raw = node.attrs["gravity"], !raw.isEmpty {
@@ -540,6 +633,15 @@ public enum OriginalContentLoader {
             spawner.gravity = SIMD3<Float>(values[0], values[1], values[2])
         }
 
+        spawner.overrideRaw = node.attrs["override"]
+        spawner.overrideMode = Spawner.parseOverrideMode(for: spawner.overrideRaw)
+        spawner.placementRaw = node.attrs["placement"]
+        spawner.placementCode = Spawner.parsePlacementCode(for: spawner.placementRaw)
+        if let value = try int32Value(node, "replaceWithChallengeFruit", path) {
+            spawner.replaceWithChallengeFruit = value
+        }
+        spawner.mirror = node.attrs["mirror"] == "true"
+
         guard let rawType = node.attrs["type"] else {
             throw OriginalContentError.missingAttribute(node: node.tag, attribute: "type", path: path)
         }
@@ -549,17 +651,33 @@ public enum OriginalContentLoader {
             guard !token.isEmpty else {
                 throw OriginalContentError.emptySpawnTypeToken(index: index, path: path)
             }
-            switch token {
-            case "bomb": spawner.types.append(.bomb)
-            case "random": spawner.types.append(.random)
-            default:
-                guard let typeID = fruitIndex[token] else {
-                    throw OriginalContentError.unknownSpawnType(raw: token, path: path)
-                }
+            if asciiCaseInsensitiveEquals(token, "bomb") {
+                spawner.types.append(.bomb)
+            } else if asciiCaseInsensitiveEquals(token, "random") {
+                spawner.types.append(.random)
+            } else if asciiCaseInsensitiveEquals(token, "challengeFruit") {
+                spawner.types.append(.challengeFruit)
+            } else if let typeID = fruitIndex[token] {
                 spawner.types.append(.fruit(typeID))
+            } else if asciiCaseInsensitiveEquals(token, "fruit") {
+                // 原版 fruit 走名称查找；未找到时保留 -1 空槽。
+                spawner.types.append(.empty)
+            } else {
+                throw OriginalContentError.unknownSpawnType(raw: token, path: path)
             }
         }
         return spawner
+    }
+
+    private static func asciiCaseInsensitiveEquals(_ lhs: String, _ rhs: String) -> Bool {
+        let left = Array(lhs.utf8)
+        let right = Array(rhs.utf8)
+        guard left.count == right.count else { return false }
+        return left.indices.allSatisfy { index in
+            let a = (65...90).contains(left[index]) ? left[index] + 32 : left[index]
+            let b = (65...90).contains(right[index]) ? right[index] + 32 : right[index]
+            return a == b
+        }
     }
 
     private static func int32Value(_ node: ContentNode,

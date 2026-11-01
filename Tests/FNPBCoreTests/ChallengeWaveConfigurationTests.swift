@@ -66,7 +66,8 @@ final class ChallengeWaveConfigurationTests: XCTestCase {
         XCTAssertNil(director.runtime.forcedWaveIndex)
         XCTAssertEqual(director.runtime.waveActivationCount, 5)
         XCTAssertEqual(director.runtime.currentWaveIndex, 0)
-        XCTAssertEqual(director.runtime.currentChances, [0, 75])
+        XCTAssertEqual(director.runtime.currentChances, [0, 100],
+                       "50 → 恢复 50 → 再恢复 50，并钳到 maxChance=100")
     }
 
     func testUnknownNameClearsForcedAndDoesNotSelect() {
@@ -111,15 +112,15 @@ final class ChallengeWaveConfigurationTests: XCTestCase {
         XCTAssertEqual(director.runtime.currentWaveSpInc, 0)
     }
 
-    func testLoaderPreservesExplicitWaveNameWithoutInventingMissingNames() throws {
+    func testLoaderReadsDebugNameAndFallsBackToDocumentIndex() throws {
         let json = #"""
         {"root":{"tag":"waveManagerFile","attrs":{},"children":[
-          {"tag":"WaveInfo","attrs":{"name":"alpha","waveNo":"0","until":"forever"},"children":[]},
+          {"tag":"WaveInfo","attrs":{"debugName":"alpha","waveNo":"0","until":"forever"},"children":[]},
           {"tag":"WaveInfo","attrs":{"waveNo":"1","until":"forever"},"children":[]}
         ]}}
         """#
         let list = try OriginalContentLoader.loadWaves(from: Data(json.utf8), fruitIndex: [:])
-        XCTAssertEqual(list.waves.map(\.name), ["alpha", nil])
+        XCTAssertEqual(list.waves.map(\.name), ["alpha", "waveNo. 1"])
     }
 
     func testWaveInfoNameCodableRemainsCompatibleWithOldData() throws {

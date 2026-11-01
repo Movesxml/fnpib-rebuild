@@ -45,12 +45,16 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(rng.calls, 3)
     }
 
-    func testRealDefaultVelocityScalesStayZeroAndGravityIsNamedCompatibility() {
+    func testRealDefaultVelocityScalesAreUnitAndGravityIsNamedCompatibility() {
         let rng = SequenceTestRandom([1, 1, 1])
         let state = FruitMotion.spawnState(rng: rng, spawner: Spawner())
 
+        let speed: Float = 9.5 + 1.5
+        let radians: Float = -65 * .pi / 180
         XCTAssertEqual(state.position, SIMD3<Float>(150, -215, 0))
-        XCTAssertEqual(state.velocity, .zero, "原 Spawn 构造器的两个速度缩放均为 0")
+        XCTAssertEqual(state.velocity.x, speed * sin(radians), accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.y, speed * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(Constants.Physics.missingGravityCompatibility, SIMD3<Float>(0, -1, 0))
         XCTAssertEqual(state.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(rng.calls, 3)
@@ -83,7 +87,11 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(entity.kind, .fruit)
         XCTAssertEqual(entity.fruit?.typeID, Self.appleTypeID)
         XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -215, 0))
-        XCTAssertEqual(entity.transform.velocity, .zero)
+        let speed: Float = 11
+        let radians: Float = -65 * .pi / 180
+        XCTAssertEqual(entity.transform.velocity.x, speed * sin(radians), accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.velocity.y, speed * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(entity.transform.angularVelocity, .zero)
         XCTAssertEqual(rng.calls, 3, "不得再消耗旧实现的第四次随机自旋")
@@ -144,7 +152,10 @@ final class SpawnMotionTests: XCTestCase {
         let entity = try XCTUnwrap(store.entity(id))
         XCTAssertEqual(entity.kind, .bomb)
         XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -160, 32))
-        XCTAssertEqual(entity.transform.velocity, .zero, "原 Spawn 构造器的两个速度缩放均为 0")
+        let radians: Float = 30 * .pi / 180
+        XCTAssertEqual(entity.transform.velocity.x, 5.5, accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.velocity.y, 11 * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(entity.transform.angularVelocity, .zero)
         XCTAssertEqual(entity.transform.scale, 55, accuracy: 1e-6)

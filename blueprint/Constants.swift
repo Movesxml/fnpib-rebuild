@@ -210,8 +210,12 @@ public enum Constants {
 
     public enum WaveDefaults {
 
-        /// 默认 override 概率池 ID（原 `+0xb0`，int）
-        public static let overridePoolID: Int32 = 10
+        /// FUN_00053cb8 的 defaults.waveChance 构造缺省。
+        public static let waveChance: Int32 = 10
+
+        /// FUN_00058ee4 的 WaveInfo +0xb0 构造缺省；XML 键为 overideProbabiltyPool。
+        /// 旧名 overridePoolID 仅为源码与 Codable 兼容，不再解释为默认 waveChance=10 的槽。
+        public static let overridePoolID: Int32 = 100
 
         /// waveChanceRegrowth（原 `+0xb4`）
         public static let regrowthChance: Float = 0.25

@@ -177,11 +177,15 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
     /// 真实水果池（`beginGame(waves:fruits:)` 注入；`.random` 抽取用）。
     private var fruits: [FruitInfo] = []
 
+    /// 挑战控制器 +0x88 的水果 ID。必须在 beginGame 的首次批次解析前注入；
+    /// nil 表示普通模式，random 不排除任何已选 ID。
+    private var challengeFruitID: Int32?
+
     /// 每玩家 freeze 触发一次性保证（防止归零后每帧重复触发）。
     private var freezeTriggered: [Bool] = []
 
-    /// `WaveInfo.chance` 缺省兜底（加载器通常会继承 defaults.waveChance = 90）。
-    private static let fallbackWaveChance: Int32 = 90
+    /// 手工构造且未赋 chance 的波使用原版 defaults 构造缺省 10。
+    private static let fallbackWaveChance = Constants.WaveDefaults.waveChance
 
     // MARK: Init
 
@@ -230,11 +234,20 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
     /// forceWave=false 走 FUN_00057c90：把激活计数改为同名首波的 waveNo-1，
     /// 然后走普通候选与权重选择，绝不按名称过滤或锁定。
     /// 未知名称只清空 forced 并返回 false，不触发选波、不虚构替代波。
+    /// 原挑战控制器 +0x88 的水果 ID，必须在 beginGame 首次解析批次前注入。
+    /// nil 表示普通模式；本方法不从波名或挑战名猜测水果。
+    public func setChallengeFruit(_ typeID: Int32?) {
+        challengeFruitID = typeID
+    }
+
     @discardableResult
     public func configureChallengeWave(customWave: String?, forceWave: Bool) -> Bool {
         runtime.forcedWaveIndex = nil
         guard let customWave, !customWave.isEmpty,
-              let index = waves.firstIndex(where: { $0.name == customWave }) else {
+              let index = waves.firstIndex(where: { wave in
+                  guard let name = wave.name else { return false }
+                  return Self.asciiCaseInsensitiveEquals(name, customWave)
+              }) else {
             return false
         }
 
@@ -445,7 +458,7 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
         return batch
     }
 
-    /// 初始化阶段一次性解析类型序列：显式 fruit/bomb 保序，random 按权重抽一次。
+    /// 初始化阶段一次性解析类型序列：显式类型保序，random 按权重抽一次。
     private func resolveTypeSequence(spawner: Spawner) -> [Int32] {
         var kinds: [Int32] = []
         kinds.reserveCapacity(spawner.types.count)
@@ -455,6 +468,11 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
                 kinds.append(id)
             case .bomb:
                 kinds.append(Constants.EntityPool.bombSlot)
+            case .empty:
+                kinds.append(Constants.EntityPool.emptySlot)
+            case .challengeFruit:
+                // 挑战控制器未注入时没有可绑定的水果，保留空槽而不猜测 ID。
+                kinds.append(challengeFruitID ?? Constants.EntityPool.emptySlot)
             case .random:
                 kinds.append(drawRandomFruit())
             }
@@ -462,8 +480,8 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
         return kinds
     }
 
-    /// 普通模式权重抽取：按 `FruitInfo.chance` 累计和、保持文档顺序。
-    /// 无正权重候选 → 空槽（-1），**不以水果 0 兜底** [macho]。
+    /// 按 FruitInfo.chance 累计权重抽取，保持文档顺序。
+    /// FUN_00055670：仅挑战模式反复重抽，直到不等于已绑定的 challengeFruit。
     private func drawRandomFruit() -> Int32 {
         var cumulative: [Int64] = []
         var total: Int64 = 0
@@ -474,11 +492,32 @@ public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
         guard total > 0 else { return Constants.EntityPool.emptySlot }
 
         let bound = total >= Int64(Int32.max) ? Int32.max : Int32(total)
-        let roll = Int64(rng.nextInt(bound))
-        for (index, boundary) in cumulative.enumerated() where roll < boundary {
-            return fruits[index].typeID
+        while true {
+            let roll = Int64(rng.nextInt(bound))
+            var picked = Constants.EntityPool.emptySlot
+            for (index, boundary) in cumulative.enumerated() where roll < boundary {
+                picked = fruits[index].typeID
+                break
+            }
+            if let excluded = challengeFruitID {
+                if picked != excluded { return picked }
+            } else {
+                return picked
+            }
+            // 与原机一致，不额外设置重抽上限；挑战水果池必须包含其它正权重水果。
         }
-        return Constants.EntityPool.emptySlot
+    }
+
+    /// FUN_002f69c4：只折叠 ASCII A-Z，不使用 Unicode lowercased()。
+    private static func asciiCaseInsensitiveEquals(_ lhs: String, _ rhs: String) -> Bool {
+        let left = Array(lhs.utf8)
+        let right = Array(rhs.utf8)
+        guard left.count == right.count else { return false }
+        return left.indices.allSatisfy { index in
+            let a = (65...90).contains(left[index]) ? left[index] + 32 : left[index]
+            let b = (65...90).contains(right[index]) ? right[index] + 32 : right[index]
+            return a == b
+        }
     }
 
     // MARK: Private — step 3
