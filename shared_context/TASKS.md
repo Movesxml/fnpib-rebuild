@@ -420,3 +420,9 @@ d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通
 - 备注: 完整CI 41293585133成功（远端aaaba90b）：真实JSON/BIN严格解码、24水果+bomb共25网格、原始64B顶点/UV/顶点色、fruit_atlas与pinata真实贴图、3D后接2D刀光及新增FNPBRenderTests均通过。chest按未闭合调色板跳过；scale/100、相机、UV方向、winding与MATRIX0仍待真机/反编译验证，不宣称官方视觉完全对齐。
 
 基于T-031的Content/fruitModels.json与fruitMeshes.bin实现真正3D水果/炸弹渲染，删除整图集拉伸和typeID哈希色。范围：新增FNPBRender的纯数据资产解码器、Metal网格库与MeshBatch、fruit.metal；修改MetalContext/RenderSurface以在同一encoder内先画3D网格再画既有2D刀光；修改App/GameRenderer接入实体；新增FNPBRenderTests及project.yml测试目标。要求：1) 纯Swift Codable解码当前JSON，严格校验BIN magic/version/header/stride64/u32、每mesh offset+length边界、triangle count、index<vertexCount，输出fruit typeID与bomb的完整多网格几何，不能重解释或修改Content数据。2) Metal按原始64B顶点(pos3/normal3/uv2/color4/weight/reserved3)建buffer，u32索引drawIndexedPrimitives；sample*vertexColor，不乘果汁色、不使用材质alpha猜测透明、不做V翻转。3) 只把basename fruit_atlas.tex与pinata.tex映射到已验证RGB565 PNG；chest.tex调色板未闭合，必须返回无已验证纹理并跳过/诊断，不能用灰度预览或整图集兜底。普通渲染资源错误集中记录且不每帧IO。4) Mesh shader接受原始UV和顶点色；opaque+LEQUAL深度，cullMode.none直至winding有证据；2D sprite管线保持。5) GameRenderer对fruit按typeID、bomb单独取网格，使用EntityTransform位置与XYZ旋转；scale/100和世界到NDC 1逻辑点、正交深度只是沿用现有视觉重建参数，全部明确[待验证]，不得宣称官方相机。忽略尚未闭合布局的binmodel MATRIX0，不新增光照猜测。6) 纯数据测试含合法合成、损坏magic/offset/stride/index、真实Content 24水果+bomb/25网格/贴图映射；CI完整编译测试。7) 不改玩法、运动、切割、Content JSON/BIN，不输出大型资源内容。
+
+### [T-033] doing :: 主循环权威证据重审与输入/炸弹修正
+- 创建: 2026-11-01T17:42:16+08:00　更新: 2026-11-01T17:42:16+08:00
+- 验收: 触摸点与最后命中点分离且切中不改变后续query；炸弹先命中后近失、命中才按原条件置isFaulted；特殊实体与combo状态槽符合反编译；相关交互回归测试和完整CI通过；未闭合运动/特效参数继续明确登记
+
+按完整FUN_00016214逐段审查GameWorld、SliceQuery装配、Entity与ComboTracker。成批修复切中位置污染触摸输入、近失错误结束、炸弹命中缺分支、type=0特殊实体缺遍历、combo读错状态槽等确定偏差；不以占位参数冒充官方行为。

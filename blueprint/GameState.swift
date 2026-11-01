@@ -71,11 +71,12 @@ public struct GameState: Sendable, Equatable {
     public var comboCount: Int32 = 0
 
     /// 原 `+0x90` int
-    /// combo 类型 / 难度标记：`(type != 0)` 写入（0 或 1）。§1.2 步骤 6.4。
+    /// combo 类型 / 难度标记：`(entity[0x21] != 0)` 写入（0 或 1）。§1.2 步骤 6.4。
     public var comboTypeFlag: Int32 = 0
 
     /// 原 `+0xa4` byte
-    /// 失灵 / 结束标志：炸弹近失时置位（`+0x7e && piVar13[0x26]==0 → 1`）。§1.2 步骤 7。
+    /// 失灵 / 结束标志：炸弹**命中**且 `+0x7e && entity[0x26]==0` 时置位。
+    /// 近失只上报 near_miss，不修改此字段。§1.2 步骤 7。
     public var isFaulted: Bool = false
 
     /// 原 `+0xa5` byte
@@ -92,12 +93,12 @@ public struct GameState: Sendable, Equatable {
     public var levelEffectParam: Float = 0
 
     /// 原 `+0xf8` / `+0xfc` / `+0x100` vec3
-    /// 上一 slash 位置（切中时由当前 slash 位置覆写）。§1.2 步骤 6.3.3。
+    /// 上一 slash 位置（切中时由当前触摸位置覆写）。§1.2 步骤 6.3.3。
     public var previousSlashPosition: SIMD3<Float> = .zero
 
     /// 原 `+0x104` / `+0x108` / `+0x10c` vec3
-    /// 命中点（切中时记录实体位置）。§1.2 步骤 6.3.3。
-    /// T-023：GameWorld 步骤 2/3 把它当作本帧切割点（`|hitPoint|` 归一化 + 轨迹采样点）。
+    /// 最后命中实体的位置（切中时记录实体位置）。§1.2 步骤 6.3.3。
+    /// 主循环步骤 2/3 与切割查询使用 `slashPosition`，不得读取此字段作为触摸输入。
     public var hitPoint: SIMD3<Float> = .zero
 
     /// 原 `+0x110` int
@@ -125,10 +126,6 @@ public struct GameState: Sendable, Equatable {
     /// 特殊果加成开关（为真时 `+0x110 += DAT_004d90b4`）。§1.2 步骤 6.4。
     public var specialFruitBonusEnabled: Bool = false
 
-    /// 原 `+0xc1` byte
-    /// 特殊果 / 炸弹标记（参与 `+0x3c += 2` 的条件判定）。§1.2 步骤 6.3.2。
-    public var specialOrBombMarked: Bool = false
-
     // MARK: 补充字段（不属 §0 表，来自其它函数，单独列出以便对账）
 
     /// 原 `game + 0xf0` float
@@ -137,6 +134,19 @@ public struct GameState: Sendable, Equatable {
     /// 来源：deep_slash_macho.md（FUN_00017d74 函数体）
     /// T-023：由 GameWorld 步骤 2 每帧写入（= `w²`）。
     public var sliceRadiusSquared: Float = 0
+
+    /// 当前触摸点，对应主循环读取的 `game+0xc0/+0xc4/+0xc8`。
+    /// 不得与 `hitPoint`(+0x104，最后命中实体位置) 混用，否则首个水果命中后
+    /// 会污染同帧后续实体以及炸弹的切割查询。
+    public var slashPosition: SIMD3<Float> = .zero
+
+    /// 上一个触摸事件位置。仅用于重建 `SliceQuery` 的线段与方向；
+    /// 原版刀形状由其它函数维护，精确构造仍为 [待验证]。
+    public var previousTouchPosition: SIMD3<Float> = .zero
+
+    /// 当前是否有有效触摸输入。它是重建输入状态，不复用 +0xa5：
+    /// 原 +0xa5 只在切中后驱动轨迹写槽，并不表示手指正在按下。
+    public var isSlashInputActive: Bool = false
 
     /// slash 轨迹环形缓冲（T-023 新增）。
     ///

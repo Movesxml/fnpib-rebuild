@@ -135,6 +135,51 @@ final class ComboScoreTests: XCTestCase {
         XCTAssertEqual(state.comboFruitTypes[0], 3)
     }
 
+    func testStateSlotControlsComboGateAndTypeFlag() {
+        let tracker = ComboTracker()
+        let rng = FixedRandom()
+        var state = GameState()
+
+        let skipped = tracker.registerSlice(
+            fruitType: 7,
+            entity: EntityID(rawValue: 1),
+            stateSlot0: 2,
+            state: &state,
+            rng: rng
+        )
+        XCTAssertNil(skipped)
+        XCTAssertEqual(state.comboCount, 0)
+        XCTAssertEqual(state.rhythmFactor, 0)
+
+        _ = tracker.registerSlice(
+            fruitType: 7,
+            entity: EntityID(rawValue: 2),
+            stateSlot0: 1,
+            state: &state,
+            rng: rng
+        )
+        XCTAssertEqual(state.comboCount, 1)
+        XCTAssertEqual(state.comboTypeFlag, 1, "+0x90 来自 entity[0x21]，不是水果 typeID")
+    }
+
+    func testSlashStatsFollowOriginalFirstWindowAndLaterWindowBranches() {
+        let stats = StatsRecorder()
+        let tracker = ComboTracker(stats: stats)
+        let rng = FixedRandom()
+        var state = GameState()
+
+        _ = tracker.registerSlice(fruitType: 1, entity: EntityID(rawValue: 1),
+                                  state: &state, rng: rng)
+        XCTAssertEqual(stats.value(for: .slashesScoring), 1)
+        XCTAssertEqual(stats.value(for: .slashes), 0, "首次 +0x51==0 分支只发 slashesScoring")
+
+        _ = tracker.tickWindow(dt: 0.2, state: &state)
+        _ = tracker.registerSlice(fruitType: 1, entity: EntityID(rawValue: 2),
+                                  state: &state, rng: rng)
+        XCTAssertEqual(stats.value(for: .slashesScoring), 2)
+        XCTAssertEqual(stats.value(for: .slashes), 1, "后续新窗口才同时发 slashes")
+    }
+
     // MARK: - 档位 clamp 边界
 
     func testTierClampBoundaries() {

@@ -15,9 +15,9 @@ import simd
 //   3  slash 轨迹：+0xa5!=0 → +0x17c+=dt；超时写槽 (slot+1)%8      [both]  ✅ T-023
 //   4  等级特效：+0xb4<4 → +0xf4=0 且跳过实体遍历                  [both]  ✅ T-023（判定）
 //   5  遍历门控：爆炸/冻结计时、0x40 位掩码、单例 vtable+0x28      [macho] ✅ T-023（恒 true + 注释）
-//   6  循环A 水果：判定→+0xa5/+0x3c/+0xf8/~+0x104/+0x110/combo    [both]  ✅ T-023
-//   7  循环B 炸弹：近失 = 同一判定、球半径 ×1.5（仅炸弹）          [macho] ✅ T-023
-//   8  循环C：§1.2 在 findings 中截断，语义 [待验证]（L3 状态槽）  [M]     ⛔ T-023 保留桩
+//   6  循环A 水果：判定→+0xa5/+0x3c/+0xf8/~+0x104/+0x110/combo    [both]  ✅ T-023/T-033
+//   7  循环B 炸弹：先命中后近失；近失只统计，不写结束标志          [macho] ✅ T-033
+//   8  循环C：type=0 实体的切割筛选与首发统计                      [macho] ✅ T-033
 //   9  combo 结算：+0x174 推进 → 到期结算 → clearComboTracking     [both]  ✅ T-023
 //  10  子系统更新：波次/计分/统计/特效/音频                        [macho] ✅ T-023（仅 waves，其余见注释）
 //
@@ -56,12 +56,21 @@ public protocol SliceTesting: AnyObject {
 }
 
 public protocol ComboTracking: AnyObject {
-    /// §1.2 步骤 6.4：非炸弹、非同一实体、非跳过窗口检查时调用
-    func registerSlice(fruitType: Int32, entity: EntityID,
+    /// §1.2 步骤 6.4：stateSlot0 是实体 int 下标 0x21，决定跳过窗口与 +0x90。
+    func registerSlice(fruitType: Int32, entity: EntityID, stateSlot0: Int32,
                        state: inout GameState, rng: any RandomSource) -> ComboEvent?
     /// §1.2 步骤 9：窗口推进 + 到期结算
     func tickWindow(dt: Float, state: inout GameState) -> [ComboEvent]
     func reset(state: inout GameState)
+}
+
+public extension ComboTracking {
+    /// 保留纯逻辑测试/旧调用方的普通实体便捷入口；生产主循环必须传真实 stateSlot0。
+    func registerSlice(fruitType: Int32, entity: EntityID,
+                       state: inout GameState, rng: any RandomSource) -> ComboEvent? {
+        registerSlice(fruitType: fruitType, entity: entity, stateSlot0: 0,
+                      state: &state, rng: rng)
+    }
 }
 
 public protocol ScoreDispatching: AnyObject {
@@ -214,7 +223,9 @@ public final class GameWorld: GameTicking {
     ///    照抄门控会让 `sliceRadiusSquared` 恒为 0 → 切割门控 `0.0 < radius²` 永远失败
     ///    → 游戏锁死。本卡按任务卡字面**无条件计算**，门控留待字段默认值闭合后再引入。
     private func step2_normalizeCollisionRadius(state: inout GameState) {
-        let distance = simd_length(state.hitPoint)
+        // 完整反编译步骤 2 读取 game+0xc0/+0xc4/+0xc8（当前触摸点），
+        // 不是 +0x104 的最后命中实体位置。
+        let distance = simd_length(state.slashPosition)
         let ratio = distance / Constants.Simulation.collisionNormalizeDivisor
 
         let weight: Float
@@ -237,9 +248,8 @@ public final class GameWorld: GameTicking {
     /// 镜像字段同步（`slashTrailActive` ↔ +0xa5，`slashTrailTimer` ↔ +0x17c），
     /// 保持与原偏移语义的可对账性。
     private func step3_advanceSlashTrail(dt: Float, state: inout GameState) {
-        // 先取出采样点：`state.slashTrail.advance(... , point: state.hitPoint)`
-        // 会同时对 state 做 mutating 与读访问 → Swift 独占检查报错，故拆开。
-        let samplePoint = state.hitPoint
+        // 原 FUN_00019f10 的输入是 +0xb8/+0xb4 关联的触摸采样，不是命中实体位置。
+        let samplePoint = state.slashPosition
         state.slashTrail.advance(dt: dt, point: samplePoint)
 
         // 镜像字段同步（原 +0xa5 / +0x17c）
@@ -284,20 +294,17 @@ public final class GameWorld: GameTicking {
     ///  6.2 门控：+0x6f==0 && +0x41<=-1.0 && +0x34<=0 && (flags&1)==0 && +0x30!=0
     ///  6.3 isSliced==true →（a）+0xa5=1 开轨迹（b）(+0x33==0 || +0x32>3) && +0xc1==0 → +0x3c+=2
     ///      （c）清 +0x40/+0x44，写 +0xf8~+0x100（旧 slash 位）、+0x110=type、+0x104~+0x10c=位置
-    ///  6.4 非炸弹：+0x21==2 或同实体 → 跳过窗口检查；否则 +0x180=entity、+0x174=0、
-    ///      comboArr[+0x8c]=type、+0x90=(type!=0)、首发发 slashes/slashesScoring、+0x51=1、combo++；
+    ///  6.4 非炸弹：entity[0x21]==2 或同实体 → 跳过窗口检查；否则 +0x180=entity、+0x174=0、
+    ///      comboArr[+0x8c]=type、+0x90=(entity[0x21]!=0)、按首发分支上报统计、+0x51=1、combo++；
     ///      combo>9 → +0x174=0.095；+0x54 -= combo*(0.5*rand/8+0.75)；vtable+0x44 回调
     ///  6.5 +0x1ba!=0 → +0x110 += specialBonus；+0x54 += -3.0*(0.5*rand/8+0.75)
     ///
     /// ── 实现边界（逐条与任务卡对齐）────────────────────────────────────────
     /// • 6.1 全局锁 `DAT_00557390`：无协议入口 → 不实现 [待验证]。
-    /// • 6.2 实现 `+0x6f`（isMarked，极性 [待验证]）、`+0x30`（isVisible）、`+0x2b`（fallDelay）
-    ///    三项；**不实现** `+0x41 dropState <= -1.0` 与 `(flags&1)==0`
-    ///   —— `Entity.dropState` 默认 0、`flags` 默认 0，照抄会让默认实体永不参与判定
-    ///   （同 levelTier 的锁死模式），默认值闭合前不引入。
-    /// • 6.4 的 `+0x21 == 2` 门控：该槽为实体字段（非 GameState），`Entity.stateSlot0`
-    ///   语义 [M] 级未闭合 → 不臆造，改由 `ComboTracker.registerSlice` 的「同实体」分支
-    ///   兜住主要重复计数路径。⚠️ 缺此门控时可能多计一次 combo（注释在 ComboTracker）。
+    /// • 6.2 已实现 `+0x6f`、`+0x30`、`+0x2b` 与 `(flags&1)==0`；`+0x41` 和 `+0x34`
+    ///   的生成初值仍未闭合，暂不引入会阻止默认实体参与判定的条件。
+    /// • 6.4 的 `entity[0x21]==2` 与同实体门控由 ComboTracker 执行；生产调用必须传
+    ///   真实 `Entity.stateSlot0`，不能用水果 typeID 代替。
     /// • 首发 `slashes` / `slashesScoring` 统计：**已由 ComboTracker 内部上报**
     ///   （其 `stats` 注入 = `services.stats`），本步不重复上报，避免双倍计数。
     /// • 计分基数：取 `entity.fruit?.score`（`FruitInfo.score ↔ +0x314`，§4.5 [macho H]）。
@@ -325,10 +332,12 @@ public final class GameWorld: GameTicking {
                 return true
             }
 
-            // 6.2 参与判定门控（子集，见方法注释）
-            guard !entity.isMarked else { return true }      // +0x6f（极性 [待验证]）
-            guard entity.isVisible else { return true }      // +0x30 != 0
-            guard entity.fallDelay <= 0 else { return true } // +0x2b > 0 → 跳过
+            // 6.2 参与判定门控。dropState 与 +0x34 的生成初值仍未闭合，保持既有子集；
+            // flags 默认 0，可以无锁死风险地恢复发售版 (flags&1)==0 条件。
+            guard !entity.isMarked else { return true }       // +0x6f==0
+            guard entity.isVisible else { return true }       // +0x30!=0
+            guard entity.fallDelay <= 0 else { return true }  // +0x2b>0 → 跳过
+            guard (entity.flags & 1) == 0 else { return true }
 
             // 6.3 两段式切割判定（SliceTesting 内部已做门控 + 形状相交 + 球体二次确认）
             guard services.slice.isSliced(game: state, entity: entity) else { return true }
@@ -339,17 +348,15 @@ public final class GameWorld: GameTicking {
 
             let fruitType = entity.fruit?.typeID ?? Constants.EntityPool.emptySlot
             let entityPosition = entity.transform.position
-            let previousSlashPosition = state.hitPoint
 
-            // 6.3.3 清 +0x40/+0x44；+0xf8.. = 旧 slash 位；+0x110 = type；+0x104.. = 位置
+            // 旧 slash 位置来自当前触摸输入；hitPoint 将在本调用中改写为实体位置。
             state.recordSliceHit(entityPosition: entityPosition,
-                                 slashPosition: previousSlashPosition,
+                                 slashPosition: state.slashPosition,
                                  fruitType: fruitType)
 
-            // 6.3.2 (+0x33==0 || +0x32>3) && +0xc1==0 → +0x3c += 2
-            //   +0x33 / +0x32 为实体状态槽（语义 [M] 未闭合），此处仅用 +0x33 的
-            //   GameState 对应字段 stateSlot2 做「==0」判定的保守近似。
-            if entity.stateSlot2 == 0 && !state.specialOrBombMarked {
+            // (+0x33==0 || +0x32>3) && entity+0xc1==0 → +0x3c+=2。
+            if (entity.stateSlot2 == 0 || entity.stateSlot0x32 > 3)
+                && !entity.specialOrBombMarked {
                 state.missPenaltyCount &+= 2
             }
 
@@ -357,6 +364,7 @@ public final class GameWorld: GameTicking {
             let previousVisualTier = ComboTier.visual(for: state.comboCount)
             let event = services.combo.registerSlice(fruitType: fruitType,
                                                      entity: entity.id,
+                                                     stateSlot0: entity.stateSlot0,
                                                      state: &state,
                                                      rng: services.rng)
 
@@ -398,13 +406,9 @@ public final class GameWorld: GameTicking {
     }
 
     // MARK: 7 — 循环B（type=2 炸弹）[macho]
-    /// §1.2 循环B：炸弹遍历；近失 = isNearMiss（同一判定、球半径 ×1.5）仅在此循环调用，
-    /// 结果写 +0xa4（isFaulted）并计入 near_miss 统计（L4：**不可**推广到水果）。
-    ///
-    /// ⚠️ [待验证] 统计去重：原逻辑 `+0x7e && piVar13[0x26]==0 → 1` 的具体触发条件未闭合。
-    ///    若每帧无条件 `stats.add(.nearMiss, 1)`，炸弹在空中停留期间会每帧累加（明显失真）。
-    ///    本实现以 `isFaulted` 作为一次性门（首次近失才统计），语义待 Frida 核对。
-    /// ⚠️ 炸弹「被切中」的爆炸结算在 §1.2 截断段，本卡**不实现**（见 step8 注释）。
+    /// 完整 FUN_00016214 的顺序是：先 FUN_00017d74 命中测试；命中时 OnSliced、
+    /// 按 +0x7e && entity[0x26]==0 写 game+0xa4；只有未命中才做 FUN_00017fdc
+    /// 近失并上报 near_miss。近失本身绝不写结束标志，也没有每帧去重门。
     private func step7_processBombs(dt: Float, state: inout GameState,
                                     world: inout any EntityStore, services: GameServices) {
         let tuning = motionTuning
@@ -415,10 +419,23 @@ public final class GameWorld: GameTicking {
                 pendingDespawn.append(entity.id)
                 return true
             }
-            guard services.slice.isNearMiss(game: state, entity: entity) else { return true }
-            if !state.isFaulted {
-                state.isFaulted = true                              // +0xa4
-                services.stats.add(.nearMiss, 1)                    // L4：仅炸弹循环
+            guard entity.isBombSliceEnabled,
+                  entity.bombState <= 0,
+                  (entity.flags & 1) == 0 else { return true }
+
+            if services.slice.isSliced(game: state, entity: entity) {
+                pendingDespawn.append(entity.id)
+                services.audio.play(Constants.Bomb.explodeAudioKey)
+                if entity.isFaultingBomb && entity.stateSlot1 == 0 {
+                    state.isFaulted = true
+                }
+                // 原 DAT_00557390 会让本帧停止后续炸弹遍历。3.2 秒爆炸门控
+                // 尚未接入，不能把该全局锁永久写入 GameState。
+                return false
+            }
+
+            if services.slice.isNearMiss(game: state, entity: entity) {
+                services.stats.add(.nearMiss, 1)
             }
             return true
         }
@@ -427,19 +444,29 @@ public final class GameWorld: GameTicking {
         }
     }
 
-    // MARK: 8 — 循环C [待验证]
-    /// §1.2 步骤 6 之后的循环C 在 findings 中截断，语义仅 [M] 级（L3 状态槽 0x21/0x26/0x33）。
-    /// 本桩只占位，禁止在语义闭合前写入具体逻辑。
-    ///
-    /// [待验证] 三项已知但不可臆造的内容：
-    ///  1. 循环C 的实体筛选 kind（原按 type 过滤，候选：coin=3 / slash=4 / blast=5）
-    ///  2. 炸弹爆炸结算（`Bomb.explosionTimerSeconds` / `blastPushSpeedFactor` /
-    ///     `Bomb.explodeAudioKey` 已闭合，但触发点与弹飞循环归属未定）
-    ///  3. L3 状态槽 0x21/0x26/0x33 的状态机迁移
-    /// 管线：待 T-01x 从 exe 侧 FUN_00bda510 的循环 C 段导出全量反编译后补齐。
+    // MARK: 8 — 循环C（type=0 其他）[macho]
+    /// 完整反编译已闭合筛选：entity[0x17] 低字节非零、(flags&0x11)==0、
+    /// FUN_00017d74==1 → OnSliced；若 +0x51==0 则首发 slashesScoring 并置位。
+    /// 具体 coin/特殊果的 OnSliced 奖励仍属各自实体实现，不在此臆造。
     private func step8_processSpecials(dt: Float, state: inout GameState,
                                        world: inout any EntityStore, services: GameServices) {
-        // 占位桩：语义未闭合，禁止写入逻辑。
+        _ = dt // 运动由实体自身更新函数负责；主循环此处只做切割分发。
+        var pendingDespawn: [EntityID] = []
+        world.forEach(kind: .other) { (entity: inout Entity) -> Bool in
+            guard entity.isSpecialSliceEnabled,
+                  (entity.flags & 0x11) == 0,
+                  services.slice.isSliced(game: state, entity: entity) else { return true }
+
+            pendingDespawn.append(entity.id)
+            if !state.slashesScoringEmitted {
+                services.stats.add(.slashesScoring, 1)
+            }
+            state.slashesScoringEmitted = true
+            return true
+        }
+        for id in pendingDespawn {
+            world.despawn(id)
+        }
     }
 
     // MARK: 9 — combo 结算 [both]

@@ -11,7 +11,8 @@
 //    数值：Constants.Combo（DECISIONS T-004 M41 双源确认）
 //
 //  【范围】只做逻辑，不碰 UI；事件经 ComboEvent 交由调用方（GameWorld 步骤 9）分发。
-//  【签名边界】ComboTracking 的方法签名由 GameWorld.swift 固定，本文件不得扩展协议。
+//  【签名边界】ComboTracking 的方法签名集中声明于 GameWorld.swift；修改时必须
+//  同步全部实现、测试替身与生产调用点，并传齐原主循环需要的实体状态。
 //
 
 import Foundation
@@ -41,21 +42,14 @@ public final class ComboTracker: ComboTracking {
 
     /// §1.2 步骤 6.4：非炸弹命中后的 combo 计数。
     ///
-    /// 分支（macho FUN_00016214 顺序）：
-    ///  1. 同一实体（+0x180）→ 跳过 combo 计数，**不**覆写实体指针
-    ///  2. 否则：+0x174=0；comboArr[+0x8c]=type；+0x90=(type!=0)；首发 slashes/slashesScoring；
-    ///     combo++；combo>9 → +0x174=0.095；+0x54 -= combo*(0.5*rand/8+0.75)
-    ///  3. 特殊果（+0x1ba）：+0x110 += 加成；+0x54 += -3.0*(0.5*rand/8+0.75) —— 与计数解耦
-    ///
-    /// ⚠️ 签名限制：原文另有一条门控 `piVar13[0x21] == 2`（实体状态槽=2 → 跳过计数），
-    ///    该槽不在 GameState 且本方法只拿到 EntityID，无法在此判定。
-    ///    **必须由调用方（GameWorld 步骤 6.4）在调用前过滤**，否则会多计一次 combo。
-    public func registerSlice(fruitType: Int32, entity: EntityID,
+    /// `stateSlot0` 是实体 int 下标 0x21：值 2 跳过窗口计数；原 +0x90
+    /// 也取自该槽是否非零，不是水果 typeID 是否非零。
+    public func registerSlice(fruitType: Int32, entity: EntityID, stateSlot0: Int32,
                               state: inout GameState, rng: any RandomSource) -> ComboEvent? {
         var event: ComboEvent?
 
-        // 1. 同一实体防重复（原 `+0x180 == entity` → 跳窗口检查）
-        if state.lastComboEntity != entity {
+        // stateSlot0==2 或同一实体均跳过 combo 计数；特殊果分支仍会执行。
+        if stateSlot0 != 2 && state.lastComboEntity != entity {
             state.lastComboEntity = entity
             state.comboWindowTimer = 0                              // +0x174 = 0
 
@@ -71,14 +65,17 @@ public final class ComboTracker: ComboTracking {
                 }
             }
 
-            state.comboTypeFlag = (fruitType != 0) ? 1 : 0           // +0x90 = (type != 0)
+            state.comboTypeFlag = (stateSlot0 != 0) ? 1 : 0          // +0x90 = (entity[0x21] != 0)
 
-            // 首发统计：slashesScoring / slashes；+0x51 = 1
-            if !state.slashesScoringEmitted {
-                state.slashesScoringEmitted = true
-                stats?.add(.slashesScoring, 1)
+            // 原顺序：+0x51==0 时只发 slashesScoring；若 +0x51==1 且新窗口
+            // combo==0，则发 slashes + slashesScoring；窗口后续命中不重复发。
+            if state.slashesScoringEmitted && state.comboCount == 0 {
                 stats?.add(.slashes, 1)
             }
+            if !state.slashesScoringEmitted || state.comboCount == 0 {
+                stats?.add(.slashesScoring, 1)
+            }
+            state.slashesScoringEmitted = true
 
             state.comboCount &+= 1                                   // combo++（32 位回绕语义）
             if state.comboCount > Constants.Combo.countThresholdForTightWindow {
@@ -93,7 +90,7 @@ public final class ComboTracker: ComboTracking {
                                  textTier: ComboTier.text(for: state.comboCount))
         }
 
-        // 2. 特殊果加成（+0x1ba）：与 combo 计数解耦，命中即生效
+        // 特殊果加成（+0x1ba）：与 combo 计数解耦，命中即生效。
         if state.specialFruitBonusEnabled {
             let term = rhythmTerm(rng)
             state.lastSliceScore &+= specialFruitBonus                // +0x110 += DAT_004d90b4 [待验证]
@@ -102,8 +99,6 @@ public final class ComboTracker: ComboTracking {
             if event == nil {
                 event = .specialBonusApplied(delta: specialDelta)
             }
-            // 注：ComboEvent 单值返回，同帧既计数又特殊果时只回 incremented；
-            //     specialDelta 已写入 state.rhythmFactor，调用方可按需读取。
         }
 
         return event

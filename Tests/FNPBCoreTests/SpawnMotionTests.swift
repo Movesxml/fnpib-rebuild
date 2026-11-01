@@ -213,7 +213,7 @@ final class SpawnMotionTests: XCTestCase {
         var state = GameState()
         state.levelTier = Constants.Simulation.lowLevelEffectCutoff
         state.sliceRadiusSquared = 225.0
-        state.hitPoint = SIMD3<Float>(1, 1, 0)
+        state.slashPosition = SIMD3<Float>(1, 1, 0)
         return state
     }
 
@@ -248,7 +248,7 @@ private final class StubSlice: SliceTesting {
     func isNearMiss(game: GameState, entity: Entity) -> Bool { false }
 }
 private final class StubCombo: ComboTracking {
-    func registerSlice(fruitType: Int32, entity: EntityID,
+    func registerSlice(fruitType: Int32, entity: EntityID, stateSlot0: Int32,
                        state: inout GameState, rng: any RandomSource) -> ComboEvent? { nil }
     func tickWindow(dt: Float, state: inout GameState) -> [ComboEvent] { [] }
     func reset(state: inout GameState) {}

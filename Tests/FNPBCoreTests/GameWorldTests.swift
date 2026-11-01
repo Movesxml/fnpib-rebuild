@@ -3,7 +3,7 @@ import simd
 @testable import FNPBCore
 
 // ============================================================================
-// GameWorldTests — T-023 主循环十步实装回归
+// GameWorldTests — T-023/T-033 主循环十步实装回归
 //
 // 覆盖：
 //   1) step2 碰撞半径归一化（d = 0 / 7.5 / 30 三值）
@@ -11,7 +11,7 @@ import simd
 //   3) step4 levelTier < 4 清特效参数并跳过实体遍历；== 4 进入遍历
 //   4) step9 combo 窗口到期分发结算事件（真实 ComboTracker）
 //   5) step10 波次子系统每帧被调用（StubWaveDirector 计数）
-//   6) 附加：step6 命中 → despawn + 连击 + 计分；step7 炸弹近失一次性统计
+//   6) 水果输入隔离、炸弹先命中后近失、type=0 实体筛选与首发统计
 //
 // ⚠️ 复用 WaveTests.swift 中已定义的测试替身（同 target）：
 //    `SeededRandomSource`（确定性 LCG）。**不重复定义**，否则编译冲突。
@@ -55,22 +55,22 @@ final class GameWorldTests: XCTestCase {
         var world: any EntityStore = GenerationOrderStore()
 
         // d = 0 → ratio = 0 → w = 0.5 → w² = 0.25
-        state.hitPoint = SIMD3<Float>(0, 0, 0)
+        state.slashPosition = SIMD3<Float>(0, 0, 0)
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
         XCTAssertEqual(state.sliceRadiusSquared, 0.25, accuracy: 1e-6)
 
         // d = 7.5 → ratio = 0.5 → w = 0.75 → w² = 0.5625
-        state.hitPoint = SIMD3<Float>(7.5, 0, 0)
+        state.slashPosition = SIMD3<Float>(7.5, 0, 0)
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
         XCTAssertEqual(state.sliceRadiusSquared, 0.5625, accuracy: 1e-6)
 
         // d = 30 → ratio = 2 → clamp → w = 1.0 → w² = 1.0
-        state.hitPoint = SIMD3<Float>(30, 0, 0)
+        state.slashPosition = SIMD3<Float>(30, 0, 0)
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
         XCTAssertEqual(state.sliceRadiusSquared, 1.0, accuracy: 1e-6)
 
         // 三维长度（非单轴）：|(3,4,0)| = 5 → ratio = 1/3 → w = 0.5/3 + 0.5 = 0.6666..
-        state.hitPoint = SIMD3<Float>(3, 4, 0)
+        state.slashPosition = SIMD3<Float>(3, 4, 0)
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
         let expectedW: Float = 0.5 * (5.0 / 15.0) + 0.5
         XCTAssertEqual(state.sliceRadiusSquared, expectedW * expectedW, accuracy: 1e-6)
@@ -83,7 +83,7 @@ final class GameWorldTests: XCTestCase {
         var state = GameState()
         var world: any EntityStore = GenerationOrderStore()
 
-        state.hitPoint = SIMD3<Float>(1, 2, 3)
+        state.slashPosition = SIMD3<Float>(1, 2, 3)
         state.slashTrail.begin()                 // 原 +0xa5 = 1
 
         rig.world.tick(dt: Constants.Slash.trailTimeout,
@@ -102,7 +102,7 @@ final class GameWorldTests: XCTestCase {
         var state = GameState()
         var world: any EntityStore = GenerationOrderStore()
 
-        state.hitPoint = SIMD3<Float>(1, 2, 3)
+        state.slashPosition = SIMD3<Float>(1, 2, 3)
         state.slashTrail.begin()
 
         rig.world.tick(dt: Constants.Slash.trailTimeout,
@@ -124,7 +124,7 @@ final class GameWorldTests: XCTestCase {
         var state = GameState()
         var world: any EntityStore = GenerationOrderStore()
 
-        state.hitPoint = SIMD3<Float>(9, 9, 9)
+        state.slashPosition = SIMD3<Float>(9, 9, 9)
         // 不调用 begin()：isActive == false
         rig.world.tick(dt: 1.0, state: &state, world: &world, services: rig.services)
 
@@ -278,22 +278,126 @@ final class GameWorldTests: XCTestCase {
         XCTAssertTrue(rig.audio.keys.isEmpty)
     }
 
-    func test_step7_炸弹近失置位并只统计一次() {
+    func test_step6_命中不会污染后续实体的触摸输入() {
+        let rig = Rig()
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        state.slashPosition = SIMD3<Float>(9, 8, 0)
+        state.previousTouchPosition = SIMD3<Float>(1, 2, 0)
+        rig.slice.sliceResult = true
+
+        var world: any EntityStore = GenerationOrderStore()
+        world.spawn(EntityPrototype(
+            kind: .fruit,
+            transform: EntityTransform(position: SIMD3<Float>(10, 20, 0))
+        ))
+        world.spawn(EntityPrototype(
+            kind: .fruit,
+            transform: EntityTransform(position: SIMD3<Float>(30, 40, 0))
+        ))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+
+        XCTAssertEqual(rig.slice.slashInputs, Array(repeating: state.slashPosition, count: 2))
+        XCTAssertEqual(rig.slice.segmentStarts, Array(repeating: state.previousTouchPosition, count: 2))
+        XCTAssertEqual(state.previousSlashPosition, state.slashPosition)
+        XCTAssertNotEqual(state.hitPoint, state.slashPosition, "+0x104 只能是最后命中实体位置")
+    }
+
+    func test_step7_炸弹近失只统计不结束() {
         let rig = Rig()
         var state = GameState()
         state.levelTier = Constants.Simulation.lowLevelEffectCutoff
         rig.slice.nearMissResult = true
 
         var world: any EntityStore = GenerationOrderStore()
-        world.spawn(EntityPrototype(kind: .bomb))
+        let id = world.spawn(EntityPrototype(kind: .bomb))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertFalse(state.isFaulted)
+        XCTAssertEqual(rig.stats.adds[.nearMiss], 1)
+        XCTAssertNotNil(world.entity(id))
+
+        // 原主循环每次未命中且近失都上报，没有 isFaulted 去重门。
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.stats.adds[.nearMiss], 2)
+        XCTAssertFalse(state.isFaulted)
+    }
+
+    func test_step7_命中炸弹才按条件结束且不走近失() {
+        let rig = Rig()
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        rig.slice.sliceResult = true
+        rig.slice.nearMissResult = true
+
+        var world: any EntityStore = GenerationOrderStore()
+        let id = world.spawn(EntityPrototype(kind: .bomb))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+
+        XCTAssertNil(world.entity(id))
         XCTAssertTrue(state.isFaulted)
-        XCTAssertEqual(rig.stats.adds[.nearMiss], 1)
+        XCTAssertEqual(rig.slice.nearMissCalls, 0)
+        XCTAssertNil(rig.stats.adds[.nearMiss])
+        XCTAssertTrue(rig.audio.keys.contains(Constants.Bomb.explodeAudioKey))
+    }
 
-        // 已置位 → 不重复统计（[待验证] 去重口径）
+    func test_step7_非致命炸弹命中不结束() {
+        let rig = Rig()
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        rig.slice.sliceResult = true
+
+        var world: any EntityStore = GenerationOrderStore()
+        let id = world.spawn(EntityPrototype(kind: .bomb, isFaultingBomb: false))
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
-        XCTAssertEqual(rig.stats.adds[.nearMiss], 1)
+
+        XCTAssertNil(world.entity(id))
+        XCTAssertFalse(state.isFaulted)
+    }
+
+    func test_step7_状态槽非零炸弹命中不写结束标志() {
+        let rig = Rig()
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        rig.slice.sliceResult = true
+
+        var world: any EntityStore = GenerationOrderStore()
+        world.spawn(EntityPrototype(kind: .bomb, stateSlot1: 1))
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertFalse(state.isFaulted)
+    }
+
+    func test_step8_type0特殊实体被切并首发统计() {
+        let rig = Rig()
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        rig.slice.sliceResult = true
+
+        var world: any EntityStore = GenerationOrderStore()
+        let id = world.spawn(EntityPrototype(kind: .other))
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+
+        XCTAssertNil(world.entity(id))
+        XCTAssertEqual(rig.stats.adds[.slashesScoring], 1)
+        XCTAssertTrue(state.slashesScoringEmitted)
+        XCTAssertEqual(state.comboCount, 0, "循环 C 不进入水果 combo 计数")
+    }
+
+    func test_step8_flags屏蔽特殊实体() {
+        let rig = Rig()
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        rig.slice.sliceResult = true
+
+        var world: any EntityStore = GenerationOrderStore()
+        let id = world.spawn(EntityPrototype(kind: .other, flags: 0x10))
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+
+        XCTAssertNotNil(world.entity(id))
+        XCTAssertEqual(rig.slice.sliceCalls, 0)
+        XCTAssertFalse(state.slashesScoringEmitted)
     }
 
     func test_step7_近失只对炸弹调用() {
@@ -317,7 +421,7 @@ final class GameWorldTests: XCTestCase {
     func test_未prime首帧不推进() {
         let rig = Rig()
         var state = GameState()
-        state.hitPoint = SIMD3<Float>(30, 0, 0)
+        state.slashPosition = SIMD3<Float>(30, 0, 0)
         var world: any EntityStore = GenerationOrderStore()
 
         rig.world.tick(dt: 0, state: &state, world: &world, services: rig.services)
@@ -330,7 +434,7 @@ final class GameWorldTests: XCTestCase {
         let rig = Rig()
         rig.world.prime()
         var state = GameState()
-        state.hitPoint = SIMD3<Float>(30, 0, 0)
+        state.slashPosition = SIMD3<Float>(30, 0, 0)
         var world: any EntityStore = GenerationOrderStore()
 
         rig.world.tick(dt: 0, state: &state, world: &world, services: rig.services)
@@ -349,9 +453,13 @@ private final class SpySliceTester: SliceTesting {
     var nearMissResult = false
     private(set) var sliceCalls = 0
     private(set) var nearMissCalls = 0
+    private(set) var slashInputs: [SIMD3<Float>] = []
+    private(set) var segmentStarts: [SIMD3<Float>] = []
 
     func isSliced(game: GameState, entity: Entity) -> Bool {
         sliceCalls += 1
+        slashInputs.append(game.slashPosition)
+        segmentStarts.append(game.previousTouchPosition)
         return sliceResult
     }
 

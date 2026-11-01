@@ -170,7 +170,21 @@ final class EntityStoreTests: XCTestCase {
         fruit.name = "strawberry"
         fruit.typeID = 5
 
-        let id = store.spawn(EntityPrototype(kind: .fruit, transform: transform, fruit: fruit))
+        let id = store.spawn(EntityPrototype(
+            kind: .fruit,
+            transform: transform,
+            fruit: fruit,
+            flags: 0x10,
+            stateSlot0: 2,
+            stateSlot1: 3,
+            stateSlot2: 4,
+            stateSlot0x32: 5,
+            specialOrBombMarked: true,
+            bombState: 6,
+            isBombSliceEnabled: false,
+            isFaultingBomb: false,
+            isSpecialSliceEnabled: false
+        ))
         let entity = store.entity(id)
 
         XCTAssertEqual(entity?.kind, .fruit)
@@ -178,6 +192,16 @@ final class EntityStoreTests: XCTestCase {
         XCTAssertEqual(entity?.transform.velocity, SIMD3<Float>(0, 5, 0))
         XCTAssertEqual(entity?.fruit?.name, "strawberry")
         XCTAssertEqual(entity?.fruit?.typeID, 5)
+        XCTAssertEqual(entity?.flags, 0x10)
+        XCTAssertEqual(entity?.stateSlot0, 2)
+        XCTAssertEqual(entity?.stateSlot1, 3)
+        XCTAssertEqual(entity?.stateSlot2, 4)
+        XCTAssertEqual(entity?.stateSlot0x32, 5)
+        XCTAssertEqual(entity?.specialOrBombMarked, true)
+        XCTAssertEqual(entity?.bombState, 6)
+        XCTAssertEqual(entity?.isBombSliceEnabled, false)
+        XCTAssertEqual(entity?.isFaultingBomb, false)
+        XCTAssertEqual(entity?.isSpecialSliceEnabled, false)
     }
 }
 

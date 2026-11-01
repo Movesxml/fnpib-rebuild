@@ -122,22 +122,39 @@ public struct Entity: Sendable {
     /// 值类型拷贝，单个实体几十字节量级，暂不做引用化。
     public var fruit: FruitInfo?
 
-    /// 原 (piVar13[3] & 1) 等位域。
+    /// 原 (piVar13[3] & 1 / 0x11) 等位域。
     public var flags: UInt32 = 0
 
-    /// L3：状态槽语义仅 [M] 级，禁止提前 enum 化（原 0x21/0x26/0x33/0x6e/0x6f）
+    /// L3：状态槽语义仅 [M] 级，禁止提前 enum 化。
+    /// stateSlot0/1/2 分别对应主循环 int 下标 0x21/0x26/0x33。
     public var stateSlot0: Int32 = 0
     public var stateSlot1: Int32 = 0
     public var stateSlot2: Int32 = 0
+    /// 原 int 下标 0x32；水果切中计数条件使用 `stateSlot2 == 0 || stateSlot0x32 > 3`。
+    public var stateSlot0x32: Int32 = 0
 
     /// 原 +0x6f==0 才参与判定
     public var isMarked: Bool = false
-    /// 原 +0x30!=0
+    /// 原水果布局 +0x30!=0
     public var isVisible: Bool = true
     /// 原 +0x2b > 0 跳过
     public var fallDelay: Float = 0
     /// 原 +0x41 <= -1.0 为下落态
     public var dropState: Float = 0
+
+    /// 原实体 +0xc1；它是实体字段，不是 GameState 全局标记。
+    public var specialOrBombMarked: Bool = false
+
+    /// 炸弹布局 +0x30 的计时/状态值；普通炸弹生成后为 0，<=0 才参与切割。
+    public var bombState: Float = 0
+    /// 炸弹布局 +0x7d：是否允许被切。
+    public var isBombSliceEnabled: Bool = true
+    /// 炸弹布局 +0x7e：命中且 stateSlot1==0 时是否写 game+0xa4。
+    /// 普通 Classic 炸弹为 true；特殊模式实体必须显式覆盖。
+    public var isFaultingBomb: Bool = true
+
+    /// type=0 实体布局 int 下标 0x17 的低字节：是否参与循环 C 切割。
+    public var isSpecialSliceEnabled: Bool = true
 
     public init(id: EntityID, kind: EntityKind) {
         self.id = id
@@ -149,21 +166,60 @@ public struct Entity: Sendable {
 
 // MARK: - EntityPrototype
 
-/// 实体生成描述（不含 id）。
-///
-/// 由波次/生成器侧构造，交给 `EntityStore.spawn` 换取 `EntityID`；
-/// 其余状态槽/标记一律取 `Entity` 的默认值（生成瞬间的语义尚未闭合，不在此臆造）。
+/// 实体生成描述（不含 id）。运行状态默认值与 `Entity` 一致，并完整传入容器。
 public struct EntityPrototype: Sendable {
 
     public var kind: EntityKind
     public var transform: EntityTransform
     public var fruit: FruitInfo?
+    public var flags: UInt32
+    public var stateSlot0: Int32
+    public var stateSlot1: Int32
+    public var stateSlot2: Int32
+    public var stateSlot0x32: Int32
+    public var isMarked: Bool
+    public var isVisible: Bool
+    public var fallDelay: Float
+    public var dropState: Float
+    public var specialOrBombMarked: Bool
+    public var bombState: Float
+    public var isBombSliceEnabled: Bool
+    public var isFaultingBomb: Bool
+    public var isSpecialSliceEnabled: Bool
 
     public init(kind: EntityKind,
                 transform: EntityTransform = EntityTransform(),
-                fruit: FruitInfo? = nil) {
+                fruit: FruitInfo? = nil,
+                flags: UInt32 = 0,
+                stateSlot0: Int32 = 0,
+                stateSlot1: Int32 = 0,
+                stateSlot2: Int32 = 0,
+                stateSlot0x32: Int32 = 0,
+                isMarked: Bool = false,
+                isVisible: Bool = true,
+                fallDelay: Float = 0,
+                dropState: Float = 0,
+                specialOrBombMarked: Bool = false,
+                bombState: Float = 0,
+                isBombSliceEnabled: Bool = true,
+                isFaultingBomb: Bool = true,
+                isSpecialSliceEnabled: Bool = true) {
         self.kind = kind
         self.transform = transform
         self.fruit = fruit
+        self.flags = flags
+        self.stateSlot0 = stateSlot0
+        self.stateSlot1 = stateSlot1
+        self.stateSlot2 = stateSlot2
+        self.stateSlot0x32 = stateSlot0x32
+        self.isMarked = isMarked
+        self.isVisible = isVisible
+        self.fallDelay = fallDelay
+        self.dropState = dropState
+        self.specialOrBombMarked = specialOrBombMarked
+        self.bombState = bombState
+        self.isBombSliceEnabled = isBombSliceEnabled
+        self.isFaultingBomb = isFaultingBomb
+        self.isSpecialSliceEnabled = isSpecialSliceEnabled
     }
 }

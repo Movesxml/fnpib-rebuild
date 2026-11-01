@@ -101,7 +101,7 @@ struct ContentView: View {
             }
 
             // 触摸层仅在真正游玩时挂载：paused 下若仍接收触摸，
-            // began 会写入 GameState（slashTrailActive / hitPoint），逻辑态被污染。
+            // began 会写入 GameState 的触摸输入状态，恢复后污染切割逻辑。
             if vm.snapshot.phase == .playing {
                 TouchSurfaceView(router: host.touchRouter)
                     .ignoresSafeArea()
@@ -235,14 +235,17 @@ final class GameHost: ObservableObject {
         let score = ScoreSystem()
         let combo = ComboTracker(stats: stats, specialFruitBonus: 0)
         let waves = WaveDirector(playerCount: 1, rng: rng)
-        // [Kimi 修正 T-022 审查] SliceTester 的 queryProvider 无默认值，必须显式给出。
-        // GameState → SliceQuery 映射按 §1.2 语义：切割形状 = 上一轨迹点 → 当前触摸点的线段
-        // （[待验证] 原版的切割形状构造在反编译截断处，形状闭合后只改这个 provider）。
+        // 刀形状只读触摸输入，不读 last-hit 字段：hitPoint(+0x104) 会在每个
+        // 水果命中后被改写，previousSlashPosition(+0xf8) 也只是命中时保存的旧触摸点。
+        // 线段构造本身仍为 [待验证]，但状态来源已由完整 FUN_00016214 闭合。
         let slice = SliceTester(
             intersector: DefaultShapeIntersector(),
             queryProvider: { state in
                 SliceQuery(
-                    cutter: .line(a: state.previousSlashPosition, b: state.hitPoint),
+                    cutter: state.isSlashInputActive
+                        ? .line(a: state.previousTouchPosition, b: state.slashPosition)
+                        : nil,
+                    cutDirection: state.slashPosition - state.previousTouchPosition,
                     cutRadiusSquared: state.sliceRadiusSquared
                 )
             }
@@ -512,24 +515,24 @@ final class GameHost: ObservableObject {
 
     // MARK: 触摸（macho §1.2 语义）
 
-    /// began → `state.hitPoint = position`；`state.slashTrailActive = true`。
-    ///
-    /// [待验证] 位置类型：若 TouchRouter 回调给 CGPoint/SIMD2<Float>，
-    /// 在 init 的接线处转换一次 `SIMD3(p.x, p.y, 0)` 即可。
+    /// 触摸输入只写 slashPosition；hitPoint 保留给“最后命中实体位置”。
+    /// +0xa5 是切中后的轨迹写槽状态，不能拿来表示手指是否按下。
     func touchBegan(at position: SIMD3<Float>) {
-        state.hitPoint = position
-        state.slashTrailActive = true
+        state.previousTouchPosition = position
+        state.slashPosition = position
+        state.isSlashInputActive = true
     }
 
-    /// moved 且轨迹活跃 → `state.hitPoint = position`。
     func touchMoved(to position: SIMD3<Float>) {
-        guard state.slashTrailActive else { return }
-        state.hitPoint = position
+        guard state.isSlashInputActive else { return }
+        state.previousTouchPosition = state.slashPosition
+        state.slashPosition = position
     }
 
-    /// ended → 无操作：轨迹由 `slashTrailTimer` 超时自清（§1.2 步骤 3，原版同款）。
+    /// 结束后立即关闭切割形状；已切中产生的轨迹仍按原 0.05 秒规则写槽。
     func touchEnded() {
-        // 刻意留空
+        state.isSlashInputActive = false
+        state.previousTouchPosition = state.slashPosition
     }
 
     // MARK: 存档

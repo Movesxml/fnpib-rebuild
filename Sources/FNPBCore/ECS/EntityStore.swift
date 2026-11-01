@@ -97,6 +97,20 @@ public final class GenerationOrderStore: EntityStore {
         var entity = Entity(id: id, kind: prototype.kind)
         entity.transform = prototype.transform
         entity.fruit = prototype.fruit
+        entity.flags = prototype.flags
+        entity.stateSlot0 = prototype.stateSlot0
+        entity.stateSlot1 = prototype.stateSlot1
+        entity.stateSlot2 = prototype.stateSlot2
+        entity.stateSlot0x32 = prototype.stateSlot0x32
+        entity.isMarked = prototype.isMarked
+        entity.isVisible = prototype.isVisible
+        entity.fallDelay = prototype.fallDelay
+        entity.dropState = prototype.dropState
+        entity.specialOrBombMarked = prototype.specialOrBombMarked
+        entity.bombState = prototype.bombState
+        entity.isBombSliceEnabled = prototype.isBombSliceEnabled
+        entity.isFaultingBomb = prototype.isFaultingBomb
+        entity.isSpecialSliceEnabled = prototype.isSpecialSliceEnabled
 
         slots.append(Slot(entity: entity))
         indexByID[id] = slots.count - 1
