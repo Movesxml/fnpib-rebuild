@@ -1,0 +1,2393 @@
+{
+  "tool": "model_extract.py",
+  "version": "T-031",
+  "sourceModels": "D:\\fnpib_update\\assets_raw\\models\\Fruit",
+  "sourceFruitList": "D:\\fnpib_update\\Content\\fruitList.json",
+  "binary": {
+    "file": "fruitMeshes.bin",
+    "version": 1,
+    "headerBytes": 32,
+    "meshCount": 25,
+    "vertexStride": 64,
+    "indexType": "u32",
+    "bytes": 965600
+  },
+  "notes": {
+    "uvOrientation": "UV copied verbatim; no V flip applied in this tool (render-time test required)",
+    "juiceColour": "FruitInfo/colours/colour is juice/splash RGBA, NOT a model tint",
+    "modelSource": "original MMD/binmodel meshes; UV bounds are metadata only, not cropped official sprites",
+    "mmdVertexColor": "RGBA8 packed u32 interpreted as R,G,B,A bytes, normalized to 0..1",
+    "binmodelVertexColor": "RGB f32 copied verbatim",
+    "binmodelTopology": "source quads preserved in sourceIndices; triangleIndices = (i0,i1,i2)+(i0,i2,i3)",
+    "vertexStride": 64,
+    "vertexLayout": "pos3 f32, normal3 f32, uv2 f32, color4 f32, weight f32, reserved3 f32"
+  },
+  "fruits": [
+    {
+      "typeID": 0,
+      "name": "apple",
+      "juiceColour": [
+        248,
+        255,
+        164,
+        130
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Apple_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.3847900927066803,
+        "minV": 0.25309163331985474,
+        "maxU": 0.494112104177475,
+        "maxV": 0.37239980697631836
+      },
+      "meshes": [
+        {
+          "name": "Apple_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 206,
+          "sourceIndexCount": 618,
+          "triangleIndexCount": 618,
+          "vertexCount": 107,
+          "uvBounds": {
+            "minU": 0.3847900927066803,
+            "minV": 0.25309163331985474,
+            "maxU": 0.494112104177475,
+            "maxV": 0.37239980697631836
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 32,
+              "lengthBytes": 2472,
+              "count": 618
+            },
+            "triangleIndices": {
+              "offset": 2512,
+              "lengthBytes": 2472,
+              "count": 618
+            },
+            "vertices": {
+              "offset": 4992,
+              "lengthBytes": 6848,
+              "count": 107,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 618
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 5120,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "31d54da640cefe4d4ff354f6680ce5e1c9819f5269d0d388e1079a35fdc17d9e",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAAAAAAAAAGhCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 5251,
+          "lengthBytes": 236,
+          "sha256": "437cf52ba3e52b232cce7835356b26ecdd2c13ff0137d13aa952e8f90f200a83",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAYV9waWVjZQEAAAAHAGFfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAN/qvQAAAACwfwK9AACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBhX3BpZWNlAQAAAAcAYV9waWVjZXw8FsLB8yfChyUowohUUkK+8ydC8sEnQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 1,
+      "name": "banana",
+      "juiceColour": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Banana_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.12708067893981934,
+        "minV": 0.2513066530227661,
+        "maxU": 0.24881836771965027,
+        "maxV": 0.3726612329483032
+      },
+      "meshes": [
+        {
+          "name": "Banana_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 148,
+          "sourceIndexCount": 444,
+          "triangleIndexCount": 444,
+          "vertexCount": 112,
+          "uvBounds": {
+            "minU": 0.12708067893981934,
+            "minV": 0.2513066530227661,
+            "maxU": 0.24881836771965027,
+            "maxV": 0.3726612329483032
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 11840,
+              "lengthBytes": 1776,
+              "count": 444
+            },
+            "triangleIndices": {
+              "offset": 13616,
+              "lengthBytes": 1776,
+              "count": 444
+            },
+            "vertices": {
+              "offset": 15392,
+              "lengthBytes": 7168,
+              "count": 112,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 444
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 4952,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "de4d14dbea99e19a2d3ef7ba65df63f06aaf9a491157af766e48eb88a269ebb5",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAHVRSgAAAGhCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 5083,
+          "lengthBytes": 236,
+          "sha256": "8f9bd8d81f1e0007b44c222ba7a0241cf6e7b43a3d356cf58a261a1077f88ebc",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAYl9waWVjZQEAAAAHAGJfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBiX3BpZWNlAQAAAAcAYl9waWVjZaAjVMIhL73BOEdrwvEHEEIgL71BZQa2QgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 2,
+      "name": "orange",
+      "juiceColour": [
+        255,
+        115,
+        0,
+        158
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Orange_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.3780374526977539,
+        "minV": 0.0024585723876953125,
+        "maxU": 0.4975699186325073,
+        "maxV": 0.12228941917419434
+      },
+      "meshes": [
+        {
+          "name": "Orange_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 120,
+          "sourceIndexCount": 360,
+          "triangleIndexCount": 360,
+          "vertexCount": 62,
+          "uvBounds": {
+            "minU": 0.3780374526977539,
+            "minV": 0.0024585723876953125,
+            "maxU": 0.4975699186325073,
+            "maxV": 0.12228941917419434
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 22560,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "triangleIndices": {
+              "offset": 24000,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "vertices": {
+              "offset": 25440,
+              "lengthBytes": 3968,
+              "count": 62,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 360
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 2984,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "6138940fea711f939591116a9a9968c2d8683de342892a34c9607ad49d741a57",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAFc8NwAAAFxCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 3115,
+          "lengthBytes": 236,
+          "sha256": "4feef3050e812418013a7534853c1400449edd351c1d4823bc7937f335ef776f",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAb19waWVjZQEAAAAHAG9fcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAJCh6NQAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBvX3BpZWNlAQAAAAcAb19waWVjZS4VJsIqFSbCSPcpwioVJkItFSZCSPcpQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 3,
+      "name": "watermelon",
+      "juiceColour": [
+        200,
+        52,
+        52,
+        140
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "watermelon_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.002371164970099926,
+        "minV": 0.882461667060852,
+        "maxU": 0.12234121561050415,
+        "maxV": 0.9952590465545654
+      },
+      "meshes": [
+        {
+          "name": "w_piece",
+          "parent": "[none]",
+          "materialNames": [
+            "fruitAtlas"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 168,
+          "sourceIndexCount": 672,
+          "triangleIndexCount": 1008,
+          "vertexCount": 504,
+          "uvBounds": {
+            "minU": 0.002371164970099926,
+            "minV": 0.882461667060852,
+            "maxU": 0.12234121561050415,
+            "maxV": 0.9952590465545654
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 29408,
+              "lengthBytes": 2688,
+              "count": 672
+            },
+            "triangleIndices": {
+              "offset": 32096,
+              "lengthBytes": 4032,
+              "count": 1008
+            },
+            "vertices": {
+              "offset": 36128,
+              "lengthBytes": 32256,
+              "count": 504,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "fruitAtlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 0.0,
+              "DiffuseTex": "models/fruit/textures/fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 1.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 4,
+      "name": "strawberry",
+      "juiceColour": [
+        200,
+        0,
+        0,
+        190
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "strawberry_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.5016051530838013,
+        "minV": 0.7528150677680969,
+        "maxU": 0.5867380499839783,
+        "maxV": 0.8738254904747009
+      },
+      "meshes": [
+        {
+          "name": "s_piece",
+          "parent": "[none]",
+          "materialNames": [
+            "fruitAtlas"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 168,
+          "sourceIndexCount": 672,
+          "triangleIndexCount": 1008,
+          "vertexCount": 504,
+          "uvBounds": {
+            "minU": 0.5016051530838013,
+            "minV": 0.7528150677680969,
+            "maxU": 0.5867380499839783,
+            "maxV": 0.8738254904747009
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 68384,
+              "lengthBytes": 2688,
+              "count": 672
+            },
+            "triangleIndices": {
+              "offset": 71072,
+              "lengthBytes": 4032,
+              "count": 1008
+            },
+            "vertices": {
+              "offset": 75104,
+              "lengthBytes": 32256,
+              "count": 504,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            -1.7484555314695172e-07,
+            0.0,
+            1.7484555314695172e-07,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "fruitAtlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 0.0,
+              "DiffuseTex": "models/fruit/textures/fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 1.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 5,
+      "name": "kiwifruit",
+      "juiceColour": [
+        150,
+        217,
+        17,
+        145
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Kiwifruit_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.25193893909454346,
+        "minV": 0.2522590160369873,
+        "maxU": 0.3735380470752716,
+        "maxV": 0.3711448311805725
+      },
+      "meshes": [
+        {
+          "name": "Kiwifruit_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 120,
+          "sourceIndexCount": 360,
+          "triangleIndexCount": 360,
+          "vertexCount": 68,
+          "uvBounds": {
+            "minU": 0.25193893909454346,
+            "minV": 0.2522590160369873,
+            "maxU": 0.3735380470752716,
+            "maxV": 0.3711448311805725
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 107360,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "triangleIndices": {
+              "offset": 108800,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "vertices": {
+              "offset": 110240,
+              "lengthBytes": 4352,
+              "count": 68,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 360
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 3200,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "4f7aec517905c58e4d434989c62311f479831cc63b20f3af46e8832df075e6e0",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAP////////8AAAAAAAAAAAD//x9BAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 3331,
+          "lengthBytes": 236,
+          "sha256": "85db45757317ce81d4d19cd0976b48342fb2e04d4c79543412c6a2f0587bb8fb",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAa19waWVjZQEAAAAHAGtfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAA+mXLtgAAAABalX41AACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBrX3BpZWNlAQAAAAcAa19waWVjZYlNJ8KFTSfCE3A4woJNJ0KFTSdCE3A4QgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 6,
+      "name": "pineapple",
+      "juiceColour": [
+        235,
+        175,
+        14,
+        155
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Pineapple_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.25172924995422363,
+        "minV": 0.0008404254913330078,
+        "maxU": 0.3728996813297272,
+        "maxV": 0.12286913394927979
+      },
+      "meshes": [
+        {
+          "name": "Pineapple_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 216,
+          "sourceIndexCount": 648,
+          "triangleIndexCount": 648,
+          "vertexCount": 225,
+          "uvBounds": {
+            "minU": 0.25172924995422363,
+            "minV": 0.0008404254913330078,
+            "maxU": 0.3728996813297272,
+            "maxV": 0.12286913394927979
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 114592,
+              "lengthBytes": 2592,
+              "count": 648
+            },
+            "triangleIndices": {
+              "offset": 117184,
+              "lengthBytes": 2592,
+              "count": 648
+            },
+            "vertices": {
+              "offset": 119776,
+              "lengthBytes": 14400,
+              "count": 225,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 648
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 9428,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "4f7aec517905c58e4d434989c62311f479831cc63b20f3af46e8832df075e6e0",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAP////////8AAAAAAAAAAAD//x9BAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 9559,
+          "lengthBytes": 236,
+          "sha256": "019ac5cc30ff6923dc98119ec26f6a2078117bf47d6424efff361b2f3a734e26",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAcF9waWVjZQEAAAAHAHBfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBwX3BpZWNlAQAAAAcAcF9waWVjZTO5VMKuF1fC7iZKwpSCUEK+iUxCNOP4QgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 7,
+      "name": "plum",
+      "juiceColour": [
+        247,
+        141,
+        10,
+        160
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Plum_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.13119855523109436,
+        "minV": 0.0051604509353637695,
+        "maxU": 0.2419055998325348,
+        "maxV": 0.12009656429290771
+      },
+      "meshes": [
+        {
+          "name": "Plum_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 182,
+          "sourceIndexCount": 546,
+          "triangleIndexCount": 546,
+          "vertexCount": 101,
+          "uvBounds": {
+            "minU": 0.13119855523109436,
+            "minV": 0.0051604509353637695,
+            "maxU": 0.2419055998325348,
+            "maxV": 0.12009656429290771
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 134176,
+              "lengthBytes": 2184,
+              "count": 546
+            },
+            "triangleIndices": {
+              "offset": 136368,
+              "lengthBytes": 2184,
+              "count": 546
+            },
+            "vertices": {
+              "offset": 138560,
+              "lengthBytes": 6464,
+              "count": 101,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 546
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 4760,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "4f7aec517905c58e4d434989c62311f479831cc63b20f3af46e8832df075e6e0",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAP////////8AAAAAAAAAAAD//x9BAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 4891,
+          "lengthBytes": 236,
+          "sha256": "962475e0e617eb266b36fafde9902b07c165049d65680bf5891141ceb14b4daf",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAcF9waWVjZQEAAAAHAHBfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBwX3BpZWNlAQAAAAcAcF9waWVjZcD1F8J6Zx3Cqt4gwjLoHUJ6Zx1CvjmUQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 8,
+      "name": "pear",
+      "juiceColour": [
+        248,
+        255,
+        164,
+        130
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Pear_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.009872183203697205,
+        "minV": 0.2512826919555664,
+        "maxU": 0.12365923076868057,
+        "maxV": 0.3741455078125
+      },
+      "meshes": [
+        {
+          "name": "Pear_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 182,
+          "sourceIndexCount": 546,
+          "triangleIndexCount": 546,
+          "vertexCount": 101,
+          "uvBounds": {
+            "minU": 0.009872183203697205,
+            "minV": 0.2512826919555664,
+            "maxU": 0.12365923076868057,
+            "maxV": 0.3741455078125
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 145024,
+              "lengthBytes": 2184,
+              "count": 546
+            },
+            "triangleIndices": {
+              "offset": 147216,
+              "lengthBytes": 2184,
+              "count": 546
+            },
+            "vertices": {
+              "offset": 149408,
+              "lengthBytes": 6464,
+              "count": 101,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 546
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 4760,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "de4d14dbea99e19a2d3ef7ba65df63f06aaf9a491157af766e48eb88a269ebb5",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAHVRSgAAAGhCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 4891,
+          "lengthBytes": 236,
+          "sha256": "35ad1d2274b62227324eeaebfc836663ea37b7524ed1fdbdc4b002bc28549e30",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAcF9waWVjZQEAAAAHAHBfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBwX3BpZWNlAQAAAAcAcF9waWVjZd57OMKabxrCNAEVwjOFiUKYbxpCNAEVQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 9,
+      "name": "mango",
+      "juiceColour": [
+        255,
+        174,
+        0,
+        170
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Mango_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.5048603415489197,
+        "minV": 0.0030909180641174316,
+        "maxU": 0.6203073859214783,
+        "maxV": 0.1219402551651001
+      },
+      "meshes": [
+        {
+          "name": "Mango_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 168,
+          "sourceIndexCount": 504,
+          "triangleIndexCount": 504,
+          "vertexCount": 86,
+          "uvBounds": {
+            "minU": 0.5048603415489197,
+            "minV": 0.0030909180641174316,
+            "maxU": 0.6203073859214783,
+            "maxV": 0.1219402551651001
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 155872,
+              "lengthBytes": 2016,
+              "count": 504
+            },
+            "triangleIndices": {
+              "offset": 157888,
+              "lengthBytes": 2016,
+              "count": 504
+            },
+            "vertices": {
+              "offset": 159904,
+              "lengthBytes": 5504,
+              "count": 86,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 504
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 4136,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "4f7aec517905c58e4d434989c62311f479831cc63b20f3af46e8832df075e6e0",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAP////////8AAAAAAAAAAAD//x9BAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 4267,
+          "lengthBytes": 236,
+          "sha256": "19da7b0b6036eb7ca413e2470a8edd18a822974f73e257e6e2c0212e7c704721",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAbV9waWVjZQEAAAAHAG1fcGllY2X/////AACAPy69OzTtrQkpAAAAAC69O7QAAIA/Lr07NAAAAAAARHQZLr07tAAAgD8AAAAASV+itvG0iaurO0s1AACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAABEdJkuIrMOAACAPwAAyh0AMzeaAADKHQAAgD8BAAAABwBtX3BpZWNlAQAAAAcAbV9waWVjZQuaJ8I4mg7C/+M5wpToEkI4mg5CIqQrQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 10,
+      "name": "apple_red",
+      "juiceColour": [
+        248,
+        255,
+        164,
+        130
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Apple_red_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.5130424499511719,
+        "minV": 0.3781927824020386,
+        "maxU": 0.6223644614219666,
+        "maxV": 0.4970938563346863
+      },
+      "meshes": [
+        {
+          "name": "Apple_red_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 206,
+          "sourceIndexCount": 618,
+          "triangleIndexCount": 618,
+          "vertexCount": 268,
+          "uvBounds": {
+            "minU": 0.5130424499511719,
+            "minV": 0.3781927824020386,
+            "maxU": 0.6223644614219666,
+            "maxV": 0.4970938563346863
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 165408,
+              "lengthBytes": 2472,
+              "count": 618
+            },
+            "triangleIndices": {
+              "offset": 167888,
+              "lengthBytes": 2472,
+              "count": 618
+            },
+            "vertices": {
+              "offset": 170368,
+              "lengthBytes": 17152,
+              "count": 268,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 618
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 10916,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "de4d14dbea99e19a2d3ef7ba65df63f06aaf9a491157af766e48eb88a269ebb5",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAHVRSgAAAGhCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 11047,
+          "lengthBytes": 236,
+          "sha256": "437cf52ba3e52b232cce7835356b26ecdd2c13ff0137d13aa952e8f90f200a83",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAYV9waWVjZQEAAAAHAGFfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAN/qvQAAAACwfwK9AACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBhX3BpZWNlAQAAAAcAYV9waWVjZXw8FsLB8yfChyUowohUUkK+8ydC8sEnQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 11,
+      "name": "lime",
+      "juiceColour": [
+        150,
+        217,
+        17,
+        145
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "lime_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.0033524457830935717,
+        "minV": 0.37870895862579346,
+        "maxU": 0.12288491427898407,
+        "maxV": 0.4985398054122925
+      },
+      "meshes": [
+        {
+          "name": "lime_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 120,
+          "sourceIndexCount": 360,
+          "triangleIndexCount": 360,
+          "vertexCount": 62,
+          "uvBounds": {
+            "minU": 0.0033524457830935717,
+            "minV": 0.37870895862579346,
+            "maxU": 0.12288491427898407,
+            "maxV": 0.4985398054122925
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 187520,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "triangleIndices": {
+              "offset": 188960,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "vertices": {
+              "offset": 190400,
+              "lengthBytes": 3968,
+              "count": 62,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 360
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 2984,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "de4d14dbea99e19a2d3ef7ba65df63f06aaf9a491157af766e48eb88a269ebb5",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAHVRSgAAAGhCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 3115,
+          "lengthBytes": 236,
+          "sha256": "1408ae072cb8102e1089466ae8157ad78a1183ec40ab204bc0bff9ce1a988738",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAbF9waWVjZQEAAAAHAGxfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAJCh6NQAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBsX3BpZWNlAQAAAAcAbF9waWVjZS4VJsIqFSbCSPcpwioVJkItFSZCSPcpQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 12,
+      "name": "coconut",
+      "juiceColour": [
+        255,
+        255,
+        255,
+        145
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Coconut_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.7524315118789673,
+        "minV": 0.2607460618019104,
+        "maxU": 0.8731471300125122,
+        "maxV": 0.36826545000076294
+      },
+      "meshes": [
+        {
+          "name": "Coconut_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 120,
+          "sourceIndexCount": 360,
+          "triangleIndexCount": 360,
+          "vertexCount": 74,
+          "uvBounds": {
+            "minU": 0.7524315118789673,
+            "minV": 0.2607460618019104,
+            "maxU": 0.8731471300125122,
+            "maxV": 0.36826545000076294
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 194368,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "triangleIndices": {
+              "offset": 195808,
+              "lengthBytes": 1440,
+              "count": 360
+            },
+            "vertices": {
+              "offset": 197248,
+              "lengthBytes": 4736,
+              "count": 74,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 360
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 3416,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "4f7aec517905c58e4d434989c62311f479831cc63b20f3af46e8832df075e6e0",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAP////////8AAAAAAAAAAAD//x9BAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 3547,
+          "lengthBytes": 236,
+          "sha256": "c81845bec94a2cafbe4d4afea1b2841f94313434dd96033824624991c2828a02",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAY19waWVjZQEAAAAHAGNfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAJCh6NQAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBjX3BpZWNlAQAAAAcAY19waWVjZSoVJsIqFSbCSPcpwioVJkItFSZCSPcpQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 13,
+      "name": "passionfruit",
+      "juiceColour": [
+        255,
+        184,
+        0,
+        170
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "passionfruit_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.5037781000137329,
+        "minV": 0.378595769405365,
+        "maxU": 0.622352123260498,
+        "maxV": 0.49362364411354065
+      },
+      "meshes": [
+        {
+          "name": "p_piece",
+          "parent": "[none]",
+          "materialNames": [
+            "fruitAtlas"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 156,
+          "sourceIndexCount": 624,
+          "triangleIndexCount": 936,
+          "vertexCount": 468,
+          "uvBounds": {
+            "minU": 0.5037781000137329,
+            "minV": 0.378595769405365,
+            "maxU": 0.622352123260498,
+            "maxV": 0.49362364411354065
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 201984,
+              "lengthBytes": 2496,
+              "count": 624
+            },
+            "triangleIndices": {
+              "offset": 204480,
+              "lengthBytes": 3744,
+              "count": 936
+            },
+            "vertices": {
+              "offset": 208224,
+              "lengthBytes": 29952,
+              "count": 468,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            -1.123748006648384e-05,
+            1.9073486328125e-05,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "fruitAtlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 0.0,
+              "DiffuseTex": "models/fruit/textures/fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 1.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 14,
+      "name": "lemon",
+      "juiceColour": [
+        255,
+        252,
+        0,
+        130
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Lemon_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.7534239292144775,
+        "minV": 0.005111217498779297,
+        "maxU": 0.8730976581573486,
+        "maxV": 0.12188851833343506
+      },
+      "meshes": [
+        {
+          "name": "Lemon_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 216,
+          "sourceIndexCount": 648,
+          "triangleIndexCount": 648,
+          "vertexCount": 110,
+          "uvBounds": {
+            "minU": 0.7534239292144775,
+            "minV": 0.005111217498779297,
+            "maxU": 0.8730976581573486,
+            "maxV": 0.12188851833343506
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 238176,
+              "lengthBytes": 2592,
+              "count": 648
+            },
+            "triangleIndices": {
+              "offset": 240768,
+              "lengthBytes": 2592,
+              "count": 648
+            },
+            "vertices": {
+              "offset": 243360,
+              "lengthBytes": 7040,
+              "count": 110,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 648
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 5288,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "4f7aec517905c58e4d434989c62311f479831cc63b20f3af46e8832df075e6e0",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAP////////8AAAAAAAAAAAD//x9BAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 5419,
+          "lengthBytes": 236,
+          "sha256": "49245ae960333ebe7407a36ddfe50c099109276db710b59ff6821fbcd1d44c38",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAbF9waWVjZQEAAAAHAGxfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAJCh6NQAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBsX3BpZWNlAQAAAAcAbF9waWVjZaViGsKjYhrCHjBowqRiGkKlYhpCHjBoQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 15,
+      "name": "bean",
+      "juiceColour": [
+        150,
+        217,
+        17,
+        145
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "bean_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.2533229887485504,
+        "minV": 0.00231811311095953,
+        "maxU": 0.4563139081001282,
+        "maxV": 0.45173540711402893
+      },
+      "meshes": [
+        {
+          "name": "bean",
+          "parent": "[none]",
+          "materialNames": [
+            "fruitAtlas"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 284,
+          "sourceIndexCount": 1136,
+          "triangleIndexCount": 1704,
+          "vertexCount": 852,
+          "uvBounds": {
+            "minU": 0.2533229887485504,
+            "minV": 0.00231811311095953,
+            "maxU": 0.4563139081001282,
+            "maxV": 0.45173540711402893
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 250400,
+              "lengthBytes": 4544,
+              "count": 1136
+            },
+            "triangleIndices": {
+              "offset": 254944,
+              "lengthBytes": 6816,
+              "count": 1704
+            },
+            "vertices": {
+              "offset": 261760,
+              "lengthBytes": 54528,
+              "count": 852,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "fruitAtlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 0.0,
+              "DiffuseTex": "models/fruit/textures/fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 255.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 16,
+      "name": "tomato",
+      "juiceColour": [
+        200,
+        0,
+        0,
+        190
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "tomato_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.5026999711990356,
+        "minV": 0.12639999389648438,
+        "maxU": 0.5422871112823486,
+        "maxV": 0.24220000207424164
+      },
+      "meshes": [
+        {
+          "name": "t_piece",
+          "parent": "[none]",
+          "materialNames": [
+            "fruitAtlas"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 180,
+          "sourceIndexCount": 720,
+          "triangleIndexCount": 1080,
+          "vertexCount": 540,
+          "uvBounds": {
+            "minU": 0.5026999711990356,
+            "minV": 0.12639999389648438,
+            "maxU": 0.5422871112823486,
+            "maxV": 0.24220000207424164
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 316288,
+              "lengthBytes": 2880,
+              "count": 720
+            },
+            "triangleIndices": {
+              "offset": 319168,
+              "lengthBytes": 4320,
+              "count": 1080
+            },
+            "vertices": {
+              "offset": 323488,
+              "lengthBytes": 34560,
+              "count": 540,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "fruitAtlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 0.0,
+              "DiffuseTex": "models/fruit/textures/fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 255.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 17,
+      "name": "super_pomegranate",
+      "juiceColour": [
+        200,
+        3,
+        40,
+        225
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "pomegranate_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": -0.004590634722262621,
+        "minV": 0.0025506559759378433,
+        "maxU": 0.9947789311408997,
+        "maxV": 0.9964536428451538
+      },
+      "meshes": [
+        {
+          "name": "pinata_single",
+          "parent": "[none]",
+          "materialNames": [
+            "pinata"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/pinata.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/pinata.tex",
+          "sourceTopology": "quads",
+          "faceCount": 492,
+          "sourceIndexCount": 1968,
+          "triangleIndexCount": 2952,
+          "vertexCount": 1476,
+          "uvBounds": {
+            "minU": -0.004590634722262621,
+            "minV": 0.0025506559759378433,
+            "maxU": 0.9947789311408997,
+            "maxV": 0.9964536428451538
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 358048,
+              "lengthBytes": 7872,
+              "count": 1968
+            },
+            "triangleIndices": {
+              "offset": 365920,
+              "lengthBytes": 11808,
+              "count": 2952
+            },
+            "vertices": {
+              "offset": 377728,
+              "lengthBytes": 94464,
+              "count": 1476,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "pinata",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                229.5,
+                229.5,
+                229.5
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 9.999999046325684,
+              "DiffuseTex": "models/fruit/textures/pinata.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 0.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 1.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 18,
+      "name": "super_chest",
+      "juiceColour": [
+        200,
+        3,
+        40,
+        225
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "chest_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.010629478842020035,
+        "minV": 0.010449464432895184,
+        "maxU": 0.9906124472618103,
+        "maxV": 0.9918420910835266
+      },
+      "meshes": [
+        {
+          "name": "chest_single",
+          "parent": "[none]",
+          "materialNames": [
+            "chest"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/chest.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/chest.tex",
+          "sourceTopology": "quads",
+          "faceCount": 856,
+          "sourceIndexCount": 3424,
+          "triangleIndexCount": 5136,
+          "vertexCount": 2568,
+          "uvBounds": {
+            "minU": 0.010629478842020035,
+            "minV": 0.010449464432895184,
+            "maxU": 0.9906124472618103,
+            "maxV": 0.9918420910835266
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 472192,
+              "lengthBytes": 13696,
+              "count": 3424
+            },
+            "triangleIndices": {
+              "offset": 485888,
+              "lengthBytes": 20544,
+              "count": 5136
+            },
+            "vertices": {
+              "offset": 506432,
+              "lengthBytes": 164352,
+              "count": 2568,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "chest",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                229.5,
+                229.5,
+                229.5
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 10.0,
+              "DiffuseTex": "models/fruit/textures/chest.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 0.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 255.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 19,
+      "name": "peach",
+      "juiceColour": [
+        255,
+        174,
+        0,
+        170
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Peach_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.6319612860679626,
+        "minV": 0.1292838752269745,
+        "maxU": 0.7484307885169983,
+        "maxV": 0.24908526241779327
+      },
+      "meshes": [
+        {
+          "name": "p_piece",
+          "parent": "[none]",
+          "materialNames": [
+            "fruit_atlas"
+          ],
+          "diffuseTextures": [
+            "models\\fruit\\textures\\fruit_atlas.tex"
+          ],
+          "diffuseTex": "models\\fruit\\textures\\fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 314,
+          "sourceIndexCount": 1256,
+          "triangleIndexCount": 1884,
+          "vertexCount": 942,
+          "uvBounds": {
+            "minU": 0.6319612860679626,
+            "minV": 0.1292838752269745,
+            "maxU": 0.7484307885169983,
+            "maxV": 0.24908526241779327
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 670784,
+              "lengthBytes": 5024,
+              "count": 1256
+            },
+            "triangleIndices": {
+              "offset": 675808,
+              "lengthBytes": 7536,
+              "count": 1884
+            },
+            "vertices": {
+              "offset": 683344,
+              "lengthBytes": 60288,
+              "count": 942,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "fruit_atlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                88.0,
+                32.0,
+                32.0
+              ],
+              "Diffuse": [
+                88.0,
+                32.0,
+                32.0
+              ],
+              "Specular": [
+                255.0,
+                176.0,
+                161.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 58.0,
+              "DiffuseTex": "models\\fruit\\textures\\fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 255.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 20,
+      "name": "black_pineapple",
+      "juiceColour": [
+        255,
+        255,
+        255,
+        150
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "black_pineapple_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.4659777879714966,
+        "minV": 0.4226204752922058,
+        "maxU": 0.989301323890686,
+        "maxV": 0.9937779307365417
+      },
+      "meshes": [
+        {
+          "name": "m_piece_locked",
+          "parent": "[none]",
+          "materialNames": [
+            "fruitAtlas"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 336,
+          "sourceIndexCount": 1344,
+          "triangleIndexCount": 2016,
+          "vertexCount": 1008,
+          "uvBounds": {
+            "minU": 0.4659777879714966,
+            "minV": 0.4226204752922058,
+            "maxU": 0.989301323890686,
+            "maxV": 0.9937779307365417
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 743632,
+              "lengthBytes": 5376,
+              "count": 1344
+            },
+            "triangleIndices": {
+              "offset": 749008,
+              "lengthBytes": 8064,
+              "count": 2016
+            },
+            "vertices": {
+              "offset": 757072,
+              "lengthBytes": 64512,
+              "count": 1008,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            -1.7484555314695172e-07,
+            0.0,
+            1.7484555314695172e-07,
+            1.0,
+            -1.7484555314695172e-07,
+            3.057096744263528e-14,
+            1.7484555314695172e-07,
+            1.0,
+            4.839068878936814e-06,
+            0.0,
+            -7.571022138108674e-07
+          ],
+          "materials": [
+            {
+              "Matname": "fruitAtlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 0.0,
+              "DiffuseTex": "models/fruit/textures/fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 255.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 21,
+      "name": "apple_center",
+      "juiceColour": [
+        235,
+        175,
+        14,
+        155
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "apple_center_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.8763159513473511,
+        "minV": 0.6253888607025146,
+        "maxU": 0.9984310269355774,
+        "maxV": 0.7473145723342896
+      },
+      "meshes": [
+        {
+          "name": "apple_center_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 222,
+          "sourceIndexCount": 666,
+          "triangleIndexCount": 666,
+          "vertexCount": 139,
+          "uvBounds": {
+            "minU": 0.8763159513473511,
+            "minV": 0.6253888607025146,
+            "maxU": 0.9984310269355774,
+            "maxV": 0.7473145723342896
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 821584,
+              "lengthBytes": 2664,
+              "count": 666
+            },
+            "triangleIndices": {
+              "offset": 824256,
+              "lengthBytes": 2664,
+              "count": 666
+            },
+            "vertices": {
+              "offset": 826928,
+              "lengthBytes": 8896,
+              "count": 139,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 666
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 6368,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "28371c7cb213762e7772f30af689a61e447822c199ddc737568634db86a997dd",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAKFvZQAAAFxCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 6499,
+          "lengthBytes": 236,
+          "sha256": "b04b39990189c04250bf3b0ceaf05eb355b0f15ec660c3b704ad0311eef0c19a",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAYV9waWVjZQEAAAAHAGFfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBhX3BpZWNlAQAAAAcAYV9waWVjZfPBJ8LB8yfCyIMcwoQlKEK+8ydCzcNJQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    },
+    {
+      "typeID": 22,
+      "name": "skynet",
+      "juiceColour": [
+        255,
+        255,
+        255,
+        150
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "Skynet_single.binmodel",
+      "modelFormat": "binmodel",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.8763159513473511,
+        "minV": 0.12657812237739563,
+        "maxU": 0.9984310269355774,
+        "maxV": 0.24850386381149292
+      },
+      "meshes": [
+        {
+          "name": "a_piece001",
+          "parent": "[none]",
+          "materialNames": [
+            "fruitAtlas"
+          ],
+          "diffuseTextures": [
+            "models/fruit/textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "models/fruit/textures/fruit_atlas.tex",
+          "sourceTopology": "quads",
+          "faceCount": 222,
+          "sourceIndexCount": 888,
+          "triangleIndexCount": 1332,
+          "vertexCount": 666,
+          "uvBounds": {
+            "minU": 0.8763159513473511,
+            "minV": 0.12657812237739563,
+            "maxU": 0.9984310269355774,
+            "maxV": 0.24850386381149292
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 835824,
+              "lengthBytes": 3552,
+              "count": 888
+            },
+            "triangleIndices": {
+              "offset": 839376,
+              "lengthBytes": 5328,
+              "count": 1332
+            },
+            "vertices": {
+              "offset": 844704,
+              "lengthBytes": 42624,
+              "count": 666,
+              "stride": 64
+            }
+          },
+          "matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "materials": [
+            {
+              "Matname": "fruitAtlas",
+              "Twosided": 0.0,
+              "Ambient": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Diffuse": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "Specular": [
+                255.0,
+                255.0,
+                255.0
+              ],
+              "SpecLevel": 0.0,
+              "GlossLevel": 0.0,
+              "DiffuseTex": "models/fruit/textures/fruit_atlas.tex",
+              "ReflectLevel": 0.0,
+              "AmbientLevel": 100.0,
+              "alpha": 0.0
+            }
+          ],
+          "vertexTrailer": 255.0,
+          "vertexTrailerSemantics": "unverified_preserved_verbatim"
+        }
+      ]
+    },
+    {
+      "typeID": 23,
+      "name": "pear_gold",
+      "juiceColour": [
+        255,
+        255,
+        255,
+        145
+      ],
+      "juiceColourRole": "juice_splash_not_tint",
+      "modelFile": "pear_gold_single.mmd",
+      "modelFormat": "mmd",
+      "meshCount": 1,
+      "uvBounds": {
+        "minU": 0.3850271999835968,
+        "minV": 0.21720927953720093,
+        "maxU": 0.6769013404846191,
+        "maxV": 0.8739718794822693
+      },
+      "meshes": [
+        {
+          "name": "pear_gold_single",
+          "parent": "",
+          "materialNames": [],
+          "diffuseTextures": [
+            "textures/fruit_atlas.tex"
+          ],
+          "diffuseTex": "textures/fruit_atlas.tex",
+          "sourceTopology": "triangles",
+          "faceCount": 530,
+          "sourceIndexCount": 1590,
+          "triangleIndexCount": 1590,
+          "vertexCount": 668,
+          "uvBounds": {
+            "minU": 0.3850271999835968,
+            "minV": 0.21720927953720093,
+            "maxU": 0.6769013404846191,
+            "maxV": 0.8739718794822693
+          },
+          "bin": {
+            "sourceIndices": {
+              "offset": 887328,
+              "lengthBytes": 6360,
+              "count": 1590
+            },
+            "triangleIndices": {
+              "offset": 893696,
+              "lengthBytes": 6360,
+              "count": 1590
+            },
+            "vertices": {
+              "offset": 900064,
+              "lengthBytes": 42752,
+              "count": 668,
+              "stride": 64
+            }
+          },
+          "meshParam3": "000021",
+          "meshParams5": "00ff010012",
+          "indexCount": 1590
+        }
+      ],
+      "topMaterialBlock": {
+        "length": 115,
+        "topMeshField": 27260,
+        "topMeshFieldSemantics": "unverified_preserved_verbatim",
+        "sha256": "de4d14dbea99e19a2d3ef7ba65df63f06aaf9a491157af766e48eb88a269ebb5",
+        "encoding": "base64",
+        "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAFggIP9YICAAAAAAAHVRSgAAAGhCAAAAAA==",
+        "strings": [
+          "Map #1",
+          "textures\\fruit_atlas.tex",
+          "fruit_atlas"
+        ],
+        "parsed": false,
+        "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+      },
+      "tailChunks": [
+        {
+          "format": "uninterpreted_node_transform_tail",
+          "offset": 27391,
+          "lengthBytes": 236,
+          "sha256": "8d5e2d503acbdd980964e725c4dcc7029ba24afe1020ef1fba301d88e562487e",
+          "encoding": "base64",
+          "data": "AgAAANAAAADYAAAA3AAAAAcAcF9waWVjZQEAAAAHAHBfcGllY2X/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABwBwX3BpZWNlAQAAAAcAcF9waWVjZRcBLcKUbzLCMgBJwh8BLUKObzJCzuyWQgEAAAABAAAAAQAAAAIAAAA="
+        }
+      ]
+    }
+  ],
+  "bomb": {
+    "typeID": null,
+    "name": "bomb",
+    "juiceColour": null,
+    "juiceColourRole": "not_applicable",
+    "note": "bomb is not a FruitInfo; source model resolved separately",
+    "modelFile": "Bomb.mmd",
+    "modelFormat": "mmd",
+    "meshCount": 1,
+    "uvBounds": {
+      "minU": 0.007802540902048349,
+      "minV": 0.503028392791748,
+      "maxU": 0.24731522798538208,
+      "maxV": 0.7492710947990417
+    },
+    "meshes": [
+      {
+        "name": "Bomb",
+        "parent": "",
+        "materialNames": [],
+        "diffuseTextures": [
+          "textures/fruit_atlas.tex"
+        ],
+        "diffuseTex": "textures/fruit_atlas.tex",
+        "sourceTopology": "triangles",
+        "faceCount": 314,
+        "sourceIndexCount": 942,
+        "triangleIndexCount": 942,
+        "vertexCount": 238,
+        "uvBounds": {
+          "minU": 0.007802540902048349,
+          "minV": 0.503028392791748,
+          "maxU": 0.24731522798538208,
+          "maxV": 0.7492710947990417
+        },
+        "bin": {
+          "sourceIndices": {
+            "offset": 942816,
+            "lengthBytes": 3768,
+            "count": 942
+          },
+          "triangleIndices": {
+            "offset": 946592,
+            "lengthBytes": 3768,
+            "count": 942
+          },
+          "vertices": {
+            "offset": 950368,
+            "lengthBytes": 15232,
+            "count": 238,
+            "stride": 64
+          }
+        },
+        "meshParam3": "000021",
+        "meshParams5": "00ff010012",
+        "indexCount": 942
+      }
+    ],
+    "topMaterialBlock": {
+      "length": 115,
+      "topMeshField": 10484,
+      "topMeshFieldSemantics": "unverified_preserved_verbatim",
+      "sha256": "4f7aec517905c58e4d434989c62311f479831cc63b20f3af46e8832df075e6e0",
+      "encoding": "base64",
+      "data": "SEJSMAEAAAAyAAAASEJSMAAAAAAAAAAAIgAAAAYATWFwICMxGAB0ZXh0dXJlc1xmcnVpdF9hdGxhcy50ZXgBAAAADQAAACkAAAALAGZydWl0X2F0bGFzAQAAAP////////8AAAAAAAAAAAD//x9BAAAAAA==",
+      "strings": [
+        "Map #1",
+        "textures\\fruit_atlas.tex",
+        "fruit_atlas"
+      ],
+      "parsed": false,
+      "note": "MMD top material block preserved verbatim; only bounded u16 strings and .tex references are extracted"
+    },
+    "tailChunks": [
+      {
+        "format": "uninterpreted_node_transform_tail",
+        "offset": 10615,
+        "lengthBytes": 224,
+        "sha256": "df09763e2c008a6cfc6fa100866906ae52eb2aa234677afe26eb322ae3f673ee",
+        "encoding": "base64",
+        "data": "AgAAAMQAAADMAAAA0AAAAAQAYm9tYgEAAAAEAGJvbWL/////AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8BAAAABABib21iAQAAAAQAYm9tYjDIQsIuyELCU649wjDIQkIayEJCY66cQgEAAAABAAAAAQAAAAIAAAA="
+      }
+    ]
+  }
+}
