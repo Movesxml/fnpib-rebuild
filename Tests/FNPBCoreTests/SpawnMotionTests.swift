@@ -300,6 +300,7 @@ final class SpawnMotionTests: XCTestCase {
         return try OriginalContentLoader.load(
             fruitsData: Data(contentsOf: root.appendingPathComponent("Content/fruitList.json")),
             wavesData: Data(contentsOf: root.appendingPathComponent("Content/originalWaveList.json")),
+            challengeWavesData: Data(contentsOf: root.appendingPathComponent("Content/ch1challengeWaveList.json")),
             bonusAwardsData: Data(contentsOf: root.appendingPathComponent("Content/bonusAwards.json")),
             originalModeData: Data(contentsOf: root.appendingPathComponent("Content/originalModeInfo.json")),
             challengeCatalogData: Data(contentsOf: root.appendingPathComponent("Content/ch1challengeList.json")),

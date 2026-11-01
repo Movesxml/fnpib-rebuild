@@ -25,12 +25,14 @@ enum OriginalContentBundle {
         do {
             let fruitsData = try readResource(named: "fruitList", bundle: bundle)
             let wavesData = try readResource(named: "originalWaveList", bundle: bundle)
+            let challengeWavesData = try readResource(named: "ch1challengeWaveList", bundle: bundle)
             let bonusAwardsData = try readResource(named: "bonusAwards", bundle: bundle)
             let originalModeData = try readResource(named: "originalModeInfo", bundle: bundle)
             let challengeCatalogData = try readResource(named: "ch1challengeList", bundle: bundle)
             let challengeConditionsData = try readResource(named: "challengeConditions", bundle: bundle)
             return .success(try OriginalContentLoader.load(fruitsData: fruitsData,
                                                            wavesData: wavesData,
+                                                           challengeWavesData: challengeWavesData,
                                                            bonusAwardsData: bonusAwardsData,
                                                            originalModeData: originalModeData,
                                                            challengeCatalogData: challengeCatalogData,

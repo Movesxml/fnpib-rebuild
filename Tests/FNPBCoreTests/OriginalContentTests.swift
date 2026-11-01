@@ -280,6 +280,7 @@ final class OriginalContentTests: XCTestCase {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
+            challengeWavesData: contentData("ch1challengeWaveList.json"),
             bonusAwardsData: contentData("bonusAwards.json"),
             originalModeData: contentData("originalModeInfo.json"),
             challengeCatalogData: contentData("ch1challengeList.json"),
@@ -363,12 +364,19 @@ final class OriginalContentTests: XCTestCase {
         for wave in content.waves.waves {
             XCTAssertTrue(wave.until == -2 || wave.until >= wave.waveNo)
         }
+
+        // T-048：挑战波独立加载；计数和首波名称直接核对发售版资源。
+        XCTAssertEqual(content.waves.waves.count, 38, "挑战波不得替换经典 content.waves")
+        XCTAssertEqual(content.challengeWaves.waves.count, 365)
+        XCTAssertEqual(content.challengeWaves.waves.flatMap(\.spawners).count, 1714)
+        XCTAssertEqual(content.challengeWaves.waves.first?.name, "bombPairs1")
     }
 
     func testRealWave0ValuesAndRealDefaultsAreNotAliased() throws {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
+            challengeWavesData: contentData("ch1challengeWaveList.json"),
             bonusAwardsData: contentData("bonusAwards.json"),
             originalModeData: contentData("originalModeInfo.json"),
             challengeCatalogData: contentData("ch1challengeList.json"),

@@ -194,6 +194,8 @@ public struct OriginalClassicConfig: Equatable, Sendable {
 public struct OriginalContent: Equatable, Sendable {
     public var fruits: OriginalFruitList
     public var waves: OriginalWaveList
+    /// 独立挑战波列表；经典 content.waves 始终只来自 originalWaveList。
+    public var challengeWaves: OriginalWaveList
     public var classic: OriginalClassicConfig
     /// bonusAwards.xml 中 combo 节点按文档顺序排列的 bonus 值。
     public var comboBonuses: [Int32]
@@ -202,12 +204,14 @@ public struct OriginalContent: Equatable, Sendable {
 
     public init(fruits: OriginalFruitList,
                 waves: OriginalWaveList,
+                challengeWaves: OriginalWaveList,
                 classic: OriginalClassicConfig,
                 comboBonuses: [Int32],
                 challengeCatalog: ChallengeCatalog,
                 challengeConditions: [ChallengeConditionDefinition]) {
         self.fruits = fruits
         self.waves = waves
+        self.challengeWaves = challengeWaves
         self.classic = classic
         self.comboBonuses = comboBonuses
         self.challengeCatalog = challengeCatalog
@@ -218,18 +222,21 @@ public struct OriginalContent: Equatable, Sendable {
 public enum OriginalContentLoader {
     public static func load(fruitsData: Data,
                             wavesData: Data,
+                            challengeWavesData: Data,
                             bonusAwardsData: Data,
                             originalModeData: Data,
                             challengeCatalogData: Data,
                             challengeConditionsData: Data) throws -> OriginalContent {
         let fruitList = try loadFruits(from: fruitsData)
         let waveList = try loadWaves(from: wavesData, fruits: fruitList.fruits)
+        let challengeWaveList = try loadWaves(from: challengeWavesData, fruits: fruitList.fruits)
         let comboBonuses = try loadComboBonuses(from: bonusAwardsData)
         let classic = try loadClassicConfig(from: originalModeData)
         let challengeCatalog = try ChallengeCatalogLoader.load(from: challengeCatalogData)
         let challengeConditions = try ChallengeConditionLoader.load(from: challengeConditionsData)
         return OriginalContent(fruits: fruitList,
                                waves: waveList,
+                               challengeWaves: challengeWaveList,
                                classic: classic,
                                comboBonuses: comboBonuses,
                                challengeCatalog: challengeCatalog,

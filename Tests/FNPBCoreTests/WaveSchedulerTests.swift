@@ -341,6 +341,7 @@ final class WaveSchedulerTests: XCTestCase {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
+            challengeWavesData: contentData("ch1challengeWaveList.json"),
             bonusAwardsData: contentData("bonusAwards.json"),
             originalModeData: contentData("originalModeInfo.json"),
             challengeCatalogData: contentData("ch1challengeList.json"),
