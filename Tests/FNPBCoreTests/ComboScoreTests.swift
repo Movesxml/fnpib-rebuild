@@ -219,13 +219,17 @@ final class ComboScoreTests: XCTestCase {
         entity.fruit?.name = "orange"
 
         let score = ScoreSystem()
+        score.dispatch(score: 2, comboType: 0, isScoring: true, mode: 0)
         let services = GameServices(
             slice: UnusedSlice(), combo: tracker, score: score, stats: stats,
             waves: UnusedWaves(), audio: UnusedAudio(), effects: UnusedEffects(), rng: rng)
-        FruitOnSliced(critical: criticalConfig(score: 10), fruitTypeCount: 24)
-            .apply(entity: &entity, state: &state, services: services)
+        var critical = criticalConfig(score: 10)
+        critical.chance = 1
+        let onSliced = FruitOnSliced(critical: critical, fruitTypeCount: 24)
+        onSliced.reset(isClassicMode: true, initialChance: 1)
+        onSliced.apply(entity: &entity, state: &state, services: services)
 
-        XCTAssertEqual(score.total, 17)
+        XCTAssertEqual(score.total, 19)
         XCTAssertEqual(state.lastSliceScore, 26, "+0x110 是 typeID 加水果类型总数")
         XCTAssertEqual(state.rhythmFactor, -2.25, accuracy: 1e-5)
         XCTAssertEqual(stats.value(forDynamicKey: "crit"), 1)

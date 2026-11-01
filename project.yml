@@ -132,6 +132,7 @@ targets:
       - path: Tests/FNPBCoreTests
     dependencies:
       - target: FNPBCore
+      - target: FNPBPlatform
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.coretests

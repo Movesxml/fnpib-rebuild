@@ -317,9 +317,12 @@ final class GameWorldTests: XCTestCase {
     func test_step6_暴击加内容配置分并执行实体后处理() {
         var critical = CriticalConfig()
         critical.score = 10
+        critical.chance = 1
         let rig = Rig(onSliced: FruitOnSliced(critical: critical,
                                               fruitTypeCount: 24,
                                               starfruitTypeID: 99))
+        rig.world.resetForNewGame(isClassicMode: true, initialCriticalChance: 1)
+        rig.score.dispatch(score: 2, comboType: 0, isScoring: true, mode: 0)
         var state = runnableState()
         rig.slice.sliceResult = true
         var world: any EntityStore = GenerationOrderStore()
@@ -330,7 +333,7 @@ final class GameWorldTests: XCTestCase {
         world.spawn(EntityPrototype(kind: .fruit, fruit: fruit, isCriticalHit: true))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
-        XCTAssertEqual(rig.score.total, 18)
+        XCTAssertEqual(rig.score.total, 20, "门槛预置 2 分后，再加基础 8 与暴击 10")
         XCTAssertEqual(state.lastSliceScore, 29)
         XCTAssertEqual(rig.stats.reports["crit"], 1)
         XCTAssertEqual(rig.stats.reports["crits_total"], 1)

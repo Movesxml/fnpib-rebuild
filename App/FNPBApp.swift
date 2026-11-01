@@ -465,13 +465,14 @@ final class GameHost: ObservableObject {
 
         // store.clear 对应 param_2==0 的强制清理，不经过正常漏切计数。
         store.clear()
-        gameWorld.resetForNewGame(isClassicMode: mode == .classic)
+        // 必须先读档再重置：FUN_0002504c 每局从存档 +0x100 读取整数初值。
+        saveData = saveStore.load()
+        gameWorld.resetForNewGame(isClassicMode: mode == .classic,
+                                  initialCriticalChance: saveData.criticalChance)
         scoreSystem.reset()
         comboTracker.reset(state: &state)
         statsRecorder.reset()
         waveDirector.beginGame(waves: content.waves.waves, fruits: content.fruits.fruits)
-
-        saveData = saveStore.load()
         shouldRunDisplayLink = true
         displayLink.start()
         return true

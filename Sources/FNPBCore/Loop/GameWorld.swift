@@ -102,6 +102,11 @@ public protocol WaveDirecting: AnyObject {
     func tick(dt: Float, state: inout GameState, world: any EntityStore)
 }
 
+/// FUN_000580e4 的当前波 criticalChance × 管理器系数；管理器构造缺省为 1。
+public protocol CriticalChanceProviding: AnyObject {
+    var criticalChanceForSlice: Float { get }
+}
+
 public protocol AudioPlaying: AnyObject {
     /// 原 AudioToolbox/OpenAL 调用点仅作音量/时序参考 [待验证]
     func play(_ key: String)
@@ -189,10 +194,11 @@ public final class GameWorld: GameTicking {
     }
 
     /// 重开局同时清理上一局的爆炸与经典事件，避免复用 GameWorld 时继承结束状态。
-    public func resetForNewGame(isClassicMode: Bool) {
+    public func resetForNewGame(isClassicMode: Bool, initialCriticalChance: Int32 = 70) {
         lastDelta = 0
         explosionTimeRemaining = 0
         classic.reset(isClassicMode: isClassicMode)
+        onSliced.reset(isClassicMode: isClassicMode, initialChance: initialCriticalChance)
     }
 
     /// 动画系统回报当前 game_over / game_over_real 已完成。
@@ -413,7 +419,8 @@ public final class GameWorld: GameTicking {
 
             // 原顺序是先实体 vtable+0x24，再消费实体 +0x1ba。单果得分不依赖
             // combo 是否递增，也不依赖 stateSlot0 或 +0x6e 的普通路径门控。
-            onSliced.apply(entity: &entity, state: &state, services: services)
+            onSliced.apply(entity: &entity, state: &state, services: services,
+                           explosionTimeRemaining: explosionTimeRemaining)
             classic.onFruitSliced(entity, state: &state, services: services)
 
             pendingDespawn.append(entity.id)

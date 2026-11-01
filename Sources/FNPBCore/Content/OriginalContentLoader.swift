@@ -172,21 +172,31 @@ public enum OriginalContentLoader {
         var critical: CriticalConfig?
         var seenNames = Set<String>()
 
+        // FUN_0001267c 先加载全局 critical，再逐个加载水果；XML 文档顺序不影响规则。
+        for (index, child) in root.children.enumerated() where child.tag == "critical" {
+            let path = "\(root.tag)/\(child.tag)[\(index)]"
+            guard critical == nil else {
+                throw OriginalContentError.duplicateNode(tag: child.tag, path: path)
+            }
+            critical = try parseCritical(child, path: path)
+        }
+        let resolvedCritical = critical ?? CriticalConfig()
+
         for (index, child) in root.children.enumerated() {
             let path = "\(root.tag)/\(child.tag)[\(index)]"
             switch child.tag {
             case "FruitInfo":
-                let info = try parseFruit(child, typeID: Int32(fruits.count), path: path)
+                let info = try parseFruit(child,
+                                          typeID: Int32(fruits.count),
+                                          path: path,
+                                          critical: resolvedCritical)
                 guard !seenNames.contains(info.name) else {
                     throw OriginalContentError.duplicateFruit(name: info.name, path: path)
                 }
                 seenNames.insert(info.name)
                 fruits.append(info)
             case "critical":
-                guard critical == nil else {
-                    throw OriginalContentError.duplicateNode(tag: child.tag, path: path)
-                }
-                critical = try parseCritical(child, path: path)
+                continue // 已在水果加载前统一解析
             case "bomb":
                 guard bomb == nil else {
                     throw OriginalContentError.duplicateNode(tag: child.tag, path: path)
@@ -262,7 +272,8 @@ public enum OriginalContentLoader {
 
     private static func parseFruit(_ node: ContentNode,
                                    typeID: Int32,
-                                   path: String) throws -> FruitInfo {
+                                   path: String,
+                                   critical: CriticalConfig) throws -> FruitInfo {
         guard let name = node.attrs["name"], !name.isEmpty else {
             throw OriginalContentError.missingAttribute(node: node.tag, attribute: "name", path: path)
         }
@@ -289,8 +300,27 @@ public enum OriginalContentLoader {
         if let value = try boolValue(node, keys: ["onlySprinkle"], path: path) {
             info.onlySprinkle = value
         }
+
+        // 自动规则严格按原版顺序：colours.alpha==0，再比较全局 critical.score。
+        if let colours = node.children.first(where: { $0.tag == "colours" }),
+           let raw = colours.attrs["colour"] {
+            let components = raw.split(separator: ",", omittingEmptySubsequences: false)
+            var values = [Int32](repeating: 255, count: 4)
+            for index in 0..<min(components.count, values.count) {
+                let component = components[index].trimmingCharacters(in: .whitespacesAndNewlines)
+                guard let value = Int32(component) else {
+                    throw OriginalContentError.invalidNumber(node: colours.tag, attribute: "colour",
+                                                             raw: raw, path: path)
+                }
+                values[index] = value
+            }
+            if values[3] == 0 { info.noCritical = false }
+        }
+        if let threshold = critical.score, threshold <= info.score {
+            info.noCritical = false
+        }
+        // 显式 noCritical 最后覆盖：true 清除，false 置位。
         if let value = try boolValue(node, keys: ["noCritical"], path: path) {
-            // 完整反编译为 strcmp("true", value) != 0：true 清除，false 置位。
             info.noCritical = !value
         }
         return info

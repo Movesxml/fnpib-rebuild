@@ -13,7 +13,7 @@ import Foundation
 //  highscore                                           "highscore"._default (Int32，见下)
 //  %shighscore      ← sprintf("%shighscore", mode)      "highscore".<mode>   (Int32)
 //                     例："classichighscore"  = 100  →  {"highscore":{"classic":100}}
-//  critical_chance                                     "critical_chance"    (Float)
+//  critical_chance                                     "critical_chance"    (Int32)
 //  rated                                               "rated"              (Bool)
 //  challengeData                                       "challengeData"      (String, base64)
 //  slashes / slashesScoring / totalfruit / all /        "stats"              ([String:Int32])
@@ -40,8 +40,9 @@ public struct SaveData: Codable, Equatable, Sendable {
     public var version: Int
     /// 原 "highscore" + "%shighscore"（模式前缀 → 分数）
     public var highscores: [String: Int32]
-    /// 原 "critical_chance"（float 概率，见 DECISIONS「critical 是 float 概率」）
-    public var criticalChance: Float
+    /// 原 "critical_chance"：FUN_00028350 按整数读取、FUN_000292e0 按 %d 保存。
+    /// 这是每局暴击动态分母初值，不是 WaveInfo.criticalChance 的浮点系数。
+    public var criticalChance: Int32
     /// 原 "rated"
     public var rated: Bool
     /// 原 "challengeData"（原为 XML/二进制块，这里以 base64 保真携带）
@@ -60,7 +61,7 @@ public struct SaveData: Codable, Equatable, Sendable {
 
     public init(version: Int = SaveData.currentVersion,
                 highscores: [String: Int32] = [:],
-                criticalChance: Float = 1.0,      // §4.1 WaveInfo criticalChance 默认 1.0
+                criticalChance: Int32 = 70,       // FUN_00027c70：存档 +0x100 = 0x46
                 rated: Bool = false,
                 challengeData: String? = nil,
                 stats: [String: Int32] = [:]) {
@@ -187,7 +188,7 @@ extension SaveStore {
     ///   "version": 3,
     ///   "classichighscore": 1024,      // 原 "%shighscore" 展开
     ///   "highscore": 999,              // 原扁平兜底键
-    ///   "critical_chance": 0.25,
+    ///   "critical_chance": 70,
     ///   "rated": true,
     ///   "challengeData": <Data>,
     ///   "slashes": 1200
@@ -199,7 +200,7 @@ extension SaveStore {
         if let version = intValue(legacyValues[SaveKeys.version]) {
             save.version = version
         }
-        if let chance = floatValue(legacyValues[SaveKeys.criticalChance]) {
+        if let chance = int32Value(legacyValues[SaveKeys.criticalChance]) {
             save.criticalChance = chance
         }
         if let rated = boolValue(legacyValues[SaveKeys.rated]) {

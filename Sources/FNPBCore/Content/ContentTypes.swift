@@ -418,9 +418,10 @@ public struct BombInfo: Codable, Equatable, Sendable {
 /// fruitList.xml 的全局 critical 配置；不得复制到每个 FruitInfo。
 public struct CriticalConfig: Codable, Equatable, Sendable {
     public var newLifeAt: Int32? = nil
-    public var score: Int32? = nil
-    public var chance: Int32? = nil
-    public var chanceInc: Int32? = nil
+    /// DAT_0052bf64 / DAT_0052bf68 / DAT_0052bf6c 的发售版数据段缺省。
+    public var score: Int32? = 5
+    public var chance: Int32? = 5
+    public var chanceInc: Int32? = 30
     public var splats: Int32? = nil
     public var scale: Float? = nil
     public var spread: Float? = nil

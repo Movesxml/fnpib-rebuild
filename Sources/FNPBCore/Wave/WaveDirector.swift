@@ -148,7 +148,7 @@ public protocol WaveSpawnSink: AnyObject {
 ///
 /// 非 Sendable：持有 `RandomSource` / `WaveEventSink` / `WaveSpawnSink` 等有状态
 /// AnyObject，按设计由逻辑线程（MainActor）独占，禁止跨 actor 传递。
-public final class WaveDirector: WaveDirecting {
+public final class WaveDirector: WaveDirecting, CriticalChanceProviding {
 
     // MARK: Public state
 
@@ -250,6 +250,14 @@ public final class WaveDirector: WaveDirecting {
     }
 
     // MARK: Public helpers
+
+    /// FUN_000580e4：未选波返回 1；管理器 +0x70 的构造缺省也是 1。
+    public var criticalChanceForSlice: Float {
+        guard runtime.hasSelectedWave,
+              runtime.currentWaveIndex >= 0,
+              runtime.currentWaveIndex < waves.count else { return 1 }
+        return waves[runtime.currentWaveIndex].criticalChance
+    }
 
     /// 由关卡逻辑触发冻结（外部设置 freezeRemaining）。
     /// 若该玩家已有冻结计时，则覆盖并重置「触发一次」标志。

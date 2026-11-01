@@ -73,6 +73,31 @@ final class OriginalContentTests: XCTestCase {
         XCTAssertEqual(list.bomb.collision, 2, accuracy: 1e-5)
     }
 
+    func testCriticalDefaultsAndFruitAutomaticRulesFollowOriginalOrder() throws {
+        let defaults = CriticalConfig()
+        XCTAssertEqual(defaults.score, 5)
+        XCTAssertEqual(defaults.chance, 5)
+        XCTAssertEqual(defaults.chanceInc, 30)
+
+        let json = """
+        {"root":{"tag":"fruitInfoFile","children":[
+          {"tag":"FruitInfo","attrs":{"name":"alpha","score":"1"},"children":[
+            {"tag":"colours","attrs":{"colour":"1,2,3,0"},"children":[]}]},
+          {"tag":"critical","attrs":{"score":"10","chance":"50","chance_inc":"30"},"children":[]},
+          {"tag":"FruitInfo","attrs":{"name":"highScore","score":"10"},"children":[]},
+          {"tag":"FruitInfo","attrs":{"name":"forcedOff","score":"10","noCritical":"false"},"children":[
+            {"tag":"colours","attrs":{"colour":"1,2,3,0"},"children":[]}]},
+          {"tag":"FruitInfo","attrs":{"name":"forcedOn","score":"1","noCritical":"true"},"children":[
+            {"tag":"colours","attrs":{"colour":"1,2,3,255"},"children":[]}]}
+        ]}}
+        """
+        let list = try OriginalContentLoader.loadFruits(from: Data(json.utf8))
+        XCTAssertFalse(list.fruits[0].noCritical, "alpha==0 自动允许暴击")
+        XCTAssertFalse(list.fruits[1].noCritical, "critical.score <= fruit.score 自动允许暴击")
+        XCTAssertTrue(list.fruits[2].noCritical, "显式 false 最后覆盖所有自动允许规则")
+        XCTAssertFalse(list.fruits[3].noCritical, "显式 true 最后清除标记")
+    }
+
     func testInlineFruitListRejectsInvalidNumberAndBoolean() {
         let badScore = """
         {"root":{"tag":"fruitInfoFile","children":[{"tag":"FruitInfo","attrs":{"name":"apple","score":"abc"}}]}}
