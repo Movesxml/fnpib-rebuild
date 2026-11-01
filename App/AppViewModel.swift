@@ -185,10 +185,8 @@ final class AppViewModel: FNPBUIViewModel {
         host.applySoundEnabled(soundEnabled)
     }
 
-    /// 结算入口。由 GameHost 在判定本局结束（core_logic_notes §1.2 步骤 7 的 `+0xa4` 失灵标志）时调用。
-    ///
-    /// [待验证] 结束条件：`GameState.isFaulted` 或独立漏切计数达到三振阈值；
-    /// 两条均未从反编译完全闭合，闭合后只需改 GameHost 的调用点。
+    /// 结算入口。Classic 控制器依次等待 game_over、game_over_real 完成，
+    /// 进入 +0x44==4 后由 GameHost 调用；三振和炸弹命中本身不直接显示结算。
     func finishGame() {
         guard phase == .playing || phase == .paused, let host else { return }
 

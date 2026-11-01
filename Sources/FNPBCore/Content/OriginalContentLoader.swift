@@ -270,8 +270,15 @@ public enum OriginalContentLoader {
         info.name = name
         info.typeID = typeID
         info.chance = try int32Value(node, "chance", path)
-        info.score = try int32Value(node, "score", path) ?? 0
+        // FUN_00015404 的缺省 score=1；只有显式 score 才覆盖构造器初值。
+        if let score = try int32Value(node, "score", path) { info.score = score }
         info.noScore = info.score == 0
+        info.powers = try node.children.filter { $0.tag == "power" }.enumerated().map { index, power in
+            var parsed = FruitPower()
+            parsed.name = power.attrs["name"] ?? ""
+            parsed.chance = try int32Value(power, "chance", "\(path).power[\(index)]") ?? 100
+            return parsed
+        }
         if let value = try floatValue(node, "scale", path) { info.scale = value }
         if let value = try floatValue(node, "collision", path) { info.collision = value }
         if let value = try floatValue(node, "hitInfluence", path) { info.hitInfluence = value }

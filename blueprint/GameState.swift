@@ -29,6 +29,26 @@ import Foundation
 // 与 Sources/FNPBCore/ECS/Entity.swift 中的唯一权威定义同模块共享（T-020 修复，
 // 首跑 #41094655636 报 invalid redeclaration / ambiguous type lookup）。
 
+// MARK: - Classic 模式结束阶段
+
+/// 经典控制器 `+0x44` 的已闭合运行/结束状态。原版还有开局 0，这里从开局完成后的 1 开始。
+/// 2 → 等待 game_over 完成；3 → 等待 game_over_real 完成；4 → 进入 results。
+public enum ClassicPhase: Int32, Sendable, Equatable {
+    case running = 1
+    case gameOver = 2
+    case gameOverReal = 3
+    case results = 4
+}
+
+/// 经典 HUD / 动画事件。它们不是音频键，调用方不得把动画名直接送进 AudioPlaying。
+public enum ClassicEvent: Sendable, Equatable {
+    case missCross(Int32)
+    case restoreCross(Int32)
+    case gameOver
+    case gameOverReal
+    case results
+}
+
 // MARK: - GameState
 
 /// 原 `Game` 状态类。
@@ -159,9 +179,12 @@ public struct GameState: Sendable, Equatable {
     /// （轨迹缓冲为真源，镜像字段仅供对账/历史调用点读取）。
     public var slashTrail: SlashTrail = SlashTrail()
 
-    /// 本局未切且出界的水果数（T-025 重建辅助字段，默认 0，随 GameState 开局重置）。
-    /// 原版映射 [待验证]；刻意不复用 +0x3c，因为该偏移在切中分支也会 += 2。
+    /// 经典控制器 `+0x14`：经过发售版完整筛选后的漏切数；三次阈值是 `> 2`。
+    /// 不复用 game `+0x3c`，后者在切中分支也会 += 2。[macho H]
     public var missedFruitCount: Int32 = 0
+
+    /// 经典控制器 `+0x44`。只由经典规则推进，不能由炸弹命中标志直接跳到 results。
+    public var classicPhase: ClassicPhase = .running
 
     // MARK: - 生命周期
 

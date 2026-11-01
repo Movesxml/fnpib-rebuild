@@ -157,8 +157,11 @@ public final class GameWorld: GameTicking {
     private var lastDelta: Float = 0
 
     /// 原全局单例 +0x24。普通炸弹命中写 3.2，实体主循环后按 dt 递减并钳到 0。
-    /// 模式 1 的第二次递减及 1.5 秒阈值回调尚未接入对应模式，不能在这里臆造。
+    /// 经典模式在 old>1.5 && new<=1.5 时进入结束控制器；模式 1 的第二次递减不在此臆造。
     public private(set) var explosionTimeRemaining: Float = 0
+
+    /// 经典控制器是模式实例，不属于全局 Game 状态；重开局必须清空其事件队列。
+    private var classic = ClassicModeRuntime()
 
     /// dt==0 时的兜底步长（原 PTR_DAT_004d9048+0x44 / _DAT_0197f47c）
     /// [待验证] 具体数值未闭合（T-007 遗留），暂按逻辑帧 1/60
@@ -185,6 +188,23 @@ public final class GameWorld: GameTicking {
         lastDelta = fallbackDelta
     }
 
+    /// 重开局同时清理上一局的爆炸与经典事件，避免复用 GameWorld 时继承结束状态。
+    public func resetForNewGame(isClassicMode: Bool) {
+        lastDelta = 0
+        explosionTimeRemaining = 0
+        classic.reset(isClassicMode: isClassicMode)
+    }
+
+    /// 动画系统回报当前 game_over / game_over_real 已完成。
+    public func completeClassicAnimation(state: inout GameState) {
+        classic.completeAnimation(state: &state)
+    }
+
+    /// 将 HUD/动画事件交给实际播放器；事件不是音频键，也不会在此伪造完成时间。
+    public func drainClassicEvents() -> [ClassicEvent] {
+        classic.drainEvents()
+    }
+
     public func tick(dt: Float, state: inout GameState,
                      world: inout any EntityStore, services: GameServices) {
         let step = step1_resolveDelta(dt)
@@ -204,11 +224,18 @@ public final class GameWorld: GameTicking {
 
         step9_settleCombo(dt: step, state: &state, services: services)
         step10_updateSubsystems(dt: step, state: &state, world: &world, services: services)
+        classic.update(state: &state)
 
         // FUN_0001f018 先由 FUN_0001b384 调每玩家 vtable+0x14，再推进 +0x24。
         // 放在整个实体主循环之后，保证命中帧也消耗一次 dt，下一帧开始关闭遍历。
         if explosionTimeRemaining > 0 {
-            explosionTimeRemaining = max(0, explosionTimeRemaining - step)
+            let old = explosionTimeRemaining
+            let new = old - step
+            if old > Constants.Bomb.classicGameOverThreshold,
+               new <= Constants.Bomb.classicGameOverThreshold {
+                classic.onExplosionThreshold(state: &state)
+            }
+            explosionTimeRemaining = max(0, new)
         }
     }
 
@@ -326,12 +353,14 @@ public final class GameWorld: GameTicking {
         // 收集后统一 despawn。
         var pendingDespawn: [EntityID] = []
         var hitPositions: [SIMD3<Float>] = []
-        var missedFruitCount: Int32 = 0
 
         world.forEach(kind: .fruit) { (entity: inout Entity) -> Bool in
-            // T-025：先运动、后判定；出界水果不进入切割判定。
+            // 先运动、后判定；正常出界走 FUN_0000f2f8(param_2 == 1) 的完整回收筛选。
             guard FruitMotion.integrate(&entity, dt: dt, tuning: tuning) else {
-                missedFruitCount &+= 1
+                classic.retireFruit(entity,
+                                    reason: .normalDrop,
+                                    state: &state,
+                                    services: services)
                 pendingDespawn.append(entity.id)
                 return true
             }
@@ -385,6 +414,7 @@ public final class GameWorld: GameTicking {
             // 原顺序是先实体 vtable+0x24，再消费实体 +0x1ba。单果得分不依赖
             // combo 是否递增，也不依赖 stateSlot0 或 +0x6e 的普通路径门控。
             onSliced.apply(entity: &entity, state: &state, services: services)
+            classic.onFruitSliced(entity, state: &state, services: services)
 
             pendingDespawn.append(entity.id)
             return true
@@ -393,10 +423,6 @@ public final class GameWorld: GameTicking {
         // 6.3.4 / 6.3.5 回收 + 命中特效 + 音效（原 FUN_00033ca0/FUN_00035a08）
         for id in pendingDespawn {
             world.despawn(id)
-        }
-        // 漏切使用独立的本局辅助字段，保留原 +0x3c 的切中分支语义。
-        if missedFruitCount > 0 {
-            state.missedFruitCount &+= missedFruitCount * Constants.MissPenalty.perMissedFruit
         }
         for position in hitPositions {
             services.effects.emit(Self.hitEffectKind, at: position)

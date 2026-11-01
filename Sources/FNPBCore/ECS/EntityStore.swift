@@ -103,6 +103,9 @@ public final class GenerationOrderStore: EntityStore {
         entity.stateSlot2 = prototype.stateSlot2
         entity.stateSlot0x32 = prototype.stateSlot0x32
         entity.isMarked = prototype.isMarked
+        entity.isBombMarked = prototype.isBombMarked
+        entity.hasBeenSliced = prototype.hasBeenSliced
+        entity.missExclusionMarker = prototype.missExclusionMarker
         entity.isVisible = prototype.isVisible
         entity.fallDelay = prototype.fallDelay
         entity.dropState = prototype.dropState

@@ -143,6 +143,9 @@ public enum Constants {
         /// 爆炸计时 / 半径（写入单例 `+0x24`，主循环据此做爆炸门控）。[macho] H
         public static let explosionTimerSeconds: Float = 3.2
 
+        /// FUN_0001f018：old>1.5 且 new<=1.5 时调用经典结束入口。[macho] H
+        public static let classicGameOverThreshold: Float = 1.5
+
         /// 爆炸参数 1（`FUN_0000577c` 形参）。[macho] H
         public static let explodeParamA: Float = 1.6
 

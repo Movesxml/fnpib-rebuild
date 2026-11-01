@@ -405,9 +405,9 @@ final class GameHost: ObservableObject {
         }
         renderInterpolationAlpha = alpha
 
-        // 本局结束判定均为 [待验证]：原 +0xa4 标志；Classic 三次漏切近似。
-        // missedFruitCount 是重建辅助字段，不能与原 +0x3c 的切中分支计数混用。
-        if state.isFaulted || state.missedFruitCount >= Constants.MissPenalty.threshold {
+        // 三振或炸弹阈值只进入 Classic 结束动画；两段动画完成后才进入结算。
+        // isFaulted(+0xa4) 是命中时写入的原始状态，不再是独立的即时结算条件。
+        if state.classicPhase == .results {
             viewModel.finishGame()
         }
 
@@ -463,7 +463,9 @@ final class GameHost: ObservableObject {
         // [待验证] 原版 levelTier 开局写入点尚未闭合。
         state.levelTier = Constants.Simulation.lowLevelEffectCutoff
 
+        // store.clear 对应 param_2==0 的强制清理，不经过正常漏切计数。
         store.clear()
+        gameWorld.resetForNewGame(isClassicMode: mode == .classic)
         scoreSystem.reset()
         comboTracker.reset(state: &state)
         statsRecorder.reset()
@@ -473,6 +475,15 @@ final class GameHost: ObservableObject {
         shouldRunDisplayLink = true
         displayLink.start()
         return true
+    }
+
+    /// 供实际动画播放器在两段 Classic 动画各自结束时回报；不设置猜测时长。
+    func completeClassicAnimation() {
+        gameWorld.completeClassicAnimation(state: &state)
+        if state.classicPhase == .results {
+            viewModel.finishGame()
+        }
+        viewModel.refreshSnapshot()
     }
 
     /// 重开：以当前模式重新开局，复用已验证内容。

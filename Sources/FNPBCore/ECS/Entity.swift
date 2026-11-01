@@ -138,8 +138,14 @@ public struct Entity: Sendable {
     /// 原 int 下标 0x32；水果切中计数条件使用 `stateSlot2 == 0 || stateSlot0x32 > 3`。
     public var stateSlot0x32: Int32 = 0
 
-    /// 原 +0x6f==0 才参与判定
+    /// 原通用实体 +0x6f==0 才参与判定。
     public var isMarked: Bool = false
+    /// 原水果 +0x1b8；与通用 +0x6f 是不同字段。构造器初值 false。
+    public var isBombMarked: Bool = false
+    /// 原水果 +0x1bc；OnSliced 完成后置位，正常漏切回收必须排除。
+    public var hasBeenSliced: Bool = false
+    /// 原水果 +0xc4 的精确状态映射；这里不根据用途猜测更具体的名称。
+    public var missExclusionMarker: Bool = false
     /// 原水果布局 +0x30!=0
     public var isVisible: Bool = true
     /// 原 +0x2b > 0 跳过
@@ -191,6 +197,9 @@ public struct EntityPrototype: Sendable {
     public var stateSlot2: Int32
     public var stateSlot0x32: Int32
     public var isMarked: Bool
+    public var isBombMarked: Bool
+    public var hasBeenSliced: Bool
+    public var missExclusionMarker: Bool
     public var isVisible: Bool
     public var fallDelay: Float
     public var dropState: Float
@@ -211,6 +220,9 @@ public struct EntityPrototype: Sendable {
                 stateSlot2: Int32 = 0,
                 stateSlot0x32: Int32 = 0,
                 isMarked: Bool = false,
+                isBombMarked: Bool = false,
+                hasBeenSliced: Bool = false,
+                missExclusionMarker: Bool = false,
                 isVisible: Bool = true,
                 fallDelay: Float = 0,
                 dropState: Float = 0,
@@ -230,6 +242,9 @@ public struct EntityPrototype: Sendable {
         self.stateSlot2 = stateSlot2
         self.stateSlot0x32 = stateSlot0x32
         self.isMarked = isMarked
+        self.isBombMarked = isBombMarked
+        self.hasBeenSliced = hasBeenSliced
+        self.missExclusionMarker = missExclusionMarker
         self.isVisible = isVisible
         self.fallDelay = fallDelay
         self.dropState = dropState

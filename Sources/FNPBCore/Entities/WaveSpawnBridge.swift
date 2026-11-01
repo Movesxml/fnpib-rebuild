@@ -6,8 +6,8 @@ import simd
 // 特殊 placement 与缺省 gravity 的官方运行时初值仍未闭合。
 
 extension Constants {
-    /// Classic 三次漏切的重建辅助规则 [待验证 原版失败条件]。
-    /// 刻意不复用 GameState.missPenaltyCount（原 +0x3c）：该字段在切中分支也会 +2。
+    /// Classic 控制器 +0x14 每次合格漏切 +1，状态 1 在计数 >2 时结束。[macho H]
+    /// 不复用 GameState.missPenaltyCount（原 game +0x3c）：该字段在切中分支也会 +2。
     public enum MissPenalty {
         public static let perMissedFruit: Int32 = 1
         public static let threshold: Int32 = 3

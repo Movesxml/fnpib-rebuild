@@ -99,8 +99,8 @@ final class SpawnMotionTests: XCTestCase {
         let fruit = try XCTUnwrap(entity.fruit)
         XCTAssertEqual(fruit.name, "apple")
         XCTAssertEqual(fruit.typeID, 0)
-        XCTAssertEqual(fruit.score, 0)
-        XCTAssertTrue(fruit.noScore)
+        XCTAssertEqual(fruit.score, 1, "真实 apple 未写 score，必须保留构造器缺省 1")
+        XCTAssertFalse(fruit.noScore)
         XCTAssertEqual(fruit.chance, 100)
         XCTAssertEqual(fruit.scale, 60, accuracy: 1e-6)
         XCTAssertEqual(fruit.collision, 5, accuracy: 1e-6)
@@ -120,6 +120,7 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(entity.fruit?.name, "watermelon")
         XCTAssertEqual(entity.fruit?.typeID, 3)
         XCTAssertEqual(entity.fruit?.score, 0)
+        XCTAssertEqual(entity.fruit?.noScore, true)
         XCTAssertEqual(entity.transform.scale, 75, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.radius, 5, accuracy: 1e-6)
     }

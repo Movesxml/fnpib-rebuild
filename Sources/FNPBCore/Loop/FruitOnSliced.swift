@@ -26,6 +26,8 @@ public struct FruitOnSliced: Sendable {
     /// 单果计分独立于 combo 是否递增；stateSlot0==2 或重复实体也不能漏掉本次得分。
     func apply(entity: inout Entity, state: inout GameState, services: GameServices) {
         guard let fruit = entity.fruit else { return }
+        // 原水果 +0x1bc 在 OnSliced 完成后置位；noScore 早退也不能漏掉该状态。
+        defer { entity.hasBeenSliced = true }
 
         // 标准路径中 noScore 会使 OnSliced 清 +0x1ba 并跳过计分/水果统计。
         if fruit.noScore {

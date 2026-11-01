@@ -84,9 +84,10 @@ final class WaveTests: XCTestCase {
 
     func test_FruitInfo_defaults() {
         let f = FruitInfo()
-        XCTAssertEqual(f.score, 0)
+        XCTAssertEqual(f.score, 1, "FUN_00015404 构造器缺省 score=1")
         XCTAssertFalse(f.noScore)
-        XCTAssertFalse(f.noCritical)
+        XCTAssertTrue(f.noCritical, "FUN_00015404 构造器 +0x318=1")
+        XCTAssertTrue(f.powers.isEmpty, "+0x32c 缺省为 null")
         XCTAssertFalse(f.onside)
         XCTAssertFalse(f.onlySprinkle)
         // §4.5（macho H）

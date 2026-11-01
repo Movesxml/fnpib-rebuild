@@ -434,6 +434,15 @@ public struct CriticalConfig: Codable, Equatable, Sendable {
 
 // MARK: - FruitInfo
 
+/// `FruitInfo/power` 条目。原版只要求 `+0x32c` 列表是否存在来决定漏切分发；
+/// name 与 chance 保留供对应能力实现使用，chance 缺省为 100。[macho H]
+public struct FruitPower: Codable, Equatable, Sendable {
+    public var name: String = ""
+    public var chance: Int32 = 100
+
+    public init() {}
+}
+
 /// 水果 / 炸弹条目元数据（macho FUN_0001267c）。
 ///
 /// ⚠️ 单源风险：本结构默认值为 macho 单源（exe 侧 `fruitlist.xml` 无交叉验证）。
@@ -447,14 +456,17 @@ public struct FruitInfo: Codable, Equatable, Sendable {
     public var typeID: Int32 = 0
 
     // -- §4.5 已闭合字段（置信 H）-----------------------------------------------
-    /// 基础分（原 `+0x314`）。默认 0；`score == 0` 时上层会置 `+0x330 = 1`（noScore）。
-    public var score: Int32 = 0
+    /// 基础分（原 `+0x314`）。构造器默认 1；`score == 0` 时加载器置 `+0x330 = 1`。
+    public var score: Int32 = 1
 
     /// 无分标记（原 `+0x330`，由 score==0 派生）。[macho H]
     public var noScore: Bool = false
 
-    /// noCritical（原 `+0x318`）。原版显式属性使用 strcmp("true") != 0，加载器保留该反向分支。
-    public var noCritical: Bool = false
+    /// noCritical（原 `+0x318`）。构造器默认 true；显式属性使用 strcmp("true") != 0。
+    public var noCritical: Bool = true
+
+    /// 特殊能力列表（原 `+0x32c`）。空列表对应原 null 指针。[macho H]
+    public var powers: [FruitPower] = []
 
     /// onside（原 `+0x26c`）。[macho H]
     public var onside: Bool = false
