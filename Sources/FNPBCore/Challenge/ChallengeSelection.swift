@@ -1,7 +1,7 @@
 import Foundation
 
 // ============================================================================
-// ChallengeSelection — 挑战权重选择器与回合计划（T-036 草案，未接线）
+// ChallengeSelection — 挑战权重选择器与回合计划（核心已验证，App 未接线）
 //
 // 反编译依据（全部来自 macho，任务卡范围内）：
 //   FUN_0003994c  权重容器构造（项 20 字节；+0x10 存默认 cooldown）
@@ -12,14 +12,12 @@ import Foundation
 //   FUN_0006ebdc  刷新「组内存在可优先挑战」标志
 //   FUN_0006ed78  tier 内选组：先 regrow → 扫组标志&&cooldown==0 → take；否则 draw；
 //                 随后对选中组调 FUN_0006ec3c 选挑战
-//   FUN_0006ee88  回合计划：每组 mustSelect 次构建必选队列 → 成对交换洗牌 →
-//                 按洗牌序先消耗必选、其余走 tier 选择
-//
-// 明确不在本卡（不得猜）：
-//   FUN_00062be4  特殊单例随机组
-//   FUN_00039a64 / FUN_0003994c 内部 64 位 PRNG —— 本卡一律用注入 RandomSource，
-//                                                  不宣称复刻原版序列
-//   FUN_00061090 / FUN_000610cc  UI 与控制器接线
+//   FUN_0006ee88  回合计划：每组 mustSelect 次构建必选队列 → 特殊组门控与选择 →
+//                 成对交换洗牌 → 按洗牌序先消耗队列、其余走 tier 选择
+//   FUN_00060d04 / FUN_00062be4 / FUN_00062ca4  特殊单例随机组
+//   FUN_00039a64 / FUN_0003994c 内部 64 位 PRNG —— 注入 RandomSource；
+//                                                  生产装配使用 OriginalLCGRandom
+//   FUN_00061090 / FUN_000610cc  UI 与控制器接线（尚未接入）
 //   FUN_002f69c4  持久化 key 的字符串哈希（改用名称，见风险点）
 //
 // 与任务卡措辞的已知差异见文件末尾「实现差异」注释块。
@@ -124,8 +122,7 @@ public struct ChallengeWeightTable: Sendable, Equatable {
     ///   冷却项 current 恒为 0，累加无影响。若持久化恢复了「cooldown>0 且 current>0」
     ///   的状态，行为可能与直觉不同——[待验证]，见风险点。
     ///
-    /// 随机数来源：注入 RandomSource（`nextInt(totalWeight)` 映射到 [0,total)），
-    /// 不宣称与原版 32 位 LCG 序列一致。
+    /// 随机数来源：注入 RandomSource；生产装配使用已验证的 OriginalLCGRandom。
     public mutating func draw(rng: any RandomSource) -> Int? {
         guard totalWeight > 0 else { return 0 }
         let roll = rng.nextInt(totalWeight)
@@ -298,10 +295,12 @@ public struct ChallengeTierSelector: Sendable {
     public let tier: ChallengeTierDefinition
     public private(set) var groupTable: ChallengeWeightTable
     public private(set) var selectors: [ChallengeGroupSelector]
+    public private(set) var specialSelector: ChallengeSpecialGroupSelector?
 
     public init(tier: ChallengeTierDefinition,
                 persistence: any ChallengeSelectionPersisting,
-                defaultCooldown: Int32 = 4) {
+                defaultCooldown: Int32 = 4,
+                specialChallenges: ChallengeSpecialGroupDefinition? = nil) {
         self.tier = tier
         let entries = tier.groups.enumerated().map { index, group -> ChallengeWeightEntry in
             let key = Self.groupKey(tier: tier, group: group, index: index)
@@ -317,6 +316,10 @@ public struct ChallengeTierSelector: Sendable {
         self.selectors = tier.groups.map {
             ChallengeGroupSelector(group: $0, persistence: persistence,
                                    defaultCooldown: defaultCooldown)
+        }
+        self.specialSelector = specialChallenges.map {
+            ChallengeSpecialGroupSelector(definition: $0, persistence: persistence,
+                                          defaultCooldown: defaultCooldown)
         }
     }
 
@@ -372,14 +375,18 @@ public struct ChallengeTierSelector: Sendable {
     ///
     /// 1. 对每个 `mustSelect > 0` 的组，重复 mustSelect 次调用组内选择，
     ///    结果依次进入必选队列（组间顺序 = tier.groups 顺序，组内顺序 = 调用顺序）。
-    /// 2. 创建 `0..<numRounds` 槽位顺序，用注入 RNG 执行原版成对交换洗牌：
+    /// 2. 特殊组仅在 numPerGame != 0、本局尚未选中且 tierIndex 非 0/2 时掷一次；
+    ///    命中后立即计数并走普通组内选择，结果追加到同一队列。
+    /// 3. 创建 `0..<numRounds` 槽位顺序，用注入 RNG 执行原版成对交换洗牌：
     ///    `n/2` 轮，每轮生成两个 `[0,n)` 索引并交换。
-    /// 3. 按洗牌后的槽位顺序填充：先消耗必选队列，队列空后每槽走 tier 选择。
+    /// 4. 按洗牌后的槽位顺序填充：先消耗队列，队列空后每槽走 tier 选择。
     ///
-    /// 原版在必选挑战落到某槽时还会 `FUN_00039a28(tier+0x40, challenge+0x54)`；
-    /// `challenge+0x54` 是 `FUN_0006f178` 写入的父组索引，因此这里清除父组的 tier 权重。
+    /// 原版在队列挑战落到某槽时还会 `FUN_00039a28(tier+0x40, challenge+0x54)`；
+    /// 普通必选记录父组索引，特殊组记录 -1，越界清除保持无操作。
     public mutating func planRound(persistence: any ChallengeSelectionPersisting,
-                                   rng: any RandomSource) -> ChallengeRoundPlan {
+                                   rng: any RandomSource,
+                                   difficulty: Int32 = 0,
+                                   tierIndex: Int32 = 0) -> ChallengeRoundPlan {
         var mustSelectQueue: [(challenge: ChallengeDefinition, groupIndex: Int)] = []
         for index in tier.groups.indices {
             guard selectors.indices.contains(index) else { continue }
@@ -392,6 +399,12 @@ public struct ChallengeTierSelector: Sendable {
                 }
                 remaining -= 1
             }
+        }
+
+        // FUN_0006ee88 在普通必选构建之后、FUN_00039a64 洗牌之前处理特殊组。
+        if let picked = specialSelector?.select(rng: rng, persistence: persistence,
+                                               difficulty: difficulty, tierIndex: tierIndex) {
+            mustSelectQueue.append((picked, -1))
         }
 
         let slotCount = max(0, Int(tier.numRounds))
@@ -417,8 +430,13 @@ public struct ChallengeTierSelector: Sendable {
             remainingMustSelect: mustSelectQueue[queueIndex...].map(\.challenge))
     }
 
+    /// FUN_0005f94c：新局只清特殊组计数，权重和持久化快照保持不变。
+    public mutating func resetGame() {
+        specialSelector?.resetGame()
+    }
+
     /// FUN_00039a64 的「成对交换」洗牌结构：n/2 轮，每轮取两个 `[0,n)` 索引交换。
-    /// 随机源为注入 RandomSource，不宣称与原版 32 位 PRNG 一致。
+    /// 随机源为注入 RandomSource；生产装配使用已验证 OriginalLCGRandom。
     static func shufflePairwise(_ array: inout [Int], rng: any RandomSource) {
         let n = array.count
         guard n > 1 else { return }
@@ -430,6 +448,47 @@ public struct ChallengeTierSelector: Sendable {
             guard array.indices.contains(a), array.indices.contains(b) else { continue }
             array.swapAt(a, b)
         }
+    }
+}
+
+// MARK: - 特殊单例随机组（FUN_00060d04 / FUN_00062be4 / FUN_00062ca4）
+
+public struct ChallengeSpecialGroupSelector: Sendable {
+    public let definition: ChallengeSpecialGroupDefinition
+    public private(set) var selector: ChallengeGroupSelector
+    public private(set) var selectionCount: Int32 = 0
+
+    public init(definition: ChallengeSpecialGroupDefinition,
+                persistence: any ChallengeSelectionPersisting,
+                defaultCooldown: Int32 = 4) {
+        self.definition = definition
+        self.selector = ChallengeGroupSelector(group: definition.group,
+                                               persistence: persistence,
+                                               defaultCooldown: defaultCooldown)
+    }
+
+    /// 返回 nil 既可能是未触发，也可能是命中后空组无挑战；两种情况都不重掷门控。
+    public mutating func select(rng: any RandomSource,
+                                persistence: any ChallengeSelectionPersisting,
+                                difficulty: Int32,
+                                tierIndex: Int32) -> ChallengeDefinition? {
+        guard definition.numPerGame != 0,
+              selectionCount == 0,
+              tierIndex != 0, tierIndex != 2 else { return nil }
+        let threshold: Float
+        switch difficulty {
+        case 0: threshold = 0.2
+        case 1: threshold = 0.5
+        default: threshold = 0.8
+        }
+        guard rng.nextFloat() < threshold else { return nil }
+        // 原机先增加本局计数，再经 FUN_00062ca4 调普通组内选择器。
+        selectionCount += 1
+        return selector.select(rng: rng, persistence: persistence)
+    }
+
+    public mutating func resetGame() {
+        selectionCount = 0
     }
 }
 
@@ -473,7 +532,7 @@ public struct ChallengeRoundPlan: Sendable, Equatable {
 // 已核实的实现边界
 //
 // 1) 持久化 key 暂用名称，不宣称兼容原版 Int32 哈希存档。
-// 2) 注入 RandomSource 只保证选择结构一致，不保证原版随机序列一致。
-// 3) 特殊单例随机组 FUN_00062be4 不在本卡；回合计时与 UI 也未接线。
-// 4) [待验证] FPToFixed 的具体舍入模式与真机随机序列尚未闭合。
+// 2) 生产随机源为已验证 OriginalLCGRandom；测试使用脚本化 RandomSource。
+// 3) 特殊组核心已闭合；App 的 tier/difficulty 与回合 UI 尚未接线。
+// 4) [待验证] 持久化恢复状态的 FPToFixed 舍入与真机全序列尚未闭合。
 // ============================================================================

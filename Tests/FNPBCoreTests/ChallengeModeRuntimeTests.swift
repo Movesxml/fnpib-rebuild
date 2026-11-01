@@ -11,6 +11,8 @@ final class ChallengeModeRuntimeTests: XCTestCase {
             "tier1", "tier2", "tier3", "finalTier"
         ])
         XCTAssertEqual(catalog.tiers.flatMap(\.groups).count, 34)
+        XCTAssertNil(catalog.specialChallenges,
+                     "发售版真实文档未提供 specialChallenges，不得虚构配置")
         XCTAssertEqual(catalog.allChallenges.count, 70)
         XCTAssertEqual(catalog.tiers.map { $0.groups.flatMap(\.challenges).count }, [
             25, 23, 21, 1
@@ -70,6 +72,29 @@ final class ChallengeModeRuntimeTests: XCTestCase {
         XCTAssertEqual(finalTier.groups.flatMap(\.challenges).map(\.name), ["finalePinata"])
         XCTAssertEqual(finalTier.groups[0].challenges[0].bonusMods, ChallengeBonusModifiers(
             fruit: 0.1, accuracy: 0, finesse: 0))
+    }
+
+    func testSpecialGroupLoaderPreservesConfigurationWithoutMustSelectSideEffects() throws {
+        let data = Data(#"""
+        {"root":{"tag":"partyChallenges","attrs":{},"children":[
+          {"tag":"specialChallenges","attrs":{"numPerGame":"2"},"children":[
+            {"tag":"challengeGroup","attrs":{"mustSelect":"3"},"children":[
+              {"tag":"challenge","attrs":{"name":"special","chanceSelect":"7"},"children":[
+                {"tag":"condition","attrs":{"name":"specialCondition"},"children":[]}
+              ]}
+            ]}
+          ]}
+        ]}}
+        """#.utf8)
+        let catalog = try ChallengeCatalogLoader.load(from: data)
+        let special = try XCTUnwrap(catalog.specialChallenges)
+        XCTAssertEqual(special.numPerGame, 2)
+        XCTAssertEqual(special.group.challenges.map(\.name), ["special"])
+        XCTAssertEqual(special.group.challenges[0].selection.chanceSelect, 7)
+        XCTAssertEqual(special.group.challenges[0].conditionNames, ["specialCondition"])
+        XCTAssertFalse(special.group.challenges[0].hard,
+                       "FUN_00060d04 不经过普通 mustSelect 的 hard 标记分支")
+        XCTAssertEqual(catalog.allChallenges.map(\.name), ["special"])
     }
 
     func testMustSelectOnlyOverridesGroupWeightsAndMarksContainedChallengesHard() throws {

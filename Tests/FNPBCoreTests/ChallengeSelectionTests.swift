@@ -11,24 +11,29 @@ import XCTest
 final class ScriptedRandom: RandomSource {
     private let ints: [Int32]
     private var cursor = 0
+    private(set) var floatCallCount = 0
+    private(set) var intCallCount = 0
 
     init(ints: [Int32] = []) {
         self.ints = ints
     }
 
+    private func nextRaw() -> Int32 {
+        defer { cursor += 1 }
+        return cursor < ints.count ? ints[cursor] : 0
+    }
+
     func nextFloat() -> Float {
-        Float(nextInt(1_000_000)) / 1_000_000
+        floatCallCount += 1
+        let raw = nextRaw()
+        let positive = raw >= 0 ? raw : -raw
+        return Float(positive) / 1_000_000
     }
 
     func nextInt(_ upperBound: Int32) -> Int32 {
+        intCallCount += 1
         guard upperBound > 0 else { return 0 }
-        let raw: Int32
-        if cursor < ints.count {
-            raw = ints[cursor]
-            cursor += 1
-        } else {
-            raw = 0
-        }
+        let raw = nextRaw()
         let positive = raw >= 0 ? raw : -raw
         return positive % upperBound
     }
@@ -283,7 +288,115 @@ final class ChallengeSelectionTests: XCTestCase {
         XCTAssertEqual(store.snapshot(forKey: "challenge:only")?.current, 0)
     }
 
-    // MARK: 8. 回合结果接口
+    // MARK: 8. 特殊挑战组
+
+    private func specialFixture() -> (ChallengeTierDefinition, ChallengeSpecialGroupDefinition) {
+        let ordinary = ChallengeDefinition(name: "ordinary", selection: weight(20, 0.2))
+        let special = ChallengeDefinition(name: "special", selection: weight(20, 0.2))
+        let tier = ChallengeTierDefinition(
+            name: "t", numRounds: 1,
+            groups: [ChallengeGroupDefinition(name: "g", challenges: [ordinary])])
+        let configuration = ChallengeSpecialGroupDefinition(
+            numPerGame: 1, group: ChallengeGroupDefinition(challenges: [special]))
+        return (tier, configuration)
+    }
+
+    func testSpecialGroupDisabledOrWrongTierDoesNotRoll() {
+        let (tier, configuration) = specialFixture()
+        for tierIndex in [Int32(0), 2] {
+            let store = ChallengeSelectionMemoryStore()
+            var selector = ChallengeTierSelector(
+                tier: tier, persistence: store, specialChallenges: configuration)
+            let rng = ScriptedRandom(ints: Array(repeating: 0, count: 8))
+            let plan = selector.planRound(persistence: store, rng: rng,
+                                          difficulty: 2, tierIndex: tierIndex)
+            XCTAssertEqual(plan.challenge(at: 0)?.name, "ordinary")
+            XCTAssertEqual(rng.floatCallCount, 0)
+            XCTAssertEqual(selector.specialSelector?.selectionCount, 0)
+        }
+
+        let zeroStore = ChallengeSelectionMemoryStore()
+        var zeroConfiguration = configuration
+        zeroConfiguration.numPerGame = 0
+        var zeroSelector = ChallengeTierSelector(
+            tier: tier, persistence: zeroStore, specialChallenges: zeroConfiguration)
+        let zeroRNG = ScriptedRandom()
+        _ = zeroSelector.planRound(persistence: zeroStore, rng: zeroRNG,
+                                   difficulty: 2, tierIndex: 1)
+        XCTAssertEqual(zeroRNG.floatCallCount, 0, "numPerGame == 0 时不掷特殊组随机数")
+
+        let store = ChallengeSelectionMemoryStore()
+        var selector = ChallengeTierSelector(tier: tier, persistence: store)
+        let rng = ScriptedRandom()
+        _ = selector.planRound(persistence: store, rng: rng, difficulty: 2, tierIndex: 1)
+        XCTAssertEqual(rng.floatCallCount, 0, "真实文档无特殊组时不得额外消耗 RNG")
+    }
+
+    func testSpecialGroupThresholdsAndSingleSelectionPerGame() {
+        let (tier, configuration) = specialFixture()
+        let cases: [(difficulty: Int32, roll: Int32, selected: Bool)] = [
+            (0, 199_999, true), (0, 200_000, false),
+            (1, 499_999, true), (1, 500_000, false),
+            (2, 799_999, true), (2, 800_000, false),
+            (99, 799_999, true), (99, 800_000, false)
+        ]
+        for test in cases {
+            let store = ChallengeSelectionMemoryStore()
+            var selector = ChallengeTierSelector(
+                tier: tier, persistence: store, specialChallenges: configuration)
+            let rng = ScriptedRandom(ints: [test.roll, 0, 0])
+            let plan = selector.planRound(persistence: store, rng: rng,
+                                          difficulty: test.difficulty, tierIndex: 1)
+            XCTAssertEqual(plan.challenge(at: 0)?.name,
+                           test.selected ? "special" : "ordinary")
+            XCTAssertEqual(rng.floatCallCount, 1)
+            XCTAssertEqual(selector.specialSelector?.selectionCount,
+                           test.selected ? 1 : 0)
+        }
+    }
+
+    func testSpecialGroupResetsOnlySelectionCountOnNewGame() {
+        let (tier, configuration) = specialFixture()
+        let store = ChallengeSelectionMemoryStore()
+        var selector = ChallengeTierSelector(
+            tier: tier, persistence: store, specialChallenges: configuration)
+        let rng = ScriptedRandom(ints: Array(repeating: 0, count: 16))
+        XCTAssertEqual(selector.planRound(persistence: store, rng: rng,
+                                          difficulty: 2, tierIndex: 1).challenge(at: 0)?.name,
+                       "special")
+        XCTAssertEqual(selector.planRound(persistence: store, rng: rng,
+                                          difficulty: 2, tierIndex: 1).challenge(at: 0)?.name,
+                       "ordinary")
+        XCTAssertEqual(rng.floatCallCount, 1, "命中后同一局不再进行特殊组判定")
+        selector.resetGame()
+        XCTAssertEqual(selector.specialSelector?.selectionCount, 0)
+        XCTAssertEqual(selector.planRound(persistence: store, rng: rng,
+                                          difficulty: 2, tierIndex: 1).challenge(at: 0)?.name,
+                       "special")
+        XCTAssertEqual(rng.floatCallCount, 2)
+    }
+
+    func testSpecialGroupJoinsQueueBeforePairwiseShuffle() {
+        let required = ChallengeDefinition(name: "required", selection: weight(20, 0.2))
+        let special = ChallengeDefinition(name: "special", selection: weight(20, 0.2))
+        let tier = ChallengeTierDefinition(
+            name: "t", numRounds: 2,
+            groups: [ChallengeGroupDefinition(name: "g", mustSelect: 1,
+                                              challenges: [required])])
+        let configuration = ChallengeSpecialGroupDefinition(
+            numPerGame: 1, group: ChallengeGroupDefinition(challenges: [special]))
+        let store = ChallengeSelectionMemoryStore()
+        var selector = ChallengeTierSelector(
+            tier: tier, persistence: store, specialChallenges: configuration)
+        // 特殊门控 roll=0；必选及特殊组内选择 roll=0；洗牌交换槽位 0 和 1。
+        let rng = ScriptedRandom(ints: [0, 0, 0, 0, 1])
+        let plan = selector.planRound(persistence: store, rng: rng,
+                                      difficulty: 2, tierIndex: 1)
+        XCTAssertEqual(plan.slots.map { $0?.name }, ["special", "required"])
+        XCTAssertEqual(rng.floatCallCount, 1)
+    }
+
+    // MARK: 9. 回合结果接口
 
     func testRoundPlanRecordAndLookup() {
         let a = ChallengeDefinition(name: "a", selection: weight(20, 0.2))

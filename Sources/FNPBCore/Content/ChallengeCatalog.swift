@@ -169,18 +169,34 @@ public struct ChallengeTierDefinition: Sendable, Equatable {
     }
 }
 
+public struct ChallengeSpecialGroupDefinition: Sendable, Equatable {
+    public var numPerGame: Int32
+    public var group: ChallengeGroupDefinition
+
+    public init(numPerGame: Int32 = 0,
+                group: ChallengeGroupDefinition = ChallengeGroupDefinition()) {
+        self.numPerGame = numPerGame
+        self.group = group
+    }
+}
+
 public struct ChallengeCatalog: Sendable, Equatable {
     public var defaults: ChallengeSelectionWeight
     public var tiers: [ChallengeTierDefinition]
+    /// FUN_00060d04：只有文档存在 specialChallenges 节点时才创建该单例。
+    public var specialChallenges: ChallengeSpecialGroupDefinition?
 
     public var allChallenges: [ChallengeDefinition] {
-        tiers.flatMap { $0.groups.flatMap(\.challenges) }
+        let ordinary = tiers.flatMap { $0.groups.flatMap(\.challenges) }
+        return ordinary + (specialChallenges?.group.challenges ?? [])
     }
 
     public init(defaults: ChallengeSelectionWeight = ChallengeSelectionWeight(),
-                tiers: [ChallengeTierDefinition] = []) {
+                tiers: [ChallengeTierDefinition] = [],
+                specialChallenges: ChallengeSpecialGroupDefinition? = nil) {
         self.defaults = defaults
         self.tiers = tiers
+        self.specialChallenges = specialChallenges
     }
 }
 
@@ -258,7 +274,25 @@ public enum ChallengeCatalogLoader {
                 groups: groups,
                 rawAttributes: node.attrs))
         }
-        return ChallengeCatalog(defaults: defaults, tiers: tiers)
+
+        var specialChallenges: ChallengeSpecialGroupDefinition?
+        if let specialNode = root.children.first(where: { $0.tag == "specialChallenges" }) {
+            let specialPath = "partyChallenges/specialChallenges"
+            var challenges: [ChallengeDefinition] = []
+            if let groupNode = specialNode.children.first(where: { $0.tag == "challengeGroup" }) {
+                for (challengeIndex, challengeNode) in groupNode.children.enumerated()
+                where challengeNode.tag == "challenge" {
+                    let path = "\(specialPath)/challengeGroup/challenge[\(challengeIndex)]"
+                    // 特殊组由 FUN_0006f178(..., -1) 直接解析，不走 mustSelect 分支。
+                    challenges.append(try challenge(challengeNode, hard: false, path: path))
+                }
+            }
+            specialChallenges = ChallengeSpecialGroupDefinition(
+                numPerGame: try integer(specialNode, "numPerGame", path: specialPath) ?? 0,
+                group: ChallengeGroupDefinition(challenges: challenges))
+        }
+        return ChallengeCatalog(defaults: defaults, tiers: tiers,
+                                specialChallenges: specialChallenges)
     }
 
     private static func challenge(_ node: ContentNode,

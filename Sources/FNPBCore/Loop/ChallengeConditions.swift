@@ -135,8 +135,9 @@ public struct ChallengeCondition: Sendable, Equatable {
         if definition.kind == .statsCompare {
             let old = current
             let lhs = context.statistic(resolvedStatisticKey(definition.specificType))
-            // specific_type2 的 challengeFruit 替换没有直接证据，保持原键。
-            let rhs = context.statistic(definition.specificType2)
+            // specific_type2 不做 challengeFruit 替换，但原加载器对两个键都做小写哈希；
+            // 值语义入口因此也必须规范化大小写，不能让驼峰键意外读到 0。
+            let rhs = context.statistic(definition.specificType2?.lowercased())
             current = definition.comparison.evaluate(lhs, rhs) ? definition.result : .pending
             return current != old
         }

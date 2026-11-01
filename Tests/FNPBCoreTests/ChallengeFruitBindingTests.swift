@@ -74,9 +74,14 @@ final class ChallengeFruitBindingTests: XCTestCase {
         XCTAssertTrue(condition.updateResult(context: ChallengeEvaluationContext(
             stats: ["totalfruit": 3, "apple": 2, "challengefruit": 2])))
         XCTAssertEqual(condition.current, .pass)
+        // 第二键不做 challengeFruit 替换，因此仍读到 2；1 > 2 不成立，
+        // current 从 PASS 回到 PENDING，0x5f0b8 报告结果发生变化。
         XCTAssertTrue(condition.updateResult(context: ChallengeEvaluationContext(
             stats: ["totalfruit": 1, "apple": 2, "challengefruit": 2])))
         XCTAssertEqual(condition.current, .pending)
+        XCTAssertFalse(condition.updateResult(context: ChallengeEvaluationContext(
+            stats: ["totalfruit": 1, "apple": 2, "challengefruit": 2])),
+                       "比较结果未变化时返回 false；不能误把 PENDING 当成比较失败")
     }
 
     func testConsecutivePlaceholderMatchesOnlySelectedFruit() {

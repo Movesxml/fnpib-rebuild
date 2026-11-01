@@ -169,7 +169,7 @@ final class GameHost: ObservableObject {
     private let scoreSystem: ScoreSystem
     private let comboTracker: ComboTracker
     private let waveDirector: WaveDirector
-    private let rng: SplitMix64Random
+    private let rng: OriginalLCGRandom
 
     /// 唯一保留的占位：特效模块（原 FUN_00033ca0 / FUN_00035a08）待特效任务卡。
     private let effects: PlaceholderEffectEmitter
@@ -235,8 +235,8 @@ final class GameHost: ObservableObject {
             })
         )
 
-        // [Kimi 修正 T-022 审查] PRNG 序列 [待验证]，勿改动算法
-        let rng = SplitMix64Random(seed: 0x5DEE_CE66_D)
+        // 算法已按发售版 LCG 闭合；启动种子的原运行时来源仍未核实，保留旧数值且不冒充官方种子。
+        let rng = OriginalLCGRandom(seed: 0x5DEE_CE66_D)
         let stats = StatsRecorder()
         let score = ScoreSystem()
         let combo = ComboTracker(stats: stats)
@@ -771,42 +771,6 @@ final class GameHost: ObservableObject {
         let bounds = screen.bounds
         return SIMD2<Float>(Float(bounds.width * screen.scale),
                             Float(bounds.height * screen.scale))
-    }
-}
-
-// MARK: - 确定性 PRNG（T-016 原样保留）
-
-/// 确定性 PRNG（SplitMix64）。回放一致性要求的 snapshot/restore 直接映射内部状态。
-/// [待验证] 原版是 32 位定点随机（§5.3 DAT_005a7930 固定点随机），
-/// 序列必然不同；此处只保证「可复现 + 均匀分布」，若需逐帧复刻原版请等 PRNG 任务卡。
-final class SplitMix64Random: RandomSource {
-
-    private var state: UInt64
-
-    init(seed: UInt64) {
-        self.state = seed == 0 ? 0x9E37_79B9_7F4A_7C15 : seed
-    }
-
-    func nextFloat() -> Float {
-        // 取高 24 位 → [0, 1)
-        Float(next() >> 40) * (1.0 / 16_777_216.0)
-    }
-
-    func nextInt(_ upperBound: Int32) -> Int32 {
-        guard upperBound > 0 else { return 0 }
-        return Int32((next() >> 33) % UInt64(upperBound))
-    }
-
-    func snapshot() -> UInt64 { state }
-
-    func restore(_ s: UInt64) { state = s == 0 ? 0x9E37_79B9_7F4A_7C15 : s }
-
-    private func next() -> UInt64 {
-        state &+= 0x9E37_79B9_7F4A_7C15
-        var z = state
-        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
-        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
-        return z ^ (z >> 31)
     }
 }
 
