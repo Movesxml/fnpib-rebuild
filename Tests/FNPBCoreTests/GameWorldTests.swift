@@ -443,7 +443,42 @@ final class GameWorldTests: XCTestCase {
         XCTAssertTrue(state.isFaulted)
         XCTAssertEqual(rig.slice.nearMissCalls, 0)
         XCTAssertNil(rig.stats.adds[.nearMiss])
+        XCTAssertEqual(rig.stats.adds[.bomb], 1)
+        XCTAssertEqual(rig.world.explosionTimeRemaining,
+                       Constants.Bomb.explosionTimerSeconds - 1.0 / 60.0,
+                       accuracy: 1e-6,
+                       "原版在实体主循环之后递减，命中帧也消耗一个 dt")
         XCTAssertTrue(rig.audio.keys.contains(Constants.Bomb.explodeAudioKey))
+    }
+
+    func test_step5_爆炸计时阻断遍历并在归零后恢复() {
+        let rig = Rig()
+        var state = GameState()
+        state.levelTier = Constants.Simulation.lowLevelEffectCutoff
+        rig.slice.sliceResult = true
+
+        var world: any EntityStore = GenerationOrderStore()
+        world.spawn(EntityPrototype(kind: .bomb))
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertGreaterThan(rig.world.explosionTimeRemaining, 0)
+        let callsAfterExplosion = rig.slice.sliceCalls
+
+        let fruitID = world.spawn(EntityPrototype(kind: .fruit))
+        rig.world.tick(dt: 1.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.slice.sliceCalls, callsAfterExplosion,
+                       "爆炸期间不得移动、切割或回收实体")
+        XCTAssertNotNil(world.entity(fruitID))
+
+        rig.world.tick(dt: Constants.Bomb.explosionTimerSeconds,
+                       state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.world.explosionTimeRemaining, 0, accuracy: 1e-6,
+                       "计时跨过零点必须钳为 0")
+        XCTAssertEqual(rig.slice.sliceCalls, callsAfterExplosion,
+                       "计时归零的那一帧仍使用帧初门控结果")
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.slice.sliceCalls, callsAfterExplosion + 1)
+        XCTAssertNil(world.entity(fruitID))
     }
 
     func test_step7_非致命炸弹命中不结束() {

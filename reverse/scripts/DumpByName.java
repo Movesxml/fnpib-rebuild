@@ -50,7 +50,7 @@ public class DumpByName extends GhidraScript {
                 pw.println("- 函数体: " + f.getBody().getNumAddresses() + " 字节");
                 pw.println("- 调用者数: " + f.getCallingFunctions(monitor).size()
                         + " / 被调用者数: " + f.getCalledFunctions(monitor).size() + "\n");
-                DecompileResults res = decomp.decompileFunction(f, 60, monitor);
+                DecompileResults res = decomp.decompileFunction(f, 180, monitor);
                 if (res != null && res.decompileCompleted()) {
                     pw.println("```c");
                     pw.println(res.getDecompiledFunction().getC());  // 完整输出，不截断

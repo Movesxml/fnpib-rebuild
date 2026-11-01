@@ -337,8 +337,8 @@ final class ComboScoreTests: XCTestCase {
         XCTAssertEqual(ComboPatternRank.rank([1, 2, 1], fruitNames: names), 24,
                        "原 bVar3 已被打断，短交替序列同样返回 24")
         XCTAssertEqual(ComboPatternRank.rank([1, 2, 1, 2, 1, 2], fruitNames: names), 24)
-        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2], fruitNames: names), -1,
-                       "重复始终命中最近新增种类时不进入交替分支")
+        XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 2], fruitNames: names), 1,
+                       "不进入交替分支后，长度为 4 的默认排名为 1")
         XCTAssertEqual(ComboPatternRank.rank([1, 1, 2, 1, 2], fruitNames: names), 20)
         XCTAssertEqual(ComboPatternRank.rank([1, 1, 1, 2], fruitNames: names), 22)
         XCTAssertEqual(ComboPatternRank.rank([1, 1, 1, 1, 2], fruitNames: names), 23)

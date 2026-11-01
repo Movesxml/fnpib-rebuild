@@ -156,6 +156,10 @@ public final class GameWorld: GameTicking {
     /// R7：原 lastDelta 初值 0.0 → 首帧零步进；`prime()` 显式吃一帧
     private var lastDelta: Float = 0
 
+    /// 原全局单例 +0x24。普通炸弹命中写 3.2，实体主循环后按 dt 递减并钳到 0。
+    /// 模式 1 的第二次递减及 1.5 秒阈值回调尚未接入对应模式，不能在这里臆造。
+    public private(set) var explosionTimeRemaining: Float = 0
+
     /// dt==0 时的兜底步长（原 PTR_DAT_004d9048+0x44 / _DAT_0197f47c）
     /// [待验证] 具体数值未闭合（T-007 遗留），暂按逻辑帧 1/60
     private let fallbackDelta: Float = 1.0 / 60.0
@@ -200,6 +204,12 @@ public final class GameWorld: GameTicking {
 
         step9_settleCombo(dt: step, state: &state, services: services)
         step10_updateSubsystems(dt: step, state: &state, world: &world, services: services)
+
+        // FUN_0001f018 先由 FUN_0001b384 调每玩家 vtable+0x14，再推进 +0x24。
+        // 放在整个实体主循环之后，保证命中帧也消耗一次 dt，下一帧开始关闭遍历。
+        if explosionTimeRemaining > 0 {
+            explosionTimeRemaining = max(0, explosionTimeRemaining - step)
+        }
     }
 
     // MARK: 1 — dt 兜底 [both]
@@ -277,16 +287,12 @@ public final class GameWorld: GameTicking {
     /// §1.2 步骤 5：爆炸/冻结计时 <=0，且全局位掩码 & 0x40 == 0，
     /// 且（单例 vtable+0x28 返回 1 或单例为空）。
     ///
-    /// 三项门控来源均**未闭合**，本卡保持恒 true：
-    ///  1. 爆炸/冻结计时：`PTR+0x24 <= 0.0` —— 对应单例（`BombBlast`？）的计时字段，
-    ///     逻辑层经 `services` 无法访问 `WaveDirector.runtime`（协议无此入口）。
-    ///  2. `DAT_005d4d74 & 0x40`：Debug 门控位域，exe 静态值 = 0（Constants Pending #7），
-    ///     发售版正常路径恒关闭 → 重建**不迁移**（Constants 注释已注明仅保留 2 个 bool 位）。
-    ///  3. 单例 `vtable + 0x28`：单例身份未定（疑 GameMode/暂停管理器），无协议入口。
-    /// 结论：本步为纯守卫，不臆造字段；三项关闭条件待后续任务卡闭合。
+    /// 已闭合爆炸计时门控：`PTR+0x24 <= 0.0` 才允许实体遍历。
+    /// `DAT_005d4d74 & 0x40` 是发售版正常路径关闭的 Debug 位，不迁移。
+    /// 另一单例 `vtable+0x28` 身份尚未闭合，不能用猜测条件阻断正常游玩。
     private func step5_shouldTraverseEntities(world: any EntityStore) -> Bool {
         _ = world
-        return true
+        return explosionTimeRemaining <= 0
     }
 
     // MARK: 6 — 循环A（type=1 水果）[both]
@@ -418,12 +424,16 @@ public final class GameWorld: GameTicking {
 
             if services.slice.isSliced(game: state, entity: entity) {
                 pendingDespawn.append(entity.id)
+
+                // FUN_00020c38：统计 bomb、写 +0x24=3.2、创建爆炸并播放音效。
+                // 爆炸实体/阈值回调另卡闭合；这里只接入已经逐项核实的公共链。
+                services.stats.add(.bomb, 1)
+                explosionTimeRemaining = Constants.Bomb.explosionTimerSeconds
                 services.audio.play(Constants.Bomb.explodeAudioKey)
                 if entity.isFaultingBomb && entity.stateSlot1 == 0 {
                     state.isFaulted = true
                 }
-                // 原 DAT_00557390 会让本帧停止后续炸弹遍历。3.2 秒爆炸门控
-                // 尚未接入，不能把该全局锁永久写入 GameState。
+                // DAT_00557390 只终止本帧后续炸弹遍历；跨帧禁止切割由 +0x24 负责。
                 return false
             }
 
