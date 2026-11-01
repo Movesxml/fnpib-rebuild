@@ -32,7 +32,7 @@ final class ChallengeFruitSelectionTests: XCTestCase {
     func testRebuildOrderAndCacheBoundary() throws {
         var state = ChallengeFruitWeightState(totalAll: 0, totalFree: 5,
                                               totalFlag: 7, totalFlagFree: 9)
-        let weights = [
+        let weights: [Int32: ChallengeFruitWeightEntry] = [
             0: entry(100),
             1: entry(50, noCritical: false, coinsMax: 5),
             2: entry(25, coinsMax: -1),
@@ -73,7 +73,7 @@ final class ChallengeFruitSelectionTests: XCTestCase {
     func testFreeScanStrictLessZeroAndNegativeWeights() throws {
         let state = ChallengeFruitWeightState()
         let candidates: [Int32] = [10, 11]
-        let normal = [10: entry(3), 11: entry(7)]
+        let normal: [Int32: ChallengeFruitWeightEntry] = [10: entry(3), 11: entry(7)]
         XCTAssertEqual(try ChallengeFruitSelector.scanWeighted(
             path: .free, roll: 2, candidates: candidates, weights: normal, state: state), 10)
         XCTAssertEqual(try ChallengeFruitSelector.scanWeighted(
@@ -81,13 +81,13 @@ final class ChallengeFruitSelectionTests: XCTestCase {
         XCTAssertNil(try ChallengeFruitSelector.scanWeighted(
             path: .free, roll: 10, candidates: candidates, weights: normal, state: state))
 
-        let zero = [10: entry(0), 11: entry(0)]
+        let zero: [Int32: ChallengeFruitWeightEntry] = [10: entry(0), 11: entry(0)]
         XCTAssertNil(try ChallengeFruitSelector.scanWeighted(
             path: .free, roll: 0, candidates: candidates, weights: zero, state: state))
         XCTAssertEqual(try ChallengeFruitSelector.scanWeighted(
             path: .free, roll: .max, candidates: candidates, weights: zero, state: state), 10)
 
-        let negative = [10: entry(-1), 11: entry(2)]
+        let negative: [Int32: ChallengeFruitWeightEntry] = [10: entry(-1), 11: entry(2)]
         XCTAssertEqual(try ChallengeFruitSelector.scanWeighted(
             path: .free, roll: 0, candidates: candidates, weights: negative, state: state), 11)
     }
@@ -101,7 +101,7 @@ final class ChallengeFruitSelectionTests: XCTestCase {
         XCTAssertEqual(try ChallengeFruitSelector.scanWeighted(
             path: .flag, roll: 10, candidates: [10, 11], weights: [:], state: state), 11)
 
-        let filtered = [
+        let filtered: [Int32: ChallengeFruitWeightEntry] = [
             10: entry(5),
             11: entry(7, coinsMax: 5),
             12: entry(9, noCritical: false),
@@ -146,7 +146,7 @@ final class ChallengeFruitSelectionTests: XCTestCase {
         for candidates in [[Int32](), [Int32(0)]] {
             var selector = ChallengeFruitSelector()
             let random = OriginalLCGRandom(seed: 0)
-            let weights = candidates.isEmpty ? [:] : [0: entry(0)]
+            let weights: [Int32: ChallengeFruitWeightEntry] = candidates.isEmpty ? [:] : [0: entry(0)]
             XCTAssertThrowsError(try selector.select(
                 candidates: candidates, weights: weights,
                 param1: 0, predicateP: 0, random: random))
@@ -177,21 +177,21 @@ final class ChallengeFruitSelectionTests: XCTestCase {
     func testNewGameDefaultAndModeShareOriginalCache() throws {
         let catalog = [fruit("apple", 0), fruit("banana", 1),
                        fruit("strawberry", 4), fruit("lime", 11)]
-        let weights = [0: entry(100), 1: entry(100), 4: entry(60), 11: entry(40)]
+        let weights: [Int32: ChallengeFruitWeightEntry] = [0: entry(100), 1: entry(100), 4: entry(60), 11: entry(40)]
         var selector = ChallengeFruitSelector()
         let result = try selector.selectNewGameChallengeFruit(
             size: .small, catalog: catalog, weights: weights,
             predicateP: 0, random: OriginalLCGRandom(seed: 0))
         XCTAssertEqual(result.defaultSelection, 0)
         XCTAssertTrue([4, 11].contains(result.finalSelection))
-        XCTAssertEqual(result.appliedMode, .small)
+        XCTAssertEqual(result.appliedMode, ChallengeFruitSize.small)
         XCTAssertEqual(selector.state.totalAll, 200)
         XCTAssertEqual(selector.state.totalFree, 200)
     }
 
     func testNormalNewGameOnlyConsumesDefaultSelection() throws {
         let catalog = [fruit("apple", 0), fruit("banana", 1)]
-        let weights = [0: entry(100), 1: entry(100)]
+        let weights: [Int32: ChallengeFruitWeightEntry] = [0: entry(100), 1: entry(100)]
         let random = OriginalLCGRandom(seed: 0)
         var selector = ChallengeFruitSelector()
         let result = try selector.selectNewGameChallengeFruit(
@@ -199,7 +199,7 @@ final class ChallengeFruitSelectionTests: XCTestCase {
             predicateP: 0, random: random)
         XCTAssertEqual(result.defaultSelection, 0)
         XCTAssertEqual(result.finalSelection, 0)
-        XCTAssertEqual(result.appliedMode, .normal)
+        XCTAssertEqual(result.appliedMode, ChallengeFruitSize.normal)
         let reference = OriginalLCGRandom(seed: 0)
         _ = reference.nextInt(0)
         XCTAssertEqual(random.snapshot(), reference.snapshot())

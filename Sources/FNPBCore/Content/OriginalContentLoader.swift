@@ -148,15 +148,21 @@ public struct OriginalContent: Equatable, Sendable {
     public var classic: OriginalClassicConfig
     /// bonusAwards.xml 中 combo 节点按文档顺序排列的 bonus 值。
     public var comboBonuses: [Int32]
+    public var challengeCatalog: ChallengeCatalog
+    public var challengeConditions: [ChallengeConditionDefinition]
 
     public init(fruits: OriginalFruitList,
                 waves: OriginalWaveList,
                 classic: OriginalClassicConfig,
-                comboBonuses: [Int32]) {
+                comboBonuses: [Int32],
+                challengeCatalog: ChallengeCatalog,
+                challengeConditions: [ChallengeConditionDefinition]) {
         self.fruits = fruits
         self.waves = waves
         self.classic = classic
         self.comboBonuses = comboBonuses
+        self.challengeCatalog = challengeCatalog
+        self.challengeConditions = challengeConditions
     }
 }
 
@@ -164,15 +170,21 @@ public enum OriginalContentLoader {
     public static func load(fruitsData: Data,
                             wavesData: Data,
                             bonusAwardsData: Data,
-                            originalModeData: Data) throws -> OriginalContent {
+                            originalModeData: Data,
+                            challengeCatalogData: Data,
+                            challengeConditionsData: Data) throws -> OriginalContent {
         let fruitList = try loadFruits(from: fruitsData)
         let waveList = try loadWaves(from: wavesData, fruits: fruitList.fruits)
         let comboBonuses = try loadComboBonuses(from: bonusAwardsData)
         let classic = try loadClassicConfig(from: originalModeData)
+        let challengeCatalog = try ChallengeCatalogLoader.load(from: challengeCatalogData)
+        let challengeConditions = try ChallengeConditionLoader.load(from: challengeConditionsData)
         return OriginalContent(fruits: fruitList,
                                waves: waveList,
                                classic: classic,
-                               comboBonuses: comboBonuses)
+                               comboBonuses: comboBonuses,
+                               challengeCatalog: challengeCatalog,
+                               challengeConditions: challengeConditions)
     }
 
     /// FUN_0006fa3c：DAT_005f9610+0x14 即 DAT_005f9624，读取 magicBean.beanScore。

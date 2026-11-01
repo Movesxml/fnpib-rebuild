@@ -16,6 +16,18 @@ public struct ChallengeFruitWeightEntry: Equatable, Sendable {
     }
 }
 
+public enum ChallengeFruitWeightMap {
+    /// 原全局 FruitInfo 表的值语义投影；缺省 chance 的有效值为 0。
+    public static func make(from fruits: [FruitInfo]) -> [Int32: ChallengeFruitWeightEntry] {
+        Dictionary(uniqueKeysWithValues: fruits.map { fruit in
+            (fruit.typeID, ChallengeFruitWeightEntry(
+                chance: fruit.chance ?? 0,
+                noCritical: fruit.noCritical,
+                coinsMax: 0))
+        })
+    }
+}
+
 public enum ChallengeFruitSelectionError: Error, Equatable, Sendable {
     case missingWeightEntry(fruitID: Int32)
     case candidateCountOverflow(Int)

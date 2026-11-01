@@ -281,7 +281,9 @@ final class OriginalContentTests: XCTestCase {
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
             bonusAwardsData: contentData("bonusAwards.json"),
-            originalModeData: contentData("originalModeInfo.json"))
+            originalModeData: contentData("originalModeInfo.json"),
+            challengeCatalogData: contentData("ch1challengeList.json"),
+            challengeConditionsData: contentData("challengeConditions.json"))
 
         XCTAssertEqual(content.comboBonuses, [3, 4, 5, 7, 9, 12, 14, 17])
         XCTAssertEqual(content.classic.magicBean.baseInterval, 7)
@@ -313,6 +315,28 @@ final class OriginalContentTests: XCTestCase {
         XCTAssertEqual(content.fruits.bomb.collision, 35, accuracy: 1e-5)
         XCTAssertEqual(content.fruits.critical?.score, 10)
         XCTAssertEqual(content.fruits.critical?.chance, 50)
+
+        let firstTier = try XCTUnwrap(content.challengeCatalog.tiers.first)
+        XCTAssertEqual(firstTier.name, "tier1")
+        let firstGroup = try XCTUnwrap(firstTier.groups.first)
+        XCTAssertEqual(firstGroup.name, "tier1basic")
+        XCTAssertEqual(firstGroup.challenges.first?.name, "fruitAcross1")
+        let useChallengeFruit = try XCTUnwrap(content.challengeConditions.first {
+            $0.name == "useChallengeFruit"
+        })
+        XCTAssertEqual(useChallengeFruit.kind, .stats)
+        XCTAssertEqual(useChallengeFruit.result, .fail)
+        XCTAssertEqual(useChallengeFruit.total, 9999)
+        XCTAssertEqual(useChallengeFruit.specificType, "challengefruit")
+
+        let weightMap = ChallengeFruitWeightMap.make(from: content.fruits.fruits)
+        XCTAssertEqual(weightMap.count, content.fruits.fruits.count)
+        for fruit in content.fruits.fruits {
+            let entry = try XCTUnwrap(weightMap[fruit.typeID])
+            XCTAssertEqual(entry.chance, fruit.chance ?? 0)
+            XCTAssertEqual(entry.noCritical, fruit.noCritical)
+            XCTAssertEqual(entry.coinsMax, 0)
+        }
 
         XCTAssertEqual(content.waves.waves.count, 38)
         XCTAssertEqual(content.waves.defaults.waveChance, 90)
@@ -346,7 +370,9 @@ final class OriginalContentTests: XCTestCase {
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
             bonusAwardsData: contentData("bonusAwards.json"),
-            originalModeData: contentData("originalModeInfo.json"))
+            originalModeData: contentData("originalModeInfo.json"),
+            challengeCatalogData: contentData("ch1challengeList.json"),
+            challengeConditionsData: contentData("challengeConditions.json"))
         let wave0 = content.waves.waves[0]
         XCTAssertEqual(wave0.waveNo, 0)
         XCTAssertEqual(wave0.chance, 90, "缺省波次权重继承 defaults.waveChance")

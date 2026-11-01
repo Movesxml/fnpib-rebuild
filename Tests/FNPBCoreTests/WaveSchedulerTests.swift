@@ -342,7 +342,9 @@ final class WaveSchedulerTests: XCTestCase {
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
             bonusAwardsData: contentData("bonusAwards.json"),
-            originalModeData: contentData("originalModeInfo.json"))
+            originalModeData: contentData("originalModeInfo.json"),
+            challengeCatalogData: contentData("ch1challengeList.json"),
+            challengeConditionsData: contentData("challengeConditions.json"))
 
         XCTAssertEqual(content.waves.waves.count, 38)
         XCTAssertEqual(content.fruits.fruits.count, 24)
