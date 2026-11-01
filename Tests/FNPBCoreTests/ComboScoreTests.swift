@@ -370,7 +370,7 @@ final class ComboScoreTests: XCTestCase {
 
     func testComboBonusUsesEveryOriginalTierAndClampsAtTen() {
         let stats = StatsRecorder(comboBonuses: [3, 4, 5, 7, 9, 12, 14, 17])
-        let expected = [3, 4, 5, 7, 9, 12, 14, 17, 17, 17]
+        let expected: [Int32] = [3, 4, 5, 7, 9, 12, 14, 17, 17, 17]
         var accumulated: Int32 = 0
         for (offset, bonus) in expected.enumerated() {
             let count = Int32(offset + 3)
