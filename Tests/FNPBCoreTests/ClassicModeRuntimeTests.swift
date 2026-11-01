@@ -41,7 +41,7 @@ final class ClassicModeRuntimeTests: XCTestCase {
         XCTAssertEqual(rig.stats.value(forDynamicKey: "apple_drops"), 1)
 
         var noScore = FruitInfo()
-        noScore.name = "watermelon"
+        noScore.name = "super_pomegranate"
         noScore.score = 0
         noScore.noScore = true
         runtime.retireFruit(makeFruit(noScore), reason: .normalDrop, state: &state, services: rig.services)
@@ -122,8 +122,6 @@ final class ClassicModeRuntimeTests: XCTestCase {
 
         var bean = FruitInfo()
         bean.name = "bean"
-        bean.score = 0
-        bean.noScore = true
         bean.powers = [FruitPower()]
         store.spawn(EntityPrototype(kind: .fruit, fruit: bean))
 

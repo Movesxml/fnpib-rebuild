@@ -119,8 +119,8 @@ final class SpawnMotionTests: XCTestCase {
         let entity = try XCTUnwrap(store.entity(id))
         XCTAssertEqual(entity.fruit?.name, "watermelon")
         XCTAssertEqual(entity.fruit?.typeID, 3)
-        XCTAssertEqual(entity.fruit?.score, 0)
-        XCTAssertEqual(entity.fruit?.noScore, true)
+        XCTAssertEqual(entity.fruit?.score, 1, "真实 watermelon 未写 score，缺省也是 1")
+        XCTAssertEqual(entity.fruit?.noScore, false)
         XCTAssertEqual(entity.transform.scale, 75, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.radius, 5, accuracy: 1e-6)
     }
