@@ -14,8 +14,12 @@ final class UIScreenAnimationPlayerTests: XCTestCase {
 
     func testProductionResourceHasExactVerifiedDurationsAndZeroPaddingRemoved() throws {
         let player = try productionPlayer()
-        XCTAssertEqual(player.content.components.count, 4)
-        XCTAssertEqual(player.content.components.flatMap(\.animations).count, 8)
+        XCTAssertEqual(player.content.components.count, 6)
+        XCTAssertEqual(player.content.components.flatMap(\.animations).count, 10)
+        XCTAssertEqual(player.content.components.first { $0.name == "popups.beanExtraLife" }?
+            .animations.first?.endTimeMS, 1115)
+        XCTAssertEqual(player.content.components.first { $0.name == "popups.beanPlus25" }?
+            .animations.first?.endTimeMS, 930)
         XCTAssertEqual(player.content.source.file, "inGameClassic.uiscreen")
         XCTAssertEqual(player.content.source.sha256.count, 64)
         let gameOver = player.content.components

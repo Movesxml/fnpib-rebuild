@@ -41,9 +41,15 @@ public enum ClassicPhase: Int32, Sendable, Equatable {
 }
 
 /// 经典 HUD / 动画事件。它们不是音频键，调用方不得把动画名直接送进 AudioPlaying。
+public enum ClassicMagicBeanPopup: String, Sendable, Equatable {
+    case extraLife = "popups.beanExtraLife"
+    case bonus = "popups.beanPlus25"
+}
+
 public enum ClassicEvent: Sendable, Equatable {
     case missCross(Int32)
     case restoreCross(Int32)
+    case magicBeanPopup(ClassicMagicBeanPopup, at: SIMD3<Float>)
     case gameOver
     case gameOverReal
     case results

@@ -4,9 +4,10 @@ import XCTest
 /// 经典失败链整组回归：回收筛选、三振、额外生命、爆炸阈值与动画完成输入。
 final class ClassicModeRuntimeTests: XCTestCase {
     private final class Rig {
-        let world = GameWorld()
+        let world = GameWorld(magicBeanScore: 25)
         let slice = ClassicSliceStub()
         let stats = StatsRecorder()
+        let score = ScoreSystem()
         let audio = ClassicAudioSpy()
         let services: GameServices
 
@@ -15,7 +16,7 @@ final class ClassicModeRuntimeTests: XCTestCase {
             services = GameServices(
                 slice: slice,
                 combo: ComboTracker(stats: stats),
-                score: ScoreSystem(),
+                score: score,
                 stats: stats,
                 waves: ClassicWaveStub(),
                 audio: audio,
@@ -128,24 +129,78 @@ final class ClassicModeRuntimeTests: XCTestCase {
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &store, services: rig.services)
         XCTAssertEqual(state.missedFruitCount, 0)
         XCTAssertEqual(state.classicPhase, .running)
-        XCTAssertTrue(rig.audio.keys.contains("extra-life"))
-        XCTAssertEqual(rig.world.drainClassicEvents(), [.restoreCross(1)])
+        XCTAssertEqual(rig.score.total, 1, "恢复生命分支仍保留水果的普通 1 分")
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "bean"), 1)
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "bean_game_consecutive_total"), 1)
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "magic_bean_points"), 0)
+        XCTAssertEqual(rig.audio.keys, ["bean-collect", "extra-life", "splash"])
+        XCTAssertEqual(rig.audio.stoppedKeys, ["bean-lp"])
+        XCTAssertEqual(rig.world.drainClassicEvents(), [
+            .restoreCross(1), .magicBeanPopup(.extraLife, at: .zero)
+        ])
 
         rig.world.completeClassicAnimation(state: &state)
         XCTAssertEqual(state.classicPhase, .running, "running 状态没有待完成结束动画")
     }
 
-    func testMagicBeanAtZeroMissesDoesNotInventReward() {
+    func testMagicBeanAtZeroMissesAddsConfiguredBonusAfterBaseScore() {
         let rig = Rig()
-        var runtime = ClassicModeRuntime()
-        var state = GameState()
+        var state = rig.runnableState
+        rig.slice.sliceResult = true
+        var store: any EntityStore = GenerationOrderStore()
         var bean = FruitInfo()
         bean.name = "bean"
-        runtime.onFruitSliced(makeFruit(bean), state: &state, services: rig.services)
+        store.spawn(EntityPrototype(kind: .fruit, fruit: bean))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &store, services: rig.services)
 
         XCTAssertEqual(state.missedFruitCount, 0)
-        XCTAssertTrue(rig.audio.keys.isEmpty)
-        XCTAssertTrue(runtime.drainEvents().isEmpty)
+        XCTAssertEqual(rig.score.total, 26, "bean 缺省普通分 1 与 XML 奖励 25 是两次独立计分")
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "magic_bean_points"), 25)
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "bean_game_consecutive_total"), 1)
+        XCTAssertEqual(rig.audio.keys, ["bean-collect", "splash"])
+        XCTAssertEqual(rig.audio.stoppedKeys, ["bean-lp"])
+        XCTAssertEqual(rig.world.drainClassicEvents(), [.magicBeanPopup(.bonus, at: .zero)])
+    }
+
+    func testBeanConsecutiveBonusOnlyIncrementsOnFirstBean() {
+        let rig = Rig()
+        var state = rig.runnableState
+        rig.slice.sliceResult = true
+        var store: any EntityStore = GenerationOrderStore()
+        var bean = FruitInfo()
+        bean.name = "bean"
+
+        for _ in 0..<2 {
+            store.spawn(EntityPrototype(kind: .fruit, fruit: bean))
+            rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &store, services: rig.services)
+            _ = rig.world.drainClassicEvents()
+        }
+
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "bean"), 2)
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "bean_game_consecutive_total"), 1)
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "magic_bean_points"), 50)
+        XCTAssertEqual(rig.score.total, 52)
+    }
+
+    func testNonClassicBeanKeepsBaseScoreWithoutClassicReward() {
+        let rig = Rig()
+        rig.world.resetForNewGame(isClassicMode: false)
+        var state = rig.runnableState
+        rig.slice.sliceResult = true
+        var store: any EntityStore = GenerationOrderStore()
+        var bean = FruitInfo()
+        bean.name = "bean"
+        store.spawn(EntityPrototype(kind: .fruit, fruit: bean))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &store, services: rig.services)
+
+        XCTAssertEqual(rig.score.total, 1)
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "magic_bean_points"), 0)
+        XCTAssertEqual(rig.stats.value(forDynamicKey: "bean_game_consecutive_total"), 0)
+        XCTAssertEqual(rig.audio.keys, ["splash"])
+        XCTAssertTrue(rig.audio.stoppedKeys.isEmpty)
+        XCTAssertTrue(rig.world.drainClassicEvents().isEmpty)
     }
 
     func testExplosionCrossesOnePointFiveExactlyOnce() {
@@ -225,7 +280,9 @@ private final class ClassicWaveStub: WaveDirecting {
 
 private final class ClassicAudioSpy: AudioPlaying {
     private(set) var keys: [String] = []
+    private(set) var stoppedKeys: [String] = []
     func play(_ key: String) { keys.append(key) }
+    func stop(_ key: String) { stoppedKeys.append(key) }
 }
 
 private final class ClassicEffectsStub: EffectEmitting {

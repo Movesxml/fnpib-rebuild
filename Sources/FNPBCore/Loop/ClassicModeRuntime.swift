@@ -15,6 +15,11 @@ struct ClassicModeRuntime: Sendable {
 
     private var isClassicMode = true
     private var events: [ClassicEvent] = []
+    private let magicBeanScore: Int32?
+
+    init(magicBeanScore: Int32? = nil) {
+        self.magicBeanScore = magicBeanScore
+    }
 
     mutating func reset(isClassicMode: Bool) {
         self.isClassicMode = isClassicMode
@@ -57,20 +62,30 @@ struct ClassicModeRuntime: Sendable {
         }
     }
 
-    /// 经典控制器收到水果切中委托后的 magic bean 分支（FUN_00070bc8）。
-    /// 原函数在已有漏切时恢复一格；零漏切时的 magic_bean_points 常量尚未闭合，
-    /// 因而这里不臆造额外得分，也不改变现有 noScore 行为。
+    /// FUN_00070bc8 / FUN_00070e68：每次切中先停循环声并播放收集声。
+    /// 有漏切时恢复最近一格；零漏切时追加 originalModeInfo.xml 的真实奖励分。
     mutating func onFruitSliced(_ entity: Entity,
                                 state: inout GameState,
                                 services: GameServices) {
-        guard isClassicMode,
-              entity.fruit?.name == "bean",
-              state.missedFruitCount > 0 else { return }
+        guard isClassicMode, entity.fruit?.name == "bean" else { return }
 
-        let restoredCross = state.missedFruitCount
-        state.missedFruitCount -= 1
-        services.audio.play("extra-life")
-        events.append(.restoreCross(restoredCross))
+        services.audio.stop("bean-lp")
+        services.audio.play("bean-collect")
+        if services.stats.value(forDynamicKey: "bean") == 1 {
+            services.stats.report("bean_game_consecutive_total", 1)
+        }
+
+        if state.missedFruitCount > 0 {
+            let restoredCross = state.missedFruitCount
+            state.missedFruitCount -= 1
+            services.audio.play("extra-life")
+            events.append(.restoreCross(restoredCross))
+            events.append(.magicBeanPopup(.extraLife, at: entity.transform.position))
+        } else if let magicBeanScore {
+            services.stats.report("magic_bean_points", magicBeanScore)
+            services.score.dispatch(score: magicBeanScore, comboType: 0, isScoring: true, mode: 0)
+            events.append(.magicBeanPopup(.bonus, at: entity.transform.position))
+        }
     }
 
     /// FUN_00070050 状态 1：第三次（>2）才进入结束，不是 >=3 时直接显示结算。

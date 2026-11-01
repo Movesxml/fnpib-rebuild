@@ -15,6 +15,8 @@ SELECTED = {
     "misscounters.cross1": {"in", "out"},
     "misscounters.cross2": {"in", "out"},
     "misscounters.cross3": {"in", "out"},
+    "popups.beanExtraLife": {"trigger"},
+    "popups.beanPlus25": {"trigger"},
 }
 
 
@@ -32,15 +34,13 @@ def qualified_names(components: list[dict]) -> list[str]:
 
 
 def crop_values(track_name: str, values: list, offset: int) -> list:
-    expected = {"scale": 3, "position": 3, "movescale": 1, "enabled": 1}.get(track_name)
+    expected = {"scale": 3, "position": 3, "movescale": 1, "enabled": 1, "colour": 4}.get(track_name)
     if expected is None:
         raise FormatError(f"unsupported production track {track_name!r} at 0x{offset:x}")
     if len(values) < expected:
         raise FormatError(f"short {track_name!r} payload at 0x{offset:x}")
-    # enabled has three trailing engine metadata words; numeric transform tracks have
-    # zero alignment padding. Neither kind of trailing data is animation input.
-    if track_name != "enabled" and any(value != 0 for value in values[expected:]):
-        raise FormatError(f"non-zero transform padding in {track_name!r} at 0x{offset:x}")
+    # UIKF can append alignment words and engine metadata (including integer bit 1,
+    # which is not a float colour/scale). Only the typed track payload is interpolated.
     return values[:expected]
 
 
@@ -58,7 +58,7 @@ def build() -> dict:
                 continue
             tracks = []
             for track in animation["tracks"]:
-                if track["name"] not in {"scale", "position", "movescale", "enabled", "_Events_"}:
+                if track["name"] not in {"scale", "position", "movescale", "enabled", "colour", "_Events_"}:
                     raise FormatError(f"unhandled track {track['name']!r} in {name}/{animation['name']}")
                 keyframes = []
                 for key in sorted(track["keyframes"], key=lambda item: item["time_ms"]):

@@ -325,7 +325,9 @@ final class GameHost: ObservableObject {
             waves.spawnSink = bridge
         }
         self.waveSpawnBridge = spawnBridge
-        self.gameWorld = GameWorld(motionTuning: tuning, onSliced: onSliced)
+        self.gameWorld = GameWorld(motionTuning: tuning,
+                                   onSliced: onSliced,
+                                   magicBeanScore: resolvedContent?.classic.magicBean.score)
 
         // [Kimi 修正 T-022 审查] GameServices 字段表以 GameWorld.swift 为准：末尾还有 rng。
         self.services = GameServices(
@@ -532,6 +534,9 @@ final class GameHost: ObservableObject {
                 guard (1...3).contains(index) else { continue }
                 visibleClassicCrosses.insert(Int(index))
                 startClassicAnimation(component: "misscounters.cross\(index)", animation: "in")
+            case let .magicBeanPopup(kind, _):
+                // FUN_00074254 的位置参数已保留在事件中；原控件坐标投影待 HUD 整组接入。
+                startClassicAnimation(component: kind.rawValue, animation: "trigger")
             case .gameOver:
                 startClassicAnimation(component: "gameOverContainer", animation: "game_over")
             case .gameOverReal:
@@ -675,7 +680,8 @@ final class GameHost: ObservableObject {
             onSliced: FruitOnSliced(
                 critical: fruits.critical,
                 fruitTypeCount: fruits.fruits.count,
-                starfruitTypeID: fruits.fruits.first(where: { $0.name == "starfruit" })?.typeID))
+                starfruitTypeID: fruits.fruits.first(where: { $0.name == "starfruit" })?.typeID),
+            magicBeanScore: content.classic.magicBean.score)
     }
 
     // MARK: 触摸（macho §1.2 语义）

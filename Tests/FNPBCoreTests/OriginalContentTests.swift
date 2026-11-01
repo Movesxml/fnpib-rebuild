@@ -280,9 +280,17 @@ final class OriginalContentTests: XCTestCase {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
-            bonusAwardsData: contentData("bonusAwards.json"))
+            bonusAwardsData: contentData("bonusAwards.json"),
+            originalModeData: contentData("originalModeInfo.json"))
 
         XCTAssertEqual(content.comboBonuses, [3, 4, 5, 7, 9, 12, 14, 17])
+        XCTAssertEqual(content.classic.magicBean.baseInterval, 7)
+        XCTAssertEqual(content.classic.magicBean.intervalGrowth, 0.8)
+        XCTAssertEqual(content.classic.magicBean.intervalVariation, 7)
+        XCTAssertEqual(content.classic.magicBean.initialSpawn, 12)
+        XCTAssertEqual(content.classic.magicBean.score, 25)
+        XCTAssertEqual(content.classic.timing.dtStart, 0.7)
+        XCTAssertEqual(content.classic.timing.dtIncrease, 0.0000245)
         XCTAssertEqual(content.fruits.fruits.count, 24)
         XCTAssertEqual(content.fruits.fruits[0].name, "apple")
         XCTAssertEqual(content.fruits.fruits[0].typeID, 0)
@@ -337,7 +345,8 @@ final class OriginalContentTests: XCTestCase {
         let content = try OriginalContentLoader.load(
             fruitsData: contentData("fruitList.json"),
             wavesData: contentData("originalWaveList.json"),
-            bonusAwardsData: contentData("bonusAwards.json"))
+            bonusAwardsData: contentData("bonusAwards.json"),
+            originalModeData: contentData("originalModeInfo.json"))
         let wave0 = content.waves.waves[0]
         XCTAssertEqual(wave0.waveNo, 0)
         XCTAssertEqual(wave0.chance, 90, "缺省波次权重继承 defaults.waveChance")

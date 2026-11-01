@@ -111,6 +111,11 @@ public final class AudioEngine: AudioPlaying {
         }
     }
 
+    public func stop(_ key: String) {
+        guard let pool = pools[key] else { return }
+        for player in pool where player.isPlaying { player.stop() }
+    }
+
     // MARK: 便捷能力
 
     /// 当前正在播放的 voice 数（诊断/性能面板用）

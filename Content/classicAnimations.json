@@ -583,6 +583,216 @@
           ]
         }
       ]
+    },
+    {
+      "name": "popups.beanExtraLife",
+      "animations": [
+        {
+          "name": "trigger",
+          "endTimeMS": 1115,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1115,
+                  "interpolation": 0,
+                  "values": [
+                    0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 60,
+                  "interpolation": 0,
+                  "values": [
+                    1.5,
+                    1.5,
+                    1.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 115,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 995,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1060,
+                  "interpolation": 0,
+                  "values": [
+                    1.5,
+                    1.5,
+                    1.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1115,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "popups.beanPlus25",
+      "animations": [
+        {
+          "name": "trigger",
+          "endTimeMS": 930,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 930,
+                  "interpolation": 0,
+                  "values": [
+                    0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 115,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 175,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 680,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 930,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
     }
   ]
 }

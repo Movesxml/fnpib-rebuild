@@ -123,15 +123,39 @@ public struct OriginalWaveList: Equatable, Sendable {
     }
 }
 
+public struct OriginalClassicConfig: Equatable, Sendable {
+    public struct MagicBean: Equatable, Sendable {
+        public var baseInterval: Float
+        public var intervalGrowth: Float
+        public var intervalVariation: Float
+        /// 保留原 XML 的 initalSpawn 拼写所对应的语义，不另造生成参数。
+        public var initialSpawn: Float
+        public var score: Int32
+    }
+
+    public struct Timing: Equatable, Sendable {
+        public var dtStart: Float
+        public var dtIncrease: Float
+    }
+
+    public var magicBean: MagicBean
+    public var timing: Timing
+}
+
 public struct OriginalContent: Equatable, Sendable {
     public var fruits: OriginalFruitList
     public var waves: OriginalWaveList
+    public var classic: OriginalClassicConfig
     /// bonusAwards.xml 中 combo 节点按文档顺序排列的 bonus 值。
     public var comboBonuses: [Int32]
 
-    public init(fruits: OriginalFruitList, waves: OriginalWaveList, comboBonuses: [Int32]) {
+    public init(fruits: OriginalFruitList,
+                waves: OriginalWaveList,
+                classic: OriginalClassicConfig,
+                comboBonuses: [Int32]) {
         self.fruits = fruits
         self.waves = waves
+        self.classic = classic
         self.comboBonuses = comboBonuses
     }
 }
@@ -139,11 +163,62 @@ public struct OriginalContent: Equatable, Sendable {
 public enum OriginalContentLoader {
     public static func load(fruitsData: Data,
                             wavesData: Data,
-                            bonusAwardsData: Data) throws -> OriginalContent {
+                            bonusAwardsData: Data,
+                            originalModeData: Data) throws -> OriginalContent {
         let fruitList = try loadFruits(from: fruitsData)
         let waveList = try loadWaves(from: wavesData, fruits: fruitList.fruits)
         let comboBonuses = try loadComboBonuses(from: bonusAwardsData)
-        return OriginalContent(fruits: fruitList, waves: waveList, comboBonuses: comboBonuses)
+        let classic = try loadClassicConfig(from: originalModeData)
+        return OriginalContent(fruits: fruitList,
+                               waves: waveList,
+                               classic: classic,
+                               comboBonuses: comboBonuses)
+    }
+
+    /// FUN_0006fa3c：DAT_005f9610+0x14 即 DAT_005f9624，读取 magicBean.beanScore。
+    /// 发售版配置字段齐全；缺失或重复节点直接报错，不用代码常量补造原始行为。
+    public static func loadClassicConfig(from data: Data) throws -> OriginalClassicConfig {
+        let root = try decodeRoot(from: data, expected: "originalMode", source: "originalModeInfo.json")
+        let magicNodes = root.children.filter { $0.tag == "magicBean" }
+        let timingNodes = root.children.filter { $0.tag == "timing" }
+        guard magicNodes.count == 1, timingNodes.count == 1 else {
+            let tag = magicNodes.count == 1 ? "timing" : "magicBean"
+            throw OriginalContentError.missingAttribute(node: tag,
+                                                        attribute: "uniqueNode",
+                                                        path: root.tag)
+        }
+        let bean = magicNodes[0]
+        let timing = timingNodes[0]
+        let beanPath = "\(root.tag)/magicBean"
+        let timingPath = "\(root.tag)/timing"
+        return OriginalClassicConfig(
+            magicBean: .init(
+                baseInterval: try requiredFloat(bean, "baseInterval", beanPath),
+                intervalGrowth: try requiredFloat(bean, "intervalGrowth", beanPath),
+                intervalVariation: try requiredFloat(bean, "intervalVariation", beanPath),
+                initialSpawn: try requiredFloat(bean, "initalSpawn", beanPath),
+                score: try requiredInt32(bean, "beanScore", beanPath)),
+            timing: .init(
+                dtStart: try requiredFloat(timing, "dtStart", timingPath),
+                dtIncrease: try requiredFloat(timing, "dtIncrease", timingPath)))
+    }
+
+    private static func requiredFloat(_ node: ContentNode,
+                                      _ key: String,
+                                      _ path: String) throws -> Float {
+        guard let value = try floatValue(node, key, path) else {
+            throw OriginalContentError.missingAttribute(node: node.tag, attribute: key, path: path)
+        }
+        return value
+    }
+
+    private static func requiredInt32(_ node: ContentNode,
+                                      _ key: String,
+                                      _ path: String) throws -> Int32 {
+        guard let value = try int32Value(node, key, path) else {
+            throw OriginalContentError.missingAttribute(node: node.tag, attribute: key, path: path)
+        }
+        return value
     }
 
     /// FUN_0002c8f0 只读取根节点直接子级 combo 的 bonus，length 不参与数组索引。

@@ -1,0 +1,27 @@
+{
+  "source": "originalModeInfo.xml",
+  "bytes": 252,
+  "encoding": "bxml",
+  "root": {
+    "tag": "originalMode",
+    "children": [
+      {
+        "tag": "magicBean",
+        "attrs": {
+          "baseInterval": "7",
+          "intervalGrowth": "0.8",
+          "intervalVariation": "7",
+          "initalSpawn": "12",
+          "beanScore": "25"
+        }
+      },
+      {
+        "tag": "timing",
+        "attrs": {
+          "dtStart": "0.7",
+          "dtIncrease": "0.0000245"
+        }
+      }
+    ]
+  }
+}

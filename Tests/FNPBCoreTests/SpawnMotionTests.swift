@@ -276,7 +276,8 @@ final class SpawnMotionTests: XCTestCase {
         return try OriginalContentLoader.load(
             fruitsData: Data(contentsOf: root.appendingPathComponent("Content/fruitList.json")),
             wavesData: Data(contentsOf: root.appendingPathComponent("Content/originalWaveList.json")),
-            bonusAwardsData: Data(contentsOf: root.appendingPathComponent("Content/bonusAwards.json")))
+            bonusAwardsData: Data(contentsOf: root.appendingPathComponent("Content/bonusAwards.json")),
+            originalModeData: Data(contentsOf: root.appendingPathComponent("Content/originalModeInfo.json")))
     }
 
     private func firstID(in store: GenerationOrderStore) -> EntityID? {
@@ -376,6 +377,7 @@ private final class StubScore: ScoreDispatching {
 private final class StubStats: StatsRecording {
     func add(_ key: StatsKey, _ value: Int32) {}
     func report(_ dynamicKey: String, _ value: Int32) {}
+    func value(forDynamicKey key: String) -> Int32 { 0 }
     func recordCombo(count: Int32, fruitTypes: [Int32], modePrefix: String?) {}
 }
 private final class StubWaves: WaveDirecting {

@@ -645,6 +645,8 @@ private final class SpyStats: StatsRecording {
         reports[dynamicKey, default: 0] += value
     }
 
+    func value(forDynamicKey key: String) -> Int32 { reports[key, default: 0] }
+
     func recordCombo(count: Int32, fruitTypes: [Int32], modePrefix: String?) {
         guard count >= 3 else { return }
         add(.combos, 1)

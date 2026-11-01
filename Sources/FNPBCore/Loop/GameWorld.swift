@@ -92,6 +92,8 @@ public protocol StatsRecording: AnyObject {
     func add(_ key: StatsKey, _ value: Int32)
     /// 动态键（"%s_combos" / "strawberry_combo_total"）走字符串通道
     func report(_ dynamicKey: String, _ value: Int32)
+    /// FUN_000276e8 的查询与 report 必须读取同一动态计数存储。
+    func value(forDynamicKey key: String) -> Int32
     /// combo 快照必须包含水果类型；模式未闭合时 modePrefix 为 nil。
     func recordCombo(count: Int32, fruitTypes: [Int32], modePrefix: String?)
 }
@@ -110,6 +112,13 @@ public protocol CriticalChanceProviding: AnyObject {
 public protocol AudioPlaying: AnyObject {
     /// 原 AudioToolbox/OpenAL 调用点仅作音量/时序参考 [待验证]
     func play(_ key: String)
+    /// FUN_0002be70：按资源键停止当前声音；未加载或已停止时为空操作。
+    func stop(_ key: String)
+}
+
+public extension AudioPlaying {
+    /// 只记录一次性音效的轻量测试替身无需维护停止状态。
+    func stop(_ key: String) {}
 }
 
 public protocol EffectEmitting: AnyObject {
@@ -166,7 +175,7 @@ public final class GameWorld: GameTicking {
     public private(set) var explosionTimeRemaining: Float = 0
 
     /// 经典控制器是模式实例，不属于全局 Game 状态；重开局必须清空其事件队列。
-    private var classic = ClassicModeRuntime()
+    private var classic: ClassicModeRuntime
 
     /// dt==0 时的兜底步长（原 PTR_DAT_004d9048+0x44 / _DAT_0197f47c）
     /// [待验证] 具体数值未闭合（T-007 遗留），暂按逻辑帧 1/60
@@ -183,9 +192,11 @@ public final class GameWorld: GameTicking {
     private static let hitEffectKind: Int32 = 0
 
     public init(motionTuning: FruitMotionTuning = FruitMotionTuning(),
-                onSliced: FruitOnSliced = FruitOnSliced()) {
+                onSliced: FruitOnSliced = FruitOnSliced(),
+                magicBeanScore: Int32? = nil) {
         self.motionTuning = motionTuning
         self.onSliced = onSliced
+        self.classic = ClassicModeRuntime(magicBeanScore: magicBeanScore)
     }
 
     /// R7：由 GameLoop 在 `FrameDriving.start()` 后调用一次，使首帧 dt==0 也能推进

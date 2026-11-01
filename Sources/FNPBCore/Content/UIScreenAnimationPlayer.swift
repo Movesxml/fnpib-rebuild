@@ -234,7 +234,8 @@ public struct UIScreenAnimationPlayer: Sendable {
                         }
                         previousTime = keyframe.timeMS
                         let expectedValues = track.name == "_Events_" ? 0 :
-                            (track.name == "enabled" || track.name == "movescale" ? 1 : 3)
+                            (track.name == "enabled" || track.name == "movescale" ? 1 :
+                                (track.name == "colour" ? 4 : 3))
                         guard keyframe.values.count == expectedValues else {
                             throw UIScreenAnimationError.invalidTimeline(
                                 component: component.name,

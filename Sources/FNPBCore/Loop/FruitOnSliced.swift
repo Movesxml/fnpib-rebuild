@@ -66,6 +66,9 @@ public final class FruitOnSliced {
                                     isScoring: true,
                                     mode: 0)
         }
+        // FUN_00010bec 在 totalfruit 之前按水果名上报；bean_game_consecutive_total
+        // 随后读取的正是这份计数，不能另建一份经典模式私有计数。
+        services.stats.report(fruit.name, 1)
         services.stats.add(.totalfruit, 1)
 
         if entity.isCriticalHit {
