@@ -144,6 +144,17 @@ public struct UIScreenAnimationPlayer: Sendable {
         return output
     }
 
+    /// Samples the component's current animation at its current logical-clock time.
+    /// A completed animation remains sampleable at its end frame; reset removes it.
+    public func sampleActive(component componentName: String,
+                             track trackName: String) throws -> [Float]? {
+        guard let playback = playbacks[componentName] else { return nil }
+        return try sample(component: componentName,
+                          animation: playback.animation.name,
+                          track: trackName,
+                          atTimeMS: playback.elapsedMS)
+    }
+
     public func sample(component componentName: String,
                        animation animationName: String,
                        track trackName: String,

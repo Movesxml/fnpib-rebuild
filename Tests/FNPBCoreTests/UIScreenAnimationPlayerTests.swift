@@ -91,6 +91,28 @@ final class UIScreenAnimationPlayerTests: XCTestCase {
         XCTAssertEqual(end, [1, 1, 1])
     }
 
+    func testActiveSamplingTracksPlaybackCompletionReplacementAndReset() throws {
+        var player = try productionPlayer()
+        XCTAssertNil(try player.sampleActive(component: "misscounters.cross1", track: "scale"))
+
+        _ = try player.play(component: "misscounters.cross1", animation: "in")
+        XCTAssertEqual(try player.sampleActive(component: "misscounters.cross1", track: "scale"),
+                       [0, 0, 0])
+        _ = try player.advance(deltaSeconds: 0.1225)
+        XCTAssertEqual(try XCTUnwrap(try player.sampleActive(
+            component: "misscounters.cross1", track: "scale"))[0], 0.75, accuracy: 0.00001)
+        _ = try player.advance(deltaSeconds: 1)
+        XCTAssertFalse(player.isPlaying(component: "misscounters.cross1", animation: "in"))
+        XCTAssertEqual(try player.sampleActive(component: "misscounters.cross1", track: "scale"),
+                       [1, 1, 1], "完成后必须保留可采样的结束帧")
+
+        _ = try player.play(component: "misscounters.cross1", animation: "out")
+        XCTAssertEqual(try player.sampleActive(component: "misscounters.cross1", track: "scale"),
+                       [1, 1, 1], "替换后必须读取当前动画，而不是旧动画结束帧")
+        player.reset()
+        XCTAssertNil(try player.sampleActive(component: "misscounters.cross1", track: "scale"))
+    }
+
     func testReplayClearsOldEventsAndResetClearsPlayback() throws {
         var player = try productionPlayer()
         _ = try player.play(component: "gameOverContainer", animation: "game_over")

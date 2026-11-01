@@ -1,21 +1,10 @@
 //
 //  InGameHUDScreen.swift
-//  FNPBUI — 界面层 v1（T-021）
+//  FNPBUI
 //
-//  锚定 uiscreen：`inGameClassic.uiscreen`（v1 只做 Classic HUD；
-//  Adventure / Challenge HUD 见占位 ID `inGameAdventure` / `inGameChallengeHud`）
-//
-//  主要元素：
-//  - 左上角分数块      score（[exe] `ComponentScore` / `HUDControl` 类存在）
-//  - 右上角暂停按钮    → `.pause`（进入 `pause.uiscreen` 浮层）
-//  - 屏幕中央连击横幅  combo（档位由 App 层算好，UI 只上色；
-//                      视觉档位 clamp(combo-3,0,2) [macho]）
-//  - 左下角生命标记    lives / maxLives（[待验证] 原版用叉号图标与 3 次上限）
-//
-//  ⚠️ 本屏是**叠加层**：不画背景（背景由游戏渲染层负责），空白区域不拦截触摸，
-//     只有暂停按钮可点。`allowsHitTesting(false)` 只包在装饰元素上。
-//
-//  疑问清单见文件末尾。
+//  Classic 生命布局取自 inGameClassic.uiscreen 的 480×320 逻辑画布。
+//  active/backing 分别使用 hud_cross 图集的红心／灰心区域，不用 misspool 叉号代替。
+//  分数字体、连击文案、暂停图标仍是既有占位，不代表这些子系统已完成原版视觉重建。
 //
 
 import SwiftUI
@@ -24,6 +13,27 @@ public struct InGameHUDScreen: View {
     public var snapshot: GameSnapshot
     public var actions: UIActions
 
+    private struct HeartLayout {
+        var index: Int
+        var activePosition: CGPoint
+        var backingPosition: CGPoint
+        var size: CGFloat
+    }
+
+    /// backing* 与 cross* 的 originFromCenter 均已开启，所以这些坐标是中心点。
+    /// 保留原浮点值及 backing/cross 的 0.5px 纵向差，而不是凑整后改变相对位置。
+    private static let heartLayouts = [
+        HeartLayout(index: 1,
+                    activePosition: CGPoint(x: 386.9993896484375, y: 16),
+                    backingPosition: CGPoint(x: 386.9993896484375, y: 16), size: 28),
+        HeartLayout(index: 2,
+                    activePosition: CGPoint(x: 419.9993896484375, y: 18.5),
+                    backingPosition: CGPoint(x: 419.9993896484375, y: 19), size: 35),
+        HeartLayout(index: 3,
+                    activePosition: CGPoint(x: 458.99994015157275, y: 21.5),
+                    backingPosition: CGPoint(x: 458.99994015157275, y: 22), size: 42)
+    ]
+
     public init(snapshot: GameSnapshot, actions: UIActions) {
         self.snapshot = snapshot
         self.actions = actions
@@ -31,32 +41,68 @@ public struct InGameHUDScreen: View {
 
     public var body: some View {
         GeometryReader { proxy in
-            let isLandscape = proxy.size.width >= proxy.size.height
-            VStack(spacing: 0) {
-                topRow
-                Spacer(minLength: 0)
+            let canvasScale = min(proxy.size.width / 480, proxy.size.height / 320)
+
+            ZStack {
+                scoreBlock
+                    .padding(.horizontal, proxy.size.width >= proxy.size.height ? 34 : 18)
+                    .padding(.vertical, proxy.size.width >= proxy.size.height ? 16 : 10)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .allowsHitTesting(false)
+
                 comboOverlay
-                Spacer(minLength: 0)
-                bottomRow
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .allowsHitTesting(false)
+
+                if snapshot.mode == .classic {
+                    classicHearts(canvasScale: canvasScale, canvasOrigin: CGPoint(
+                        x: (proxy.size.width - 480 * canvasScale) / 2,
+                        y: (proxy.size.height - 320 * canvasScale) / 2
+                    ))
+                    .allowsHitTesting(false)
+                }
+
+                // 原 pause 位于逻辑画布 (0,320)，不是右上角；美术与触摸尺寸仍待闭合。
+                pauseButton
+                    .padding(.horizontal, proxy.size.width >= proxy.size.height ? 34 : 18)
+                    .padding(.vertical, proxy.size.width >= proxy.size.height ? 16 : 10)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
             }
-            .padding(.horizontal, isLandscape ? 34 : 18)
-            .padding(.vertical, isLandscape ? 16 : 10)
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
-        // HUD 整体透明；触摸事件穿透到下方渲染视图（暂停按钮自身仍可点）。
         .background(Color.clear)
     }
 
-    // MARK: 顶栏
+    // MARK: 原图集生命图标
 
-    private var topRow: some View {
-        HStack(alignment: .top, spacing: 16) {
-            scoreBlock
-                .allowsHitTesting(false)
-            Spacer(minLength: 0)
-            pauseButton
+    private func classicHearts(canvasScale: CGFloat, canvasOrigin: CGPoint) -> some View {
+        ZStack {
+            ForEach(Self.heartLayouts, id: \.index) { layout in
+                let side = layout.size * canvasScale
+                let activePosition = CGPoint(
+                    x: canvasOrigin.x + layout.activePosition.x * canvasScale,
+                    y: canvasOrigin.y + layout.activePosition.y * canvasScale
+                )
+                let backingPosition = CGPoint(
+                    x: canvasOrigin.x + layout.backingPosition.x * canvasScale,
+                    y: canvasOrigin.y + layout.backingPosition.y * canvasScale
+                )
+                let heart = snapshot.classicHearts.first { $0.index == layout.index }
+
+                ArtworkImage(key: "classicHeartBacking", fallback: .clear, contentMode: .fit)
+                    .frame(width: side, height: side)
+                    .position(backingPosition)
+                if let heart {
+                    ArtworkImage(key: "classicHeartActive", fallback: .clear, contentMode: .fit)
+                        .frame(width: side, height: side)
+                        .scaleEffect(heart.scale)
+                        .position(activePosition)
+                }
+            }
         }
     }
+
+    // MARK: 既有占位控件
 
     private var scoreBlock: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -79,7 +125,6 @@ public struct InGameHUDScreen: View {
     }
 
     private var pauseButton: some View {
-        // [待验证] 原版暂停按钮用贴图（pause.uiscreen 相关素材）；此处用 SF Symbol 占位。
         Button {
             actions.send(.pause)
         } label: {
@@ -92,8 +137,6 @@ public struct InGameHUDScreen: View {
         .buttonStyle(.plain)
         .accessibilityLabel(Text("Pause"))
     }
-
-    // MARK: 连击横幅
 
     @ViewBuilder
     private var comboOverlay: some View {
@@ -111,11 +154,9 @@ public struct InGameHUDScreen: View {
             }
             .padding(.horizontal, 24)
             .opacity(combo.opacity)
-            .allowsHitTesting(false)
         }
     }
 
-    /// 视觉档位配色：0/1/2 三档（clamp 已在 App 层完成，这里再夹一次防越界）。
     private func comboColor(_ tier: Int) -> Color {
         switch min(max(tier, 0), 2) {
         case 0: UIPalette.gold
@@ -123,45 +164,4 @@ public struct InGameHUDScreen: View {
         default: UIPalette.accent
         }
     }
-
-    // MARK: 底栏
-
-    private var bottomRow: some View {
-        HStack(alignment: .bottom) {
-            livesRow
-                .allowsHitTesting(false)
-            Spacer(minLength: 0)
-            // [待验证] 原版 HUD 右下角疑似有波次/进度指示（WaveManager 相关），
-            // 语义未闭合前不画，避免臆造。
-        }
-    }
-
-    private var livesRow: some View {
-        HStack(spacing: 6) {
-            // [待验证] 原版生命图标为叉号（三振出局），上限 3；用 SF Symbol 占位。
-            ForEach(0..<max(snapshot.maxLives, 0), id: \.self) { index in
-                Image(systemName: "xmark")
-                    .font(.system(size: 17, weight: .black))
-                    .foregroundStyle(
-                        index < snapshot.lives
-                            ? UIPalette.accent
-                            : UIPalette.parchment.opacity(0.22)
-                    )
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color.black.opacity(0.30))
-        )
-    }
 }
-
-// 疑问清单（[待验证]）：
-// 1. 生命数量上限与扣血规则（切炸弹是否 -1）未从 macho 闭合；HUD 只是显示 `lives/maxLives`。
-// 2. 分数块在屏幕上的实际锚点（mainscreen/inGameClassic.uiscreen 坐标）未提取。
-// 3. Classic 模式是否显示计时（原版 Classic 无倒计时，Challenge 才有）——
-//    本 HUD 故意不画计时，`GameSnapshot.elapsed` 仅留给 Challenge HUD 卡。
-// 4. `inGameClassic.uiscreen` 可能还含道具/特殊果提示位；无证据不实现。
-// 5. 暂停按钮的触达区域 52pt 是自定值，不是原版尺寸。

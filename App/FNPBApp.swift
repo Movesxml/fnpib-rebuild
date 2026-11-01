@@ -369,6 +369,22 @@ final class GameHost: ObservableObject {
     var currentState: GameState { state }
     var currentScore: Int32 { scoreSystem.total }
     var currentTotalFruitSliced: Int32 { statsRecorder.value(for: .totalfruit) }
+    var classicHearts: [ClassicHeartState] {
+        visibleClassicCrosses.sorted().compactMap { index in
+            var scale = SIMD2<Float>(1, 1)
+            do {
+                if let values = try classicAnimationPlayer?.sampleActive(
+                    component: "misscounters.cross\(index)", track: "scale"),
+                   values.count == 3, values.allSatisfy({ $0.isFinite && $0 >= 0 }) {
+                    scale = SIMD2(values[0], values[1])
+                }
+            } catch {
+                classicAnimationLoadError = String(describing: error)
+                Self.contentLogger.error("Classic 生命动画采样失败：\(error.localizedDescription, privacy: .public)")
+            }
+            return ClassicHeartState(index: index, scale: Double(scale.x))
+        }
+    }
     /// [Kimi 修正 T-022 审查] SaveData 无 soundEnabled 字段（Persistence.swift 字段表
     /// 只有 version/highscores/criticalChance/rated/challengeData/stats）——原版音效开关
     /// 在 settings.xml，映射未闭合。v1 用内存态，不持久化，标 [待验证]。
@@ -499,7 +515,8 @@ final class GameHost: ObservableObject {
         gameWorld.resetForNewGame(isClassicMode: mode == .classic,
                                   initialCriticalChance: saveData.criticalChance)
         classicAnimationPlayer?.reset()
-        visibleClassicCrosses.removeAll(keepingCapacity: false)
+        // inGameClassic 开局三颗 active heart 直接可见，不播放入场动画。
+        visibleClassicCrosses = mode == .classic ? [1, 2, 3] : []
         scoreSystem.reset()
         comboTracker.reset(state: &state)
         statsRecorder.reset()

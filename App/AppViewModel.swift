@@ -230,6 +230,7 @@ final class AppViewModel: FNPBUIViewModel {
         next.score = Int(host.currentScore)
         next.bestScore = Int(host.bestScore(for: mode))
         next.lives = max(0, Int(Constants.MissPenalty.threshold) - Int(state.missedFruitCount))
+        next.classicHearts = mode == .classic ? host.classicHearts : []
         next.combo = comboBanner(count: comboCount, windowTimer: state.comboWindowTimer)
         next.pauseVisible = (phase == .paused)
         if phase == .results {

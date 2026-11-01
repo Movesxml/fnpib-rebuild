@@ -99,6 +99,20 @@ public struct ComboBanner: Sendable, Equatable {
     }
 }
 
+// MARK: - 经典生命图标
+
+/// inGameClassic 的红心状态；index 使用原资源编号 1...3。
+/// scale 来自对应 misscounters.cross* 的 UISF 动画轨道，UI 不自行计时。
+public struct ClassicHeartState: Sendable, Equatable {
+    public var index: Int
+    public var scale: Double
+
+    public init(index: Int, scale: Double = 1) {
+        self.index = index
+        self.scale = scale
+    }
+}
+
 // MARK: - 结算摘要
 
 /// 单局结算摘要（results.uiscreen）。
@@ -147,8 +161,10 @@ public struct GameSnapshot: Sendable, Equatable {
     public var bestScore: Int
     /// 剩余生命（Classic 三振出局语义）。
     public var lives: Int
-    /// 生命上限（用于决定 HUD 上画几个叉）。
+    /// 生命上限（保留给结算等旧接口；经典 HUD 使用 classicHearts）。
     public var maxLives: Int
+    /// 经典 HUD 当前可见的红心；灰心始终作为底图绘制。
+    public var classicHearts: [ClassicHeartState]
     /// 本局已用秒数。
     public var elapsed: TimeInterval
     /// 暂停浮层是否可见。与 `phase == .paused` 独立维护：
@@ -168,6 +184,7 @@ public struct GameSnapshot: Sendable, Equatable {
         bestScore: Int = 0,
         lives: Int = 3,
         maxLives: Int = 3,
+        classicHearts: [ClassicHeartState] = (1...3).map { ClassicHeartState(index: $0) },
         elapsed: TimeInterval = 0,
         pauseVisible: Bool = false,
         combo: ComboBanner? = nil,
@@ -180,6 +197,7 @@ public struct GameSnapshot: Sendable, Equatable {
         self.bestScore = bestScore
         self.lives = lives
         self.maxLives = maxLives
+        self.classicHearts = classicHearts
         self.elapsed = elapsed
         self.pauseVisible = pauseVisible
         self.combo = combo
