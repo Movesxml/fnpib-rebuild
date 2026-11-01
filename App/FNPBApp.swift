@@ -177,6 +177,12 @@ final class GameHost: ObservableObject {
     // MARK: 真实内容（T-030）
     private(set) var originalContent: OriginalContent?
     private(set) var contentLoadError: String?
+
+    // MARK: 发售版 Classic UISF 动画
+    private var classicAnimationPlayer: UIScreenAnimationPlayer?
+    private(set) var classicAnimationLoadError: String?
+    /// FUN_00071838_1 只有 out 完成后才隐藏；恢复时 in 立即使控件可见。
+    private(set) var visibleClassicCrosses: Set<Int> = []
     private static let contentLogger = Logger(subsystem: "com.example.fnpib",
                                               category: "original-content")
 
@@ -285,6 +291,15 @@ final class GameHost: ObservableObject {
         }
         self.originalContent = resolvedContent
         self.contentLoadError = resolvedError
+        if let url = Bundle.main.url(forResource: "classicAnimations", withExtension: "json") {
+            do {
+                self.classicAnimationPlayer = try UIScreenAnimationPlayer(data: Data(contentsOf: url))
+            } catch {
+                self.classicAnimationLoadError = String(describing: error)
+            }
+        } else {
+            self.classicAnimationLoadError = "Content/classicAnimations.json 未进入应用资源"
+        }
 
         let tuning = FruitMotionTuning()
         self.motionTuning = tuning
@@ -341,6 +356,9 @@ final class GameHost: ObservableObject {
         renderer?.host = self
         if let resolvedError {
             Self.contentLogger.error("原始内容加载失败：\(resolvedError, privacy: .public)")
+        }
+        if let classicAnimationLoadError {
+            Self.contentLogger.error("Classic 动画加载失败：\(classicAnimationLoadError, privacy: .public)")
         }
     }
 
@@ -401,7 +419,11 @@ final class GameHost: ObservableObject {
             } else {
                 gameWorld.motionTuning.actualSize = GameHost.currentLogicalSize()
             }
+            // 先推进已有 UISF 时间线，再跑控制器并启动本帧新动画；新动画从 0 ms 开始，
+            // 完成 game_over 时产生的 game_over_real 会在同一逻辑帧被消费。
+            advanceClassicAnimations(deltaSeconds: step)
             gameWorld.tick(dt: step, state: &state, world: &store, services: services)
+            consumeClassicEvents()
         }
         renderInterpolationAlpha = alpha
 
@@ -444,6 +466,11 @@ final class GameHost: ObservableObject {
             return false
         }
 
+        if mode == .classic, !ensureClassicAnimations() {
+            Self.contentLogger.error("经典开局被拒绝：动画资源不可用")
+            return false
+        }
+
         currentMode = mode
         state = GameState()
         switch mode {
@@ -469,6 +496,8 @@ final class GameHost: ObservableObject {
         saveData = saveStore.load()
         gameWorld.resetForNewGame(isClassicMode: mode == .classic,
                                   initialCriticalChance: saveData.criticalChance)
+        classicAnimationPlayer?.reset()
+        visibleClassicCrosses.removeAll(keepingCapacity: false)
         scoreSystem.reset()
         comboTracker.reset(state: &state)
         statsRecorder.reset()
@@ -478,13 +507,96 @@ final class GameHost: ObservableObject {
         return true
     }
 
-    /// 供实际动画播放器在两段 Classic 动画各自结束时回报；不设置猜测时长。
-    func completeClassicAnimation() {
-        gameWorld.completeClassicAnimation(state: &state)
-        if state.classicPhase == .results {
-            viewModel.finishGame()
+    // MARK: Classic UISF 动画消费
+
+    private func advanceClassicAnimations(deltaSeconds: Float) {
+        guard var player = classicAnimationPlayer else { return }
+        do {
+            let output = try player.advance(deltaSeconds: deltaSeconds)
+            classicAnimationPlayer = player
+            processClassicAnimationOutput(output)
+        } catch {
+            classicAnimationLoadError = String(describing: error)
+            Self.contentLogger.error("Classic 动画推进失败：\(error.localizedDescription, privacy: .public)")
         }
-        viewModel.refreshSnapshot()
+    }
+
+    private func consumeClassicEvents() {
+        for event in gameWorld.drainClassicEvents() {
+            switch event {
+            case let .missCross(index):
+                guard (1...3).contains(index) else { continue }
+                visibleClassicCrosses.insert(Int(index))
+                startClassicAnimation(component: "misscounters.cross\(index)", animation: "out")
+            case let .restoreCross(index):
+                guard (1...3).contains(index) else { continue }
+                visibleClassicCrosses.insert(Int(index))
+                startClassicAnimation(component: "misscounters.cross\(index)", animation: "in")
+            case .gameOver:
+                startClassicAnimation(component: "gameOverContainer", animation: "game_over")
+            case .gameOverReal:
+                startClassicAnimation(component: "gameOverContainer", animation: "game_over_real")
+            case .results:
+                break
+            }
+        }
+    }
+
+    private func startClassicAnimation(component: String, animation: String) {
+        guard var player = classicAnimationPlayer else {
+            classicAnimationLoadError = "Classic 动画资源不可用，无法启动 \(component)/\(animation)"
+            return
+        }
+        do {
+            let output = try player.play(component: component, animation: animation)
+            classicAnimationPlayer = player
+            processClassicAnimationOutput(output)
+        } catch {
+            classicAnimationLoadError = String(describing: error)
+            Self.contentLogger.error("Classic 动画启动失败：\(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    private func processClassicAnimationOutput(_ output: [UIScreenAnimationOutput]) {
+        for item in output {
+            switch item {
+            case let .event(_, _, command, arguments):
+                if command == "PlaySound", let key = arguments.first {
+                    audio.play(key)
+                }
+            case let .completed(component, animation):
+                if component == "gameOverContainer", animation == "game_over",
+                   state.classicPhase == .gameOver {
+                    gameWorld.completeClassicAnimation(state: &state)
+                    consumeClassicEvents()
+                } else if component == "gameOverContainer", animation == "game_over_real",
+                          state.classicPhase == .gameOverReal {
+                    gameWorld.completeClassicAnimation(state: &state)
+                    consumeClassicEvents()
+                } else if component.hasPrefix("misscounters.cross"), animation == "out",
+                          let index = Int(component.dropFirst("misscounters.cross".count)) {
+                    // FUN_00071838_1：out 完成回调在这里隐藏控件，而不是漏切瞬间隐藏。
+                    // 同回调的 heartLostSml 粒子创建仍属于尚未重建的特效系统。
+                    visibleClassicCrosses.remove(index)
+                }
+            }
+        }
+    }
+
+    private func ensureClassicAnimations() -> Bool {
+        if classicAnimationPlayer != nil { return true }
+        guard let url = Bundle.main.url(forResource: "classicAnimations", withExtension: "json") else {
+            classicAnimationLoadError = "Content/classicAnimations.json 未进入应用资源"
+            return false
+        }
+        do {
+            classicAnimationPlayer = try UIScreenAnimationPlayer(data: Data(contentsOf: url))
+            classicAnimationLoadError = nil
+            return true
+        } catch {
+            classicAnimationLoadError = String(describing: error)
+            return false
+        }
     }
 
     /// 重开：以当前模式重新开局，复用已验证内容。
@@ -519,6 +631,9 @@ final class GameHost: ObservableObject {
     func quitToMenu() {
         shouldRunDisplayLink = false
         displayLink.stop()
+        classicAnimationPlayer?.reset()
+        visibleClassicCrosses.removeAll(keepingCapacity: false)
+        _ = gameWorld.drainClassicEvents()
         persist()
     }
 

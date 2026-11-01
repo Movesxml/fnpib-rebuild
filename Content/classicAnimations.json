@@ -1,0 +1,588 @@
+{
+  "formatVersion": 1,
+  "source": {
+    "file": "inGameClassic.uiscreen",
+    "sha256": "da4a51d62ffb247eb6b146264ee5cd3e0e4bd586260e8ebf0f1cead24dcf9121"
+  },
+  "components": [
+    {
+      "name": "misscounters.cross1",
+      "animations": [
+        {
+          "name": "in",
+          "endTimeMS": 695,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    1.5,
+                    1.5,
+                    1.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 395,
+                  "interpolation": 0,
+                  "values": [
+                    0.5,
+                    0.5,
+                    0.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    1.25,
+                    1.25,
+                    1.25
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 595,
+                  "interpolation": 0,
+                  "values": [
+                    0.75,
+                    0.75,
+                    0.75
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 695,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "out",
+          "endTimeMS": 250,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 250,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "life-lose"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "misscounters.cross2",
+      "animations": [
+        {
+          "name": "in",
+          "endTimeMS": 695,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    1.5,
+                    1.5,
+                    1.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 395,
+                  "interpolation": 0,
+                  "values": [
+                    0.5,
+                    0.5,
+                    0.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    1.25,
+                    1.25,
+                    1.25
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 595,
+                  "interpolation": 0,
+                  "values": [
+                    0.75,
+                    0.75,
+                    0.75
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 695,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "out",
+          "endTimeMS": 250,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 250,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "life-lose"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "misscounters.cross3",
+      "animations": [
+        {
+          "name": "in",
+          "endTimeMS": 695,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    1.5,
+                    1.5,
+                    1.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 395,
+                  "interpolation": 0,
+                  "values": [
+                    0.5,
+                    0.5,
+                    0.5
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    1.25,
+                    1.25,
+                    1.25
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 595,
+                  "interpolation": 0,
+                  "values": [
+                    0.75,
+                    0.75,
+                    0.75
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 695,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "out",
+          "endTimeMS": 250,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 250,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "life-lose"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gameOverContainer",
+      "animations": [
+        {
+          "name": "game_over",
+          "endTimeMS": 2345,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 205,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    240.0,
+                    160.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2345,
+                  "interpolation": 0,
+                  "values": [
+                    240.0,
+                    160.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Pause"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "timeMS": 350,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Game-over"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "game_over_real",
+          "endTimeMS": 225,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 225,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    240.0,
+                    160.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 225,
+                  "interpolation": 0,
+                  "values": [
+                    240.0,
+                    -50.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 225,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 155,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Unpause"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
