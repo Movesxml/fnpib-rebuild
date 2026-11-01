@@ -1,0 +1,3750 @@
+{
+  "source": "ch1challengeList.xml",
+  "bytes": 18597,
+  "encoding": "bxml",
+  "root": {
+    "tag": "partyChallenges",
+    "children": [
+      {
+        "tag": "defaults",
+        "attrs": {
+          "chanceSelect": "20",
+          "chanceRegrowth": "0.2"
+        }
+      },
+      {
+        "tag": "challengeTier",
+        "attrs": {
+          "name": "tier1",
+          "numRounds": "4",
+          "dtStart": "1.0f",
+          "dtRoundIncrement": "0.03f",
+          "background": "background1"
+        },
+        "children": [
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1basic",
+              "chanceSelect": "40"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "fruitAcross1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "9",
+                  "timeLimit": "8",
+                  "customWave": "fruitAcross1",
+                  "type": "speed"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "fountainFruitWave",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_25",
+                  "numWaves": "15",
+                  "timeLimit": "9",
+                  "customWave": "centerFruitSpam",
+                  "type": "fruitAndBomb",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit25FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "tenSingles",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "10",
+                  "timeLimit": "7",
+                  "customWave": "tenSingles",
+                  "type": "fruit"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "fruitPairs1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "6",
+                  "timeLimit": "9",
+                  "customWave": "fruitPairs1",
+                  "type": "fruit"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "fruitFighter1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "20",
+                  "timeLimit": "10",
+                  "customWave": "fruitFighter1",
+                  "type": "speed"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bombField1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "3",
+                  "timeLimit": "10",
+                  "customWave": "bombField1",
+                  "evaluateOnEnd": "true",
+                  "type": "fruitAndBomb"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "notChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1shape"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "Square1FruitWave",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "20",
+                  "timeLimit": "14",
+                  "customWave": "Square1FruitWave",
+                  "startActive": "false",
+                  "type": "fruitshapes"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1Balloon"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "balloon1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "9",
+                  "timeLimit": "16",
+                  "customWave": "BallonLine1",
+                  "type": "balloons",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BalloonsStrong"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "balloon2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "9",
+                  "timeLimit": "16",
+                  "customWave": "BalloonDropLeftToRight",
+                  "type": "balloons",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BalloonsStrong"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1bounce",
+              "chanceSelect": "30"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceFlat1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "1",
+                  "timeLimit": "10",
+                  "customWave": "bounceFlat1",
+                  "type": "bounceHorizontal"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "pachinko1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_30",
+                  "numWaves": "10",
+                  "timeLimit": "15",
+                  "customWave": "pachinkoWave1",
+                  "challengeFruitSize": "medium",
+                  "type": "pachinko"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit30FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "Pachinko"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceFruit1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10_FRUIT",
+                  "numWaves": "99",
+                  "timeLimit": "10",
+                  "customWave": "BounceFruit1",
+                  "challengeFruitSize": "medium",
+                  "type": "bounceHorizontal"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1slide",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "slideDiag2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "20",
+                  "timeLimit": "10",
+                  "customWave": "slideDiag2",
+                  "evaluateOnEnd": "true",
+                  "challengeFruitSize": "small",
+                  "startActive": "true",
+                  "type": "conveyorBelt"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "TwoSlopesRight"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1slopes",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "slopes1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15_FRUIT",
+                  "numWaves": "1",
+                  "timeLimit": "17",
+                  "customWave": "slopes1",
+                  "challengeFruitSize": "medium",
+                  "type": "bounceOblique"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "Slopes"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceOrder1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_ALL",
+                  "numWaves": "1",
+                  "timeLimit": "15",
+                  "customWave": "bounceOrder1",
+                  "startActive": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "fruitBomb"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit7FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitOrder"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "3",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1window",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "window2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "20",
+                  "timeLimit": "16",
+                  "customWave": "window2",
+                  "evaluateOnEnd": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "window"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "WindowsMiddleRow"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1special"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "snakeFruit1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_50",
+                  "numWaves": "1",
+                  "timeLimit": "9",
+                  "customWave": "snakeWave1",
+                  "challengeFruitSize": "medium",
+                  "type": "snake"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit50FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "0.6",
+                      "bonusFinesse": "1"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "SnakeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "megafruit2",
+                  "instructions": "FN_PUSS_CHALLENGE_DESTROY_MEGA",
+                  "numWaves": "1",
+                  "timeLimit": "12",
+                  "customWave": "megafruit1",
+                  "type": "megaFruit"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit31FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "MegaFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1magicbomb",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "MagicBombs1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "15",
+                  "timeLimit": "11",
+                  "customWave": "FloatingBombs1",
+                  "startActive": "true",
+                  "evaluateOnEnd": "true",
+                  "type": "bombbarrier"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier1hard",
+              "mustSelect": "1"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "BombPop4Wave",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_5",
+                  "numWaves": "20",
+                  "timeLimit": "15",
+                  "customWave": "4PopWithBombs",
+                  "type": "hard",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit5FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "waveLine",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "15",
+                  "timeLimit": "9",
+                  "customWave": "WaveBomb",
+                  "challengeFruitSize": "medium",
+                  "type": "hard",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "boxBombs1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_5",
+                  "numWaves": "10",
+                  "timeLimit": "13",
+                  "customWave": "BombsBoxWave",
+                  "type": "hard",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit5FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "crackTheCoconut1",
+                  "instructions": "FN_PUSS_CHALLENGE_CRACK_1_COCONUT",
+                  "numWaves": "10",
+                  "timeLimit": "10",
+                  "customWave": "crackTheCoconut1",
+                  "evaluateOnEnd": "true",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit1FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "fruitDropped"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "KeepyUppy"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "15",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceCircle1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "20",
+                  "timeLimit": "15",
+                  "customWave": "bounceCircle1",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyCircle"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "megafruit1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_12_FRUIT",
+                  "numWaves": "1",
+                  "timeLimit": "10",
+                  "customWave": "megafruitbomb",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit12FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "MegaBomb"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "challengeTier",
+        "attrs": {
+          "name": "tier2",
+          "numRounds": "4",
+          "dtStart": "1.1f",
+          "dtRoundIncrement": "0.0f",
+          "background": "BACKGROUND_CANTINA"
+        },
+        "children": [
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2shapes",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "boxBombs2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "15",
+                  "timeLimit": "15",
+                  "customWave": "BombsBoxMovingWave",
+                  "type": "fruitshapes",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "CircleShapes1FruitWave",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "20",
+                  "timeLimit": "13",
+                  "customWave": "CircleShapes1FruitWave",
+                  "startActive": "false",
+                  "challengeFruitSize": "medium",
+                  "type": "fruitshapes"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2basic"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "FastFruit2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "30",
+                  "timeLimit": "14",
+                  "customWave": "FastFruit2",
+                  "challengeFruitSize": "medium",
+                  "type": "speed"
+                },
+                "children": [
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2Balloon"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "balloon4",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "20",
+                  "timeLimit": "13",
+                  "customWave": "BalloonLineSmall1",
+                  "type": "balloons",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BalloonsNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "balloon3",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "9",
+                  "timeLimit": "16",
+                  "customWave": "BalloonLeftToRight",
+                  "type": "balloons",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BalloonsNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2window",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "window1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "20",
+                  "timeLimit": "16",
+                  "customWave": "window1",
+                  "evaluateOnEnd": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "window"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "Windows5x3"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "window4",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_40",
+                  "numWaves": "20",
+                  "timeLimit": "16",
+                  "customWave": "window4",
+                  "evaluateOnEnd": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "window"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit40FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "WindowsCircle"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2bounce",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceSide1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "1",
+                  "timeLimit": "10",
+                  "customWave": "bounceSide1",
+                  "challengeFruitSize": "small",
+                  "type": "bounceRound"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BounceCircleSide"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceCircle2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_25",
+                  "numWaves": "20",
+                  "timeLimit": "13",
+                  "customWave": "bounceCircle2",
+                  "challengeFruitSize": "medium",
+                  "type": "bounceRound"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit25FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyCircle"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2stack"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "stack1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "1",
+                  "timeLimit": "5",
+                  "customWave": "stack1",
+                  "startActive": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "stack"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitStack"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "superstack1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_25",
+                  "numWaves": "1",
+                  "timeLimit": "15",
+                  "customWave": "superstack1",
+                  "startActive": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "fallStack"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit25FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitSuperStack"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2slide"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "slide1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "20",
+                  "timeLimit": "12",
+                  "customWave": "slide1",
+                  "evaluateOnEnd": "true",
+                  "challengeFruitSize": "medium",
+                  "startActive": "true",
+                  "type": "conveyorBelt"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "halfPipe1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "5",
+                  "timeLimit": "13",
+                  "customWave": "halfPipe1",
+                  "challengeFruitSize": "medium",
+                  "type": "halfPipe"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "HalfPipe"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2magicbomb",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "MagicBombs2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "15",
+                  "timeLimit": "13",
+                  "customWave": "MagicBombs2",
+                  "startActive": "true",
+                  "evaluateOnEnd": "true",
+                  "type": "bombbarrier"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.0",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2order"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "OrderStatic1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_ALL",
+                  "numWaves": "1",
+                  "timeLimit": "9",
+                  "customWave": "OrderStatic1",
+                  "startActive": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "fruitBomb"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitOrder"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "CircleVelocity"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "3",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "BombFruitSquare1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_ALL",
+                  "numWaves": "1",
+                  "timeLimit": "9",
+                  "customWave": "BombFruitSquare1",
+                  "startActive": "true",
+                  "challengeFruitSize": "small",
+                  "type": "fruitBomb"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit9FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitOrder"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "CircleVelocity"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "3",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2gravity",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "gravity1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "1",
+                  "timeLimit": "5",
+                  "customWave": "gravity1",
+                  "evaluateOnEnd": "true",
+                  "type": "oppositeGravity"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2vslope",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "VerticalSlope1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "30",
+                  "timeLimit": "15",
+                  "customWave": "VerticalSlope1",
+                  "challengeFruitSize": "medium",
+                  "type": "split"
+                },
+                "children": [
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "VerticalSlope1"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2mega",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "megafruit2",
+                  "instructions": "FN_PUSS_CHALLENGE_DESTROY_MEGA",
+                  "numWaves": "1",
+                  "timeLimit": "17",
+                  "customWave": "megafruit2",
+                  "challengeFruitSize": "medium",
+                  "type": "megaFruit"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit31FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "MegaFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier2hard",
+              "mustSelect": "1"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "pachinko3",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_25",
+                  "numWaves": "10",
+                  "timeLimit": "15",
+                  "customWave": "pachinkoWave3",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit25FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "Pachinko3"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceStacks1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_ALL",
+                  "numWaves": "1",
+                  "startActive": "true",
+                  "timeLimit": "10",
+                  "customWave": "bounceStacks1",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit6FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "crackTheCoconut2",
+                  "instructions": "FN_PUSS_CHALLENGE_CRACK_3_COCONUT",
+                  "chanceSelect": "15",
+                  "numWaves": "10",
+                  "timeLimit": "18",
+                  "customWave": "crackTheCoconut2",
+                  "evaluateOnEnd": "true",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit3FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "KeepyUppy"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "10",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "4-BombRain1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_5",
+                  "numWaves": "1",
+                  "timeLimit": "11",
+                  "customWave": "BombRain1",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit5FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "3",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "challengeTier",
+        "attrs": {
+          "name": "tier3",
+          "numRounds": "4",
+          "dtStart": "1.15f",
+          "dtRoundIncrement": "0.0f",
+          "background": "BACKGROUND_CASTLE"
+        },
+        "children": [
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3basic",
+              "chanceSelect": "30"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "hit10fruitWithBombs",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_10",
+                  "numWaves": "1",
+                  "timeLimit": "12",
+                  "customWave": "10fruitAndBombs",
+                  "type": "fruitAndBomb"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit10FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "drop1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_1",
+                  "numWaves": "3",
+                  "timeLimit": "6",
+                  "customWave": "drop1",
+                  "type": "speed"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit1FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "3",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "BombDrop4Wave",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_5",
+                  "numWaves": "20",
+                  "timeLimit": "11",
+                  "customWave": "4dropWithBombs",
+                  "type": "fall",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit5FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3window",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "window3",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_30",
+                  "numWaves": "20",
+                  "timeLimit": "16",
+                  "customWave": "window3",
+                  "evaluateOnEnd": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "window"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit30FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "Windows3x3"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3Balloon",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "balloon5",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_12",
+                  "numWaves": "9",
+                  "timeLimit": "15",
+                  "customWave": "BallonLineStagger",
+                  "type": "balloons",
+                  "prioritySelection": "1"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit12FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BalloonsNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3shape"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "Triangle1FruitWave",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_12",
+                  "numWaves": "20",
+                  "timeLimit": "12",
+                  "customWave": "Triangle1FruitWave",
+                  "startActive": "false",
+                  "challengeFruitSize": "medium",
+                  "type": "fruitshapes"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit12FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3stack"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "superstack2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_40",
+                  "numWaves": "1",
+                  "timeLimit": "20",
+                  "customWave": "superstack1",
+                  "startActive": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "fallStack"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit40FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitSuperStack"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3bounce",
+              "chanceSelect": "15"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceField1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_5",
+                  "numWaves": "1",
+                  "timeLimit": "8",
+                  "customWave": "bounceField1",
+                  "startActive": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "bounceHorizontal"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit5FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "bounceCircleTwoBig1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_12",
+                  "numWaves": "20",
+                  "timeLimit": "16",
+                  "customWave": "bounceCircleTwoBig1",
+                  "challengeFruitSize": "medium",
+                  "type": "bounceRound"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit12FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BounceCircleTwoBig"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3gravity"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "GravitySwitch1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "10",
+                  "timeLimit": "11",
+                  "customWave": "GravitySwitch1",
+                  "evaluateOnEnd": "true",
+                  "type": "mystery"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "GravitySwitch2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "10",
+                  "timeLimit": "11",
+                  "customWave": "GravitySwitch2",
+                  "evaluateOnEnd": "true",
+                  "type": "mystery"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3hard",
+              "mustSelect": "1"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "slopes2hard",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15_FRUIT",
+                  "numWaves": "30",
+                  "timeLimit": "15",
+                  "customWave": "slopes2",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "SlopesFast"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "slideDiag1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "20",
+                  "timeLimit": "11",
+                  "customWave": "slideDiag1",
+                  "evaluateOnEnd": "true",
+                  "challengeFruitSize": "small",
+                  "startActive": "false",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "TwoSlopesLeft"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "FastFruit1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_8",
+                  "numWaves": "11",
+                  "timeLimit": "13",
+                  "customWave": "FastFruit1",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit8FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "pachinko2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "10",
+                  "timeLimit": "16",
+                  "customWave": "pachinkoWave2",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "Pachinko"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "fastFruitShapes1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "30",
+                  "timeLimit": "11",
+                  "customWave": "fastFruitShapes1",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "Circle1FruitWave",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_ALL",
+                  "numWaves": "1",
+                  "timeLimit": "11",
+                  "customWave": "Circle1FruitWave",
+                  "startActive": "true",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit12FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitOrder"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "3",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "megafruit1",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_ALL_FRUIT",
+                  "numWaves": "1",
+                  "timeLimit": "11",
+                  "customWave": "megafruitbomb",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "MegaBomb"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombGravityNormal"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombKeepOnScreen"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BouncyWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "trampoline"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              },
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "VerticalSlope2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_15",
+                  "numWaves": "30",
+                  "timeLimit": "13",
+                  "customWave": "VerticalSlope2",
+                  "challengeFruitSize": "medium",
+                  "type": "hard"
+                },
+                "children": [
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "VerticalSlope2"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit15FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.5",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3magicbomb",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "MagicBombs3",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_20",
+                  "numWaves": "15",
+                  "timeLimit": "13",
+                  "customWave": "MagicBombs3",
+                  "startActive": "true",
+                  "evaluateOnEnd": "true",
+                  "type": "bombbarrier"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit20FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "1.0",
+                      "bonusFinesse": "1"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "tier3snake",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "snakeFruit2",
+                  "instructions": "FN_PUSS_CHALLENGE_SLICE_80",
+                  "numWaves": "1",
+                  "timeLimit": "14",
+                  "customWave": "snakeWave2",
+                  "challengeFruitSize": "medium",
+                  "type": "snake"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "useChallengeFruit"
+                    }
+                  },
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit80FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "1",
+                      "bonusAccuracy": "0.6",
+                      "bonusFinesse": "1"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "SnakeFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FloatingFruit"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "BombPushOff"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "challengeTier",
+        "attrs": {
+          "name": "finalTier",
+          "numRounds": "1",
+          "dtStart": "1.25f",
+          "dtRoundIncrement": "0.0f",
+          "bossId": "BOSS_1",
+          "background": "BACKGROUND_DUNGEON"
+        },
+        "children": [
+          {
+            "tag": "challengeGroup",
+            "attrs": {
+              "name": "finaleGroup1",
+              "chanceSelect": "10"
+            },
+            "children": [
+              {
+                "tag": "challenge",
+                "attrs": {
+                  "name": "finalePinata",
+                  "instructions": "FN_PUSS_CHALLENGE_FINAL_ROUND",
+                  "numWaves": "1",
+                  "timeLimit": "15",
+                  "type": "final",
+                  "customWave": "finalePinata"
+                },
+                "children": [
+                  {
+                    "tag": "condition",
+                    "attrs": {
+                      "name": "hit1FruitOnEnd"
+                    }
+                  },
+                  {
+                    "tag": "mod",
+                    "attrs": {
+                      "name": "FruitNoWalls"
+                    }
+                  },
+                  {
+                    "tag": "bonusMods",
+                    "attrs": {
+                      "bonusFruit": "0.1",
+                      "bonusAccuracy": "0.0",
+                      "bonusFinesse": "0"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

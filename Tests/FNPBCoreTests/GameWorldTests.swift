@@ -584,6 +584,93 @@ final class GameWorldTests: XCTestCase {
         XCTAssertEqual(state.sliceRadiusSquared, 1.0, accuracy: 1e-6)
         XCTAssertEqual(rig.waves.tickCalls, 1)
     }
+
+    // MARK: - 挑战模式真实世界接入
+
+    func testChallengeUsesWorldClockAndDrainsSettlementOnce() {
+        let rig = Rig()
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(name: "timed", timeLimit: 0.25),
+            conditionDefinitions: []))
+        var state = GameState()
+        var world: any EntityStore = GenerationOrderStore()
+
+        rig.world.tick(dt: 0.5, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.world.challenge?.phase, .settling)
+        XCTAssertEqual(rig.world.challenge?.countdown, -0.25)
+        XCTAssertTrue(rig.world.drainChallengeEvents().contains(.roundFinished(.pass)))
+        XCTAssertTrue(rig.world.drainChallengeEvents().isEmpty)
+
+        rig.world.tick(dt: 1, state: &state, world: &world, services: rig.services)
+        XCTAssertTrue(rig.world.drainChallengeEvents().isEmpty)
+        XCTAssertEqual(rig.world.challenge?.roundsPlayed, 1)
+    }
+
+    func testChallengeWaitsForRealCompletedWavesAndFruitEntities() {
+        let rig = Rig()
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(name: "oneWave", numWaves: 1),
+            conditionDefinitions: []))
+        var state = GameState()
+        var world: any EntityStore = GenerationOrderStore()
+        let fruitID = world.spawn(EntityPrototype(kind: .fruit))
+
+        rig.waves.hasEndedWaveForChallenge = true
+        rig.world.tick(dt: 0.01, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.world.challenge?.phase, .running,
+                       "只有波次结束标志、没有实际完成数时不得结束")
+
+        rig.waves.completedWaveCountForChallenge = 1
+        rig.world.tick(dt: 0.01, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.world.challenge?.phase, .running,
+                       "仍有水果实体时不得结束")
+
+        world.despawn(fruitID)
+        rig.world.tick(dt: 0.01, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.world.challenge?.phase, .settling)
+        XCTAssertEqual(rig.world.challenge?.roundResults, [.pass])
+    }
+
+    func testChallengeImmediateScoreReadsProductionScoreAfterFruitOnSliced() {
+        let rig = Rig()
+        let goal = ChallengeConditionDefinition(
+            name: "goal", kind: .score, total: 10, evaluateOnEnd: true)
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(
+                name: "scoreGoal", timeLimit: 1, conditionNames: ["goal"]),
+            conditionDefinitions: [goal]))
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        var fruit = FruitInfo()
+        fruit.typeID = 1
+        fruit.score = 10
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit))
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world,
+                       services: rig.services)
+        XCTAssertEqual(rig.score.total, 10)
+        XCTAssertEqual(rig.world.challenge?.conditions.condition(named: "goal")?.current, .pass)
+        XCTAssertEqual(rig.world.challenge?.phase, .running,
+                       "即时 PASS 不应绕过回合结束优先级")
+
+        rig.world.tick(dt: 1, state: &state, world: &world, services: rig.services)
+        XCTAssertEqual(rig.world.challenge?.roundResults, [.pass])
+    }
+
+    func testResetForNewGameClearsInjectedChallenge() {
+        let rig = Rig()
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(name: "oldRound"),
+            conditionDefinitions: []))
+        rig.world.resetForNewGame(isClassicMode: false)
+        XCTAssertNil(rig.world.challenge)
+        XCTAssertTrue(rig.world.drainChallengeEvents().isEmpty)
+    }
 }
 
 // ============================================================================
@@ -611,8 +698,10 @@ private final class SpySliceTester: SliceTesting {
     }
 }
 
-private final class SpyWaveDirector: WaveDirecting {
+private final class SpyWaveDirector: WaveDirecting, ChallengeWaveStateProviding {
     private(set) var tickCalls = 0
+    var completedWaveCountForChallenge: Int32 = 0
+    var hasEndedWaveForChallenge = false
 
     func tick(dt: Float, state: inout GameState, world: any EntityStore) {
         tickCalls += 1

@@ -92,10 +92,28 @@ public protocol StatsRecording: AnyObject {
     func add(_ key: StatsKey, _ value: Int32)
     /// 动态键（"%s_combos" / "strawberry_combo_total"）走字符串通道
     func report(_ dynamicKey: String, _ value: Int32)
+    /// 固定键查询必须和 add 读取同一存储，不得由动态键快照反推。
+    func value(for key: StatsKey) -> Int32
     /// FUN_000276e8 的查询与 report 必须读取同一动态计数存储。
     func value(forDynamicKey key: String) -> Int32
+    /// 挑战条件使用的只读快照；键统一为小写，包含固定键和动态水果键。
+    func challengeValues() -> [String: Int32]
     /// combo 快照必须包含水果类型；模式未闭合时 modePrefix 为 nil。
     func recordCombo(count: Int32, fruitTypes: [Int32], modePrefix: String?)
+}
+
+public extension StatsRecording {
+    func value(for key: StatsKey) -> Int32 {
+        value(forDynamicKey: key.rawValue)
+    }
+
+    func challengeValues() -> [String: Int32] {
+        var values: [String: Int32] = [:]
+        for key in StatsKey.allCases {
+            values[key.rawValue.lowercased()] = value(for: key)
+        }
+        return values
+    }
 }
 
 public protocol WaveDirecting: AnyObject {
@@ -177,6 +195,9 @@ public final class GameWorld: GameTicking {
     /// 经典控制器是模式实例，不属于全局 Game 状态；重开局必须清空其事件队列。
     private var classic: ClassicModeRuntime
 
+    /// 挑战控制器仅在外部注入真实 tier/challenge 后运行；缺省不影响经典模式。
+    public private(set) var challenge: ChallengeModeRuntime?
+
     /// dt==0 时的兜底步长（原 PTR_DAT_004d9048+0x44 / _DAT_0197f47c）
     /// [待验证] 具体数值未闭合（T-007 遗留），暂按逻辑帧 1/60
     private let fallbackDelta: Float = 1.0 / 60.0
@@ -204,12 +225,22 @@ public final class GameWorld: GameTicking {
         lastDelta = fallbackDelta
     }
 
-    /// 重开局同时清理上一局的爆炸与经典事件，避免复用 GameWorld 时继承结束状态。
+    /// 重开局同时清理上一局的爆炸与模式事件，避免复用 GameWorld 时继承结束状态。
     public func resetForNewGame(isClassicMode: Bool, initialCriticalChance: Int32 = 70) {
         lastDelta = 0
         explosionTimeRemaining = 0
         classic.reset(isClassicMode: isClassicMode)
+        challenge = nil
         onSliced.reset(isClassicMode: isClassicMode, initialChance: initialCriticalChance)
+    }
+
+    public func configureChallenge(_ runtime: ChallengeModeRuntime?) {
+        challenge = runtime
+    }
+
+    public func drainChallengeEvents() -> [ChallengeModeEvent] {
+        guard challenge != nil else { return [] }
+        return challenge!.drainEvents()
     }
 
     /// 动画系统回报当前 game_over / game_over_real 已完成。
@@ -433,6 +464,7 @@ public final class GameWorld: GameTicking {
             onSliced.apply(entity: &entity, state: &state, services: services,
                            explosionTimeRemaining: explosionTimeRemaining)
             classic.onFruitSliced(entity, state: &state, services: services)
+            evaluateChallengeImmediate(services: services)
 
             pendingDespawn.append(entity.id)
             return true
@@ -563,5 +595,36 @@ public final class GameWorld: GameTicking {
     private func step10_updateSubsystems(dt: Float, state: inout GameState,
                                          world: inout any EntityStore, services: GameServices) {
         services.waves.tick(dt: dt, state: &state, world: world)
+        updateChallenge(dt: dt, world: world, services: services)
+    }
+
+    /// 原 ChallengeManager 在水果 OnSliced 后读取同一玩家分数与统计对象；
+    /// 不在挑战控制器中另建计数副本。单刀多果的 CONSECUTIVE 分组仍待闭合，
+    /// 因此这里只走即时条件，不虚构 comboCount。
+    private func evaluateChallengeImmediate(services: GameServices) {
+        guard challenge != nil else { return }
+        challenge!.evaluateImmediate(context: ChallengeEvaluationContext(
+            score: services.score.total, stats: services.stats))
+    }
+
+    /// 波次结束只由真实 WaveManager 状态触发；水果数量也直接查询 ECS，
+    /// 避免控制器持有与世界脱节的影子计数。
+    private func updateChallenge(dt: Float, world: any EntityStore,
+                                 services: GameServices) {
+        guard challenge != nil else { return }
+        let waveProvider = services.waves as? any ChallengeWaveStateProviding
+        if waveProvider?.hasEndedWaveForChallenge == true {
+            challenge!.markWavesEnded()
+        }
+        var fruitEntityCount: Int32 = 0
+        world.forEach(kind: .fruit) { _ in
+            fruitEntityCount += 1
+            return true
+        }
+        challenge!.update(dt: dt, frame: ChallengeFrame(
+            evaluation: ChallengeEvaluationContext(
+                score: services.score.total, stats: services.stats),
+            waveCount: waveProvider?.completedWaveCountForChallenge ?? 0,
+            fruitEntityCount: fruitEntityCount))
     }
 }

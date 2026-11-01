@@ -1,0 +1,841 @@
+{
+  "source": "challengeConditions.xml",
+  "bytes": 5824,
+  "encoding": "bxml",
+  "root": {
+    "tag": "challengeConditions",
+    "children": [
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score2",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "2"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score4",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "4"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score10",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "10"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score15",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "15"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score20",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "20"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score30",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "30"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score40",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "40"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score50",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "50"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "score100",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "100"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "noFail",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "0",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "sliceAPineapple",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "1",
+          "specific_type": "pineapple"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitAppleOnly",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1",
+          "evaluateOnEnd": "true",
+          "specific_type": "apple"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitpineappleOnly",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1",
+          "evaluateOnEnd": "true",
+          "specific_type": "pineapple"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitTopFruitOnly",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitTopMultipleFruitOnly",
+          "type": "CONSECUTIVE",
+          "result": "PASS",
+          "total": "5"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitAnyFruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit2Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "2",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit3Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "3",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit4Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "4",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit5Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "5",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit6Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "6",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit10Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "10",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit11Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "11",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit14Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "14",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit15Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "15",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit20Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "20",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit25Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "25",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit35Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "35",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit40Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "40",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitAllWatermelons",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "5",
+          "specific_type": "watermelon"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitAWatermelon",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1",
+          "specific_type": "watermelon"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "bombDrop",
+          "type": "SCORE",
+          "result": "PASS",
+          "total": "0"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "fruitDropped",
+          "type": "STATS",
+          "result": "FAIL",
+          "total": "1",
+          "specific_type": "dropped"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "fruitDropped2",
+          "type": "STATS",
+          "result": "FAIL",
+          "total": "2",
+          "specific_type": "dropped"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "classicRules",
+          "type": "STATS",
+          "result": "FAIL",
+          "total": "3",
+          "specific_type": "dropped"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "onlyPineapple",
+          "type": "STATS_COMPARE",
+          "result": "FAIL",
+          "specific_type": "pineapple",
+          "comparison": "NOT_EQUAL",
+          "specific_type2": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "onlyapple",
+          "type": "STATS_COMPARE",
+          "result": "FAIL",
+          "specific_type": "apple",
+          "comparison": "NOT_EQUAL",
+          "specific_type2": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hitRedAppleOnly",
+          "type": "STATS_COMPARE",
+          "result": "FAIL",
+          "specific_type": "apple_red",
+          "comparison": "NOT_EQUAL",
+          "specific_type2": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "onlyRedApple",
+          "type": "STATS_COMPARE",
+          "result": "FAIL",
+          "specific_type": "apple",
+          "comparison": "NOT_EQUAL",
+          "specific_type2": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "only1Fruit",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit30Pass",
+          "type": "TIME",
+          "result": "PASS",
+          "time": "30"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit20Pass",
+          "type": "TIME",
+          "result": "PASS",
+          "time": "20"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit20",
+          "type": "TIME",
+          "result": "FAIL",
+          "time": "20"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit15",
+          "type": "TIME",
+          "result": "FAIL",
+          "time": "15"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit15Pass",
+          "type": "TIME",
+          "result": "PASS",
+          "time": "15"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit10",
+          "type": "TIME",
+          "result": "FAIL",
+          "time": "10"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit10Pass",
+          "type": "TIME",
+          "result": "PASS",
+          "time": "10"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit7",
+          "type": "TIME",
+          "result": "FAIL",
+          "time": "7"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "timeLimit5",
+          "type": "TIME",
+          "result": "FAIL",
+          "time": "5"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "useChallengeFruit",
+          "type": "STATS",
+          "result": "FAIL",
+          "total": "9999",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "challengeFruit1",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "challengeFruit2",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "2",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "challengeFruit3",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "3",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "challengeFruit4",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "4",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "challengeFruit5",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "5",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "challengeFruit6",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "6",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "challengeFruit10",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "10",
+          "specific_type": "challengeFruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "notChallengeFruit",
+          "type": "STATS_COMPARE",
+          "result": "FAIL",
+          "specific_type": "challengeFruit",
+          "comparison": "NOT_EQUAL",
+          "specific_type2": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit0FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "0",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit1FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "1",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit2FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "2",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit3FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "3",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit4FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "4",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit5FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "5",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit5FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "5",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit6FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "6",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit7FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "7",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit8FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "8",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit9FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "9",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit10FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "10",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit12FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "12",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit14FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "14",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit15FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "15",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit20FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "20",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit25FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "25",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit30FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "30",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit31FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "31",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit40FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "40",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit50FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "50",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit60FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "60",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit80FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "80",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      },
+      {
+        "tag": "condition",
+        "attrs": {
+          "name": "hit100FruitOnEnd",
+          "type": "STATS",
+          "result": "PASS",
+          "total": "100",
+          "evaluateOnEnd": "true",
+          "specific_type": "totalfruit"
+        }
+      }
+    ]
+  }
+}

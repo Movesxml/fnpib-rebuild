@@ -95,6 +95,17 @@ public final class StatsRecorder: StatsRecording {
         dynamicCounters[key] ?? 0
     }
 
+    public func challengeValues() -> [String: Int32] {
+        var values: [String: Int32] = [:]
+        for (key, value) in counters {
+            values[key.rawValue.lowercased()] = value
+        }
+        for (key, value) in dynamicCounters {
+            values[key.lowercased()] = value
+        }
+        return values
+    }
+
     public func reset() {
         counters.removeAll()
         dynamicCounters.removeAll()

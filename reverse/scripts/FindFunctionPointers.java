@@ -15,7 +15,7 @@ public class FindFunctionPointers extends GhidraScript {
             pw.println("# 函数入口指针引用\n");
             for (int i = 1; i < args.length; i++) {
                 long value = Long.parseLong(args[i].replace("0x", ""), 16);
-                Function target = currentProgram.getFunctionManager().getFunctionAt(toAddr(value));
+                Function target = currentProgram.getFunctionManager().getFunctionAt(toAddr(value & ~1L));
                 pw.println("## " + args[i] + " -> " + (target == null ? "非函数入口" : target.getName()));
                 int hits = 0;
                 for (MemoryBlock block : currentProgram.getMemory().getBlocks()) {
@@ -33,7 +33,7 @@ public class FindFunctionPointers extends GhidraScript {
                             if (!block.contains(entry)) continue;
                             int raw = currentProgram.getMemory().getInt(entry);
                             Function f = currentProgram.getFunctionManager().getFunctionAt(
-                                    toAddr(raw & 0xffffffffL));
+                                    toAddr(raw & 0xfffffffeL));
                             pw.println(String.format("  %+3d %s: 0x%08x %s", slot, entry,
                                     raw & 0xffffffffL, f == null ? "" : f.getName()));
                         }
