@@ -60,6 +60,8 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
     public private(set) var tier: ChallengeTierDefinition
     public private(set) var challenge: ChallengeDefinition
     public private(set) var conditions: ChallengeConditionsRuntime
+    /// controller+0x88 的本回合选择；先保存它，再激活 challengeFruit 条件。
+    public private(set) var selectedFruitName: String?
     public private(set) var phase: ChallengeModePhase = .running
     public private(set) var countdown: Float
     public private(set) var wavesEnded = false
@@ -77,11 +79,14 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
 
     public init(tier: ChallengeTierDefinition,
                 challenge: ChallengeDefinition,
-                conditionDefinitions: [ChallengeConditionDefinition]) {
+                conditionDefinitions: [ChallengeConditionDefinition],
+                selectedFruitName: String? = nil) {
         self.tier = tier
         self.challenge = challenge
+        self.selectedFruitName = selectedFruitName
         conditions = ChallengeConditionsRuntime(definitions: conditionDefinitions)
-        conditions.select(conditionNames: challenge.conditionNames)
+        conditions.select(conditionNames: challenge.conditionNames,
+                          selectedFruitName: selectedFruitName)
         countdown = conditions.timerDuration != 0
             ? conditions.timerDuration : challenge.timeLimit
     }
@@ -141,20 +146,23 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
     }
 
     /// FUN_0005fd7c 状态 3：只响应结算控制器 state==7 的真实子状态。
-    /// 新回合配置由外部选择器显式提供；缺失时不推进、不虚构选择。
+    /// 新回合配置与水果由外部选择器显式提供；缺失时不推进、不虚构选择。
     /// bonusIntro 之前同样先完成外部回合 setup，避免沿用上一轮已冻结的聚合结果。
     public mutating func updateSettlement(controllerState: Int32,
                                           substate: Int32,
-                                          nextChallenge: ChallengeDefinition? = nil) {
+                                          nextChallenge: ChallengeDefinition? = nil,
+                                          nextSelectedFruitName: String? = nil) {
         guard phase == .settling, controllerState == 7 else { return }
         switch ChallengeSettlementSubstate(rawValue: substate) ?? .other {
         case .bonus:
             guard let nextChallenge else { return }
-            prepareRound(challenge: nextChallenge)
+            prepareRound(challenge: nextChallenge,
+                         selectedFruitName: nextSelectedFruitName)
             startBonusIntro()
         case .nextRound:
             guard let nextChallenge else { return }
-            beginRound(challenge: nextChallenge)
+            beginRound(challenge: nextChallenge,
+                       selectedFruitName: nextSelectedFruitName)
             events.append(.nextRound)
         case .finished:
             cleanup()
@@ -171,17 +179,21 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
         events.append(.playAnimation(target: "Timer", name: "animate_in"))
     }
 
-    private mutating func prepareRound(challenge nextChallenge: ChallengeDefinition) {
+    private mutating func prepareRound(challenge nextChallenge: ChallengeDefinition,
+                                       selectedFruitName: String?) {
         challenge = nextChallenge
+        self.selectedFruitName = selectedFruitName
         countdown = 0
         wavesEnded = false
-        conditions.select(conditionNames: challenge.conditionNames)
+        conditions.select(conditionNames: challenge.conditionNames,
+                          selectedFruitName: selectedFruitName)
         countdown = conditions.timerDuration != 0
             ? conditions.timerDuration : challenge.timeLimit
     }
 
-    private mutating func beginRound(challenge nextChallenge: ChallengeDefinition) {
-        prepareRound(challenge: nextChallenge)
+    private mutating func beginRound(challenge nextChallenge: ChallengeDefinition,
+                                     selectedFruitName: String?) {
+        prepareRound(challenge: nextChallenge, selectedFruitName: selectedFruitName)
         phase = .running
         events.append(.playAnimation(target: "Timer", name: "animate_in"))
     }

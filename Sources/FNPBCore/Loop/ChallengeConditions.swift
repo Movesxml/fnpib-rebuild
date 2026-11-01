@@ -104,11 +104,14 @@ public struct ChallengeCondition: Sendable, Equatable {
     public var definition: ChallengeConditionDefinition
     public private(set) var current: ChallengeOutcome
     public private(set) var timeRemaining: Float
+    /// condition+0x50 的值语义投影；只有 challengeFruit 占位符在激活时使用它。
+    public private(set) var selectedFruitName: String?
 
     public init(_ definition: ChallengeConditionDefinition) {
         self.definition = definition
         current = .pending
         timeRemaining = definition.time
+        selectedFruitName = nil
     }
 
     /// 所有类型先清当前结果；TIME 的 0x5f624 另外恢复完整倒计时。
@@ -119,13 +122,20 @@ public struct ChallengeCondition: Sendable, Equatable {
         }
     }
 
+    /// FUN_0005ed54 → 虚表+8：选定水果后激活；不改共享 definition，允许下回合重绑。
+    public mutating func activate(selectedFruitName: String?) {
+        reset()
+        self.selectedFruitName = selectedFruitName?.lowercased()
+    }
+
     /// 虚表 +0x44。SCORE / STATS 等只返回 target <= current；
     /// STATS_COMPARE 的 0x5f0b8 则在比较后自行更新 current 并返回是否变化。
     @discardableResult
     public mutating func check(context: ChallengeEvaluationContext) -> Bool {
         if definition.kind == .statsCompare {
             let old = current
-            let lhs = context.statistic(definition.specificType)
+            let lhs = context.statistic(resolvedStatisticKey(definition.specificType))
+            // specific_type2 的 challengeFruit 替换没有直接证据，保持原键。
             let rhs = context.statistic(definition.specificType2)
             current = definition.comparison.evaluate(lhs, rhs) ? definition.result : .pending
             return current != old
@@ -171,13 +181,13 @@ public struct ChallengeCondition: Sendable, Equatable {
         }
     }
 
-    /// CONSECUTIVE 的 0x5f21c：可选类型匹配后，按本刀数量与 total 比较。
+    /// CONSECUTIVE 的 0x5f21c：nil 过滤值是通配；占位符只在激活后解析。
     @discardableResult
     public mutating func recordConsecutive(count: Int32,
                                            specificType: String?) -> Bool {
         guard definition.kind == .consecutive else { return false }
-        if let required = definition.specificType,
-           required.lowercased() != specificType?.lowercased() {
+        if let required = resolvedStatisticKey(definition.specificType),
+           required != specificType?.lowercased() {
             return false
         }
         let old = current
@@ -200,12 +210,20 @@ public struct ChallengeCondition: Sendable, Equatable {
         return current != old
     }
 
+    private func resolvedStatisticKey(_ raw: String?) -> String? {
+        guard let raw, !raw.isEmpty else { return nil }
+        if raw.lowercased() == "challengefruit" {
+            return selectedFruitName
+        }
+        return raw.lowercased()
+    }
+
     private func currentValue(context: ChallengeEvaluationContext) -> Int32 {
         switch definition.kind {
         case .score:
             return context.score
         case .stats:
-            return context.statistic(definition.specificType)
+            return context.statistic(resolvedStatisticKey(definition.specificType))
         case .base, .consecutive, .statsCompare, .time:
             return 0
         }
@@ -326,14 +344,16 @@ public struct ChallengeConditionsRuntime: Sendable, Equatable {
     }
 
     /// FUN_0005ed54：只重置并入列真实存在的条件，未知名称静默跳过。
-    public mutating func select(conditionNames names: [String]) {
+    /// 选择器先提供本回合水果，再激活条件；共享 definition 保持不变。
+    public mutating func select(conditionNames names: [String],
+                                selectedFruitName: String? = nil) {
         result = .pending
         timerDuration = 0
         activeNames.removeAll(keepingCapacity: false)
         for name in names {
             let key = name.lowercased()
             guard var condition = conditions[key] else { continue }
-            condition.reset()
+            condition.activate(selectedFruitName: selectedFruitName)
             if condition.definition.kind == .time {
                 timerDuration = condition.timeRemaining
             }

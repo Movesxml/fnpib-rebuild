@@ -28,7 +28,7 @@ final class ChallengeConsecutiveTrackerTests: XCTestCase {
         let stats = StatsRecorder()
         let rng = OriginalLCGRandom(seed: 1)
         let services = GameServices(
-            slice: SliceTester(), combo: ComboTracker(stats: stats), score: score,
+            slice: ConsecutiveSlice(), combo: ComboTracker(stats: stats), score: score,
             stats: stats, waves: WaveDirector(rng: rng), audio: ConsecutiveAudio(),
             effects: ConsecutiveEffects(), rng: rng)
         var entity = Entity(id: EntityID(rawValue: 1), kind: .fruit)
@@ -58,7 +58,7 @@ final class ChallengeConsecutiveTrackerTests: XCTestCase {
         let stats = StatsRecorder()
         let rng = OriginalLCGRandom(seed: 1)
         let services = GameServices(
-            slice: SliceTester(), combo: ComboTracker(stats: stats), score: score,
+            slice: ConsecutiveSlice(), combo: ComboTracker(stats: stats), score: score,
             stats: stats, waves: WaveDirector(rng: rng), audio: ConsecutiveAudio(),
             effects: ConsecutiveEffects(), rng: rng)
         var entity = Entity(id: EntityID(rawValue: 1), kind: .fruit)
@@ -79,6 +79,11 @@ final class ChallengeConsecutiveTrackerTests: XCTestCase {
         XCTAssertEqual(score.total, 0)
         XCTAssertEqual(stats.value(for: .totalfruit), 0)
     }
+}
+
+private final class ConsecutiveSlice: SliceTesting {
+    func isSliced(game: GameState, entity: Entity) -> Bool { false }
+    func isNearMiss(game: GameState, entity: Entity) -> Bool { false }
 }
 
 private final class ConsecutiveAudio: AudioPlaying {
