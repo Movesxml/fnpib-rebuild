@@ -162,11 +162,11 @@ final class SpawnMotionTests: XCTestCase {
         let entity = try XCTUnwrap(store.entity(id))
         XCTAssertEqual(entity.kind, .bomb)
         XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -260, 32))
-        // 测试整数随机源返回 20：trunc(10*150/-300)-10+20 = 15°。
+        // 测试整数随机源返回 20：trunc(10*150/-300)-10+20 = 5°。
         XCTAssertEqual(entity.transform.velocity.x,
-                       11 * OriginalSpawnTrigonometry.sin(degrees: 15), accuracy: 1e-5)
+                       11 * OriginalSpawnTrigonometry.sin(degrees: 5), accuracy: 1e-5)
         XCTAssertEqual(entity.transform.velocity.y,
-                       11 * OriginalSpawnTrigonometry.cos(degrees: 15) * 1.075, accuracy: 1e-5)
+                       11 * OriginalSpawnTrigonometry.cos(degrees: 5) * 1.075, accuracy: 1e-5)
         XCTAssertEqual(entity.transform.velocity.z, 0, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(entity.transform.angularVelocity, .zero)

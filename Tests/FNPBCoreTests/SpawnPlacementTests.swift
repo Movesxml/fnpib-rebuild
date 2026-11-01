@@ -40,9 +40,9 @@ final class SpawnPlacementTests: XCTestCase {
             spawner.radius = 20
 
             let state = spawn(kind, rng: rng, spawner: spawner)
-            // 初始 (30,-180)：原表 sin90≈0.9999993，乘 20 后截为 19；cos0=1，x 加 20。
+            // 初始 (30,-180)：原表 sin90≈0.9999993，乘 20 后截为 19；cos=0 按原版跳过余弦偏移。
             let bottom = kind == .fruit ? Float(-216) : -261
-            XCTAssertEqual(state.position, SIMD3<Float>(50, bottom, kind == .fruit ? 0 : 32))
+            XCTAssertEqual(state.position, SIMD3<Float>(30, bottom, kind == .fruit ? 0 : 32))
         }
     }
 
@@ -103,7 +103,7 @@ final class SpawnPlacementTests: XCTestCase {
     }
 
     func testLeftRightConsumesSignedHighWordAndResolvesBothDirections() {
-        for (raw, expectedX) in [(Int32(1), Float(175)), (-1, Float(-175))] {
+        for (raw, expectedX) in [(Int32(1), Float(-175)), (-1, Float(175))] {
             let rng = RecordingSpawnRandom(floats: [0.5], ints: [raw])
             var spawner = explicitVelocitySpawner()
             spawner.posX = 30

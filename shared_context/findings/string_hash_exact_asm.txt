@@ -1,0 +1,207 @@
+## 002f69c4 -> FUN_002f69c4
+002f69c4  push {r4,r5,r6,r7,lr}
+002f69c6  add r7,sp,#0xc
+002f69c8  push {r8,r10,r11}
+002f69cc  sub sp,#0x18
+002f69ce  movw r2,#0x2668
+002f69d2  cmp r0,#0x0
+002f69d4  movt r2,#0x1e
+002f69d8  add r2,pc
+002f69da  ldr r2,[r2,#0x0]  ; READ -> 004d9044
+002f69dc  str r2,[sp,#0x0]  ; DATA -> 0068e100  ; WRITE -> Stack[-0x38]
+002f69de  ldr r2,[r2,#0x0]  ; READ -> 0068e100
+002f69e0  str r2,[sp,#0x14]  ; WRITE -> Stack[-0x24]
+002f69e2  mov.w r2,#0x0
+002f69e6  beq.w 0x002f6c3c  ; CONDITIONAL_JUMP -> 002f6c3c
+002f69ea  ldrb r3,[r0,#0x0]
+002f69ec  movs r2,#0x0
+002f69ee  cmp r3,#0x0
+002f69f0  beq.w 0x002f6c3c  ; CONDITIONAL_JUMP -> 002f6c3c
+002f69f4  cmp r1,#0xc
+002f69f6  bcc.w 0x002f6b18  ; CONDITIONAL_JUMP -> 002f6b18
+002f69fa  movw lr,#0x79b9
+002f69fe  movw r10,#0x0
+002f6a02  movt lr,#0x9e37
+002f6a06  add.w r11,sp,#0x8
+002f6a0a  movw r6,#0x805
+002f6a0e  mvn r8,#0xff
+002f6a12  movt r10,#0xffff
+002f6a16  mov r12,lr
+002f6a18  mov r9,r1
+002f6a1a  str r1,[sp,#0x4]  ; WRITE -> Stack[-0x34]
+002f6a1c  movs r4,#0x0
+002f6a1e  ldrsb r2,[r0,r4]
+002f6a20  sub.w r1,r2,#0x41
+002f6a24  uxtb r1,r1
+002f6a26  cmp r1,#0x1a
+002f6a28  it cc
+002f6a2a  add.cc r2,#0x20
+002f6a2c  cmp r4,#0xb
+002f6a2e  strb.w r2,[r11,r4]  ; DATA -> Stack[-0x30]
+002f6a32  add.w r2,r4,#0x1
+002f6a36  mov r4,r2
+002f6a38  bne 0x002f6a1e  ; CONDITIONAL_JUMP -> 002f6a1e
+002f6a3a  ldr r2,[sp,#0x10]  ; READ -> Stack[-0x28]
+002f6a3c  sub.w r9,r9,#0xc
+002f6a40  ldr r5,[sp,#0xc]  ; READ -> Stack[-0x2c]
+002f6a42  adds r0,#0xc
+002f6a44  ldr r4,[sp,#0x8]  ; READ -> Stack[-0x30]
+002f6a46  cmp.w r9,#0xb
+002f6a4a  lsl.w r1,r2,#0x10
+002f6a4e  sxtab r3,r6,r2
+002f6a52  and.w r1,r8,r1, asr #0x10
+002f6a56  lsl.w r6,r2,#0x8
+002f6a5a  add r3,r1
+002f6a5c  and.w r1,r10,r6, asr #0x8
+002f6a60  add r3,r1
+002f6a62  and r2,r2,#0xff000000
+002f6a66  add.w r6,r3,r2
+002f6a6a  lsl.w r3,r5,#0x10
+002f6a6e  sxtab r2,r12,r5
+002f6a72  and.w r1,r8,r3, asr #0x10
+002f6a76  lsl.w r12,r5,#0x8
+002f6a7a  add r2,r1
+002f6a7c  and.w r1,r10,r12, asr #0x8
+002f6a80  and r3,r5,#0xff000000
+002f6a84  add r2,r1
+002f6a86  and r12,r4,#0xff000000
+002f6a8a  add.w r5,r2,r3
+002f6a8e  lsl.w r2,r4,#0x10
+002f6a92  sxtab r3,lr,r4
+002f6a96  and.w r1,r8,r2, asr #0x10
+002f6a9a  lsl.w lr,r4,#0x8
+002f6a9e  add r3,r1
+002f6aa0  and.w r1,r10,lr, asr #0x8
+002f6aa4  sub.w r2,r5,r6
+002f6aa8  add r1,r3
+002f6aaa  add r1,r12
+002f6aac  sub.w r1,r1,r5
+002f6ab0  sub.w r1,r1,r6
+002f6ab4  eor.w r5,r1,r6, lsr #0xd
+002f6ab8  sub.w r1,r2,r5
+002f6abc  sub.w r12,r6,r5
+002f6ac0  eor.w r2,r1,r5, lsl #0x8
+002f6ac4  sub.w r1,r12,r2
+002f6ac8  sub.w r3,r5,r2
+002f6acc  eor.w r6,r1,r2, lsr #0xd
+002f6ad0  sub.w r1,r3,r6
+002f6ad4  sub.w r2,r2,r6
+002f6ad8  eor.w r5,r1,r6, lsr #0xc
+002f6adc  sub.w r1,r2,r5
+002f6ae0  sub.w r3,r6,r5
+002f6ae4  eor.w r2,r1,r5, lsl #0x10
+002f6ae8  sub.w r1,r3,r2
+002f6aec  sub.w r12,r5,r2
+002f6af0  eor.w r4,r1,r2, lsr #0x5
+002f6af4  sub.w r1,r12,r4
+002f6af8  sub.w r3,r2,r4
+002f6afc  eor.w lr,r1,r4, lsr #0x3
+002f6b00  sub.w r1,r3,lr
+002f6b04  sub.w r2,r4,lr
+002f6b08  eor.w r12,r1,lr, lsl #0xa
+002f6b0c  sub.w r1,r2,r12
+002f6b10  eor.w r6,r1,r12, lsr #0xf
+002f6b14  bhi 0x002f6a1c  ; CONDITIONAL_JUMP -> 002f6a1c
+002f6b16  b 0x002f6b2a  ; UNCONDITIONAL_JUMP -> 002f6b2a
+002f6b18  movw lr,#0x79b9
+002f6b1c  str r1,[sp,#0x4]  ; WRITE -> Stack[-0x34]
+002f6b1e  movt lr,#0x9e37
+002f6b22  movw r6,#0x805
+002f6b26  mov r12,lr
+002f6b28  mov r9,r1
+002f6b2a  ldr r1,[sp,#0x4]  ; READ -> Stack[-0x34]
+002f6b2c  cmp.w r9,#0x0
+002f6b30  add.w r3,r6,r1
+002f6b34  beq 0x002f6bee  ; CONDITIONAL_JUMP -> 002f6bee
+002f6b36  add r4,sp,#0x8
+002f6b38  movs r2,#0x1
+002f6b3a  b 0x002f6b3e  ; UNCONDITIONAL_JUMP -> 002f6b3e
+002f6b3c  adds r2,#0x1
+002f6b3e  adds r1,r0,r2
+002f6b40  ldrsb.w r5,[r1,#-0x1]
+002f6b44  sub.w r1,r5,#0x41
+002f6b48  uxtb r1,r1
+002f6b4a  cmp r1,#0x1a
+002f6b4c  add.w r1,r4,r2
+002f6b50  it cc
+002f6b52  add.cc r5,#0x20
+002f6b54  cmp r9,r2
+002f6b56  strb.w r5,[r1,#-0x1]
+002f6b5a  bne 0x002f6b3c  ; CONDITIONAL_JUMP -> 002f6b3c
+002f6b5c  sub.w r0,r9,#0x1
+002f6b60  cmp r0,#0xa
+002f6b62  bhi 0x002f6bee  ; CONDITIONAL_JUMP -> 002f6bee
+002f6b64  adr.w r1,0x2f6b6e
+002f6b68  add.w r2,r1,r0, lsl #0x2
+002f6b6c  mov pc,r2  ; COMPUTED_JUMP -> 002f6b6e  ; COMPUTED_JUMP -> 002f6b72  ; COMPUTED_JUMP -> 002f6b76  ; COMPUTED_JUMP -> 002f6b7a  ; COMPUTED_JUMP -> 002f6b7e  ; COMPUTED_JUMP -> 002f6b82  ; COMPUTED_JUMP -> 002f6b86  ; COMPUTED_JUMP -> 002f6b8a  ; COMPUTED_JUMP -> 002f6b8e  ; COMPUTED_JUMP -> 002f6b92  ; COMPUTED_JUMP -> 002f6b96
+002f6b6e  b.w 0x002f6be8  ; UNCONDITIONAL_JUMP -> 002f6be8
+002f6b72  b.w 0x002f6be0  ; UNCONDITIONAL_JUMP -> 002f6be0
+002f6b76  b.w 0x002f6bd8  ; UNCONDITIONAL_JUMP -> 002f6bd8
+002f6b7a  b.w 0x002f6bd0  ; UNCONDITIONAL_JUMP -> 002f6bd0
+002f6b7e  b.w 0x002f6bca  ; UNCONDITIONAL_JUMP -> 002f6bca
+002f6b82  b.w 0x002f6bc2  ; UNCONDITIONAL_JUMP -> 002f6bc2
+002f6b86  b.w 0x002f6bba  ; UNCONDITIONAL_JUMP -> 002f6bba
+002f6b8a  b.w 0x002f6bb2  ; UNCONDITIONAL_JUMP -> 002f6bb2
+002f6b8e  b.w 0x002f6baa  ; UNCONDITIONAL_JUMP -> 002f6baa
+002f6b92  b.w 0x002f6ba2  ; UNCONDITIONAL_JUMP -> 002f6ba2
+002f6b96  b.w 0x002f6b9a  ; UNCONDITIONAL_JUMP -> 002f6b9a
+002f6b9a  ldrb.w r0,[sp,#0x12]  ; READ -> Stack[-0x26]
+002f6b9e  add.w r3,r3,r0, lsl #0x18
+002f6ba2  ldrsb.w r0,[sp,#0x11]  ; READ -> Stack[-0x27]
+002f6ba6  add.w r3,r3,r0, lsl #0x10
+002f6baa  ldrsb.w r0,[sp,#0x10]  ; READ -> Stack[-0x28]
+002f6bae  add.w r3,r3,r0, lsl #0x8
+002f6bb2  ldrb.w r0,[sp,#0xf]  ; READ -> Stack[-0x29]
+002f6bb6  add.w r12,r12,r0, lsl #0x18
+002f6bba  ldrsb.w r0,[sp,#0xe]  ; READ -> Stack[-0x2a]
+002f6bbe  add.w r12,r12,r0, lsl #0x10
+002f6bc2  ldrsb.w r0,[sp,#0xd]  ; READ -> Stack[-0x2b]
+002f6bc6  add.w r12,r12,r0, lsl #0x8
+002f6bca  ldrsb.w r0,[sp,#0xc]  ; READ -> Stack[-0x2c]
+002f6bce  add r12,r0
+002f6bd0  ldrb.w r0,[sp,#0xb]  ; READ -> Stack[-0x2d]
+002f6bd4  add.w lr,lr,r0, lsl #0x18
+002f6bd8  ldrsb.w r0,[sp,#0xa]  ; READ -> Stack[-0x2e]
+002f6bdc  add.w lr,lr,r0, lsl #0x10
+002f6be0  ldrsb.w r0,[sp,#0x9]  ; READ -> Stack[-0x2f]
+002f6be4  add.w lr,lr,r0, lsl #0x8
+002f6be8  ldrsb.w r0,[sp,#0x8]  ; READ -> Stack[-0x30]
+002f6bec  add lr,r0
+002f6bee  add.w r1,r12,r3
+002f6bf2  sub.w r0,r12,r3
+002f6bf6  sub.w r1,lr,r1
+002f6bfa  eor.w r2,r1,r3, lsr #0xd
+002f6bfe  subs r0,r0,r2
+002f6c00  subs r1,r3,r2
+002f6c02  eor.w r0,r0,r2, lsl #0x8
+002f6c06  subs r1,r1,r0
+002f6c08  subs r2,r2,r0
+002f6c0a  eor.w r1,r1,r0, lsr #0xd
+002f6c0e  subs r2,r2,r1
+002f6c10  subs r0,r0,r1
+002f6c12  eor.w r2,r2,r1, lsr #0xc
+002f6c16  subs r0,r0,r2
+002f6c18  subs r1,r1,r2
+002f6c1a  eor.w r0,r0,r2, lsl #0x10
+002f6c1e  subs r1,r1,r0
+002f6c20  subs r2,r2,r0
+002f6c22  eor.w r1,r1,r0, lsr #0x5
+002f6c26  subs r2,r2,r1
+002f6c28  subs r0,r0,r1
+002f6c2a  eor.w r2,r2,r1, lsr #0x3
+002f6c2e  subs r0,r0,r2
+002f6c30  subs r1,r1,r2
+002f6c32  eor.w r0,r0,r2, lsl #0xa
+002f6c36  subs r1,r1,r0
+002f6c38  eor.w r2,r1,r0, lsr #0xf
+002f6c3c  ldr r0,[sp,#0x0]  ; READ -> Stack[-0x38]
+002f6c3e  ldr r0,[r0,#0x0]  ; READ -> 0068e100
+002f6c40  ldr r1,[sp,#0x14]  ; READ -> Stack[-0x24]
+002f6c42  cmp r0,r1
+002f6c44  itttt eq
+002f6c46  mov.eq r0,r2
+002f6c48  add.eq sp,#0x18
+002f6c4a  pop.eq.w {r8,r10,r11}  ; DATA -> Stack[-0x30]
+002f6c4e  pop.eq {r4,r5,r6,r7,pc}
+002f6c50  blx 0x00411ea4  ; UNCONDITIONAL_CALL -> 00411ea4 ___stack_chk_fail
+
