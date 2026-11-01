@@ -1,0 +1,183 @@
+# RTTI 虚表扫描
+
+## 关键字: Fruit
+
+### .?AV?$ComponentBuilder@VComponentFruit@@@Mortar@@（字符串 @ 0x018b5850）
+- COL @ 0x0187c52c（pTypeDescriptor 指针 @ 0x0187c534）
+- COL @ 0x0187c55c（pTypeDescriptor 指针 @ 0x0187c564）
+
+### .?AVFruitCamera@@（字符串 @ 0x018b59c0）
+- COL @ 0x0187c70c（pTypeDescriptor 指针 @ 0x0187c714）
+- COL @ 0x0187c738（pTypeDescriptor 指针 @ 0x0187c740）
+
+### .?AVSuperFruitChest@@（字符串 @ 0x018b5f5c）
+- COL @ 0x0187cd04（pTypeDescriptor 指针 @ 0x0187cd0c）
+- COL @ 0x0187cd38（pTypeDescriptor 指针 @ 0x0187cd40）
+
+### .?AVSuperFruitControl@@（字符串 @ 0x018b5f80）
+- COL @ 0x0187cd5c（pTypeDescriptor 指针 @ 0x0187cd64）
+- COL @ 0x0187f780（pTypeDescriptor 指针 @ 0x0187f788）
+
+### .?AVGlobal@?$Delegate1@XPAVFruit@@@Mortar@@（字符串 @ 0x018b6078）
+- COL @ 0x0187cebc（pTypeDescriptor 指针 @ 0x0187cec4）
+- COL @ 0x0187cee8（pTypeDescriptor 指针 @ 0x0187cef0）
+
+### .?AVGlobal@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@（字符串 @ 0x018b60b8）
+- COL @ 0x0187cf18（pTypeDescriptor 指针 @ 0x0187cf20）
+- COL @ 0x0187cf44（pTypeDescriptor 指针 @ 0x0187cf4c）
+
+### .?AV?$Callee@VSuperFruitChest@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@（字符串 @ 0x018b6158）
+- COL @ 0x0187cfcc（pTypeDescriptor 指针 @ 0x0187cfd4）
+- COL @ 0x0187cff8（pTypeDescriptor 指针 @ 0x0187d000）
+
+### .?AV?$Callee@VSuperFruitChest@@@?$Delegate0@X@Mortar@@（字符串 @ 0x018b61b8）
+- COL @ 0x0187d028（pTypeDescriptor 指针 @ 0x0187d030）
+- COL @ 0x0187d054（pTypeDescriptor 指针 @ 0x0187d05c）
+
+### .?AVSuperFruitPinata@@（字符串 @ 0x018b6244）
+- COL @ 0x0187d084（pTypeDescriptor 指针 @ 0x0187d08c）
+- COL @ 0x0187d0b8（pTypeDescriptor 指针 @ 0x0187d0c0）
+
+### .?AV?$Callee@VSuperFruitPinata@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@（字符串 @ 0x018b6270）
+- COL @ 0x0187d0e8（pTypeDescriptor 指针 @ 0x0187d0f0）
+- COL @ 0x0187d114（pTypeDescriptor 指针 @ 0x0187d11c）
+
+### .?AVComponentFruit@@（字符串 @ 0x018b67a4）
+- COL @ 0x0187d61c（pTypeDescriptor 指针 @ 0x0187d624）
+- COL @ 0x0187d650（pTypeDescriptor 指针 @ 0x0187d658）
+
+### .?AV?$Callee@VComponentFruit@@@?$Delegate3@XPAVComponent@Mortar@@ABV?$_Vector2@M@@AA_N@Mortar@@（字符串 @ 0x018b68c0）
+- COL @ 0x0187d78c（pTypeDescriptor 指针 @ 0x0187d794）
+- COL @ 0x0187d7b8（pTypeDescriptor 指针 @ 0x0187d7c0）
+
+### .?AV?$Callee@VComboModifier@@@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@（字符串 @ 0x018b7480）
+- COL @ 0x0187e188（pTypeDescriptor 指针 @ 0x0187e190）
+- COL @ 0x0187e1b4（pTypeDescriptor 指针 @ 0x0187e1bc）
+
+### .?AVExplodyFruitModifier@@（字符串 @ 0x018b7508）
+- COL @ 0x0187e1e4（pTypeDescriptor 指针 @ 0x0187e1ec）
+- COL @ 0x0187e210（pTypeDescriptor 指针 @ 0x0187e218）
+
+### .?AVFruitSplosion@ExplodyFruitModifier@@（字符串 @ 0x018b7534）
+- COL @ 0x0187e240（pTypeDescriptor 指针 @ 0x0187e248）
+- COL @ 0x0187e270（pTypeDescriptor 指针 @ 0x0187e278）
+
+### .?AV?$Callee@VExplodyFruitModifier@@@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@（字符串 @ 0x018b75c0）
+- COL @ 0x0187e2f8（pTypeDescriptor 指针 @ 0x0187e300）
+- COL @ 0x0187e324（pTypeDescriptor 指针 @ 0x0187e32c）
+
+### .?AV?$Callee@VFruitSplosion@ExplodyFruitModifier@@@?$Delegate1@XPAVFruit@@@Mortar@@（字符串 @ 0x018b7630）
+- COL @ 0x0187e354（pTypeDescriptor 指针 @ 0x0187e35c）
+- COL @ 0x0187e380（pTypeDescriptor 指针 @ 0x0187e388）
+
+### .?AV?$Callee@VFruitSplosion@ExplodyFruitModifier@@@?$Delegate1@XPAVHUDControl@@@Mortar@@（字符串 @ 0x018b76a0）
+- COL @ 0x0187e3b0（pTypeDescriptor 指针 @ 0x0187e3b8）
+- COL @ 0x0187e3dc（pTypeDescriptor 指针 @ 0x0187e3e4）
+
+### .?AVFruitRay@@（字符串 @ 0x018b7a68）
+- COL @ 0x0187e904（pTypeDescriptor 指针 @ 0x0187e90c）
+- COL @ 0x0187e930（pTypeDescriptor 指针 @ 0x0187e938）
+
+### .?AVFruit@@（字符串 @ 0x018b7b7c）
+- COL @ 0x0187ea70（pTypeDescriptor 指针 @ 0x0187ea78）
+- COL @ 0x0187ea9c（pTypeDescriptor 指针 @ 0x0187eaa4）
+
+### .?AVSuperFruitGlow@@（字符串 @ 0x018b8628）
+- COL @ 0x0187f6c4（pTypeDescriptor 指针 @ 0x0187f6cc）
+- COL @ 0x0187f6f4（pTypeDescriptor 指针 @ 0x0187f6fc）
+
+### .?AVSuperFruitHitControl@@（字符串 @ 0x018b864c）
+- COL @ 0x0187f724（pTypeDescriptor 指针 @ 0x0187f72c）
+- COL @ 0x0187f750（pTypeDescriptor 指针 @ 0x0187f758）
+
+### .?AV?$Callee@VSuperFruitGlow@@@?$Delegate1@XPAVFruit@@@Mortar@@（字符串 @ 0x018b8678）
+- COL @ 0x0187f798（pTypeDescriptor 指针 @ 0x0187f7a0）
+- COL @ 0x0187f7c4（pTypeDescriptor 指针 @ 0x0187f7cc）
+
+### .?AV?$Callee@VSuperFruitControl@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@（字符串 @ 0x018b86d0）
+- COL @ 0x0187f7f4（pTypeDescriptor 指针 @ 0x0187f7fc）
+- COL @ 0x0187f820（pTypeDescriptor 指针 @ 0x0187f828）
+
+### .?AV?$Callee@UGlobalProbabilityOveride@@@?$Delegate1@XPAVFruit@@@Mortar@@（字符串 @ 0x018b9298）
+- COL @ 0x01880594（pTypeDescriptor 指针 @ 0x0188059c）
+- COL @ 0x018805c0（pTypeDescriptor 指针 @ 0x018805c8）
+
+### .?AV?$Callee@VFruit@@@?$Delegate1@XPAVFruit@@@Mortar@@（字符串 @ 0x018b92fc）
+- COL @ 0x018805f0（pTypeDescriptor 指针 @ 0x018805f8）
+- COL @ 0x0188061c（pTypeDescriptor 指针 @ 0x01880624）
+
+## 关键字: Entity
+
+### .?AVEntity@@（字符串 @ 0x018b509c）
+- COL @ 0x0187bce8（pTypeDescriptor 指针 @ 0x0187bcf0）
+- COL @ 0x0187bd34（pTypeDescriptor 指针 @ 0x0187bd3c）
+
+### .?AVGlobal@?$Delegate1@PAVEntity@@J@Mortar@@（字符串 @ 0x018b5140）
+- COL @ 0x0187bdfc（pTypeDescriptor 指针 @ 0x0187be04）
+- COL @ 0x0187be28（pTypeDescriptor 指针 @ 0x0187be30）
+
+### .?AVMeshEntity@Mortar@@（字符串 @ 0x018b51b8）
+- COL @ 0x0187beb4（pTypeDescriptor 指针 @ 0x0187bebc）
+- COL @ 0x0187bee0（pTypeDescriptor 指针 @ 0x0187bee8）
+
+### .?AVGlobal@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@（字符串 @ 0x018b60b8）
+- COL @ 0x0187cf18（pTypeDescriptor 指针 @ 0x0187cf20）
+- COL @ 0x0187cf44（pTypeDescriptor 指针 @ 0x0187cf4c）
+
+### .?AV?$Callee@VSuperFruitChest@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@（字符串 @ 0x018b6158）
+- COL @ 0x0187cfcc（pTypeDescriptor 指针 @ 0x0187cfd4）
+- COL @ 0x0187cff8（pTypeDescriptor 指针 @ 0x0187d000）
+
+### .?AV?$Callee@VSuperFruitPinata@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@（字符串 @ 0x018b6270）
+- COL @ 0x0187d0e8（pTypeDescriptor 指针 @ 0x0187d0f0）
+- COL @ 0x0187d114（pTypeDescriptor 指针 @ 0x0187d11c）
+
+### .?AV?$Callee@VComboModifier@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@（字符串 @ 0x018b7420）
+- COL @ 0x0187e12c（pTypeDescriptor 指针 @ 0x0187e134）
+- COL @ 0x0187e158（pTypeDescriptor 指针 @ 0x0187e160）
+
+### .?AV?$Callee@VComboModifier@@@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@（字符串 @ 0x018b7480）
+- COL @ 0x0187e188（pTypeDescriptor 指针 @ 0x0187e190）
+- COL @ 0x0187e1b4（pTypeDescriptor 指针 @ 0x0187e1bc）
+
+### .?AV?$Callee@VExplodyFruitModifier@@@?$Delegate3@XPAVFruit@@HPAVEntity@@@Mortar@@（字符串 @ 0x018b75c0）
+- COL @ 0x0187e2f8（pTypeDescriptor 指针 @ 0x0187e300）
+- COL @ 0x0187e324（pTypeDescriptor 指针 @ 0x0187e32c）
+
+### .?AVSlashEntity@@（字符串 @ 0x018b7bec）
+- COL @ 0x0187eacc（pTypeDescriptor 指针 @ 0x0187ead4）
+- COL @ 0x0187eaf8（pTypeDescriptor 指针 @ 0x0187eb00）
+
+### .?AVSplatEntity@@（字符串 @ 0x018b7cbc）
+- COL @ 0x0187eb28（pTypeDescriptor 指针 @ 0x0187eb30）
+- COL @ 0x0187eb50（pTypeDescriptor 指针 @ 0x0187eb58）
+  - vftable @ 0x0187eb4c:
+    - [0] +0x0 -> 0x00000000  (无函数)
+    - [1] +0x4 -> 0x0187eb58  (无函数)
+    - [2] +0x8 -> 0x00000000  (无函数)
+    - [3] +0xc -> 0x018b7cb4  (无函数)
+    - [4] +0x10 -> 0x00000000  (无函数)
+    - [5] +0x14 -> 0x00000000  (无函数)
+    - [6] +0x18 -> 0xffffffff  (无函数)
+    - [7] +0x1c -> 0x00000000  (无函数)
+    - [8] +0x20 -> 0x00000040  (无函数)
+    - [9] +0x24 -> 0x0187eb3c  (无函数)
+    - [10] +0x28 -> 0x00000000  (无函数)
+    - [11] +0x2c -> 0x00000000  (无函数)
+    - [12] +0x30 -> 0x00000000  (无函数)
+    - [13] +0x34 -> 0x00000000  (无函数)
+    - [14] +0x38 -> 0x00000000  (无函数)
+    - [15] +0x3c -> 0x018b4388  (无函数)
+    - [16] +0x40 -> 0x0187ac8c  (无函数)
+    - [17] +0x44 -> 0x00000000  (无函数)
+    - [18] +0x48 -> 0x00000000  (无函数)
+    - [19] +0x4c -> 0x00000000  (无函数)
+    - [20] +0x50 -> 0x00000000  (无函数)
+    - [21] +0x54 -> 0x018b4368  (无函数)
+    - [22] +0x58 -> 0x0187ac48  (无函数)
+    - [23] +0x5c -> 0x00000000  (无函数)
+
+### .?AV?$Callee@VSuperFruitControl@@@?$Delegate1@XPAVSlashEntity@@@Mortar@@（字符串 @ 0x018b86d0）
+- COL @ 0x0187f7f4（pTypeDescriptor 指针 @ 0x0187f7fc）
+- COL @ 0x0187f820（pTypeDescriptor 指针 @ 0x0187f828）
+

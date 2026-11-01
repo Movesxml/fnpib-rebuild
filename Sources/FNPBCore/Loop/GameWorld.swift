@@ -164,8 +164,8 @@ public final class GameWorld: GameTicking {
     /// [待验证] 具体数值未闭合（T-007 遗留），暂按逻辑帧 1/60
     private let fallbackDelta: Float = 1.0 / 60.0
 
-    /// T-025：实体运动参数。装配层须把同一份值同时传给 WaveSpawnBridge。
-    public let motionTuning: FruitMotionTuning
+    /// T-035：出界逻辑使用真实视口宽高比；宿主在每个逻辑帧前更新实际尺寸。
+    public var motionTuning: FruitMotionTuning
 
     /// 发售版水果 OnSliced 的已闭合计分/统计子链。
     private let onSliced: FruitOnSliced

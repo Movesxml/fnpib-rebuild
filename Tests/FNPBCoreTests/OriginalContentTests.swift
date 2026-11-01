@@ -22,7 +22,7 @@ final class OriginalContentTests: XCTestCase {
         {"tag": "WaveInfo", "attrs": {"waveNo": "1", "until": "3", "chance": "100"}, "children": [
           {"tag": "Wave_dt", "attrs": {"dt": "0.7", "inc": "0.1", "spinc": "0.01"}, "children": []},
           {"tag": "NextWaveDelay", "attrs": {"delay": "1.5", "inc": "0.2", "wait": "2.5", "waitSpinc": "0.3", "speedLoss": "0.4", "waitForEntities": "true", "waitForProcessing": "false"}, "children": []},
-          {"tag": "Spawn", "attrs": {"min": "1", "max": "2", "mininc": "2", "maxinc": "5", "delay": "0.5", "delayinc": "0.1", "type": "apple, bomb, random ,watermelon"}, "children": []}
+          {"tag": "Spawn", "attrs": {"min": "1", "max": "2", "mininc": "2", "maxinc": "5", "delay": "0.5", "delayinc": "0.1", "velX": "5", "velY": "-6", "velscale": "2", "velXscale": "3", "gravity": "0, 1, 0", "type": "apple, bomb, random ,watermelon"}, "children": []}
         ]},
         {"tag": "WaveInfo", "attrs": {"waveNo": "1", "until": ""}, "children": []},
         {"tag": "WaveInfo", "attrs": {"waveNo": "3", "until": "1", "chanceRegrowth": "0.7"}, "children": []}
@@ -132,6 +132,32 @@ final class OriginalContentTests: XCTestCase {
         XCTAssertEqual(spawn.maxInc, 5, accuracy: 1e-5)
         XCTAssertEqual(spawn.delay, 0.5, accuracy: 1e-5)
         XCTAssertEqual(spawn.delayInc, 0.1, accuracy: 1e-5)
+        XCTAssertEqual(spawn.velocityX, 5, accuracy: 1e-5)
+        XCTAssertEqual(spawn.velocityY, -6, accuracy: 1e-5)
+        XCTAssertEqual(spawn.velocityScaleX, 3, accuracy: 1e-5,
+                       "velXscale 必须覆盖 velscale")
+        XCTAssertEqual(spawn.velocityScaleY, 2, accuracy: 1e-5,
+                       "未提供 velYscale 时继承 velscale")
+        XCTAssertEqual(spawn.gravity, SIMD3<Float>(0, 1, 0))
+    }
+
+    func testSpawnRejectsMalformedGravityWithContentPath() {
+        let json = """
+        {"root":{"tag":"waveManagerFile","children":[
+          {"tag":"WaveInfo","attrs":{"waveNo":"0"},"children":[
+            {"tag":"Spawn","attrs":{"type":"apple","gravity":"0,1"},"children":[]}
+          ]}
+        ]}}
+        """
+        XCTAssertThrowsError(try OriginalContentLoader.loadWaves(from: Data(json.utf8),
+                                                                fruitIndex: fruitIndex)) { error in
+            guard case let OriginalContentError.invalidNumber(_, attribute, raw, path) = error else {
+                return XCTFail("期望 gravity invalidNumber，实际 \(error)")
+            }
+            XCTAssertEqual(attribute, "gravity")
+            XCTAssertEqual(raw, "0,1")
+            XCTAssertTrue(path.contains("Spawn["))
+        }
     }
 
     func testInlineWaveListMapsDelaysDefaultsAndPerWaveOverrides() throws {
@@ -254,6 +280,13 @@ final class OriginalContentTests: XCTestCase {
         let allSpawns = content.waves.waves.flatMap { $0.spawners }
         XCTAssertEqual(allSpawns.count, 42)
         XCTAssertTrue(allSpawns.allSatisfy { !$0.types.isEmpty })
+        for spawn in allSpawns {
+            XCTAssertEqual(spawn.velocityX, 0, accuracy: 1e-6)
+            XCTAssertEqual(spawn.velocityY, 0, accuracy: 1e-6)
+            XCTAssertEqual(spawn.velocityScaleX, 0, accuracy: 1e-6)
+            XCTAssertEqual(spawn.velocityScaleY, 0, accuracy: 1e-6)
+            XCTAssertNil(spawn.gravity, "真实 42 个 Spawn 均未提供 gravity")
+        }
         let fruitCount = Int32(content.fruits.fruits.count)
         for kind in allSpawns.flatMap({ $0.types }) {
             if case let .fruit(typeID) = kind {

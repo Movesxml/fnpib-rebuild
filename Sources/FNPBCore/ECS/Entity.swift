@@ -67,6 +67,9 @@ public struct EntityTransform: Sendable, Equatable {
     /// 线速度（世界单位/秒）。
     public var velocity: SIMD3<Float> = .zero
 
+    /// 线加速度。原水果构造值为 Y=-12；显式 Spawn.gravity 在生成时另行计算。
+    public var acceleration: SIMD3<Float> = SIMD3<Float>(0, -12, 0)
+
     /// 旋转量（欧拉角，弧度）。
     /// ⚠️ [待验证] 原引擎水果自转的表示（轴角 / 欧拉 / 仅 2D 角）未从 macho 直读，
     ///    此处取 3 分量欧拉角作占位，FruitMotion 只做线性累加。
@@ -87,12 +90,14 @@ public struct EntityTransform: Sendable, Equatable {
 
     public init(position: SIMD3<Float>,
                 velocity: SIMD3<Float> = .zero,
+                acceleration: SIMD3<Float> = SIMD3<Float>(0, -12, 0),
                 rotation: SIMD3<Float> = .zero,
                 angularVelocity: SIMD3<Float> = .zero,
                 scale: Float = Constants.FruitDefaults.scale,
                 radius: Float = Constants.FruitDefaults.collision) {
         self.position = position
         self.velocity = velocity
+        self.acceleration = acceleration
         self.rotation = rotation
         self.angularVelocity = angularVelocity
         self.scale = scale

@@ -393,6 +393,14 @@ final class GameHost: ObservableObject {
         // [Kimi 修正 T-022 审查] 签名以 TimeDriver.swift 为准：advance(delta:) /
         // GameWorld.tick(dt:state:world:services:) 且 world 为 inout。
         let alpha = fixedStep.advance(delta: stamp.clampedDelta()) { step in
+            // FUN_00025164 的宽高比必须来自当前真实渲染视口；未布局或 Metal
+            // 不可用时才沿用宿主尺寸兜底，无效值由 FruitMotionTuning 防护。
+            if let size = renderDriver?.logicalSize,
+               size.x > 0, size.y > 0, size.x.isFinite, size.y.isFinite {
+                gameWorld.motionTuning.actualSize = size
+            } else {
+                gameWorld.motionTuning.actualSize = GameHost.currentLogicalSize()
+            }
             gameWorld.tick(dt: step, state: &state, world: &store, services: services)
         }
         renderInterpolationAlpha = alpha

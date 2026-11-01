@@ -304,6 +304,20 @@ public struct Spawner: Codable, Equatable, Sendable {
     /// XML `delayinc` → 原 `+0x70`。
     public var delayInc: Float = 0
 
+    // -- Spawn 初速与重力（FUN_000537ec / FUN_00057000）-------------------------
+    /// XML `velX/velY` → 原 `+0x40/+0x44`；构造缺省为 0。
+    public var velocityX: Float = 0
+    public var velocityY: Float = 0
+
+    /// XML `velscale` 先同时写入两轴，再由 `velXscale/velYscale` 分别覆盖。
+    /// 原 Spawn 构造缺省确实为 0，不得为了“让水果飞起来”改成 1。
+    public var velocityScaleX: Float = 0
+    public var velocityScaleY: Float = 0
+
+    /// 非空 XML `gravity` 才覆盖原 `+0x20/+0x24/+0x28`。
+    /// nil 表示原构造器未写全三分量，官方缺省向量没有唯一确定值。
+    public var gravity: SIMD3<Float>? = nil
+
     // -- 旧字段（仅为本阶段编译兼容，不表示以下旧命名已获原版证实）---------------
     /// minWait / maxWait（原 `+0x20/+0x24`）。[macho H] §4.2
     public var minWait: Float = 0
@@ -330,7 +344,12 @@ public struct Spawner: Codable, Equatable, Sendable {
                 canSpawnWithPowers: Bool = true,
                 dontSpawnBeforeWave: Float = -1.0,
                 fruits: [SpawnerFruit] = [],
-                types: [SpawnKind] = []) {
+                types: [SpawnKind] = [],
+                velocityX: Float = 0,
+                velocityY: Float = 0,
+                velocityScaleX: Float = 0,
+                velocityScaleY: Float = 0,
+                gravity: SIMD3<Float>? = nil) {
         self.name = name
         self.mode = mode
         self.minWait = minWait
@@ -339,6 +358,11 @@ public struct Spawner: Codable, Equatable, Sendable {
         self.dontSpawnBeforeWave = dontSpawnBeforeWave
         self.fruits = fruits
         self.types = types
+        self.velocityX = velocityX
+        self.velocityY = velocityY
+        self.velocityScaleX = velocityScaleX
+        self.velocityScaleY = velocityScaleY
+        self.gravity = gravity
     }
 }
 

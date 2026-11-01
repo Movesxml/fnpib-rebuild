@@ -382,6 +382,38 @@ public enum OriginalContentLoader {
         if let value = try floatValue(node, "delay", path) { spawner.delay = value }
         if let value = try floatValue(node, "delayinc", path) { spawner.delayInc = value }
 
+        // FUN_000537ec：velscale 先同时写两轴，显式单轴缩放随后覆盖。
+        if let value = try floatValue(node, "velX", path) { spawner.velocityX = value }
+        if let value = try floatValue(node, "velY", path) { spawner.velocityY = value }
+        if let value = try floatValue(node, "velscale", path) {
+            spawner.velocityScaleX = value
+            spawner.velocityScaleY = value
+        } else {
+            spawner.velocityScaleY = spawner.velocityScaleX
+        }
+        if let value = try floatValue(node, "velXscale", path) { spawner.velocityScaleX = value }
+        if let value = try floatValue(node, "velYscale", path) { spawner.velocityScaleY = value }
+
+        // 原版只采纳非空 gravity；这里要求与 FUN_000394a0 对应的三分量逗号格式。
+        if let raw = node.attrs["gravity"], !raw.isEmpty {
+            let components = raw.split(separator: ",", omittingEmptySubsequences: false)
+            guard components.count == 3 else {
+                throw OriginalContentError.invalidNumber(node: node.tag, attribute: "gravity",
+                                                         raw: raw, path: path)
+            }
+            var values: [Float] = []
+            values.reserveCapacity(3)
+            for component in components {
+                let trimmed = component.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard let value = Float(trimmed) else {
+                    throw OriginalContentError.invalidNumber(node: node.tag, attribute: "gravity",
+                                                             raw: raw, path: path)
+                }
+                values.append(value)
+            }
+            spawner.gravity = SIMD3<Float>(values[0], values[1], values[2])
+        }
+
         guard let rawType = node.attrs["type"] else {
             throw OriginalContentError.missingAttribute(node: node.tag, attribute: "type", path: path)
         }

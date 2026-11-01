@@ -1,181 +1,123 @@
 import Foundation
 import simd
 
-// ============================================================================
-// FruitMotion — 水果抛物线运动积分器（T-015）
-//
-// 定位说明（诚实预期）：
-//   - `FruitInfo`（core_logic_notes §4.5）只闭合了 `scale / collision / hitInfluence /
-//     disappearSpeed` 等元数据键，**不含**重力、初速、发射角、离屏回收阈值；
-//   - 这些真值尚未从 macho 数据段提取 → 本文件的默认参数**全部是占位值**，
-//     逐条标 `[待验证]`；
-//   - 因此所有可调参数收进 `FruitMotionTuning`（结构化注入），
-//     待 Frida 打点 / 数据段读取闭合后**只改 `Constants.Physics` 与 tuning**，
-//     不改积分逻辑本身。
-//
-// 积分方式：半隐式欧拉（symplectic Euler）
-//     v' = v + g * dt
-//     p' = p + v' * dt
-//     r' = r + ω * dt
-//   选它的理由：原点为两侧可手算，且能量行为比显式欧拉稳定；
-//   ⚠️ [待验证] 原引擎积分顺序（先位置后速度 / 是否固定步长）未从反编译确认，
-//      本实现与单元测试自洽，但不代表原版手感。
-// ============================================================================
-
-// MARK: - 常量占位
+// T-035：普通水果生成、积分与出界的 Mach-O 证据实现。
+// 生成：FUN_00057000；积分：FUN_0000c1c0；普通出界：FUN_0000f6dc。
+// 不包含特殊 placement、切片后的实体、爆炸后续或其他实体状态机。
 
 extension Constants {
-
-    /// 水果抛物线运动参数（**全部为占位值 [待验证]**）。
-    ///
-    /// 本枚举暂时声明在 `FruitMotion.swift` 的 extension 中，目的是让 T-015 不改动
-    /// `Constants.swift` 正文。**后续常量闭合任务应把本枚举整体迁入 `Constants.swift`
-    /// 正文并删除此扩展**（否则重复声明会编译失败）。
     public enum Physics {
+        public static let horizontalRandomScale: Float = 150
+        public static let minimumLaunchSpeed: Float = 9.5
+        public static let launchSpeedRange: Float = 1.5
+        public static let directionAngleScale: Float = 20
+        public static let verticalVelocityScale: Float = 1.075
+        public static let defaultSpawnY: Float = -215
+        public static let constructedAccelerationY: Float = -12
 
-        /// 重力加速度（世界单位 / 秒²）。
-        /// ⚠️ [待验证] 原版取值未知；-9.8 仅为量级占位（世界单位与屏幕像素的换算关系也未定）。
-        public static let gravity: Float = -9.8
-
-        /// 发射初速范围下限（世界单位 / 秒）。
-        /// ⚠️ [待验证] 占位值，无任何反编译依据。
-        public static let minLaunchSpeed: Float = 14.0
-
-        /// 发射初速范围上限。[待验证] 占位值。
-        public static let maxLaunchSpeed: Float = 22.0
-
-        /// 发射角下限（弧度，相对 +X 轴，逆时针为正）。
-        /// ⚠️ [待验证] 60° = 1.0471976 仅为「从下往上抛」的形状占位。
-        public static let minLaunchAngleRadians: Float = 60.0 * Float.pi / 180.0
-
-        /// 发射角上限（弧度）。[待验证] 120° = 2.0943951 占位。
-        public static let maxLaunchAngleRadians: Float = 120.0 * Float.pi / 180.0
-
-        /// 自转角速度下限（弧度/秒，绕 z 轴）。[待验证] 占位。
-        public static let minSpinRadiansPerSecond: Float = -4.0
-
-        /// 自转角速度上限（弧度/秒，绕 z 轴）。[待验证] 占位。
-        public static let maxSpinRadiansPerSecond: Float = 4.0
-
-        /// 离屏回收的下边界（position.y 低于此值即回收）。
-        /// ⚠️ [待验证] 原引擎的离屏判定在渲染层/实体管理器里完成（未见常量直读）。
-        public static let offscreenBottomMargin: Float = -2.0
-
-        /// 离屏回收的水平边界（|position.x| 超过此值即回收）。[待验证]
-        public static let offscreenHorizontalLimit: Float = 20.0
-
-        /// 离屏回收的上边界（position.y 超过此值即回收，防高速穿屏残留）。[待验证]
-        public static let offscreenTopLimit: Float = 40.0
+        /// 原 Spawner 构造器不写 gravity X/Y，真实内容也未提供 gravity。
+        /// 这只是确定性的重建兼容策略，不是原版缺省值；不得据此宣称官方行为已闭合。
+        public static let missingGravityCompatibility = SIMD3<Float>(0, 1, 0)
     }
 }
 
-// MARK: - 参数注入
-
-/// 抛物线运动参数集合。
-///
-/// 默认值来自 `Constants.Physics`（占位 [待验证]）；测试与运行时调试可整体替换，
-/// 不需要改动 `FruitMotion` 的积分代码。
+/// 出界计算只需要原 FUN_00025164 所使用的实际视口宽高比。
 public struct FruitMotionTuning: Sendable, Equatable {
+    public var actualSize: SIMD2<Float>
 
-    /// 重力加速度（负值向下）。
-    public var gravity: Float
-    /// 初速范围（大小）。
-    public var minLaunchSpeed: Float
-    public var maxLaunchSpeed: Float
-    /// 发射角范围（弧度，相对 +X 轴）。
-    public var minLaunchAngle: Float
-    public var maxLaunchAngle: Float
-    /// 自转角速度范围（弧度/秒，绕 z 轴）。
-    public var minSpin: Float
-    public var maxSpin: Float
-    /// 离屏回收阈值。
-    public var offscreenBottomMargin: Float
-    public var offscreenHorizontalLimit: Float
-    public var offscreenTopLimit: Float
+    /// 无 UI 的单元测试使用 320:480；App 每帧写入真实逻辑视口尺寸。
+    public init(actualSize: SIMD2<Float> = SIMD2<Float>(320, 480)) {
+        self.actualSize = actualSize
+    }
 
-    public init(gravity: Float = Constants.Physics.gravity,
-                minLaunchSpeed: Float = Constants.Physics.minLaunchSpeed,
-                maxLaunchSpeed: Float = Constants.Physics.maxLaunchSpeed,
-                minLaunchAngle: Float = Constants.Physics.minLaunchAngleRadians,
-                maxLaunchAngle: Float = Constants.Physics.maxLaunchAngleRadians,
-                minSpin: Float = Constants.Physics.minSpinRadiansPerSecond,
-                maxSpin: Float = Constants.Physics.maxSpinRadiansPerSecond,
-                offscreenBottomMargin: Float = Constants.Physics.offscreenBottomMargin,
-                offscreenHorizontalLimit: Float = Constants.Physics.offscreenHorizontalLimit,
-                offscreenTopLimit: Float = Constants.Physics.offscreenTopLimit) {
-        self.gravity = gravity
-        self.minLaunchSpeed = minLaunchSpeed
-        self.maxLaunchSpeed = maxLaunchSpeed
-        self.minLaunchAngle = minLaunchAngle
-        self.maxLaunchAngle = maxLaunchAngle
-        self.minSpin = minSpin
-        self.maxSpin = maxSpin
-        self.offscreenBottomMargin = offscreenBottomMargin
-        self.offscreenHorizontalLimit = offscreenHorizontalLimit
-        self.offscreenTopLimit = offscreenTopLimit
+    public var logicalWidth: Float {
+        guard actualSize.x > 0, actualSize.y > 0,
+              actualSize.x.isFinite, actualSize.y.isFinite else {
+            return 320 * (320.0 / 480.0)
+        }
+        return 320 * actualSize.x / actualSize.y
     }
 }
-
-// MARK: - 积分器
 
 public enum FruitMotion {
 
-    /// 推进一个逻辑步。
-    ///
-    /// - Parameters:
-    ///   - entity: 被推进的实体（原地修改 position/velocity/rotation）。
-    ///   - dt: 步长（秒）。`dt <= 0` 时只做存活判定，不推进。
-    ///   - tuning: 参数集合。
-    /// - Returns: `false` 表示实体已离屏、应被 `EntityStore.despawn` 回收。
-    ///
-    /// 注意：本函数**不**处理「被切中」后的形态切换（fruit → jiblet），
-    /// 那属于切割/特效层（§1.2 步骤 6.3）；也不消费 `Entity.dropState`（原 +0x41 下落态
-    /// 的语义仍为 [M] 级，未闭合，故不在积分器里使用）。
+    /// ARM `vcvt.u32.f32`：向零取整；负数/NaN 为 0，超上界饱和到 UInt32.max。
+    /// 不能用 Swift 的普通 UInt32 转换代替，否则负横向随机会触发运行时陷阱。
+    public static func armUnsignedSaturate(_ value: Float) -> UInt32 {
+        if value.isNaN || value <= 0 { return 0 }
+        if value >= Float(UInt32.max) { return UInt32.max }
+        return UInt32(value.rounded(.towardZero))
+    }
+
+    /// 普通默认 Spawn 的三次核心 RNG 顺序：横向、速度、方向。
+    /// 显式 velX/velY 非零时按原分支跳过第三次方向随机。
+    public static func spawnState(rng: any RandomSource, spawner: Spawner)
+        -> (position: SIMD3<Float>, velocity: SIMD3<Float>, acceleration: SIMD3<Float>) {
+        let horizontal = (-1 + 2 * rng.nextFloat()) * Constants.Physics.horizontalRandomScale
+        let x = Float(armUnsignedSaturate(horizontal))
+        let speed = Constants.Physics.minimumLaunchSpeed
+            + Constants.Physics.launchSpeedRange * rng.nextFloat()
+
+        let velocity: SIMD3<Float>
+        if spawner.velocityX != 0 || spawner.velocityY != 0 {
+            velocity = SIMD3<Float>(spawner.velocityX * spawner.velocityScaleX,
+                                    spawner.velocityY * spawner.velocityScaleY,
+                                    0)
+        } else {
+            let direction = rng.nextFloat() - 0.5
+            let curve = 0.5 - 2 * pow(0.5 - abs(direction), 2)
+            let signedAngle = (direction < 0 ? -1 : 1) as Float
+            let angle = -0.5 * x
+                + signedAngle * Constants.Physics.directionAngleScale * curve
+            // 原机器码先把角度向零截断为整数，再乘 182 查 sin/cos 表。
+            let quantizedDegrees = Int32(angle.rounded(.towardZero))
+            let radians = Float(quantizedDegrees) * Float.pi / 180
+            velocity = SIMD3<Float>(speed * sin(radians) * spawner.velocityScaleX,
+                                    speed * cos(radians) * Constants.Physics.verticalVelocityScale
+                                        * spawner.velocityScaleY,
+                                    0)
+        }
+
+        // 原式 acceleration = -(-12) * gravity。缺省 gravity 的兼容策略单列，
+        // 真实 XML 中显式 gravity 则严格使用解析值。
+        let gravity = spawner.gravity ?? Constants.Physics.missingGravityCompatibility
+        let acceleration = -Constants.Physics.constructedAccelerationY * gravity
+        return (SIMD3<Float>(x, Constants.Physics.defaultSpawnY, 0), velocity, acceleration)
+    }
+
+    /// FUN_0000c1c0 的普通积分顺序，不是旧实现的半隐式欧拉。
+    /// h = dt/60；先求 newVelocity，再以旧速度、加速度和newVelocity共同更新位置。
     @discardableResult
     public static func integrate(_ entity: inout Entity,
                                  dt: Float,
                                  tuning: FruitMotionTuning) -> Bool {
         guard dt > 0 else { return isAlive(entity, tuning: tuning) }
-
-        // 半隐式欧拉：先速度、后位置。
-        entity.transform.velocity.y += tuning.gravity * dt
-        entity.transform.position += entity.transform.velocity * dt
+        let h = dt / 60
+        let oldVelocity = entity.transform.velocity
+        let acceleration = entity.transform.acceleration
+        let newVelocity = oldVelocity + acceleration * h
+        entity.transform.velocity = newVelocity
+        entity.transform.position += 60 * (oldVelocity * h + 0.5 * acceleration * h * h)
+            + newVelocity * h
         entity.transform.rotation += entity.transform.angularVelocity * dt
-
         return isAlive(entity, tuning: tuning)
     }
 
-    /// 离屏判定（存活 = 仍在可交互区域）。
+    /// FUN_0000f6dc 的普通实体分支：边距随 FruitInfo.scale 变化，且越界方向
+    /// 必须与速度一致。零加速度向量允许四个方向检查，不是统一固定矩形回收。
     public static func isAlive(_ entity: Entity, tuning: FruitMotionTuning) -> Bool {
         let p = entity.transform.position
-        if p.y < tuning.offscreenBottomMargin { return false }
-        if p.y > tuning.offscreenTopLimit { return false }
-        if abs(p.x) > tuning.offscreenHorizontalLimit { return false }
+        let v = entity.transform.velocity
+        let a = entity.transform.acceleration
+        let zeroAcceleration = a == .zero
+        let margin = entity.transform.scale * 0.01 * 50
+        let horizontalLimit = tuning.logicalWidth * 0.5 + margin
+        let verticalLimit = 160 + margin
+
+        if (a.y < 0 || zeroAcceleration), p.y <= -verticalLimit, v.y < 0 { return false }
+        if (a.y > 0 || zeroAcceleration), p.y >= verticalLimit, v.y > 0 { return false }
+        if (a.x < 0 || zeroAcceleration), p.x <= -horizontalLimit, v.x < 0 { return false }
+        if (a.x > 0 || zeroAcceleration), p.x >= horizontalLimit, v.x > 0 { return false }
         return true
-    }
-
-    /// 生成初速（xy 平面抛物线，z 恒为 0）。
-    ///
-    /// ⚠️ [待验证] 原版初速/角度的分布规律（是否均匀、是否依赖水果类型、
-    ///    是否与 spawner 的 spread 字段相关）均未闭合，此处取「区间内均匀分布」占位。
-    public static func launchVelocity(rng: any RandomSource,
-                                      tuning: FruitMotionTuning) -> SIMD3<Float> {
-        let speed = lerp(tuning.minLaunchSpeed, tuning.maxLaunchSpeed, rng.nextFloat())
-        let angle = lerp(tuning.minLaunchAngle, tuning.maxLaunchAngle, rng.nextFloat())
-        return SIMD3<Float>(cos(angle) * speed, sin(angle) * speed, 0)
-    }
-
-    /// 生成自转角速度。
-    /// ⚠️ [待验证] 原版自转轴与分布未知；占位为绕 z 轴、区间均匀。
-    public static func initialSpin(rng: any RandomSource,
-                                   tuning: FruitMotionTuning) -> SIMD3<Float> {
-        let z = lerp(tuning.minSpin, tuning.maxSpin, rng.nextFloat())
-        return SIMD3<Float>(0, 0, z)
-    }
-
-    // MARK: 内部
-
-    private static func lerp(_ a: Float, _ b: Float, _ t: Float) -> Float {
-        a + (b - a) * t
     }
 }

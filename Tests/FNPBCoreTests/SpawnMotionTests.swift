@@ -2,28 +2,91 @@ import XCTest
 import simd
 @testable import FNPBCore
 
-/// 生成桥必须使用真实 Content；运动与出界参数仍按 T-025 标注为 [待验证]。
+/// T-035：默认水果生成严格按 FUN_00057000；缺省 gravity 只验证已命名的兼容策略。
 final class SpawnMotionTests: XCTestCase {
     private static let appleTypeID: Int32 = 0
     private static let watermelonTypeID: Int32 = 3
 
-    func testSpawnFruitCreatesEntityWithLaunchSpeedInRange() throws {
+    func testArmUnsignedSaturateMatchesTruncationAndSaturation() {
+        XCTAssertEqual(FruitMotion.armUnsignedSaturate(-150), 0)
+        XCTAssertEqual(FruitMotion.armUnsignedSaturate(-0.01), 0)
+        XCTAssertEqual(FruitMotion.armUnsignedSaturate(.nan), 0)
+        XCTAssertEqual(FruitMotion.armUnsignedSaturate(12.99), 12)
+        XCTAssertEqual(FruitMotion.armUnsignedSaturate(Float(UInt32.max) * 2), UInt32.max)
+    }
+
+    func testHorizontalRandomZeroHalfAndOneSaturateLikeARM() {
+        for (random, expectedX) in [(Float(0), Float(0)), (0.5, Float(0)), (1, Float(150))] {
+            let rng = SequenceTestRandom([random, 0.5, 0.5])
+            var spawner = Spawner()
+            spawner.velocityScaleX = 1
+            spawner.velocityScaleY = 1
+            let state = FruitMotion.spawnState(rng: rng, spawner: spawner)
+            XCTAssertEqual(state.position.x, expectedX, accuracy: 1e-6)
+            XCTAssertEqual(state.position.y, -215, accuracy: 1e-6)
+            XCTAssertEqual(rng.calls, 3)
+        }
+    }
+
+    func testDefaultSpawnConsumesHorizontalSpeedDirectionInOrder() {
+        let rng = SequenceTestRandom([0.25, 0.75, 0.25])
+        var spawner = Spawner()
+        spawner.velocityScaleX = 1
+        spawner.velocityScaleY = 1
+
+        let state = FruitMotion.spawnState(rng: rng, spawner: spawner)
+        let speed: Float = 9.5 + 1.5 * 0.75
+        // 横向 -75 经 ARM 饱和为 0；direction=-0.25 → curve=.375 → angle=-7.5° → -7°。
+        let radians: Float = -7 * .pi / 180
+        XCTAssertEqual(state.position, SIMD3<Float>(0, -215, 0))
+        XCTAssertEqual(state.velocity.x, speed * sin(radians), accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.y, speed * cos(radians) * 1.075, accuracy: 1e-5)
+        XCTAssertEqual(state.velocity.z, 0, accuracy: 1e-6)
+        XCTAssertEqual(rng.calls, 3)
+    }
+
+    func testRealDefaultVelocityScalesStayZeroAndGravityIsNamedCompatibility() {
+        let rng = SequenceTestRandom([1, 1, 1])
+        let state = FruitMotion.spawnState(rng: rng, spawner: Spawner())
+
+        XCTAssertEqual(state.position, SIMD3<Float>(150, -215, 0))
+        XCTAssertEqual(state.velocity, .zero, "原 Spawn 构造器的两个速度缩放均为 0")
+        XCTAssertEqual(Constants.Physics.missingGravityCompatibility, SIMD3<Float>(0, 1, 0))
+        XCTAssertEqual(state.acceleration, SIMD3<Float>(0, -12, 0))
+        XCTAssertEqual(rng.calls, 3)
+    }
+
+    func testExplicitVelocityOverrideConsumesOnlyTwoRandomValues() {
+        let rng = SequenceTestRandom([0.25, 0.75, 0.99])
+        var spawner = Spawner()
+        spawner.velocityX = 3
+        spawner.velocityY = -4
+        spawner.velocityScaleX = 2
+        spawner.velocityScaleY = 0.5
+        spawner.gravity = SIMD3<Float>(2, 0, -3)
+
+        let state = FruitMotion.spawnState(rng: rng, spawner: spawner)
+        XCTAssertEqual(state.position, SIMD3<Float>(0, -215, 0))
+        XCTAssertEqual(state.velocity, SIMD3<Float>(6, -2, 0))
+        XCTAssertEqual(state.acceleration, SIMD3<Float>(24, 0, -36))
+        XCTAssertEqual(rng.calls, 2, "显式速度覆盖分支跳过方向随机")
+    }
+
+    func testSpawnFruitUsesMachOStateAndDoesNotConsumeRandomSpin() throws {
         let store = GenerationOrderStore()
-        let tuning = FruitMotionTuning()
-        let bridge = try makeBridge(store: store, seed: 0x5EED_1234, tuning: tuning)
+        let rng = SequenceTestRandom([1, 1, 1])
+        let bridge = try makeBridge(store: store, rng: rng)
         bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
 
-        XCTAssertEqual(store.aliveCount, 1)
         let id = try XCTUnwrap(firstID(in: store))
         let entity = try XCTUnwrap(store.entity(id))
         XCTAssertEqual(entity.kind, .fruit)
         XCTAssertEqual(entity.fruit?.typeID, Self.appleTypeID)
-        XCTAssertEqual(entity.transform.position.y, tuning.offscreenBottomMargin, accuracy: 1e-5)
-        XCTAssertEqual(entity.transform.velocity.z, 0, accuracy: 1e-6)
-        let speed = simd_length(SIMD2<Float>(entity.transform.velocity.x,
-                                             entity.transform.velocity.y))
-        XCTAssertGreaterThanOrEqual(speed, tuning.minLaunchSpeed - 1e-4)
-        XCTAssertLessThanOrEqual(speed, tuning.maxLaunchSpeed + 1e-4)
+        XCTAssertEqual(entity.transform.position, SIMD3<Float>(150, -215, 0))
+        XCTAssertEqual(entity.transform.velocity, .zero)
+        XCTAssertEqual(entity.transform.acceleration, SIMD3<Float>(0, -12, 0))
+        XCTAssertEqual(entity.transform.angularVelocity, .zero)
+        XCTAssertEqual(rng.calls, 3, "不得再消耗旧实现的第四次随机自旋")
     }
 
     func testSpawnFruitUsesRealAppleMetadata() throws {
@@ -66,11 +129,10 @@ final class SpawnMotionTests: XCTestCase {
         let bridge = try makeBridge(store: store, seed: 0xBAD)
         bridge.spawnFruit(kind: 99, from: Spawner(), wave: WaveInfo())
         bridge.spawnFruit(kind: -1, from: Spawner(), wave: WaveInfo())
-        // EntityKindValue.bomb == 2 是实体类别，不是非法水果 ID；真实 typeID 2 必须可生成。
         XCTAssertEqual(store.aliveCount, 0)
     }
 
-    func testSpawnBombUsesLoadedBombInfo() throws {
+    func testSpawnBombUsesLoadedBombInfoWithoutClaimingOfficialMotion() throws {
         let store = GenerationOrderStore()
         let bridge = try makeBridge(store: store, seed: 0xB0B1)
         bridge.spawnBomb(from: Spawner(), wave: WaveInfo())
@@ -95,34 +157,13 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(store.aliveCount, 30)
     }
 
-    func testIntegrateFollowsParabolicMotion() throws {
-        let store = GenerationOrderStore()
-        let tuning = FruitMotionTuning()
-        let bridge = try makeBridge(store: store, seed: 0x5EED_5678, tuning: tuning)
-        bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
-        let id = try XCTUnwrap(firstID(in: store))
-        var entity = try XCTUnwrap(store.entity(id))
-        let p0 = entity.transform.position
-        let v0 = entity.transform.velocity
-        let dt: Float = 1.0 / 60.0
-
-        XCTAssertTrue(FruitMotion.integrate(&entity, dt: dt, tuning: tuning))
-        let v1 = entity.transform.velocity
-        XCTAssertEqual(v1.y, v0.y + tuning.gravity * dt, accuracy: 1e-4)
-        XCTAssertEqual(entity.transform.position.y, p0.y + v1.y * dt, accuracy: 1e-4)
-        XCTAssertEqual(entity.transform.position.x, p0.x + v1.x * dt, accuracy: 1e-4)
-        let p1 = entity.transform.position
-        XCTAssertTrue(FruitMotion.integrate(&entity, dt: dt, tuning: tuning))
-        XCTAssertGreaterThan(entity.transform.position.y, p1.y)
-    }
-
     func testOutOfBoundsFruitIsDespawnedByTick() throws {
         let store = GenerationOrderStore()
         let tuning = FruitMotionTuning()
         let bridge = try makeBridge(store: store, seed: 0x0FF1, tuning: tuning)
         bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
         let id = try XCTUnwrap(firstID(in: store))
-        pushOutOfBounds(store, tuning: tuning)
+        pushOutOfBounds(store)
 
         var world: any EntityStore = store
         var state = runnableState()
@@ -141,7 +182,7 @@ final class SpawnMotionTests: XCTestCase {
         for _ in 0..<3 {
             bridge.spawnFruit(kind: Self.appleTypeID, from: Spawner(), wave: WaveInfo())
         }
-        pushOutOfBounds(store, tuning: tuning)
+        pushOutOfBounds(store)
         var world: any EntityStore = store
         var state = runnableState()
         state.missPenaltyCount = 2
@@ -159,7 +200,7 @@ final class SpawnMotionTests: XCTestCase {
         let tuning = FruitMotionTuning()
         let bridge = try makeBridge(store: store, seed: 0x0FF3, tuning: tuning)
         bridge.spawnBomb(from: Spawner(), wave: WaveInfo())
-        pushOutOfBounds(store, tuning: tuning)
+        pushOutOfBounds(store)
         var world: any EntityStore = store
         var state = runnableState()
         GameWorld(motionTuning: tuning).tick(dt: 1.0 / 60.0,
@@ -174,9 +215,15 @@ final class SpawnMotionTests: XCTestCase {
     private func makeBridge(store: GenerationOrderStore,
                             seed: UInt64,
                             tuning: FruitMotionTuning = FruitMotionTuning()) throws -> WaveSpawnBridge {
+        try makeBridge(store: store, rng: DeterministicTestRandom(seed: seed), tuning: tuning)
+    }
+
+    private func makeBridge(store: GenerationOrderStore,
+                            rng: any RandomSource,
+                            tuning: FruitMotionTuning = FruitMotionTuning()) throws -> WaveSpawnBridge {
         let content = try loadRealContent()
         return WaveSpawnBridge(store: store,
-                               rng: DeterministicTestRandom(seed: seed),
+                               rng: rng,
                                fruits: content.fruits.fruits,
                                bomb: content.fruits.bomb,
                                tuning: tuning)
@@ -202,10 +249,12 @@ final class SpawnMotionTests: XCTestCase {
         return found
     }
 
-    private func pushOutOfBounds(_ store: GenerationOrderStore, tuning: FruitMotionTuning) {
+    private func pushOutOfBounds(_ store: GenerationOrderStore) {
         store.forEach { entity in
-            entity.transform.position = SIMD3<Float>(0, tuning.offscreenBottomMargin - 1, 0)
+            let margin = entity.transform.scale * 0.01 * 50
+            entity.transform.position = SIMD3<Float>(0, -160 - margin - 1, 0)
             entity.transform.velocity = SIMD3<Float>(0, -10, 0)
+            entity.transform.acceleration = SIMD3<Float>(0, -12, 0)
             return true
         }
     }
@@ -223,6 +272,28 @@ final class SpawnMotionTests: XCTestCase {
                      stats: StubStats(), waves: StubWaves(), audio: StubAudio(),
                      effects: StubEffects(), rng: DeterministicTestRandom(seed: 0xC0FFEE))
     }
+}
+
+private final class SequenceTestRandom: RandomSource {
+    private let values: [Float]
+    private var index = 0
+    private(set) var calls = 0
+
+    init(_ values: [Float]) { self.values = values }
+
+    func nextFloat() -> Float {
+        precondition(index < values.count, "测试随机序列被过度消费")
+        defer { index += 1; calls += 1 }
+        return values[index]
+    }
+
+    func nextInt(_ upperBound: Int32) -> Int32 {
+        guard upperBound > 0 else { return 0 }
+        return Int32(nextFloat() * Float(upperBound))
+    }
+
+    func snapshot() -> UInt64 { UInt64(index) }
+    func restore(_ s: UInt64) { index = Int(s) }
 }
 
 private final class DeterministicTestRandom: RandomSource {

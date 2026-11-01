@@ -213,83 +213,105 @@ final class EntityStoreTests: XCTestCase {
 
 final class FruitMotionTests: XCTestCase {
 
-    /// 手算：g = -60，dt = 1/60，初速 (3, 0, 0)，位置 (0, 10, 0)
-    ///   第 1 步：v.y = 0 + (-60)/60 = -1；p = (3/60, 10 - 1/60, 0)
-    ///   第 2 步：v.y = -2；p = (6/60, 10 - 3/60, 0)
-    func testSemiImplicitEulerManualSteps() {
+    /// h=dt/60=1/3600，p=(0,10,0)，v=(3,0,0)，a=(0,-60,0)。
+    /// 第 1 步 v.y=-1/60，p.x=183h，p.y=10-1800h²-h/60。
+    /// 第 2 步 v.y=-1/30，y 增量=-(31/30)h-1800h²。
+    func testMachOIntegrationManualSteps() {
         var entity = Entity(id: EntityID(rawValue: 1), kind: .fruit)
         entity.transform.position = SIMD3<Float>(0, 10, 0)
         entity.transform.velocity = SIMD3<Float>(3, 0, 0)
+        entity.transform.acceleration = SIMD3<Float>(0, -60, 0)
 
-        let tuning = FruitMotionTuning(gravity: -60,
-                                       offscreenBottomMargin: -1000,
-                                       offscreenHorizontalLimit: 1000,
-                                       offscreenTopLimit: 1000)
+        let tuning = FruitMotionTuning()
         let dt: Float = 1.0 / 60.0
+        let h = dt / 60
 
-        let alive1 = FruitMotion.integrate(&entity, dt: dt, tuning: tuning)
-        XCTAssertTrue(alive1)
-        XCTAssertEqual(entity.transform.velocity.y, -1.0, accuracy: 1e-4)
-        XCTAssertEqual(entity.transform.velocity.x, 3.0, accuracy: 1e-6)
-        XCTAssertEqual(entity.transform.position.x, 3.0 * dt, accuracy: 1e-4)
-        XCTAssertEqual(entity.transform.position.y, 10.0 - dt, accuracy: 1e-4)
+        XCTAssertTrue(FruitMotion.integrate(&entity, dt: dt, tuning: tuning))
+        XCTAssertEqual(entity.transform.velocity.x, 3, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.velocity.y, -1.0 / 60.0, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.position.x, 183 * h, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.position.y,
+                       10 - 1800 * h * h - h / 60, accuracy: 1e-6)
 
-        let alive2 = FruitMotion.integrate(&entity, dt: dt, tuning: tuning)
-        XCTAssertTrue(alive2)
-        XCTAssertEqual(entity.transform.velocity.y, -2.0, accuracy: 1e-4)
-        XCTAssertEqual(entity.transform.position.x, 6.0 * dt, accuracy: 1e-4)
-        XCTAssertEqual(entity.transform.position.y, 10.0 - 3.0 * dt, accuracy: 1e-4)
+        let firstY = entity.transform.position.y
+        XCTAssertTrue(FruitMotion.integrate(&entity, dt: dt, tuning: tuning))
+        XCTAssertEqual(entity.transform.velocity.y, -1.0 / 30.0, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.position.x, 366 * h, accuracy: 1e-6)
+        XCTAssertEqual(entity.transform.position.y,
+                       firstY - (31.0 / 30.0) * h - 1800 * h * h, accuracy: 1e-6)
     }
 
-    func testRotationIntegratesAngularVelocity() {
+    func testZeroAccelerationAndRotationIntegration() {
         var entity = Entity(id: EntityID(rawValue: 2), kind: .fruit)
+        entity.transform.acceleration = .zero
+        entity.transform.velocity = SIMD3<Float>(60, 0, 0)
         entity.transform.angularVelocity = SIMD3<Float>(0, 0, 1)
+        let h: Float = 0.5 / 60
 
-        let tuning = FruitMotionTuning(gravity: 0,
-                                       offscreenBottomMargin: -1000,
-                                       offscreenHorizontalLimit: 1000,
-                                       offscreenTopLimit: 1000)
-
-        FruitMotion.integrate(&entity, dt: 0.5, tuning: tuning)
-
+        XCTAssertTrue(FruitMotion.integrate(&entity, dt: 0.5, tuning: FruitMotionTuning()))
+        XCTAssertEqual(entity.transform.position.x, 3660 * h, accuracy: 1e-5)
+        XCTAssertEqual(entity.transform.position.y, 0, accuracy: 1e-6)
         XCTAssertEqual(entity.transform.rotation.z, 0.5, accuracy: 1e-6)
-        XCTAssertEqual(entity.transform.rotation.x, 0.0, accuracy: 1e-6)
-        XCTAssertEqual(entity.transform.position, .zero)
+        XCTAssertEqual(entity.transform.velocity, SIMD3<Float>(60, 0, 0))
     }
 
-    func testOffscreenRecycling() {
-        let tuning = FruitMotionTuning(gravity: -60,
-                                       offscreenBottomMargin: -2.0,
-                                       offscreenHorizontalLimit: 100,
-                                       offscreenTopLimit: 100)
+    func testFourDirectionBoundsRequirePositionAccelerationAndVelocity() {
+        let tuning = FruitMotionTuning()
+        let halfWidth = tuning.logicalWidth / 2
+        let cases: [(SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)] = [
+            (SIMD3<Float>(0, -160, 0), SIMD3<Float>(0, -1, 0), SIMD3<Float>(0, -1, 0)),
+            (SIMD3<Float>(0, 160, 0), SIMD3<Float>(0, 1, 0), SIMD3<Float>(0, 1, 0)),
+            (SIMD3<Float>(-halfWidth, 0, 0), SIMD3<Float>(-1, 0, 0), SIMD3<Float>(-1, 0, 0)),
+            (SIMD3<Float>(halfWidth, 0, 0), SIMD3<Float>(1, 0, 0), SIMD3<Float>(1, 0, 0)),
+        ]
+        for (index, testCase) in cases.enumerated() {
+            var entity = Entity(id: EntityID(rawValue: UInt32(index + 10)), kind: .fruit)
+            entity.transform.scale = 0
+            entity.transform.position = testCase.0
+            entity.transform.velocity = testCase.1
+            entity.transform.acceleration = testCase.2
+            XCTAssertFalse(FruitMotion.isAlive(entity, tuning: tuning))
 
-        // 1) 已经在下边界之下：dt == 0 时只做存活判定
-        var below = Entity(id: EntityID(rawValue: 3), kind: .fruit)
-        below.transform.position = SIMD3<Float>(0, -3, 0)
-        XCTAssertFalse(FruitMotion.integrate(&below, dt: 0, tuning: tuning))
+            entity.transform.acceleration = .zero
+            XCTAssertFalse(FruitMotion.isAlive(entity, tuning: tuning),
+                           "零加速度向量允许四方向检查")
 
-        // 2) 本步推进后越界：v.y = -61，p.y = -1.9 - 61/60 ≈ -2.9167 < -2
-        var crossing = Entity(id: EntityID(rawValue: 4), kind: .fruit)
-        crossing.transform.position = SIMD3<Float>(0, -1.9, 0)
-        crossing.transform.velocity = SIMD3<Float>(0, -60, 0)
-        XCTAssertFalse(FruitMotion.integrate(&crossing, dt: 1.0 / 60.0, tuning: tuning))
+            entity.transform.acceleration = testCase.2
+            entity.transform.velocity = -testCase.1
+            XCTAssertTrue(FruitMotion.isAlive(entity, tuning: tuning),
+                          "越界但速度朝内时不得回收")
 
-        // 3) 水平越界
-        var sideways = Entity(id: EntityID(rawValue: 5), kind: .fruit)
-        sideways.transform.position = SIMD3<Float>(100.5, 0, 0)
-        XCTAssertFalse(FruitMotion.integrate(&sideways, dt: 0, tuning: tuning))
+            entity.transform.velocity = testCase.1
+            entity.transform.acceleration = -testCase.2
+            XCTAssertTrue(FruitMotion.isAlive(entity, tuning: tuning),
+                          "加速度符号不允许该方向时不得回收")
+        }
     }
 
-    /// 初速注入：rng 返回 0 → 取区间下限
-    func testLaunchVelocityUsesTuningBounds() {
-        let tuning = FruitMotionTuning(minLaunchSpeed: 10,
-                                       maxLaunchSpeed: 20,
-                                       minLaunchAngle: 0,
-                                       maxLaunchAngle: .pi / 2)
-        let velocity = FruitMotion.launchVelocity(rng: T015FixedRandom(0), tuning: tuning)
+    func testFruitScaleChangesOffscreenMargin() {
+        let tuning = FruitMotionTuning()
+        var apple = Entity(id: EntityID(rawValue: 30), kind: .fruit)
+        apple.transform.scale = 60
+        apple.transform.position = SIMD3<Float>(0, -195, 0)
+        apple.transform.velocity = SIMD3<Float>(0, -1, 0)
+        apple.transform.acceleration = SIMD3<Float>(0, -1, 0)
 
-        XCTAssertEqual(velocity.x, 10.0, accuracy: 1e-6)
-        XCTAssertEqual(velocity.y, 0.0, accuracy: 1e-6)
-        XCTAssertEqual(velocity.z, 0.0, accuracy: 1e-6)
+        var watermelon = apple
+        watermelon.id = EntityID(rawValue: 31)
+        watermelon.transform.scale = 75
+
+        XCTAssertFalse(FruitMotion.isAlive(apple, tuning: tuning),
+                       "苹果边距 30，下限 -190")
+        XCTAssertTrue(FruitMotion.isAlive(watermelon, tuning: tuning),
+                      "西瓜边距 37.5，下限 -197.5")
+    }
+
+    func testViewportAspectRatioAndInvalidFallback() {
+        XCTAssertEqual(FruitMotionTuning(actualSize: SIMD2<Float>(320, 480)).logicalWidth,
+                       320.0 * 320.0 / 480.0, accuracy: 1e-5)
+        XCTAssertEqual(FruitMotionTuning(actualSize: SIMD2<Float>(1024, 768)).logicalWidth,
+                       320.0 * 1024.0 / 768.0, accuracy: 1e-5)
+        XCTAssertEqual(FruitMotionTuning(actualSize: .zero).logicalWidth,
+                       320.0 * 320.0 / 480.0, accuracy: 1e-5)
     }
 }
