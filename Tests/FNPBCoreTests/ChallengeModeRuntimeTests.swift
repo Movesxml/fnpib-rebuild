@@ -273,7 +273,10 @@ final class ChallengeModeRuntimeTests: XCTestCase {
         XCTAssertEqual(runtime.conditions.condition(named: "score")?.current, .pass)
         XCTAssertEqual(runtime.conditions.condition(named: "apples")?.current, .pass)
         XCTAssertEqual(runtime.conditions.condition(named: "morePineapples")?.current, .pass)
-        XCTAssertEqual(runtime.conditions.finish(context: context), .pass)
+        runtime.markWavesEnded()
+        runtime.update(dt: 0, frame: ChallengeFrame(
+            evaluation: context, waveCount: 1, fruitEntityCount: 0))
+        XCTAssertEqual(runtime.roundResults, [.pass])
     }
 
     private func makeRuntime(
