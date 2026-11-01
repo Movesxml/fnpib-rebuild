@@ -39,13 +39,27 @@ public final class FruitOnSliced {
 
     /// 主循环顺序：先执行实体 OnSliced，再处理实体 +0x1ba 对 game 的修正。
     /// 单果计分独立于 combo 是否递增；stateSlot0==2 或重复实体也不能漏掉本次得分。
+    /// 无挑战调用保留原签名，避免把挑战状态塞进 GameState 或既有计分测试。
     func apply(entity: inout Entity, state: inout GameState, services: GameServices,
                explosionTimeRemaining: Float = 0) {
+        var unusedTracker = ChallengeConsecutiveTracker()
+        apply(entity: &entity, state: &state, services: services,
+              explosionTimeRemaining: explosionTimeRemaining,
+              consecutive: &unusedTracker) { _, _ in }
+    }
+
+    /// FUN_00010bec 的完整事件顺序：先更新 DAT_005d4ce0，再单果计分，
+    /// 然后 FUN_00003fb4(count,type)，最后才是水果名统计和 totalfruit。
+    func apply(entity: inout Entity, state: inout GameState, services: GameServices,
+               explosionTimeRemaining: Float = 0,
+               consecutive tracker: inout ChallengeConsecutiveTracker,
+               playerIndex: Int32 = 0,
+               recordConsecutive: (Int32, String) -> Void) {
         guard let fruit = entity.fruit else { return }
         // 原水果 +0x1bc 在 OnSliced 完成后置位；noScore 早退也不能漏掉该状态。
         defer { entity.hasBeenSliced = true }
 
-        // 标准路径中 noScore 会使 OnSliced 清 +0x1ba 并跳过计分/水果统计。
+        // 标准路径中 noScore 会使 OnSliced 清 +0x1ba 并跳过计数、计分和水果统计。
         if fruit.noScore {
             entity.isCriticalHit = false
             return
@@ -59,6 +73,8 @@ public final class FruitOnSliced {
             points = points &+ criticalScore
         }
 
+        let consecutiveCount = tracker.recordSlice(playerIndex: playerIndex)
+
         // Mach-O FUN_00010bec: 非 starfruit 才调用 FUN_0001cb08(score, ..., 1, 0)。
         if starfruitTypeID != fruit.typeID {
             services.score.dispatch(score: points,
@@ -66,6 +82,8 @@ public final class FruitOnSliced {
                                     isScoring: true,
                                     mode: 0)
         }
+        recordConsecutive(consecutiveCount, fruit.name)
+
         // FUN_00010bec 在 totalfruit 之前按水果名上报；bean_game_consecutive_total
         // 随后读取的正是这份计数，不能另建一份经典模式私有计数。
         services.stats.report(fruit.name, 1)

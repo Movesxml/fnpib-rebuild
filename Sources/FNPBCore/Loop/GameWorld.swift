@@ -208,6 +208,9 @@ public final class GameWorld: GameTicking {
     /// 发售版水果 OnSliced 的已闭合计分/统计子链。
     private let onSliced: FruitOnSliced
 
+    /// 原 DAT_005d4ce0 是独立全局槽位，不属于 GameState 的 combo 状态。
+    private var challengeConsecutive = ChallengeConsecutiveTracker()
+
     /// 命中特效的 kind 占位（原 FUN_00033ca0 / FUN_00035a08 的类别参数）。
     /// [待验证] kind 语义待特效任务卡定名，0 为「普通命中」占位。
     private static let hitEffectKind: Int32 = 0
@@ -231,6 +234,7 @@ public final class GameWorld: GameTicking {
         explosionTimeRemaining = 0
         classic.reset(isClassicMode: isClassicMode)
         challenge = nil
+        challengeConsecutive.reset()
         onSliced.reset(isClassicMode: isClassicMode, initialChance: initialCriticalChance)
     }
 
@@ -462,7 +466,10 @@ public final class GameWorld: GameTicking {
             // 原顺序是先实体 vtable+0x24，再消费实体 +0x1ba。单果得分不依赖
             // combo 是否递增，也不依赖 stateSlot0 或 +0x6e 的普通路径门控。
             onSliced.apply(entity: &entity, state: &state, services: services,
-                           explosionTimeRemaining: explosionTimeRemaining)
+                           explosionTimeRemaining: explosionTimeRemaining,
+                           consecutive: &challengeConsecutive) { count, specificType in
+                challenge?.recordConsecutive(count: count, specificType: specificType)
+            }
             classic.onFruitSliced(entity, state: &state, services: services)
             evaluateChallengeImmediate(services: services)
 

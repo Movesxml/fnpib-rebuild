@@ -661,6 +661,119 @@ final class GameWorldTests: XCTestCase {
         XCTAssertEqual(rig.world.challenge?.roundResults, [.pass])
     }
 
+    func testChallengeConsecutiveCountsThreeRealFruitsInOneFrame() {
+        let rig = Rig()
+        let goal = ChallengeConditionDefinition(
+            name: "chain", kind: .consecutive, total: 3)
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(
+                name: "chainGoal", timeLimit: 1, conditionNames: ["chain"]),
+            conditionDefinitions: [goal]))
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        for name in ["apple", "banana", "pear"] {
+            var fruit = FruitInfo()
+            fruit.name = name
+            fruit.score = 1
+            world.spawn(EntityPrototype(kind: .fruit, fruit: fruit))
+        }
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world,
+                       services: rig.services)
+
+        XCTAssertEqual(rig.world.challenge?.conditions.condition(named: "chain")?.current,
+                       .pass, "同一帧三个真实水果必须依次产生计数 1、2、3")
+        XCTAssertEqual(rig.stats.adds[.totalfruit], 3)
+        XCTAssertEqual(rig.stats.reports["banana"], 1)
+    }
+
+    func testChallengeConsecutiveSpecificTypeFiltersRealFruitName() {
+        let rig = Rig()
+        let goal = ChallengeConditionDefinition(
+            name: "bananaChain", kind: .consecutive, total: 3,
+            specificType: "banana")
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(
+                name: "bananaGoal", timeLimit: 1, conditionNames: ["bananaChain"]),
+            conditionDefinitions: [goal]))
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        for name in ["apple", "banana", "apple"] {
+            var fruit = FruitInfo()
+            fruit.name = name
+            world.spawn(EntityPrototype(kind: .fruit, fruit: fruit))
+        }
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world,
+                       services: rig.services)
+
+        XCTAssertEqual(rig.world.challenge?.conditions.condition(named: "bananaChain")?.current,
+                       .pending, "第三个 apple 不得满足 banana 专用条件")
+    }
+
+    func testChallengeConsecutiveNoScoreFruitDoesNotAdvanceOrReport() {
+        let rig = Rig()
+        let goal = ChallengeConditionDefinition(
+            name: "chain", kind: .consecutive, total: 3)
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(
+                name: "chainGoal", timeLimit: 1, conditionNames: ["chain"]),
+            conditionDefinitions: [goal]))
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        for noScore in [false, true, false] {
+            var fruit = FruitInfo()
+            fruit.name = "apple"
+            fruit.noScore = noScore
+            world.spawn(EntityPrototype(kind: .fruit, fruit: fruit))
+        }
+
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world,
+                       services: rig.services)
+
+        XCTAssertEqual(rig.world.challenge?.conditions.condition(named: "chain")?.current,
+                       .pending, "noScore 水果若计入会错误地达到 3")
+        XCTAssertEqual(rig.stats.adds[.totalfruit], 2)
+        XCTAssertEqual(rig.stats.reports["apple"], 2)
+    }
+
+    func testChallengeConsecutiveResetsAtNewGameBoundary() {
+        let rig = Rig()
+        let goal = ChallengeConditionDefinition(
+            name: "chain", kind: .consecutive, total: 2)
+        let runtime = ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(
+                name: "chainGoal", timeLimit: 1, conditionNames: ["chain"]),
+            conditionDefinitions: [goal])
+        rig.world.configureChallenge(runtime)
+        var state = runnableState()
+        rig.slice.sliceResult = true
+        var world: any EntityStore = GenerationOrderStore()
+        var fruit = FruitInfo()
+        fruit.name = "apple"
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit))
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world,
+                       services: rig.services)
+        XCTAssertEqual(rig.world.challenge?.conditions.condition(named: "chain")?.current,
+                       .pending)
+
+        rig.world.resetForNewGame(isClassicMode: false)
+        rig.world.configureChallenge(runtime)
+        world.spawn(EntityPrototype(kind: .fruit, fruit: fruit))
+        rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world,
+                       services: rig.services)
+
+        XCTAssertEqual(rig.world.challenge?.conditions.condition(named: "chain")?.current,
+                       .pending, "新局第一切若继承旧计数会错误地达到 2")
+    }
+
     func testResetForNewGameClearsInjectedChallenge() {
         let rig = Rig()
         rig.world.configureChallenge(ChallengeModeRuntime(
