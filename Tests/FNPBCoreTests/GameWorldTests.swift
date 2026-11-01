@@ -293,11 +293,13 @@ final class GameWorldTests: XCTestCase {
         ))
         world.spawn(EntityPrototype(
             kind: .fruit,
-            transform: EntityTransform(position: SIMD3<Float>(30, 40, 0))
+            transform: EntityTransform(position: SIMD3<Float>(12, 20, 0))
         ))
 
         rig.world.tick(dt: 1.0 / 60.0, state: &state, world: &world, services: rig.services)
 
+        XCTAssertEqual(rig.slice.sliceCalls, 2, "两个水果都必须存活到切割判定")
+        XCTAssertEqual(world.aliveCount, 0, "两个水果都必须命中并回收")
         XCTAssertEqual(rig.slice.slashInputs, Array(repeating: state.slashPosition, count: 2))
         XCTAssertEqual(rig.slice.segmentStarts, Array(repeating: state.previousTouchPosition, count: 2))
         XCTAssertEqual(state.previousSlashPosition, state.slashPosition)
