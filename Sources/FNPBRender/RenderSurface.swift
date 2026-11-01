@@ -61,6 +61,7 @@ public protocol RenderSurface: AnyObject {
 
     func beginFrame() -> Bool
     func submit(_ batch: SpriteBatch)
+    func submit(_ batch: MeshBatch)
     func endFrame()
 
     /// 逻辑点尺寸。原实现按固定 15.0 归一化碰撞半径，
@@ -94,6 +95,7 @@ public final class MetalRenderSurface: RenderSurface {
 
     private let context: MetalContext
     private let instanceRing: InstanceBufferRing
+    private let meshPass: MeshPass?
 
     private weak var view: MTKView?
 
@@ -102,14 +104,29 @@ public final class MetalRenderSurface: RenderSurface {
 
     private var pendingOrder: [BucketKey] = []
     private var pending: [BucketKey: Bucket] = [:]
+    private var pendingMeshes: [MeshBatch] = []
 
     private var currentCommandBuffer: MTLCommandBuffer?
     private var currentEncoder: MTLRenderCommandEncoder?
     private var currentDrawable: CAMetalDrawable?
 
+    /// 管线失败只诊断一次；2D 刀光仍继续，不能用 2D 水果占位回填。
+    public private(set) var meshPipelineError: String?
+
     public init(context: MetalContext) {
         self.context = context
         self.instanceRing = InstanceBufferRing(device: context.device)
+        do {
+            self.meshPass = try MeshPass(
+                device: context.device,
+                shaderLibrary: context.shaderLibrary,
+                colorPixelFormat: MetalContext.colorPixelFormat
+            )
+            self.meshPipelineError = nil
+        } catch {
+            self.meshPass = nil
+            self.meshPipelineError = String(describing: error)
+        }
     }
 
     public var logicalSize: SIMD2<Float> {
@@ -187,6 +204,7 @@ public final class MetalRenderSurface: RenderSurface {
 
         pendingOrder.removeAll(keepingCapacity: true)
         pending.removeAll(keepingCapacity: true)
+        pendingMeshes.removeAll(keepingCapacity: true)
         instanceRing.beginFrame()
 
         currentCommandBuffer = commandBuffer
@@ -223,6 +241,11 @@ public final class MetalRenderSurface: RenderSurface {
         pending[key] = bucket
     }
 
+    public func submit(_ batch: MeshBatch) {
+        guard currentEncoder != nil, !batch.modelMatrices.isEmpty else { return }
+        pendingMeshes.append(batch)
+    }
+
     public func endFrame() {
         guard let commandBuffer = currentCommandBuffer,
               let encoder = currentEncoder,
@@ -230,6 +253,17 @@ public final class MetalRenderSurface: RenderSurface {
             resetFrame()
             return
         }
+
+        // 先编码真实 3D 网格，再画既有 2D 刀光；二者共用同一个 render encoder。
+        let camera = VisualReconstructionCamera(
+            logicalWidth: _logicalSize.x,
+            logicalHeight: _logicalSize.y
+        )
+        meshPass?.encode(
+            encoder: encoder,
+            batches: pendingMeshes,
+            viewProjection: camera.viewProjection()
+        )
 
         let stride = MemoryLayout<SpriteInstanceGPU>.stride
 
@@ -294,6 +328,7 @@ public final class MetalRenderSurface: RenderSurface {
         currentDrawable = nil
         pendingOrder.removeAll(keepingCapacity: true)
         pending.removeAll(keepingCapacity: true)
+        pendingMeshes.removeAll(keepingCapacity: true)
     }
 
     @inline(__always)

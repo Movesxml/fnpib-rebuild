@@ -2,14 +2,15 @@
 //  GameRenderer.swift
 //  App
 //
-//  T-024：把 FNPBRender 真正挂到 App（蓝图 S7 收口 + S8 最后一公里）。
+//  T-024 接入渲染；T-032 将水果/炸弹切换为真实 3D 网格。
 //
 //  数据流（全部主线程）：
 //    MetalCanvasView.draw(in:)                ← MTKView 内部 CADisplayLink，120Hz
 //      → GameRenderer.drawFrame()
 //      → surface.beginFrame()
 //      → 读 GameHost.currentState / currentEntities（渲染直读，本卡不做插值）
-//      → surface.submit(SpriteBatch) × N
+//      → 每个实体的全部已验证子网格提交 MeshBatch
+//      → 刀光提交 SpriteBatch；endFrame 内先画 3D，再画 2D
 //      → surface.endFrame()                   ← defer 保证配对
 //
 //  【坐标系】两套约定不一致，本文件只做一次变换（screenPoint(_:logicalSize:)）：
@@ -25,6 +26,7 @@ import Metal
 import SwiftUI
 import UIKit
 import simd
+import os.log
 
 import FNPBCore
 import FNPBRender
@@ -42,24 +44,16 @@ final class GameRenderer {
     /// 本对象反向弱引用宿主，避免保留环。
     weak var host: GameHost?
 
-    // MARK: - 贴图
+    // MARK: - 真实网格与刀光贴图
 
-    /// 唯一已确证图集 `fruit_atlas.png`（T-018）。
-    /// UV 子矩形映射未闭合 → v1 整图集拉伸渲染 [待验证]；加载失败保持 nil。
-    private var atlas: TextureHandle?
+    private var meshLibrary: MeshLibrary?
+    private var meshLoadAttempted = false
+    private static let meshLogger = Logger(subsystem: "com.example.fnpib", category: "FruitMesh")
 
-    /// 1×1 纯白兜底纹理：图集缺失时靠 `tint` 画出可辨识方块，不崩。
+    /// 只供刀光使用；水果/炸弹没有贴图时不得退回纯色或整图集 sprite。
     private var solidTexture: TextureHandle?
 
-    /// 图集只尝试加载一次（失败也不每帧重试 IO）。
-    private var atlasLoadAttempted = false
-
-    // MARK: - 占位常量（全部 [待验证]）
-
-    /// 水果占位边长 / 画面短边。
-    /// [待验证] 原版按 15.0 归一化 + `FruitInfo.scale`(默认 25.0) 换算屏幕尺寸，
-    /// 世界→逻辑点比例未闭合；闭合后改写为 `transform.scale / 15.0 * 基准长度`。
-    private static let fruitSizeRatio: Float = 0.1
+    // MARK: - 刀光占位常量（全部 [待验证]）
 
     /// 刀光段宽度 / 画面短边。[待验证]
     private static let trailWidthRatio: Float = 0.02
@@ -115,42 +109,53 @@ final class GameRenderer {
         let logicalSize = surface.logicalSize
         guard logicalSize.x > 0, logicalSize.y > 0 else { return }
 
-        loadAtlasIfNeeded()
+        loadMeshesIfNeeded()
 
-        guard let texture = atlas ?? solidTexture else { return }
+        if let meshLibrary {
+            let requests = MeshSceneAdapter.drawRequests(from: host.currentEntities)
+            let batches = MeshSceneAdapter.batches(from: requests, library: meshLibrary)
+            for batch in batches {
+                surface.submit(batch)
+            }
+        }
 
-        let state = host.currentState
-
-        submitEntities(texture: texture,
-                       entities: host.currentEntities,
-                       logicalSize: logicalSize)
-
+        // 刀光仍走原有 2D sprite；3D 提交不依赖刀光纹理是否可用。
+        guard let texture = solidTexture else { return }
         submitSlashTrail(texture: texture,
-                         trail: state.slashTrail,
+                         trail: host.currentState.slashTrail,
                          logicalSize: logicalSize)
     }
 
-    // MARK: - 贴图
+    // MARK: - 网格资源
 
-    private func loadAtlasIfNeeded() {
-        guard !atlasLoadAttempted else { return }
-        atlasLoadAttempted = true
+    private func loadMeshesIfNeeded() {
+        guard !meshLoadAttempted else { return }
+        meshLoadAttempted = true
 
-        // [待验证] 资源定位方式：资产管线（tools/AssetPipeline）产出的 PNG 如何进入
-        // bundle（ContentBundle / folder reference / 扁平资源）尚未在工程中确认。
-        // 这里按「扁平资源名 fruit_atlas.png」尝试，失败则永久回落纯色。
-        guard let url = Bundle.main.url(forResource: "fruit_atlas", withExtension: "png") else {
+        if let error = surface.meshPipelineError {
+            Self.meshLogger.error("3D 管线创建失败：\(error, privacy: .public)")
+        }
+        guard let manifestURL = Bundle.main.url(forResource: "fruitModels", withExtension: "json"),
+              let binaryURL = Bundle.main.url(forResource: "fruitMeshes", withExtension: "bin") else {
+            Self.meshLogger.error("缺少 fruitModels.json 或 fruitMeshes.bin；不使用占位水果")
             return
         }
 
-        let asset = TextureAsset(
-            id: "fruit_atlas",
-            source: .url(url),
-            srgb: true,
-            generateMipmaps: false,
-            premultipliedAlpha: true   // [待验证] PNG 是否预乘
-        )
-        atlas = try? textureLoader.load(asset)
+        do {
+            let content = try FruitModelLoader.load(manifestURL: manifestURL, binaryURL: binaryURL)
+            let provider = BundleMeshTextureProvider(bundle: .main, loader: textureLoader)
+            let library = MeshLibrary(
+                device: metalContext.device,
+                content: content,
+                textures: provider
+            )
+            meshLibrary = library
+            for message in library.diagnostics {
+                Self.meshLogger.warning("\(message, privacy: .public)")
+            }
+        } catch {
+            Self.meshLogger.error("网格资源加载失败：\(String(describing: error), privacy: .public)")
+        }
     }
 
     private static func makeSolidTexture(device: MTLDevice) -> TextureHandle? {
@@ -183,48 +188,6 @@ final class GameRenderer {
         return TextureHandle(texture: texture,
                              assetID: "solid-white",
                              premultipliedAlpha: false)
-    }
-
-    // MARK: - 实体精灵
-
-    private func submitEntities(texture: TextureHandle,
-                                entities: [Entity],
-                                logicalSize: SIMD2<Float>) {
-        guard !entities.isEmpty else { return }
-
-        let side = min(logicalSize.x, logicalSize.y) * Self.fruitSizeRatio
-        var instances: [SpriteInstance] = []
-        instances.reserveCapacity(entities.count)
-
-        for entity in entities {
-            guard entity.isVisible else { continue }
-            // v1 只画玩家可见的三类实体；slash/jiblet/blast 由特效任务卡负责。
-            switch entity.kind {
-            case .fruit, .bomb, .coin:
-                break
-            default:
-                continue
-            }
-
-            // [待验证] `FruitInfo.typeID` 字段名由任务卡文字给出，定义本轮未注入。
-            let typeID = entity.fruit?.typeID ?? Int32(entity.kind.rawValue)
-
-            instances.append(
-                SpriteInstance(
-                    position: screenPoint(entity.transform.position, logicalSize: logicalSize),
-                    size: SIMD2<Float>(side, side),
-                    // [待验证] 原引擎水果自转表示未闭合；此处只取欧拉角 z 分量做 2D 旋转。
-                    rotation: entity.transform.rotation.z,
-                    // [待验证] UV 子矩形未闭合：整图集拉伸（任务卡 v1 允许）。
-                    uvOrigin: SIMD2<Float>(0, 0),
-                    uvSize: SIMD2<Float>(1, 1),
-                    tint: Self.tint(forTypeID: typeID)
-                )
-            )
-        }
-
-        guard !instances.isEmpty else { return }
-        surface.submit(SpriteBatch(texture: texture, instances: instances, blend: .alpha))
     }
 
     // MARK: - 刀光轨迹
@@ -271,49 +234,57 @@ final class GameRenderer {
         surface.submit(SpriteBatch(texture: texture, instances: instances, blend: .additive))
     }
 
-    // MARK: - 坐标与颜色
+    // MARK: - 刀光坐标
 
     /// 世界坐标（原点中心、y 上）→ 逻辑点坐标（左上原点、y 向下）。
-    ///
-    /// [待验证] 依赖「世界单位 == 逻辑点」这一前提。若原版按固定设计分辨率归一化
-    /// （`15.0` 除数的语义），此处需要乘一个 world→point 比例，比例值待 Frida 闭合。
+    /// [待验证] 1 世界单位 == 1 逻辑点，比例仍需 Frida 闭合。
     private func screenPoint(_ world: SIMD3<Float>,
                              logicalSize: SIMD2<Float>) -> SIMD2<Float> {
         SIMD2<Float>(logicalSize.x * 0.5 + world.x,
                      logicalSize.y * 0.5 - world.y)
     }
+}
 
-    /// 类型 ID → 占位色。
-    /// [待验证] 真实配色在 `fruitlist.xml` 的 colour 字段（T-018 未决项）；
-    /// 闭合后改为查表，本函数整体删除。
-    private static func tint(forTypeID typeID: Int32) -> SIMD4<Float> {
-        var h = UInt32(bitPattern: typeID) &* 2_654_435_761
-        h ^= h >> 13
-        h = h &* 2_246_822_519
+@MainActor
+private final class BundleMeshTextureProvider: MeshTextureProvider {
+    private let bundle: Bundle
+    private let loader: TextureLoader
 
-        let r = Float((h >> 0) & 0xFF) / 255.0
-        let g = Float((h >> 8) & 0xFF) / 255.0
-        let b = Float((h >> 16) & 0xFF) / 255.0
+    init(bundle: Bundle, loader: TextureLoader) {
+        self.bundle = bundle
+        self.loader = loader
+    }
 
-        // 抬底避免接近纯黑（additive/alpha 下不可见）。
-        return SIMD4<Float>(0.35 + 0.65 * r,
-                            0.35 + 0.65 * g,
-                            0.35 + 0.65 * b,
-                            1.0)
+    func makeTexture(pngName: String) -> MTLTexture? {
+        let name = pngName as NSString
+        guard let url = bundle.url(
+            forResource: name.deletingPathExtension,
+            withExtension: name.pathExtension
+        ) else { return nil }
+        let asset = TextureAsset(
+            id: "fruit-mesh-\(name.deletingPathExtension)",
+            source: .url(url),
+            srgb: true,
+            generateMipmaps: false,
+            premultipliedAlpha: false // 资产管线输出普通 RGBA PNG，未做预乘。
+        )
+        return try? loader.load(asset).texture
     }
 }
 
+extension Entity: MeshRenderableEntity {
+    public var renderEntityType: Int32 { kind.rawValue }
+    public var renderFruitTypeID: Int32 { fruit?.typeID ?? -1 }
+    public var renderPosition: SIMD3<Float> { transform.position }
+    public var renderEulerXYZ: SIMD3<Float> { transform.rotation }
+    public var renderScale: Float { transform.scale }
+    public var renderIsVisible: Bool { isVisible }
+}
+
 // ============================================================================
-// [待验证] 集中清单（T-024）
-//
-//  1. 世界单位 → 逻辑点的比例（`screenPoint`）：假设 1:1。
-//  2. 水果占位尺寸（`fruitSizeRatio = 0.1`）：原版走 15.0 归一化 + FruitInfo.scale。
-//  3. 刀光段宽度（`trailWidthRatio = 0.02`）与颜色（`trailTint`）。
-//  4. UV 子矩形：v1 整图集拉伸，`uvOrigin/uvSize` 为全图。
-//  5. 图集资源定位：`Bundle.main.url(forResource: "fruit_atlas", withExtension: "png")`，
-//     资产管线落盘方式未确认。
-//  6. 贴图预乘标记（`premultipliedAlpha: true`）。
-//  7. 旋转：只取 `transform.rotation.z`。
-//  8. 刀光按数组序连接（环形回绕时有一次跳线）。
-//  9. 无渲染插值：直接读逻辑帧 state（60Hz 逻辑 / 120Hz 渲染重复帧）。
+// [待验证] 集中清单（T-032）
+//  1. 世界单位 → 逻辑点、实体 scale/100、欧拉顺序和正交深度均为视觉重建参数。
+//  2. UV 原样直通；方向、原始 winding 与 binmodel MATRIX0 布局仍需真机/反编译闭合。
+//  3. chest.tex 调色板未闭合，因此 super_chest 明确跳过，不使用灰度或图集兜底。
+//  4. 刀光宽度/颜色、环形缓冲遍历顺序和无渲染插值仍是既有待验证项。
 // ============================================================================

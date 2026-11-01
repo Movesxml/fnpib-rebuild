@@ -22,6 +22,8 @@ public final class MetalContext {
     public let commandQueue: MTLCommandQueue
 
     private let library: MTLLibrary
+    /// 同一默认库同时包含 sprite.metal 与 fruit.metal，供 MeshPass 创建 3D 管线。
+    public var shaderLibrary: MTLLibrary { library }
     private var pipelines: [BlendMode: MTLRenderPipelineState] = [:]
     private var depthStates: [Bool: MTLDepthStencilState] = [:]
 

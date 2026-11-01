@@ -137,12 +137,25 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.coretests
         GENERATE_INFOPLIST_FILE: YES   # 纯逻辑测试，不设 TEST_HOST
 
+  FNPBRenderTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/FNPBRenderTests
+    dependencies:
+      - target: FNPBRender
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.rendertests
+        GENERATE_INFOPLIST_FILE: YES   # 数据/矩阵测试，不需要 App TEST_HOST
+
 schemes:
   FNPIB:
     build:
       targets:
         FNPIB: all
         FNPBCoreTests: [test]
+        FNPBRenderTests: [test]
     run:
       config: Debug
     test:
@@ -150,3 +163,4 @@ schemes:
       gatherCoverageData: true
       targets:
         - FNPBCoreTests
+        - FNPBRenderTests
