@@ -51,7 +51,7 @@ final class SpawnMotionTests: XCTestCase {
 
         XCTAssertEqual(state.position, SIMD3<Float>(150, -215, 0))
         XCTAssertEqual(state.velocity, .zero, "原 Spawn 构造器的两个速度缩放均为 0")
-        XCTAssertEqual(Constants.Physics.missingGravityCompatibility, SIMD3<Float>(0, 1, 0))
+        XCTAssertEqual(Constants.Physics.missingGravityCompatibility, SIMD3<Float>(0, -1, 0))
         XCTAssertEqual(state.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(rng.calls, 3)
     }

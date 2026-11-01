@@ -312,6 +312,6 @@ final class FruitMotionTests: XCTestCase {
         XCTAssertEqual(FruitMotionTuning(actualSize: SIMD2<Float>(1024, 768)).logicalWidth,
                        320.0 * 1024.0 / 768.0, accuracy: 1e-5)
         XCTAssertEqual(FruitMotionTuning(actualSize: .zero).logicalWidth,
-                       320.0 * 320.0 / 480.0, accuracy: 1e-5)
+                       320.0 * (320.0 / 480.0), accuracy: 1e-5)
     }
 }

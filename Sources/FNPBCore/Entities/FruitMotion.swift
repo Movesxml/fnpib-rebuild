@@ -17,7 +17,7 @@ extension Constants {
 
         /// 原 Spawner 构造器不写 gravity X/Y，真实内容也未提供 gravity。
         /// 这只是确定性的重建兼容策略，不是原版缺省值；不得据此宣称官方行为已闭合。
-        public static let missingGravityCompatibility = SIMD3<Float>(0, 1, 0)
+        public static let missingGravityCompatibility = SIMD3<Float>(0, -1, 0)
     }
 }
 
