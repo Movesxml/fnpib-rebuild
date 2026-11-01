@@ -1,0 +1,19 @@
+## 003010b8 -> FUN_003010b8
+003010b8  movw r1,#0x7444
+003010bc  movw r2,#0x3ffc
+003010c0  movt r1,#0x17
+003010c4  and.w r0,r2,r0, lsr #0x2
+003010c8  add r1,pc
+003010ca  ldr r0,[r1,r0]  ; DATA -> 00478510
+003010cc  bx lr
+
+## 003010d0 -> FUN_003010d0
+003010d0  movw r1,#0x742c
+003010d4  mov.w r2,#0x400
+003010d8  add.w r0,r2,r0, lsr #0x4
+003010dc  movt r1,#0x17
+003010e0  add r1,pc
+003010e2  bfc r0,#0xc,#0x14
+003010e6  ldr.w r0,[r1,r0,lsl #0x2]  ; DATA -> 00478510
+003010ea  bx lr
+
