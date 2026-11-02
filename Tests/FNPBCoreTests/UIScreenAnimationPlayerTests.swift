@@ -97,7 +97,8 @@ final class UIScreenAnimationPlayerTests: XCTestCase {
 
         _ = try player.play(component: "misscounters.cross1", animation: "in")
         XCTAssertEqual(try player.sampleActive(component: "misscounters.cross1", track: "scale"),
-                       [0, 0, 0])
+                       try player.sample(component: "misscounters.cross1", animation: "in",
+                                         track: "scale", atTimeMS: 0))
         _ = try player.advance(deltaSeconds: 0.1225)
         XCTAssertEqual(try XCTUnwrap(try player.sampleActive(
             component: "misscounters.cross1", track: "scale"))[0], 0.75, accuracy: 0.00001)
@@ -108,7 +109,9 @@ final class UIScreenAnimationPlayerTests: XCTestCase {
 
         _ = try player.play(component: "misscounters.cross1", animation: "out")
         XCTAssertEqual(try player.sampleActive(component: "misscounters.cross1", track: "scale"),
-                       [1, 1, 1], "替换后必须读取当前动画，而不是旧动画结束帧")
+                       try player.sample(component: "misscounters.cross1", animation: "out",
+                                         track: "scale", atTimeMS: 0),
+                       "替换后必须读取当前动画的 0ms 帧，而不是旧动画结束帧")
         player.reset()
         XCTAssertNil(try player.sampleActive(component: "misscounters.cross1", track: "scale"))
     }
