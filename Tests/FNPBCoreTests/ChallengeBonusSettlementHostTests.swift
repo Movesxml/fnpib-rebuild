@@ -47,7 +47,8 @@ final class ChallengeBonusSettlementHostTests: XCTestCase {
             if host.isFinished { break }
 
             let output = try host.update(deltaSeconds: 1.0 / 60)
-            if output.animations.contains(.completed(component: "", animation: "animate_in")) {
+            if output.animations.contains(.completed(
+                component: "backgroundControl", animation: "animate_in")) {
                 sawBackgroundIntroCompletion = true
             }
             if scoreCounterSequence.last != host.scoreCounterValue {
