@@ -2,7 +2,7 @@ import XCTest
 import simd
 @testable import FNPBCore
 
-/// T-035：默认水果生成严格按 FUN_00057000；缺省 gravity 只验证已命名的兼容策略。
+/// T-035：默认水果生成严格按 FUN_00057000；缺省 gravity 验证 FUN_00053cb8 的构造值。
 final class SpawnMotionTests: XCTestCase {
     private static let appleTypeID: Int32 = 0
     private static let watermelonTypeID: Int32 = 3
@@ -50,7 +50,7 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(rng.calls, 3)
     }
 
-    func testRealDefaultVelocityScalesAreUnitAndGravityIsNamedCompatibility() {
+    func testRealDefaultVelocityScalesAreUnitAndGravityUsesOriginalConstructedDefault() {
         let rng = SequenceTestRandom([1, 1, 1])
         let state = FruitMotion.spawnState(rng: rng, spawner: Spawner())
 
@@ -62,7 +62,7 @@ final class SpawnMotionTests: XCTestCase {
         XCTAssertEqual(state.velocity.y,
                        speed * OriginalSpawnTrigonometry.cos(degrees: -10) * 1.075, accuracy: 1e-5)
         XCTAssertEqual(state.velocity.z, 0, accuracy: 1e-6)
-        XCTAssertEqual(Constants.Physics.missingGravityCompatibility, SIMD3<Float>(0, -1, 0))
+        XCTAssertEqual(Constants.Physics.defaultGravity, SIMD3<Float>(0, -1, 0))
         XCTAssertEqual(state.acceleration, SIMD3<Float>(0, -12, 0))
         XCTAssertEqual(rng.calls, 3)
     }

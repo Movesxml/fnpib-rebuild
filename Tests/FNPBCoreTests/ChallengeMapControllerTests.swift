@@ -206,8 +206,8 @@ final class ChallengeMapControllerTests: XCTestCase {
     func testBonusActChangeUsesState5WithoutSpinnerRandomDraws() throws {
         var player = try makeMapPlayer()
         let oldInput = makeInput(
-            tierIndex: 3,
             outcomes: [.pass, .pass, .pass, .pass],
+            tierIndex: 3,
             isBonus: true,
             actChange: true,
             isInitialPresentation: false,

@@ -68,6 +68,21 @@ public enum UIArtwork {
         guard let url = url(for: key, bundle: bundle) else { return nil }
         return UIImage(contentsOfFile: url.path)
     }
+
+    /// challengeAtlas.tex 是 1024×1024 的 8×8 图集。原控制器以
+    /// ((index & 7) / 8, (index >> 3) / 8) 设置 UV，每格恰为 128×128。
+    public static func challengeIcon(_ index: Int32, bundle: Bundle = .main) -> UIImage? {
+        guard (0..<64).contains(index),
+              let atlas = image("challengeAtlas", bundle: bundle),
+              let source = atlas.cgImage,
+              source.width == 1024, source.height == 1024 else { return nil }
+        let cell = 128
+        let rectangle = CGRect(x: Int(index & 7) * cell,
+                               y: Int(index >> 3) * cell,
+                               width: cell, height: cell)
+        guard let crop = source.cropping(to: rectangle) else { return nil }
+        return UIImage(cgImage: crop, scale: atlas.scale, orientation: atlas.imageOrientation)
+    }
 }
 
 /// 素材视图：有图用图，无图用色块（版面结构保持不变）。

@@ -395,13 +395,15 @@ final class GameHost: ObservableObject {
         let controller = challengeSettlement
         var mapState: ChallengeMapHUDState?
         if let map = challengeMap, let input = map.snapshot {
+            let spinner = input.isBonus ? "bossChallengeContainer.spinner" : "challengeContainer.spinner"
             mapState = ChallengeMapHUDState(
                 controllerState: Int(map.state),
                 rounds: input.rounds.enumerated().map { index, round in
                     ChallengeMapRoundHUDState(
                         id: index,
                         challengeName: round.challengeName,
-                        outcomeRawValue: round.outcome.map { Int($0.rawValue) })
+                        outcomeRawValue: round.outcome.map { Int($0.rawValue) },
+                        iconIndex: challengeIconTargets["\(spinner).adventureNode_\(index + 1)"])
                 })
         }
         return ChallengeHUDState(

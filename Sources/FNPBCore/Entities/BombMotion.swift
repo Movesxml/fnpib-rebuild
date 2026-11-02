@@ -2,7 +2,7 @@ import Foundation
 import simd
 
 // 炸弹生成的 Mach-O 证据实现：FUN_000568f4。
-// 角速度与缺省 gravity 不从未知内存状态中臆造。
+// 缺省 gravity 使用 FUN_00053cb8 的原版构造值；角速度不从未知状态臆造。
 
 extension Constants {
     public enum BombPhysics {

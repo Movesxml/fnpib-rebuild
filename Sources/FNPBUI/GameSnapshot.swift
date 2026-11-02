@@ -152,11 +152,14 @@ public struct ChallengeMapRoundHUDState: Sendable, Equatable, Identifiable {
     public var id: Int
     public var challengeName: String
     public var outcomeRawValue: Int?
+    /// FUN_00060da0 / FUN_000607f8 返回的 challengeAtlas 8×8 图集索引。
+    public var iconIndex: Int32?
 
-    public init(id: Int, challengeName: String, outcomeRawValue: Int?) {
+    public init(id: Int, challengeName: String, outcomeRawValue: Int?, iconIndex: Int32?) {
         self.id = id
         self.challengeName = challengeName
         self.outcomeRawValue = outcomeRawValue
+        self.iconIndex = iconIndex
     }
 }
 

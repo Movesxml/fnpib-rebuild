@@ -89,7 +89,7 @@ enum OriginalSpawnMotion {
             }
         }
 
-        let gravity = spawner.gravity ?? Constants.Physics.missingGravityCompatibility
+        let gravity = spawner.gravity ?? Constants.Physics.defaultGravity
         var acceleration = -Constants.Physics.constructedAccelerationY * gravity
         var position = SIMD3<Float>(Float(x), Float(y), kind == .bomb ? 32 : 0)
         let offset: Float = kind == .fruit ? 55 : 100

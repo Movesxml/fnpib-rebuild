@@ -3,7 +3,7 @@ import simd
 
 // WaveDirector 的真实内容生成出口。
 // 普通水果与炸弹分别由 FUN_00057000、FUN_000568f4 驱动，不消费随机自旋。
-// 缺省 gravity 的官方运行时初值仍未闭合。
+// 缺省 gravity 使用 FUN_00053cb8 的原版构造值 (0,-1,0)。
 
 extension Constants {
     /// Classic 控制器 +0x14 每次合格漏切 +1，状态 1 在计数 >2 时结束。[macho H]

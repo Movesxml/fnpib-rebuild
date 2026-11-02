@@ -109,12 +109,21 @@ public struct InGameHUDScreen: View {
                         .font(.system(size: 24, weight: .black, design: .rounded))
                         .foregroundStyle(UIPalette.parchment)
                     ForEach(map.rounds) { round in
-                        PillButton(
-                            title: "\(round.id + 1). \(round.challengeName)",
-                            prominent: round.outcomeRawValue == nil,
-                            compact: true
-                        ) {
-                            actions.send(.selectChallengeMapRound(round.id))
+                        HStack(spacing: 10) {
+                            if let iconIndex = round.iconIndex,
+                               let icon = UIArtwork.challengeIcon(iconIndex) {
+                                Image(uiImage: icon)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 52, height: 52)
+                            }
+                            PillButton(
+                                title: "\(round.id + 1). \(round.challengeName)",
+                                prominent: round.outcomeRawValue == nil,
+                                compact: true
+                            ) {
+                                actions.send(.selectChallengeMapRound(round.id))
+                            }
                         }
                         .disabled(!map.canSelect || round.outcomeRawValue != nil)
                         .opacity(round.outcomeRawValue == nil ? 1 : 0.55)

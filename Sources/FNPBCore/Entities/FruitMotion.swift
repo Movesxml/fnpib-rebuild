@@ -15,9 +15,10 @@ extension Constants {
         public static let defaultSpawnY: Float = -215
         public static let constructedAccelerationY: Float = -12
 
-        /// 原 Spawner 构造器不写 gravity X/Y，真实内容也未提供 gravity。
-        /// 这只是确定性的重建兼容策略，不是原版缺省值；不得据此宣称官方行为已闭合。
-        public static let missingGravityCompatibility = SIMD3<Float>(0, -1, 0)
+        /// FUN_00053cb8 在 Spawn 数组的 8 字节头之后构造 Spawner：
+        /// 原始分配 +0x28/+0x2c/+0x30 对应元素 +0x20/+0x24/+0x28，写入 0/-1/0。
+        /// FUN_000537ec 仅在 XML 存在非空 gravity 时覆盖这三个字段。
+        public static let defaultGravity = SIMD3<Float>(0, -1, 0)
     }
 }
 
@@ -49,7 +50,7 @@ public enum FruitMotion {
         return UInt32(value.rounded(.towardZero))
     }
 
-    /// FUN_00057000 的完整 Spawn 分支；缺省 gravity 仍只使用已命名的兼容策略。
+    /// FUN_00057000 的完整 Spawn 分支；缺省 gravity 来自 FUN_00053cb8 的原版构造器。
     public static func spawnState(rng: any RandomSource,
                                   spawner: Spawner,
                                   tuning: FruitMotionTuning = FruitMotionTuning())
