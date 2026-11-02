@@ -279,6 +279,45 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         XCTAssertEqual(random.zeroBoundCalls, callsBeforeSelection)
     }
 
+    func testDeferredTierAssemblyDoesNotConsumeFruitRandomUntilState9() throws {
+        var challenge = makeChallenge(name: "deferred", size: .normal)
+        challenge.type = "speed"
+        let catalog = makeCatalog(challenges: [challenge], numRounds: 1)
+        let random = AssemblerRandom()
+        var assembler = try ChallengeRoundAssembler(
+            catalog: catalog,
+            fruits: makeFruits(),
+            conditionDefinitions: [],
+            persistence: ChallengeSelectionMemoryStore(),
+            random: random,
+            tierIndex: 0,
+            deferInitialRoundAssembly: true)
+
+        XCTAssertEqual(random.zeroBoundCalls, 0)
+        assertAssemblerError(try assembler.startFirstRound(), .runtimeNotAssembled)
+        let randomBeforeMap = random.snapshot()
+        let types = [ChallengeTypeDefinition(name: "speed", iconIndex: 4)]
+        let input = assembler.makeMapInput(
+            challengeTypes: types, isInitialPresentation: false, playActChangeSound: true)
+        XCTAssertEqual(input.rounds.first?.challengeTypeName, "speed")
+        XCTAssertEqual(input.challengeTypes, types)
+        XCTAssertFalse(input.isInitialPresentation)
+        XCTAssertTrue(input.playActChangeSound)
+        XCTAssertFalse(input.actChange)
+        XCTAssertEqual(random.snapshot(), randomBeforeMap, "构造地图输入不得抽水果")
+
+        let first = try assembler.selectRound(at: 0)
+        XCTAssertEqual(random.zeroBoundCalls, 1)
+        XCTAssertEqual(first.fruitID, 1)
+        let reread = try assembler.selectRound(at: 0)
+        XCTAssertEqual(reread, first)
+        XCTAssertEqual(random.zeroBoundCalls, 1, "state 9 重复读取不能再次消耗 RNG")
+
+        assembler.recordCurrentRoundOutcome(.pass)
+        XCTAssertTrue(assembler.makeMapInput().actChange,
+                      "全部槽位已有结果时自动请求章节切换")
+    }
+
     func testMissingFruitNameThrows() throws {
         let catalog = makeCatalog(
             challenges: [makeChallenge(name: "c1", size: .normal)], numRounds: 1)

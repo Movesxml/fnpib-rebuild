@@ -304,7 +304,8 @@ final class SpawnMotionTests: XCTestCase {
             bonusAwardsData: Data(contentsOf: root.appendingPathComponent("Content/bonusAwards.json")),
             originalModeData: Data(contentsOf: root.appendingPathComponent("Content/originalModeInfo.json")),
             challengeCatalogData: Data(contentsOf: root.appendingPathComponent("Content/ch1challengeList.json")),
-            challengeConditionsData: Data(contentsOf: root.appendingPathComponent("Content/challengeConditions.json")))
+            challengeConditionsData: Data(contentsOf: root.appendingPathComponent("Content/challengeConditions.json")),
+            challengeTypesData: Data(contentsOf: root.appendingPathComponent("Content/challengeTypes.json")))
     }
 
     private func firstID(in store: GenerationOrderStore) -> EntityID? {

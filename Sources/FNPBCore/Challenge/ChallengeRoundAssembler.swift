@@ -85,6 +85,8 @@ public struct ChallengeRoundAssembler {
     private let weights: [Int32: ChallengeFruitWeightEntry]
     private let namesByFruitID: [Int32: String]
 
+    private var isInitialRoundAssembled: Bool
+
     public init(catalog: ChallengeCatalog,
                 fruits: [FruitInfo],
                 conditionDefinitions: [ChallengeConditionDefinition],
@@ -93,7 +95,8 @@ public struct ChallengeRoundAssembler {
                 tierIndex: Int32,
                 difficulty: Int32 = 0,
                 predicateP: Int32 = 0,
-                roundCount: Int32? = nil) throws {
+                roundCount: Int32? = nil,
+                deferInitialRoundAssembly: Bool = false) throws {
         guard tierIndex >= 0, Int(tierIndex) < catalog.tiers.count else {
             throw ChallengeRoundAssemblerError.tierIndexOutOfBounds(
                 index: tierIndex, count: catalog.tiers.count)
@@ -118,6 +121,7 @@ public struct ChallengeRoundAssembler {
         self.currentFruitID = 0
         self.defaultFruitID = 0
         self.runtime = nil
+        self.isInitialRoundAssembled = false
 
         var names: [Int32: String] = [:]
         for fruit in fruits {
@@ -129,12 +133,14 @@ public struct ChallengeRoundAssembler {
         self.namesByFruitID = names
         self.weights = ChallengeFruitWeightMap.make(from: fruits)
 
-        try assembleInitialRound(roundCount: roundCount)
+        try assemblePlan(roundCount: roundCount)
+        if !deferInitialRoundAssembly {
+            try assembleDeferredFirstRound()
+        }
     }
 
-    /// 生成计划后，严格按“默认初选 → 非 normal 覆盖 → 条件激活”装配首回合。
-    private mutating func assembleInitialRound(roundCount requestedRoundCount: Int32?) throws {
-        // FUN_0005fc1c 先确定本局槽位数，FUN_0006ee88 再构建并洗牌。
+    /// FUN_0005fc1c 只重建回合计划；晋升地图期间不能提前执行水果选择。
+    private mutating func assemblePlan(roundCount requestedRoundCount: Int32?) throws {
         // App 需要先按该数量钳制难度，因此可传入同一个已抽取值，禁止重复抽随机数。
         let roundCount = requestedRoundCount
             ?? ChallengeTierSelector.rollRoundCount(tier: tier, rng: random)
@@ -148,26 +154,34 @@ public struct ChallengeRoundAssembler {
         guard plan.count > 0 else {
             throw ChallengeRoundAssemblerError.emptyPlan(tierIndex: tierIndex)
         }
-        guard let firstChallenge = plan.challenge(at: 0) else {
+        guard plan.challenge(at: 0) != nil else {
             throw ChallengeRoundAssemblerError.missingChallengeAtSlot(index: 0)
         }
+    }
 
+    /// 真正开始首回合时才执行“默认初选 → 非 normal 覆盖 → 条件激活”。
+    private mutating func assembleDeferredFirstRound() throws {
+        guard !isInitialRoundAssembled, let firstChallenge = plan.challenge(at: 0) else {
+            throw ChallengeRoundAssemblerError.runtimeNotAssembled
+        }
         let selection = try fruitSelector.selectNewGameChallengeFruit(
             size: firstChallenge.challengeFruitSize,
             catalog: fruits,
             weights: weights,
             predicateP: predicateP,
             random: random)
-        defaultFruitID = selection.defaultSelection
-        currentFruitID = selection.finalSelection
-
-        let name = try fruitName(for: currentFruitID)
-        runtime = ChallengeModeRuntime(
+        let name = try fruitName(for: selection.finalSelection)
+        let firstRuntime = ChallengeModeRuntime(
             tier: tier,
             challenge: firstChallenge,
             conditionDefinitions: conditionDefinitions,
             selectedFruitName: name)
+
+        defaultFruitID = selection.defaultSelection
+        currentFruitID = selection.finalSelection
+        runtime = firstRuntime
         currentRoundIndex = 0
+        isInitialRoundAssembled = true
     }
 
     /// 初始化已同步完成首回合装配；读取结果不会再次消耗 RNG。
@@ -210,12 +224,26 @@ public struct ChallengeRoundAssembler {
         guard plan.outcome(at: index) == nil else {
             throw ChallengeRoundAssemblerError.missingChallengeAtSlot(index: index)
         }
+        if !isInitialRoundAssembled {
+            guard index == 0 else {
+                throw ChallengeRoundAssemblerError.firstRoundAlreadyStarted(currentIndex: index)
+            }
+            try assembleDeferredFirstRound()
+        }
         guard let nextChallenge = plan.challenge(at: index) else {
             throw ChallengeRoundAssemblerError.missingChallengeAtSlot(index: index)
         }
 
         let nextFruitID: Int32
-        if nextChallenge.challengeFruitSize == .normal {
+        if index == 0, currentRoundIndex == 0, let runtime {
+            // 首回合已由默认初选路径装配，读取它不能再抽一次覆盖水果。
+            return ChallengeRound(
+                roundIndex: 0,
+                challenge: nextChallenge,
+                fruitID: currentFruitID,
+                fruitName: try fruitName(for: currentFruitID),
+                runtime: runtime)
+        } else if nextChallenge.challengeFruitSize == .normal {
             nextFruitID = defaultFruitID
         } else if let candidates = ChallengeFruitCandidates.candidates(
             for: nextChallenge.challengeFruitSize, from: fruits) {
@@ -247,17 +275,29 @@ public struct ChallengeRoundAssembler {
             runtime: nextRuntime)
     }
 
-    public func makeMapInput(isBonus: Bool, actChange: Bool = false) -> ChallengeMapInput {
+    public func makeMapInput(isBonus: Bool? = nil,
+                             actChange: Bool? = nil,
+                             challengeTypes: [ChallengeTypeDefinition] = [],
+                             isInitialPresentation: Bool = true,
+                             playActChangeSound: Bool = false) -> ChallengeMapInput {
         let rounds = plan.slots.indices.map { index in
-            ChallengeMapRoundState(
-                challengeName: plan.challenge(at: index)?.name ?? "",
+            let challenge = plan.challenge(at: index)
+            return ChallengeMapRoundState(
+                challengeName: challenge?.name ?? "",
+                challengeTypeName: challenge?.type,
                 outcome: plan.outcome(at: index))
         }
+        let allRoundsHaveResults = !plan.slots.isEmpty && plan.slots.indices.allSatisfy {
+            plan.outcome(at: $0) != nil
+        }
         return ChallengeMapInput(tierIndex: tierIndex,
-                                 isBonus: isBonus,
+                                 isBonus: isBonus ?? tier.isBonusRound,
                                  currentRoundIndex: currentRoundIndex,
                                  rounds: rounds,
-                                 actChange: actChange)
+                                 actChange: actChange ?? allRoundsHaveResults,
+                                 challengeTypes: challengeTypes,
+                                 isInitialPresentation: isInitialPresentation,
+                                 playActChangeSound: playActChangeSound)
     }
 
     /// FUN_00060108：结果写回当前槽位，并只给当前挑战累计一次 plays。

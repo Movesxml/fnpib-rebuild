@@ -1,0 +1,26 @@
+# 全局地址直接引用
+
+- 程序: FruitNinjaPuss
+
+## 005f94a0
+
+- WRITE @ 00062d78 in FUN_00062cb4: str r5,[r1,#0x0]
+- PARAM @ 00062d70 in FUN_00062cb4: add r1,pc
+- READ @ 00060848 in FUN_0006082c: ldm.w r4,{r1,r2}
+- READ @ 0006085c in FUN_0006082c: ldr r0,[r4,#0x0]
+- READ @ 00060862 in FUN_0006082c: ldm.w r4,{r1,r2}
+- PARAM @ 00060cca in FUN_00060bb8: add r0,pc
+- READ @ 00060808 in FUN_000607f8: ldrd r4,r5,[r1,#0x0]
+- READ @ 00060db2 in FUN_00060da0: ldrd r8,r9,[r0,#0x0]
+引用数: 8
+
+## 005f94a4
+
+- WRITE @ 00062d7a in FUN_00062cb4: str r5,[r1,#0x4]
+- READ @ 00060848 in FUN_0006082c: ldm.w r4,{r1,r2}
+- READ @ 00060862 in FUN_0006082c: ldm.w r4,{r1,r2}
+- WRITE @ 00060874 in FUN_0006082c: str r1,[r4,#0x4]
+- READ @ 00060808 in FUN_000607f8: ldrd r4,r5,[r1,#0x0]
+- READ @ 00060db2 in FUN_00060da0: ldrd r8,r9,[r0,#0x0]
+引用数: 6
+

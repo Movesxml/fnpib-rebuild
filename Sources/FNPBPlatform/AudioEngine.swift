@@ -116,6 +116,13 @@ public final class AudioEngine: AudioPlaying {
         for player in pool where player.isPlaying { player.stop() }
     }
 
+    public func fadeOut(_ key: String, duration: Float) {
+        guard duration.isFinite, duration >= 0, let pool = pools[key] else { return }
+        for player in pool where player.isPlaying {
+            player.setVolume(0, fadeDuration: TimeInterval(duration))
+        }
+    }
+
     // MARK: 便捷能力
 
     /// 当前正在播放的 voice 数（诊断/性能面板用）

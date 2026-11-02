@@ -284,7 +284,8 @@ final class OriginalContentTests: XCTestCase {
             bonusAwardsData: contentData("bonusAwards.json"),
             originalModeData: contentData("originalModeInfo.json"),
             challengeCatalogData: contentData("ch1challengeList.json"),
-            challengeConditionsData: contentData("challengeConditions.json"))
+            challengeConditionsData: contentData("challengeConditions.json"),
+            challengeTypesData: contentData("challengeTypes.json"))
 
         XCTAssertEqual(content.comboBonuses, [3, 4, 5, 7, 9, 12, 14, 17])
         XCTAssertEqual(content.classic.magicBean.baseInterval, 7)
@@ -316,6 +317,15 @@ final class OriginalContentTests: XCTestCase {
         XCTAssertEqual(content.fruits.bomb.collision, 35, accuracy: 1e-5)
         XCTAssertEqual(content.fruits.critical?.score, 10)
         XCTAssertEqual(content.fruits.critical?.chance, 50)
+        XCTAssertEqual(content.challengeTypes.count, 32)
+        XCTAssertEqual(content.challengeTypes[0],
+                       ChallengeTypeDefinition(name: "unknown", iconIndex: 0, showInRandom: false))
+        XCTAssertEqual(content.challengeTypes[18],
+                       ChallengeTypeDefinition(name: "final", iconIndex: 18, showInRandom: false))
+        XCTAssertEqual(content.challengeTypes.filter { !$0.showInRandom }.map(\.iconIndex), [0, 18])
+        XCTAssertEqual(content.challengeTypes.filter { $0.name == "empty1" }.map(\.iconIndex),
+                       [22, 23, 29, 30, 31],
+                       "重复名称是原资源数据，必须保留文档顺序且查找仍取第一项")
 
         let firstTier = try XCTUnwrap(content.challengeCatalog.tiers.first)
         XCTAssertEqual(firstTier.name, "tier1")
@@ -380,7 +390,8 @@ final class OriginalContentTests: XCTestCase {
             bonusAwardsData: contentData("bonusAwards.json"),
             originalModeData: contentData("originalModeInfo.json"),
             challengeCatalogData: contentData("ch1challengeList.json"),
-            challengeConditionsData: contentData("challengeConditions.json"))
+            challengeConditionsData: contentData("challengeConditions.json"),
+            challengeTypesData: contentData("challengeTypes.json"))
         let wave0 = content.waves.waves[0]
         XCTAssertEqual(wave0.waveNo, 0)
         XCTAssertEqual(wave0.chance, 90, "缺省波次权重继承 defaults.waveChance")

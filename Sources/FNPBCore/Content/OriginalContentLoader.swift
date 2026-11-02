@@ -201,6 +201,8 @@ public struct OriginalContent: Equatable, Sendable {
     public var comboBonuses: [Int32]
     public var challengeCatalog: ChallengeCatalog
     public var challengeConditions: [ChallengeConditionDefinition]
+    /// challengeTypes.xml 的原始文档顺序；地图随机图标直接按此顺序抽取。
+    public var challengeTypes: [ChallengeTypeDefinition]
 
     public init(fruits: OriginalFruitList,
                 waves: OriginalWaveList,
@@ -208,7 +210,8 @@ public struct OriginalContent: Equatable, Sendable {
                 classic: OriginalClassicConfig,
                 comboBonuses: [Int32],
                 challengeCatalog: ChallengeCatalog,
-                challengeConditions: [ChallengeConditionDefinition]) {
+                challengeConditions: [ChallengeConditionDefinition],
+                challengeTypes: [ChallengeTypeDefinition]) {
         self.fruits = fruits
         self.waves = waves
         self.challengeWaves = challengeWaves
@@ -216,6 +219,7 @@ public struct OriginalContent: Equatable, Sendable {
         self.comboBonuses = comboBonuses
         self.challengeCatalog = challengeCatalog
         self.challengeConditions = challengeConditions
+        self.challengeTypes = challengeTypes
     }
 }
 
@@ -226,7 +230,8 @@ public enum OriginalContentLoader {
                             bonusAwardsData: Data,
                             originalModeData: Data,
                             challengeCatalogData: Data,
-                            challengeConditionsData: Data) throws -> OriginalContent {
+                            challengeConditionsData: Data,
+                            challengeTypesData: Data) throws -> OriginalContent {
         let fruitList = try loadFruits(from: fruitsData)
         let waveList = try loadWaves(from: wavesData, fruits: fruitList.fruits)
         let challengeWaveList = try loadWaves(from: challengeWavesData, fruits: fruitList.fruits)
@@ -234,13 +239,15 @@ public enum OriginalContentLoader {
         let classic = try loadClassicConfig(from: originalModeData)
         let challengeCatalog = try ChallengeCatalogLoader.load(from: challengeCatalogData)
         let challengeConditions = try ChallengeConditionLoader.load(from: challengeConditionsData)
+        let challengeTypes = try ChallengeTypeCatalogLoader.load(from: challengeTypesData)
         return OriginalContent(fruits: fruitList,
                                waves: waveList,
                                challengeWaves: challengeWaveList,
                                classic: classic,
                                comboBonuses: comboBonuses,
                                challengeCatalog: challengeCatalog,
-                               challengeConditions: challengeConditions)
+                               challengeConditions: challengeConditions,
+                               challengeTypes: challengeTypes)
     }
 
     /// FUN_0006fa3c：DAT_005f9610+0x14 即 DAT_005f9624，读取 magicBean.beanScore。

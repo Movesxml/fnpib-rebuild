@@ -1,0 +1,71 @@
+## 00060da0..00060e80
+00060da0  push {r4,r5,r6,r7,lr}
+00060da2  add r7,sp,#0xc
+00060da4  push {r8,r10}
+00060da8  movw r0,#0x86ec
+00060dac  movt r0,#0x59
+00060db0  add r0,pc
+00060db2  ldrd r8,r9,[r0,#0x0]  ; READ -> 005f94a0  ; READ -> 005f94a4
+00060db6  movs r0,#0x0
+00060db8  sub.w r1,r9,r8
+00060dbc  cmp.w r0,r1, asr #0x2
+00060dc0  beq 0x00060e4c  ; CONDITIONAL_JUMP -> 00060e4c
+00060dc2  asrs r0,r1,#0x2
+00060dc4  movw r1,#0x8280
+00060dc8  movt r1,#0x47
+00060dcc  add r1,pc
+00060dce  ldr.w r9,[r1,#0x0]  ; READ -> 004d9050
+00060dd2  ldm.w r9,{r1,r2,r3,r12,lr}  ; READ -> 00603b30  ; READ -> 00603b34  ; READ -> 00603b38  ; READ -> 00603b3c  ; READ -> 00603b40
+00060dd6  ldr.w r4,[r9,#0x14]  ; READ -> 00603b44
+00060dda  umull r5,r6,r1,r3
+00060dde  mla r1,r1,r12,r6
+00060de2  mla r2,r2,r3,r1
+00060de6  adds.w r1,r5,lr
+00060dea  adcs r2,r4
+00060dec  cmp.w r0,#0xffffffff
+00060df0  stm r9,{r1,r2}  ; WRITE -> 00603b30  ; WRITE -> 00603b34
+00060df4  mov r5,r2
+00060df6  beq 0x00060e04  ; CONDITIONAL_JUMP -> 00060e04
+00060df8  umull r5,r6,r2,r0
+00060dfc  mov.w r10,#0x0
+00060e00  mla r5,r10,r0,r6
+00060e04  ldr.w r6,[r8,r5,lsl #0x2]
+00060e08  ldrb.w r5,[r6,#0x48]
+00060e0c  cbnz r5,0x00060e4a  ; CONDITIONAL_JUMP -> 00060e4a
+00060e0e  mov.w r10,#0x0
+00060e12  umull r6,r5,r1,r3
+00060e16  mla r1,r1,r12,r5
+00060e1a  mla r2,r2,r3,r1
+00060e1e  adds.w r1,r6,lr
+00060e22  adcs r2,r4
+00060e24  cbnz r0,0x00060e2a  ; CONDITIONAL_JUMP -> 00060e2a
+00060e26  mov r6,r2
+00060e28  b 0x00060e3a  ; UNCONDITIONAL_JUMP -> 00060e3a
+00060e2a  mov r6,r2
+00060e2c  cmp.w r0,#0xffffffff
+00060e30  beq 0x00060e3a  ; CONDITIONAL_JUMP -> 00060e3a
+00060e32  umull r6,r5,r2,r0
+00060e36  mla r6,r10,r0,r5
+00060e3a  ldr.w r6,[r8,r6,lsl #0x2]
+00060e3e  ldrb.w r5,[r6,#0x48]
+00060e42  cmp r5,#0x0
+00060e44  beq 0x00060e12  ; CONDITIONAL_JUMP -> 00060e12
+00060e46  stm r9,{r1,r2}  ; WRITE -> 00603b30  ; WRITE -> 00603b34
+00060e4a  ldr r0,[r6,#0x44]
+00060e4c  pop.w {r8,r10}
+00060e50  pop {r4,r5,r6,r7,pc}
+00060e54  push {r4,r7,lr}
+00060e56  mov r4,r0
+00060e58  add r7,sp,#0x4
+00060e5a  ldrb.w r0,[r4,#0x7c]
+00060e5e  cmp r0,#0x0
+00060e60  it ne
+00060e62  pop.ne {r4,r7,pc}
+00060e64  movw r0,#0x8644
+00060e68  movt r0,#0x59
+00060e6c  add r0,pc  ; PARAM -> 005f94b4
+00060e6e  bl 0x0005edc4  ; UNCONDITIONAL_CALL -> 0005edc4
+00060e72  movw r0,#0x8660
+00060e76  movs r1,#0x1
+00060e78  movt r0,#0x59
+00060e7c  strb.w r1,[r4,#0x7c]

@@ -132,11 +132,14 @@ public protocol AudioPlaying: AnyObject {
     func play(_ key: String)
     /// FUN_0002be70：按资源键停止当前声音；未加载或已停止时为空操作。
     func stop(_ key: String)
+    /// FUN_00309aac：对正在播放的声音执行真实音量淡出，不是立即 stop。
+    func fadeOut(_ key: String, duration: Float)
 }
 
 public extension AudioPlaying {
-    /// 只记录一次性音效的轻量测试替身无需维护停止状态。
+    /// 只记录一次性音效的轻量测试替身无需维护停止或淡出状态。
     func stop(_ key: String) {}
+    func fadeOut(_ key: String, duration: Float) {}
 }
 
 public protocol EffectEmitting: AnyObject {

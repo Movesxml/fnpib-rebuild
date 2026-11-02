@@ -186,6 +186,9 @@ final class GameHost: ObservableObject {
     private var challengeBonusSettlement: ChallengeBonusSettlementHost?
     private var challengeMap: ChallengeMapController?
     private var pendingChallengeMapRound: Int?
+    private var hasPresentedChallengeMap = false
+    private var actChangeSoundPending = false
+    private var challengeIconTargets: [String: Int32] = [:]
     private var challengeRoundStartScore: Int32 = 0
     private var challengeHUDAnimationPlayer: UIScreenAnimationPlayer?
     private var challengeResultAnimationPlayer: UIScreenAnimationPlayer?
@@ -592,6 +595,9 @@ final class GameHost: ObservableObject {
         challengeBonusSettlement = nil
         challengeMap = nil
         pendingChallengeMapRound = nil
+        hasPresentedChallengeMap = false
+        actChangeSoundPending = false
+        challengeIconTargets.removeAll(keepingCapacity: false)
         challengeRoundStartScore = 0
         challengeHUDAnimationPlayer?.reset()
         challengeResultAnimationPlayer?.reset()
@@ -741,11 +747,15 @@ final class GameHost: ObservableObject {
             }
             if var map = challengeMap,
                var mapPlayer = challengeMapAnimationPlayer,
-               let assembler = challengeAssembler {
+               let assembler = challengeAssembler,
+               let content = originalContent {
                 let output = try map.update(
                     deltaSeconds: deltaSeconds,
                     input: assembler.makeMapInput(
-                        isBonus: gameWorld.challenge?.isBonusRound == true),
+                        challengeTypes: content.challengeTypes,
+                        isInitialPresentation: !hasPresentedChallengeMap,
+                        playActChangeSound: actChangeSoundPending),
+                    random: rng,
                     player: &mapPlayer)
                 challengeMap = map
                 challengeMapAnimationPlayer = mapPlayer
@@ -801,16 +811,26 @@ final class GameHost: ObservableObject {
 
     private func beginChallengeMap() throws {
         guard let assembler = challengeAssembler,
+              let content = originalContent,
               var player = challengeMapAnimationPlayer else {
-            throw ChallengeHostError("挑战地图缺少真实装配器或 UISF 资源")
+            throw ChallengeHostError("挑战地图缺少真实装配器、原始内容或 UISF 资源")
+        }
+        var input = assembler.makeMapInput(
+            challengeTypes: content.challengeTypes,
+            isInitialPresentation: !hasPresentedChallengeMap,
+            playActChangeSound: actChangeSoundPending)
+        if input.actChange, !actChangeSoundPending {
+            actChangeSoundPending = true
+            input = assembler.makeMapInput(
+                challengeTypes: content.challengeTypes,
+                isInitialPresentation: !hasPresentedChallengeMap,
+                playActChangeSound: true)
         }
         var map = ChallengeMapController()
-        let output = try map.begin(
-            input: assembler.makeMapInput(
-                isBonus: gameWorld.challenge?.isBonusRound == true),
-            player: &player)
+        let output = try map.begin(input: input, player: &player)
         challengeMap = map
         challengeMapAnimationPlayer = player
+        hasPresentedChallengeMap = true
         pendingChallengeMapRound = nil
         challengeVisibleTargets["inGameChallengeHud"] = false
         try processChallengeMapOutput(output)
@@ -822,8 +842,12 @@ final class GameHost: ObservableObject {
             switch command {
             case let .setVisible(component, visible):
                 challengeVisibleTargets[component] = visible
+            case let .setIcon(component, iconIndex):
+                challengeIconTargets[component] = iconIndex
             case let .playSound(key):
                 audio.play(key)
+            case let .fadeOutSound(key, duration):
+                audio.fadeOut(key, duration: duration)
             case let .prepareRound(index):
                 pendingChallengeMapRound = Int(index)
             case let .startRound(index):
@@ -831,7 +855,38 @@ final class GameHost: ObservableObject {
                     throw ChallengeHostError("地图开局与已选择的回合不一致")
                 }
                 try startChallengeMapRound(at: Int(index))
+            case .advanceTier:
+                try advanceChallengeTier()
+            case .clearActChangeSound:
+                actChangeSoundPending = false
             }
+        }
+    }
+
+    /// FUN_00061090 / FUN_0005fc1c：越界保持原 tier；成功晋升只重建计划。
+    private func advanceChallengeTier() throws {
+        guard let current = challengeAssembler, let content = originalContent else {
+            throw ChallengeHostError("章节晋升缺少真实装配器或原始内容")
+        }
+        let nextTierIndex = current.tierIndex + 1
+        guard nextTierIndex >= 0,
+              Int(nextTierIndex) < content.challengeCatalog.tiers.count else { return }
+        let tier = content.challengeCatalog.tiers[Int(nextTierIndex)]
+        let roundCount = ChallengeTierSelector.rollRoundCount(tier: tier, rng: rng)
+        challengeAssembler = try ChallengeRoundAssembler(
+            catalog: content.challengeCatalog,
+            fruits: content.fruits.fruits,
+            conditionDefinitions: content.challengeConditions,
+            persistence: saveStore,
+            random: rng,
+            tierIndex: nextTierIndex,
+            difficulty: current.difficulty,
+            predicateP: current.predicateP,
+            roundCount: roundCount,
+            deferInitialRoundAssembly: true)
+        if nextTierIndex == 0 {
+            audio.play("act-change")
+            actChangeSoundPending = false
         }
     }
 

@@ -1,0 +1,236 @@
+{
+  "source": "challengeTypes.xml",
+  "bytes": 1352,
+  "encoding": "bxml",
+  "root": {
+    "tag": "challengeTypes",
+    "children": [
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "unknown",
+          "iconIndex": "0",
+          "dontShowInRandom": "true"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "fruit",
+          "iconIndex": "1"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "fruitAndBomb",
+          "iconIndex": "2"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "fall",
+          "iconIndex": "3"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "speed",
+          "iconIndex": "4"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "bounceHorizontal",
+          "iconIndex": "5"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "bounceOblique",
+          "iconIndex": "6"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "bounceRound",
+          "iconIndex": "7"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "snake",
+          "iconIndex": "8"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "window",
+          "iconIndex": "9"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "fruitBomb",
+          "iconIndex": "10"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "stack",
+          "iconIndex": "11"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "fallStack",
+          "iconIndex": "12"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "coconut",
+          "iconIndex": "13"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "conveyorBelt",
+          "iconIndex": "14"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "pachinko",
+          "iconIndex": "15"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "halfPipe",
+          "iconIndex": "16"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "megaFruit",
+          "iconIndex": "17"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "final",
+          "iconIndex": "18",
+          "dontShowInRandom": "true"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "mystery",
+          "iconIndex": "19"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "oppositeGravity",
+          "iconIndex": "20"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "balloons",
+          "iconIndex": "21"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "empty1",
+          "iconIndex": "22"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "empty1",
+          "iconIndex": "23"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "hard",
+          "iconIndex": "24"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "fruitshapes",
+          "iconIndex": "25"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "split",
+          "iconIndex": "26"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "bombbarrier",
+          "iconIndex": "27"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "ropes",
+          "iconIndex": "28"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "empty1",
+          "iconIndex": "29"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "empty1",
+          "iconIndex": "30"
+        }
+      },
+      {
+        "tag": "type",
+        "attrs": {
+          "name": "empty1",
+          "iconIndex": "31"
+        }
+      }
+    ]
+  }
+}
