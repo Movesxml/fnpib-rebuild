@@ -1,0 +1,8 @@
+00418fb8	animate_in
+0041a413	ins
+0041a87c	animate_out
+0041b12e	s.xml
+0041cb97	life_trigger
+0041c413	animate_trigger
+0041cba4	score_trigger
+0041c961	@scoreCounterTotal

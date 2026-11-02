@@ -1,0 +1,43 @@
+## 00074770
+00074770  mov.w r0,#0x3f800000
+00074774  bx lr
+00074778  bx lr
+0007477c  bx lr
+00074780  movw r1,#0x45e2
+00074784  movs r2,#0x0
+00074786  movt r1,#0x4c
+## 00074778
+00074778  bx lr
+0007477c  bx lr
+00074780  movw r1,#0x45e2
+00074784  movs r2,#0x0
+00074786  movt r1,#0x4c
+0007478a  add r1,pc
+0007478c  add.w r3,r1,#0x8
+## 0007477c
+0007477c  bx lr
+00074780  movw r1,#0x45e2
+00074784  movs r2,#0x0
+00074786  movt r1,#0x4c
+0007478a  add r1,pc
+0007478c  add.w r3,r1,#0x8
+00074790  str r3,[r0,#0x0]  ; DATA -> 00538d78
+00074792  str r2,[r0,#0x4]
+## 00074174
+00074174  bx lr
+00074178  bx lr
+0007417c  push {r4,r5,r6,r7,lr}
+0007417e  add r7,sp,#0xc
+00074180  push.w r8
+00074184  sub sp,#0x78
+00074186  movw r1,#0x4eb2
+0007418a  movt r1,#0x46
+## 00074424
+00074424  bx lr
+00074428  push {r4,r5,r6,r7,lr}
+0007442a  add r7,sp,#0xc
+0007442c  push {r8,r10}
+00074430  movw r5,#0x43f0
+00074434  mov r10,r0
+00074436  movt r5,#0x53
+0007443a  mov r8,r1

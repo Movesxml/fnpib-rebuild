@@ -261,7 +261,11 @@ final class ChallengeModeRuntimeTests: XCTestCase {
         XCTAssertEqual(runtime.countdown, 2)
         XCTAssertFalse(runtime.wavesEnded)
         XCTAssertEqual(runtime.roundResults, [.pass])
-        XCTAssertTrue(runtime.drainEvents().contains(.nextRound))
+        let events = runtime.drainEvents()
+        XCTAssertTrue(events.contains(.nextRound))
+        XCTAssertTrue(events.contains(.setVisible(target: "Timer", true)))
+        XCTAssertTrue(events.contains(.setVisible(target: "challengeMods", true)))
+        XCTAssertTrue(events.contains(.playAnimation(target: "challengeMods", name: "animate_in")))
     }
 
     func testProductionEvaluationReadsOneRealStatsStoreForAllConditionKinds() {

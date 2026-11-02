@@ -1,0 +1,502 @@
+{
+  "formatVersion": 1,
+  "source": {
+    "file": "inGameChallengeInstructionsScreen.uiscreen",
+    "sha256": "f15d35956d170e7b0659e54671d48a54191addeb12c6915f0116e1eea3f7cd71"
+  },
+  "components": [
+    {
+      "name": "",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerLeft",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    -260.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-door-open"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainerLeft.instructions",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 903,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    190.0,
+                    40.0,
+                    30.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 397,
+                  "interpolation": 0,
+                  "values": [
+                    190.0,
+                    40.0,
+                    30.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 903,
+                  "interpolation": 0,
+                  "values": [
+                    190.0,
+                    40.0,
+                    30.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainerLeft.iconShadow",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 197,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainerLeft.icon",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 197,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    2.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    2.0,
+                    2.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_stop",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainerRight",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    368.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    368.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    868.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainerRight.scoreCounterTotalDelay",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 203,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 203,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 200,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-stop"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainerRight.spinner.backing",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.poster",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.posterArt",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.posterArt.oval1",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.posterArt.oval2",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.posterArt.border3",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.posterArt.border2",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.posterArt.border1",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.posterArt.border4",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.scoreCounterTotal",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainerRight.spinner.scoreText",
+      "animations": []
+    },
+    {
+      "name": "skipButton",
+      "animations": []
+    },
+    {
+      "name": "dummyTimer",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 2000,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2000,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

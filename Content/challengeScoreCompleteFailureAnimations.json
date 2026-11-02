@@ -1,0 +1,359 @@
+{
+  "formatVersion": 1,
+  "source": {
+    "file": "inGameChallengeScoreScreenCompleteFailure.uiscreen",
+    "sha256": "111901fa8bcf195ee0ebf18823e175d8a70965e7ba157fdf268084b3de1b97f9"
+  },
+  "components": [
+    {
+      "name": "",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 455,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    -320.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 240,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 350,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    -10.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 455,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Game-over"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "timeMS": 240,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-door-close"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    -360.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-door-open"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.door",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.heading",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.poster",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.oval1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.oval2",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1_0",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1_0_1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1_0_0",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.scoreCounterTotalDelay",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.scoreCounterTotal",
+      "animations": [
+        {
+          "name": "score_trigger",
+          "endTimeMS": 4000,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 120,
+                  "interpolation": 2,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1000,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 4000,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    188.0,
+                    0.0,
+                    0.0,
+                    190.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 120,
+                  "interpolation": 2,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1000,
+                  "interpolation": 0,
+                  "values": [
+                    188.0,
+                    0.0,
+                    0.0,
+                    190.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "applause-heavy"
+                      ]
+                    },
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Combo"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.scorePoster.scoreText",
+      "animations": []
+    },
+    {
+      "name": "skipButton",
+      "animations": []
+    },
+    {
+      "name": "dummyTimer",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 2500,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -46,7 +46,7 @@ enum OriginalContentBundle {
         }
     }
 
-    private static func readResource(named name: String, bundle: Bundle) throws -> Data {
+    static func readResource(named name: String, bundle: Bundle = .main) throws -> Data {
         let fileName = "\(name).json"
         // XcodeGen 的 group 展开通常放在根目录；subdirectory 兼容 folder reference，
         // 两者指向同一份只读内容，不是数据兜底。

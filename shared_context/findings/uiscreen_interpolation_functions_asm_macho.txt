@@ -1,0 +1,629 @@
+## 003e7dc0..003e86e8
+003e7dc0  bx lr
+003e7dc4  push {r7,lr}
+003e7dc6  vmov.f32 d16,#0x3fc00000
+003e7dca  vldr.32 s0,[pc,#0x3c]  ; READ -> 003e7e08
+003e7dce  vmov d17,r0,r0
+003e7dd2  mov r7,sp
+003e7dd4  vadd.f32 d16,d17,d16
+003e7dd8  vmul.f32 d0,d16,d0
+003e7ddc  vcvt.f64.f32 d16,s0
+003e7de0  vmov r0,r1,d16
+003e7de4  blx 0x00412784  ; UNCONDITIONAL_CALL -> 00412784
+003e7de8  vmov d16,r0,r1
+003e7dec  vmov.f32 d17,#0x3f800000
+003e7df0  vcvt.f32.f64 s0,d16
+003e7df4  vadd.f32 d17,d0,d17
+003e7df8  vmov.f32 d16,#0x3f000000
+003e7dfc  vmul.f32 d0,d17,d16
+003e7e00  vmov r0,s0
+003e7e04  pop {r7,pc}
+003e7e0c  push {r7,lr}
+003e7e0e  mov r7,sp
+003e7e10  vpush {d8}
+003e7e14  vmov.f32 d16,#0xc0000000
+003e7e18  vmov d17,r0,r0
+003e7e1c  movw r0,#0xf854
+003e7e20  vmov.f32 d8,#0x3f800000
+003e7e24  movt r0,#0x402d
+003e7e28  vmul.f32 d17,d17,d16
+003e7e2c  vmov.f32 d16,#0x40c00000
+003e7e30  vadd.f32 d17,d17,d8
+003e7e34  vmul.f32 d0,d17,d16
+003e7e38  vmov r1,s0
+003e7e3c  blx 0x00412504  ; UNCONDITIONAL_CALL -> 00412504
+003e7e40  vmov d16,r0,r0
+003e7e44  vadd.f32 d0,d16,d8
+003e7e48  vdiv.f32 s0,s16,s0
+003e7e4c  vmov r0,s0
+003e7e50  vpop {d8}
+003e7e54  pop {r7,pc}
+003e7e58  movs r0,#0x0
+003e7e5a  bx lr
+003e7e5c  push {r4,r5,r6,r7,lr}
+003e7e5e  add r7,sp,#0xc
+003e7e60  push.w r8
+003e7e64  movw r4,#0x81ee
+003e7e68  mov r8,r0
+003e7e6a  movt r4,#0x1c
+003e7e6e  add r4,pc
+003e7e70  ldrb r0,[r4,#0x0]  ; READ -> 005b0060
+003e7e72  tst r0,#0x1
+003e7e76  bne 0x003e7eb6  ; CONDITIONAL_JUMP -> 003e7eb6
+003e7e78  movw r6,#0x81dc
+003e7e7c  movt r6,#0x1c
+003e7e80  add r6,pc
+003e7e82  mov r0,r6  ; PARAM -> 005b0060
+003e7e84  blx 0x00415954  ; UNCONDITIONAL_CALL -> 00415954
+003e7e88  cbz r0,0x003e7eb6  ; CONDITIONAL_JUMP -> 003e7eb6
+003e7e8a  add.w r5,r6,#0x18
+003e7e8e  mov r0,r5  ; PARAM -> 005b0078
+003e7e90  bl 0x0038cac0  ; UNCONDITIONAL_CALL -> 0038cac0
+003e7e94  movw r1,#0x119c
+003e7e98  movt r1,#0xf
+003e7e9c  movw r0,#0x8ff
+003e7ea0  add r1,pc
+003e7ea2  movt r0,#0x0
+003e7ea6  add r0,pc  ; PARAM -> 003e87a9
+003e7ea8  ldr r2,[r1,#0x0]  ; READ -> 004d9040  ; PARAM -> 00001000
+003e7eaa  mov r1,r5  ; PARAM -> 005b0078
+003e7eac  blx 0x00411e34  ; UNCONDITIONAL_CALL -> 00411e34
+003e7eb0  mov r0,r6  ; PARAM -> 005b0060
+003e7eb2  blx 0x00415964  ; UNCONDITIONAL_CALL -> 00415964
+003e7eb6  vmov d0,r8,r8
+003e7eba  ldr.w r0,[r4,#0x18]!  ; READ -> 005b0078
+003e7ebe  vmov r1,s0
+003e7ec2  ldr r2,[r0,#0x0]
+003e7ec4  mov r0,r4  ; PARAM -> 005b0078
+003e7ec6  blx r2
+003e7ec8  pop.w r8
+003e7ecc  pop {r4,r5,r6,r7,pc}
+003e7ed0  push {r4,r5,r6,r7,lr}
+003e7ed2  add r7,sp,#0xc
+003e7ed4  push.w r8
+003e7ed8  movw r4,#0x817a
+003e7edc  mov r8,r0
+003e7ede  movt r4,#0x1c
+003e7ee2  add r4,pc
+003e7ee4  ldrb r0,[r4,#0x4]  ; READ -> 005b0064
+003e7ee6  tst r0,#0x1
+003e7eea  bne 0x003e7f22  ; CONDITIONAL_JUMP -> 003e7f22
+003e7eec  adds r6,r4,#0x4
+003e7eee  mov r0,r6  ; PARAM -> 005b0064
+003e7ef0  blx 0x00415954  ; UNCONDITIONAL_CALL -> 00415954
+003e7ef4  cbz r0,0x003e7f22  ; CONDITIONAL_JUMP -> 003e7f22
+003e7ef6  add.w r5,r4,#0x24
+003e7efa  mov r0,r5  ; PARAM -> 005b0084
+003e7efc  bl 0x0038cd08  ; UNCONDITIONAL_CALL -> 0038cd08
+003e7f00  movw r1,#0x1130
+003e7f04  movt r1,#0xf
+003e7f08  movw r0,#0x8a3
+003e7f0c  add r1,pc
+003e7f0e  movt r0,#0x0
+003e7f12  add r0,pc  ; PARAM -> 003e87b9
+003e7f14  ldr r2,[r1,#0x0]  ; READ -> 004d9040  ; PARAM -> 00001000
+003e7f16  mov r1,r5  ; PARAM -> 005b0084
+003e7f18  blx 0x00411e34  ; UNCONDITIONAL_CALL -> 00411e34
+003e7f1c  mov r0,r6  ; PARAM -> 005b0064
+003e7f1e  blx 0x00415964  ; UNCONDITIONAL_CALL -> 00415964
+003e7f22  vmov d0,r8,r8
+003e7f26  ldr.w r0,[r4,#0x24]!  ; READ -> 005b0084
+003e7f2a  vmov r1,s0
+003e7f2e  ldr r2,[r0,#0x0]
+003e7f30  mov r0,r4  ; PARAM -> 005b0084
+003e7f32  blx r2
+003e7f34  pop.w r8
+003e7f38  pop {r4,r5,r6,r7,pc}
+003e7f3c  push {r4,r5,r6,r7,lr}
+003e7f3e  add r7,sp,#0xc
+003e7f40  push.w r8
+003e7f44  movw r4,#0x810e
+003e7f48  mov r8,r0
+003e7f4a  movt r4,#0x1c
+003e7f4e  add r4,pc
+003e7f50  ldrb r0,[r4,#0x8]  ; READ -> 005b0068
+003e7f52  tst r0,#0x1
+003e7f56  bne 0x003e7f90  ; CONDITIONAL_JUMP -> 003e7f90
+003e7f58  add.w r6,r4,#0x8
+003e7f5c  mov r0,r6  ; PARAM -> 005b0068
+003e7f5e  blx 0x00415954  ; UNCONDITIONAL_CALL -> 00415954
+003e7f62  cbz r0,0x003e7f90  ; CONDITIONAL_JUMP -> 003e7f90
+003e7f64  add.w r5,r4,#0x30
+003e7f68  mov r0,r5  ; PARAM -> 005b0090
+003e7f6a  bl 0x0038cf0c  ; UNCONDITIONAL_CALL -> 0038cf0c
+003e7f6e  movw r1,#0x10c2
+003e7f72  movt r1,#0xf
+003e7f76  movw r0,#0x845
+003e7f7a  add r1,pc
+003e7f7c  movt r0,#0x0
+003e7f80  add r0,pc  ; PARAM -> 003e87c9
+003e7f82  ldr r2,[r1,#0x0]  ; READ -> 004d9040  ; PARAM -> 00001000
+003e7f84  mov r1,r5  ; PARAM -> 005b0090
+003e7f86  blx 0x00411e34  ; UNCONDITIONAL_CALL -> 00411e34
+003e7f8a  mov r0,r6  ; PARAM -> 005b0068
+003e7f8c  blx 0x00415964  ; UNCONDITIONAL_CALL -> 00415964
+003e7f90  vmov d0,r8,r8
+003e7f94  ldr.w r0,[r4,#0x30]!  ; READ -> 005b0090
+003e7f98  vmov r1,s0
+003e7f9c  ldr r2,[r0,#0x0]
+003e7f9e  mov r0,r4  ; PARAM -> 005b0090
+003e7fa0  blx r2
+003e7fa2  pop.w r8
+003e7fa6  pop {r4,r5,r6,r7,pc}
+003e7fa8  push {r4,r5,r6,r7,lr}
+003e7faa  add r7,sp,#0xc
+003e7fac  push.w r8
+003e7fb0  movw r4,#0x80a2
+003e7fb4  mov r8,r0
+003e7fb6  movt r4,#0x1c
+003e7fba  add r4,pc
+003e7fbc  ldrb r0,[r4,#0xc]  ; READ -> 005b006c
+003e7fbe  tst r0,#0x1
+003e7fc2  bne 0x003e7ffc  ; CONDITIONAL_JUMP -> 003e7ffc
+003e7fc4  add.w r6,r4,#0xc
+003e7fc8  mov r0,r6  ; PARAM -> 005b006c
+003e7fca  blx 0x00415954  ; UNCONDITIONAL_CALL -> 00415954
+003e7fce  cbz r0,0x003e7ffc  ; CONDITIONAL_JUMP -> 003e7ffc
+003e7fd0  add.w r5,r4,#0x3c
+003e7fd4  mov r0,r5  ; PARAM -> 005b009c
+003e7fd6  bl 0x0038d154  ; UNCONDITIONAL_CALL -> 0038d154
+003e7fda  movw r1,#0x1056
+003e7fde  movt r1,#0xf
+003e7fe2  movw r0,#0x7e9
+003e7fe6  add r1,pc
+003e7fe8  movt r0,#0x0
+003e7fec  add r0,pc  ; PARAM -> 003e87d9
+003e7fee  ldr r2,[r1,#0x0]  ; READ -> 004d9040  ; PARAM -> 00001000
+003e7ff0  mov r1,r5  ; PARAM -> 005b009c
+003e7ff2  blx 0x00411e34  ; UNCONDITIONAL_CALL -> 00411e34
+003e7ff6  mov r0,r6  ; PARAM -> 005b006c
+003e7ff8  blx 0x00415964  ; UNCONDITIONAL_CALL -> 00415964
+003e7ffc  vmov d0,r8,r8
+003e8000  ldr.w r0,[r4,#0x3c]!  ; READ -> 005b009c
+003e8004  vmov r1,s0
+003e8008  ldr r2,[r0,#0x0]
+003e800a  mov r0,r4  ; PARAM -> 005b009c
+003e800c  blx r2
+003e800e  pop.w r8
+003e8012  pop {r4,r5,r6,r7,pc}
+003e8014  push {r4,r5,r6,r7,lr}
+003e8016  add r7,sp,#0xc
+003e8018  push.w r8
+003e801c  movw r4,#0x8036
+003e8020  mov r8,r0
+003e8022  movt r4,#0x1c
+003e8026  add r4,pc
+003e8028  ldrb r0,[r4,#0x10]  ; READ -> 005b0070
+003e802a  tst r0,#0x1
+003e802e  bne 0x003e8068  ; CONDITIONAL_JUMP -> 003e8068
+003e8030  add.w r6,r4,#0x10
+003e8034  mov r0,r6  ; PARAM -> 005b0070
+003e8036  blx 0x00415954  ; UNCONDITIONAL_CALL -> 00415954
+003e803a  cbz r0,0x003e8068  ; CONDITIONAL_JUMP -> 003e8068
+003e803c  add.w r5,r4,#0x48
+003e8040  mov r0,r5  ; PARAM -> 005b00a8
+003e8042  bl 0x0038d33c  ; UNCONDITIONAL_CALL -> 0038d33c
+003e8046  movw r1,#0xfea
+003e804a  movt r1,#0xf
+003e804e  movw r0,#0x78d
+003e8052  add r1,pc
+003e8054  movt r0,#0x0
+003e8058  add r0,pc  ; PARAM -> 003e87e9
+003e805a  ldr r2,[r1,#0x0]  ; READ -> 004d9040  ; PARAM -> 00001000
+003e805c  mov r1,r5  ; PARAM -> 005b00a8
+003e805e  blx 0x00411e34  ; UNCONDITIONAL_CALL -> 00411e34
+003e8062  mov r0,r6  ; PARAM -> 005b0070
+003e8064  blx 0x00415964  ; UNCONDITIONAL_CALL -> 00415964
+003e8068  vmov d0,r8,r8
+003e806c  ldr.w r0,[r4,#0x48]!  ; READ -> 005b00a8
+003e8070  vmov r1,s0
+003e8074  ldr r2,[r0,#0x0]
+003e8076  mov r0,r4  ; PARAM -> 005b00a8
+003e8078  blx r2
+003e807a  pop.w r8
+003e807e  pop {r4,r5,r6,r7,pc}
+003e8080  push {r7,lr}
+003e8082  vldr.32 s0,[pc,#0x44]  ; READ -> 003e80c8
+003e8086  vmov d16,r0,r0
+003e808a  mov r7,sp
+003e808c  vmul.f32 d0,d16,d0
+003e8090  vcvt.f64.f32 d16,s0
+003e8094  vmov r0,r1,d16
+003e8098  blx 0x00412054  ; UNCONDITIONAL_CALL -> 00412054
+003e809c  vmov.f64 d16,0x3ff0000000000000
+003e80a0  vmov d17,r0,r1
+003e80a4  vsub.f64 d16,d16,d17
+003e80a8  vldr.64 d17,[pc,#0x14]  ; READ -> 003e80c0
+003e80ac  vadd.f64 d16,d16,d17
+003e80b0  vcvt.f32.f64 s0,d16
+003e80b4  vmov r0,s0
+003e80b8  pop {r7,pc}
+003e80cc  vmov d17,r0,r0
+003e80d0  vmov.i32 d16,#0x0
+003e80d4  vmul.f32 d18,d17,d17
+003e80d8  vmul.f32 d17,d18,d17
+003e80dc  vadd.f32 d0,d17,d16
+003e80e0  vmov r0,s0
+003e80e4  bx lr
+003e80e8  vmov d16,r0,r0
+003e80ec  vmul.f32 d17,d16,d16
+003e80f0  vmul.f32 d17,d17,d16
+003e80f4  vmul.f32 d18,d17,d16
+003e80f8  vmov.i32 d17,#0x0
+003e80fc  vmul.f32 d16,d18,d16
+003e8100  vadd.f32 d0,d16,d17
+003e8104  vmov r0,s0
+003e8108  bx lr
+003e8110  vmov d17,r0,r0
+003e8114  vmov.f32 d16,#0x3f800000
+003e8118  vmul.f32 d17,d17,d17
+003e811c  vsub.f32 d0,d16,d17
+003e8120  vmov.f64 d17,-0x4010000000000000
+003e8124  vcvt.f64.f32 d16,s0
+003e8128  vsqrt.f64 d16,d16
+003e812c  vadd.f64 d16,d16,d17
+003e8130  vldr.64 d17,[pc,#0x14]  ; READ -> 003e8148
+003e8134  vsub.f64 d16,d17,d16
+003e8138  vcvt.f32.f64 s0,d16
+003e813c  vmov r0,s0
+003e8140  bx lr
+003e8150  vldr.32 s0,[pc,#0x28]  ; READ -> 003e817c
+003e8154  vmov d17,r0,r0
+003e8158  vmul.f32 d16,d17,d0
+003e815c  vldr.32 s0,[pc,#0x20]  ; READ -> 003e8180
+003e8160  vmul.f32 d17,d17,d17
+003e8164  vadd.f32 d18,d16,d0
+003e8168  vmov.i32 d16,#0x0
+003e816c  vmul.f32 d17,d17,d18
+003e8170  vadd.f32 d0,d17,d16
+003e8174  vmov r0,s0
+003e8178  bx lr
+003e8184  vmov d17,r0,r0
+003e8188  vmov.i32 d16,#0x0
+003e818c  vmul.f32 d17,d17,d17
+003e8190  vadd.f32 d0,d17,d16
+003e8194  vmov r0,s0
+003e8198  bx lr
+003e819c  vmov d16,r0,r0
+003e81a0  vmul.f32 d17,d16,d16
+003e81a4  vmul.f32 d18,d17,d16
+003e81a8  vmov.i32 d17,#0x0
+003e81ac  vmul.f32 d16,d18,d16
+003e81b0  vadd.f32 d0,d16,d17
+003e81b4  vmov r0,s0
+003e81b8  bx lr
+003e81c0  push {r7,lr}
+003e81c2  vmov d0,r0,r0
+003e81c6  mov r7,sp
+003e81c8  vmov.i32 d1,#0x0
+003e81cc  vcmpe.f32 s0,#0
+003e81d0  vmrs apsr,fpscr
+003e81d4  beq 0x003e8202  ; CONDITIONAL_JUMP -> 003e8202
+003e81d6  vmov.f32 d17,#0xbf800000
+003e81da  vmov.f32 d16,#0x41200000
+003e81de  vadd.f32 d17,d0,d17
+003e81e2  vmul.f32 d0,d17,d16
+003e81e6  vcvt.f64.f32 d16,s0
+003e81ea  vmov r0,r1,d16
+003e81ee  blx 0x00412174  ; UNCONDITIONAL_CALL -> 00412174
+003e81f2  vldr.64 d16,[pc,#0x14]  ; READ -> 003e8208
+003e81f6  vmov d17,r0,r1
+003e81fa  vadd.f64 d16,d17,d16
+003e81fe  vcvt.f32.f64 s2,d16
+003e8202  vmov r0,s2
+003e8206  pop {r7,pc}
+003e8210  push {r7,lr}
+003e8212  movs r1,#0x0
+003e8214  mov.w r2,#0x3f800000
+003e8218  mov.w r3,#0x3f800000
+003e821c  mov r7,sp
+003e821e  bl 0x003e87f8  ; UNCONDITIONAL_CALL -> 003e87f8
+003e8222  pop {r7,pc}
+003e8224  push {r7,lr}
+003e8226  mov r7,sp
+003e8228  vpush {d8}
+003e822c  vmov.f32 d8,#0x3f800000
+003e8230  movs r1,#0x0
+003e8232  vmov d16,r0,r0
+003e8236  mov.w r2,#0x3f800000
+003e823a  vsub.f32 d0,d8,d16
+003e823e  mov.w r3,#0x3f800000
+003e8242  vmov r0,s0
+003e8246  bl 0x003e89a8  ; UNCONDITIONAL_CALL -> 003e89a8
+003e824a  vmov d17,r0,r0
+003e824e  vsub.f32 d17,d8,d17
+003e8252  vmov.i32 d16,#0x0
+003e8256  vadd.f32 d0,d17,d16
+003e825a  vmov r0,s0
+003e825e  vpop {d8}
+003e8262  pop {r7,pc}
+003e8268  push {r7,lr}
+003e826a  vldr.32 s0,[pc,#0x3c]  ; READ -> 003e82a8
+003e826e  vmov d16,r0,r0
+003e8272  mov r7,sp
+003e8274  vmul.f32 d0,d16,d0
+003e8278  vcvt.f64.f32 d16,s0
+003e827c  vmov r0,r1,d16
+003e8280  blx 0x00412784  ; UNCONDITIONAL_CALL -> 00412784
+003e8284  vldr.64 d16,[pc,#0x18]  ; READ -> 003e82a0
+003e8288  vmov d17,r0,r1
+003e828c  vadd.f64 d16,d17,d16
+003e8290  vcvt.f32.f64 s0,d16
+003e8294  vmov r0,s0
+003e8298  pop {r7,pc}
+003e82ac  vmov.f32 d16,#0xbf800000
+003e82b0  vmov d17,r0,r0
+003e82b4  vadd.f32 d16,d17,d16
+003e82b8  vmov.f32 d17,#0x3f800000
+003e82bc  vmul.f32 d18,d16,d16
+003e82c0  vmul.f32 d18,d16,d18
+003e82c4  vmov.i32 d16,#0x0
+003e82c8  vadd.f32 d17,d18,d17
+003e82cc  vadd.f32 d0,d17,d16
+003e82d0  vmov r0,s0
+003e82d4  bx lr
+003e82d8  vmov.f32 d16,#0xbf800000
+003e82dc  vmov d17,r0,r0
+003e82e0  vadd.f32 d16,d17,d16
+003e82e4  vmul.f32 d17,d16,d16
+003e82e8  vmul.f32 d17,d16,d17
+003e82ec  vmul.f32 d18,d16,d17
+003e82f0  vmov.f32 d17,#0x3f800000
+003e82f4  vmul.f32 d18,d16,d18
+003e82f8  vmov.i32 d16,#0x0
+003e82fc  vadd.f32 d17,d18,d17
+003e8300  vadd.f32 d0,d17,d16
+003e8304  vmov r0,s0
+003e8308  bx lr
+003e8310  vmov.f32 d16,#0xbf800000
+003e8314  vmov d17,r0,r0
+003e8318  vadd.f32 d17,d17,d16
+003e831c  vmov.f32 d16,#0x3f800000
+003e8320  vmul.f32 d17,d17,d17
+003e8324  vsub.f32 d0,d16,d17
+003e8328  vldr.64 d17,[pc,#0x1c]  ; READ -> 003e8348
+003e832c  vcvt.f64.f32 d16,s0
+003e8330  vsqrt.f64 d16,d16
+003e8334  vadd.f64 d16,d16,d17
+003e8338  vcvt.f32.f64 s0,d16
+003e833c  vmov r0,s0
+003e8340  bx lr
+003e8350  vmov.f32 d16,#0xbf800000
+003e8354  vldr.32 s0,[pc,#0x34]  ; READ -> 003e838c
+003e8358  vmov d17,r0,r0
+003e835c  vadd.f32 d16,d17,d16
+003e8360  vmul.f32 d18,d16,d0
+003e8364  vldr.32 s0,[pc,#0x28]  ; READ -> 003e8390
+003e8368  vmul.f32 d17,d16,d16
+003e836c  vmov.f32 d16,#0x3f800000
+003e8370  vadd.f32 d18,d18,d0
+003e8374  vmul.f32 d18,d17,d18
+003e8378  vmov.i32 d17,#0x0
+003e837c  vadd.f32 d16,d18,d16
+003e8380  vadd.f32 d0,d16,d17
+003e8384  vmov r0,s0
+003e8388  bx lr
+003e8394  vmov.f32 d17,#0xc0000000
+003e8398  vmov d16,r0,r0
+003e839c  vadd.f32 d18,d16,d17
+003e83a0  vmov.i32 d17,#0x0
+003e83a4  vmul.f32 d16,d16,d18
+003e83a8  vsub.f32 d0,d17,d16
+003e83ac  vmov r0,s0
+003e83b0  bx lr
+003e83b4  vmov.f32 d16,#0xbf800000
+003e83b8  vmov d17,r0,r0
+003e83bc  vadd.f32 d17,d17,d16
+003e83c0  vmul.f32 d18,d17,d17
+003e83c4  vmul.f32 d18,d17,d18
+003e83c8  vmul.f32 d18,d17,d18
+003e83cc  vmov.i32 d17,#0x0
+003e83d0  vadd.f32 d16,d18,d16
+003e83d4  vsub.f32 d0,d17,d16
+003e83d8  vmov r0,s0
+003e83dc  bx lr
+003e83e0  push {r7,lr}
+003e83e2  vmov.f32 d1,#0x3f800000
+003e83e6  mov r7,sp
+003e83e8  vmov d0,r0,r0
+003e83ec  vcmpe.f32 s0,s2
+003e83f0  vmrs apsr,fpscr
+003e83f4  beq 0x003e8422  ; CONDITIONAL_JUMP -> 003e8422
+003e83f6  vmov.f32 d16,#0xc1200000
+003e83fa  vmul.f32 d0,d0,d16
+003e83fe  vcvt.f64.f32 d16,s0
+003e8402  vmov r0,r1,d16
+003e8406  blx 0x00412174  ; UNCONDITIONAL_CALL -> 00412174
+003e840a  vmov.f64 d16,0x3ff0000000000000
+003e840e  vmov d17,r0,r1
+003e8412  vsub.f64 d16,d16,d17
+003e8416  vldr.64 d17,[pc,#0x10]  ; READ -> 003e8428
+003e841a  vadd.f64 d16,d16,d17
+003e841e  vcvt.f32.f64 s2,d16
+003e8422  vmov r0,s2
+003e8426  pop {r7,pc}
+003e8430  push {r7,lr}
+003e8432  movs r1,#0x0
+003e8434  mov.w r2,#0x3f800000
+003e8438  mov.w r3,#0x3f800000
+003e843c  mov r7,sp
+003e843e  bl 0x003e88d0  ; UNCONDITIONAL_CALL -> 003e88d0
+003e8442  pop {r7,pc}
+003e8444  push {r7,lr}
+003e8446  movs r1,#0x0
+003e8448  mov.w r2,#0x3f800000
+003e844c  mov.w r3,#0x3f800000
+003e8450  mov r7,sp
+003e8452  bl 0x003e89a8  ; UNCONDITIONAL_CALL -> 003e89a8
+003e8456  pop {r7,pc}
+003e8458  push {r7,lr}
+003e845a  vldr.32 s0,[pc,#0x4c]  ; READ -> 003e84a8
+003e845e  vmov d16,r0,r0
+003e8462  mov r7,sp
+003e8464  vmul.f32 d0,d16,d0
+003e8468  vcvt.f64.f32 d16,s0
+003e846c  vmov r0,r1,d16
+003e8470  blx 0x00412054  ; UNCONDITIONAL_CALL -> 00412054
+003e8474  vmov.f64 d16,-0x4010000000000000
+003e8478  vmov d17,r0,r1
+003e847c  vadd.f64 d16,d17,d16
+003e8480  vmov.f64 d17,-0x4020000000000000
+003e8484  vmul.f64 d16,d16,d17
+003e8488  vldr.64 d17,[pc,#0x14]  ; READ -> 003e84a0
+003e848c  vadd.f64 d16,d16,d17
+003e8490  vcvt.f32.f64 s0,d16
+003e8494  vmov r0,s0
+003e8498  pop {r7,pc}
+003e84ac  vmov d16,r0,r0
+003e84b0  vadd.f32 d0,d16,d16
+003e84b4  vmov.f32 d1,#0x3f800000
+003e84b8  vcmpe.f32 s0,s2
+003e84bc  vmrs apsr,fpscr
+003e84c0  bpl 0x003e84d4  ; CONDITIONAL_JUMP -> 003e84d4
+003e84c2  vmov.f32 d16,#0x3f000000
+003e84c6  vmul.f32 d16,d0,d16
+003e84ca  vmul.f32 d16,d0,d16
+003e84ce  vmul.f32 d16,d0,d16
+003e84d2  b 0x003e84f4  ; UNCONDITIONAL_JUMP -> 003e84f4
+003e84d4  vmov.f32 d16,#0xc0000000
+003e84d8  vmov.f32 d17,#0x0
+003e84dc  vadd.f32 d16,d0,d16
+003e84e0  vmul.f32 d18,d16,d16
+003e84e4  vmul.f32 d18,d16,d18
+003e84e8  vmov.f32 d16,#0x3f000000
+003e84ec  vadd.f32 d17,d18,d17
+003e84f0  vmul.f32 d16,d17,d16
+003e84f4  vmov.i32 d17,#0x0
+003e84f8  vadd.f32 d0,d16,d17
+003e84fc  vmov r0,s0
+003e8500  bx lr
+003e8504  vmov d16,r0,r0
+003e8508  vadd.f32 d0,d16,d16
+003e850c  vmov.f32 d1,#0x3f800000
+003e8510  vcmpe.f32 s0,s2
+003e8514  vmrs apsr,fpscr
+003e8518  bpl 0x003e8534  ; CONDITIONAL_JUMP -> 003e8534
+003e851a  vmov.f32 d16,#0x3f000000
+003e851e  vmul.f32 d16,d0,d16
+003e8522  vmul.f32 d16,d0,d16
+003e8526  vmul.f32 d16,d0,d16
+003e852a  vmul.f32 d16,d0,d16
+003e852e  vmul.f32 d16,d0,d16
+003e8532  b 0x003e855c  ; UNCONDITIONAL_JUMP -> 003e855c
+003e8534  vmov.f32 d16,#0xc0000000
+003e8538  vadd.f32 d16,d0,d16
+003e853c  vmul.f32 d17,d16,d16
+003e8540  vmul.f32 d17,d16,d17
+003e8544  vmul.f32 d18,d16,d17
+003e8548  vmov.f32 d17,#0x0
+003e854c  vmul.f32 d18,d16,d18
+003e8550  vmov.f32 d16,#0x3f000000
+003e8554  vadd.f32 d17,d18,d17
+003e8558  vmul.f32 d16,d17,d16
+003e855c  vmov.i32 d17,#0x0
+003e8560  vadd.f32 d0,d16,d17
+003e8564  vmov r0,s0
+003e8568  bx lr
+003e856c  push {r7,lr}
+003e856e  movs r1,#0x0
+003e8570  mov.w r2,#0x3f800000
+003e8574  mov.w r3,#0x3f800000
+003e8578  mov r7,sp
+003e857a  bl 0x003e8a7c  ; UNCONDITIONAL_CALL -> 003e8a7c
+003e857e  pop {r7,pc}
+003e8580  vmov d16,r0,r0
+003e8584  vadd.f32 d0,d16,d16
+003e8588  vmov.f32 d1,#0x3f800000
+003e858c  vcmpe.f32 s0,s2
+003e8590  vmrs apsr,fpscr
+003e8594  bpl 0x003e85b0  ; CONDITIONAL_JUMP -> 003e85b0
+003e8596  vldr.32 s2,[pc,#0x58]  ; READ -> 003e85f0
+003e859a  vmul.f32 d16,d0,d0
+003e859e  vmul.f32 d17,d0,d1
+003e85a2  vldr.32 s2,[pc,#0x54]  ; READ -> 003e85f8
+003e85a6  vadd.f32 d17,d17,d1
+003e85aa  vmul.f32 d16,d16,d17
+003e85ae  b 0x003e85d8  ; UNCONDITIONAL_JUMP -> 003e85d8
+003e85b0  vmov.f32 d16,#0xc0000000
+003e85b4  vldr.32 s2,[pc,#0x38]  ; READ -> 003e85f0
+003e85b8  vadd.f32 d16,d0,d16
+003e85bc  vldr.32 s0,[pc,#0x34]  ; READ -> 003e85f4
+003e85c0  vmul.f32 d18,d16,d1
+003e85c4  vmul.f32 d17,d16,d16
+003e85c8  vmov.f32 d16,#0x0
+003e85cc  vadd.f32 d18,d18,d0
+003e85d0  vmul.f32 d17,d17,d18
+003e85d4  vadd.f32 d16,d17,d16
+003e85d8  vmov.f32 d18,#0x3f000000
+003e85dc  vmov.i32 d17,#0x0
+003e85e0  vmul.f32 d16,d16,d18
+003e85e4  vadd.f32 d0,d16,d17
+003e85e8  vmov r0,s0
+003e85ec  bx lr
+003e85fc  vmov d16,r0,r0
+003e8600  vadd.f32 d0,d16,d16
+003e8604  vmov.f32 d1,#0x3f800000
+003e8608  vcmpe.f32 s0,s2
+003e860c  vmrs apsr,fpscr
+003e8610  bpl 0x003e8620  ; CONDITIONAL_JUMP -> 003e8620
+003e8612  vmul.f32 d17,d0,d0
+003e8616  vmov.f32 d16,#0x3f000000
+003e861a  vmul.f32 d16,d17,d16
+003e861e  b 0x003e8640  ; UNCONDITIONAL_JUMP -> 003e8640
+003e8620  vmov.f32 d16,#0xbf800000
+003e8624  vmov.f32 d17,#0xc0000000
+003e8628  vadd.f32 d18,d0,d16
+003e862c  vadd.f32 d17,d18,d17
+003e8630  vmul.f32 d18,d18,d17
+003e8634  vmov.f32 d17,#0xbf000000
+003e8638  vadd.f32 d16,d18,d16
+003e863c  vmul.f32 d16,d16,d17
+003e8640  vmov.i32 d17,#0x0
+003e8644  vadd.f32 d0,d16,d17
+003e8648  vmov r0,s0
+003e864c  bx lr
+003e8650  vmov d16,r0,r0
+003e8654  vadd.f32 d0,d16,d16
+003e8658  vmov.f32 d1,#0x3f800000
+003e865c  vcmpe.f32 s0,s2
+003e8660  vmrs apsr,fpscr
+003e8664  bpl 0x003e867c  ; CONDITIONAL_JUMP -> 003e867c
+003e8666  vmov.f32 d16,#0x3f000000
+003e866a  vmul.f32 d16,d0,d16
+003e866e  vmul.f32 d16,d0,d16
+003e8672  vmul.f32 d16,d0,d16
+003e8676  vmul.f32 d16,d0,d16
+003e867a  b 0x003e869c  ; UNCONDITIONAL_JUMP -> 003e869c
+003e867c  vmov.f32 d16,#0xc0000000
+003e8680  vadd.f32 d17,d0,d16
+003e8684  vmul.f32 d18,d17,d17
+003e8688  vmul.f32 d18,d17,d18
+003e868c  vmul.f32 d18,d17,d18
+003e8690  vmov.f32 d17,#0xbf000000
+003e8694  vadd.f32 d16,d18,d16
+003e8698  vmul.f32 d16,d16,d17
+003e869c  vmov.i32 d17,#0x0
+003e86a0  vadd.f32 d0,d16,d17
+003e86a4  vmov r0,s0
+003e86a8  bx lr
+003e86ac  push {r7,lr}
+003e86ae  movs r1,#0x0
+003e86b0  mov.w r2,#0x3f800000
+003e86b4  mov.w r3,#0x3f800000
+003e86b8  mov r7,sp
+003e86ba  bl 0x003e8b10  ; UNCONDITIONAL_CALL -> 003e8b10
+003e86be  pop {r7,pc}
+003e86c0  push {r7,lr}
+003e86c2  movs r1,#0x0
+003e86c4  mov.w r2,#0x3f800000
+003e86c8  mov.w r3,#0x3f800000
+003e86cc  mov r7,sp
+003e86ce  bl 0x003e8bd0  ; UNCONDITIONAL_CALL -> 003e8bd0
+003e86d2  pop {r7,pc}
+003e86d4  push {r7,lr}
+003e86d6  movs r1,#0x0
+003e86d8  mov.w r2,#0x3f800000
+003e86dc  mov.w r3,#0x3f800000
+003e86e0  mov r7,sp
+003e86e2  bl 0x003e8d08  ; UNCONDITIONAL_CALL -> 003e8d08
+003e86e6  pop {r7,pc}

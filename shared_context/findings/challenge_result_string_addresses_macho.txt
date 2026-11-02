@@ -1,0 +1,23 @@
+## instructions_out
+0041bf2f
+count=1
+## animate_in
+00418fb8
+count=1
+## animate_out
+0041a87c
+count=1
+## ins
+004187e4
+0041a413
+00440de4
+00627223
+00670479
+count=5
+## s.xml
+0041a16a
+0041b12e
+0041bf64
+0041bf8e
+0041bff1
+count=5

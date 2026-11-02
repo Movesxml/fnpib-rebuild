@@ -1,0 +1,95 @@
+.?AVMissControl@@
+@beanExtraLife
+@lifeScore
+@missAmount
+@misscounters.cross%d
+Assertion failure: (mode >= GM_CLASSIC && mode < GM_MAX)
+CLASSIC
+CLASSIC_SCORES
+CLASSIC_WEEKLY_SCORES
+Colour mapping missing its' name property. Ignored.
+Colour mapping missing its' value property. Ignored.
+FN_PUSS_CHALLENGE_MISS
+FN_PUSS_CHALLENGE_MISSES
+FN_PUSS_CHALLENGE_NO_MISSES
+Failed LineIntersect(x+ , x+) axial conincident miss test
+Failed LineIntersect(x+ , x-) axial conincident miss test
+Failed LineIntersect(x+ y+ , x+ y+) conincident miss test
+Failed LineIntersect(x+ y+ , x+ y-) diagonal miss test
+Failed LineIntersect(x+ y+ , x- y+) diagonal miss test
+Failed LineIntersect(x+ y+ , x- y-) conincident miss test
+Failed LineIntersect(x+ y- , x+ y-) conincident miss test
+Failed LineIntersect(x+ y- , x- y+) conincident miss test
+Failed LineIntersect(x- , x+) axial conincident miss test
+Failed LineIntersect(x- , x-) axial conincident miss test
+Failed LineIntersect(x- y+ , x+ y-) conincident miss test
+Failed LineIntersect(x- y+ , x- y+) conincident miss test
+Failed LineIntersect(x- y- , x+ y+) conincident miss test
+Failed LineIntersect(x- y- , x+ y-) diagonal miss test
+Failed LineIntersect(x- y- , x- y+) diagonal miss test
+Failed LineIntersect(x- y- , x- y-) conincident miss test
+Failed LineIntersect(y+ , x+) axial miss test
+Failed LineIntersect(y+ , x-) axial miss test
+Failed LineIntersect(y+ , y+) axial conincident miss test
+Failed LineIntersect(y+ , y-) axial conincident miss test
+Failed LineIntersect(y- , x+) axial miss test
+Failed LineIntersect(y- , x-) axial miss test
+Failed LineIntersect(y- , y+) axial conincident miss test
+Failed LineIntersect(y- , y-) axial conincident miss test
+Game-over
+Memory Markers are currently disabled, someone probably missed a 'MemoryDisableMarkers(false)' if you see this message!
+Permission denied
+Property Sku value missing for "%s"
+Target server missing.
+TextureManager::Load - MISSING TEXTURE %s
+The component %s{"%s"} refuses permission to rename.
+The component %s{id="%s"} does not give permission to be deleted.
+The component %s{id="%s"} does not give permission to rename.
+The target component path length exceeds the allocated buffer. Perhaps it is missing a null-terminator.
+Tried to load a string table header/language pair with missmatching hashes!
+VO_Life_%d
+VO_Life_1
+VO_Life_2
+VO_Life_3
+_bdf_parse_glyphs: DWIDTH field missing at line %ld.  Set to glyph width.
+_bdf_parse_glyphs: SWIDTH field missing at line %ld.  Set automatically.
+_bdf_parse_glyphs: [line %ld] Missing "%s" line.
+_bdf_parse_properties: FONT_ASCENT property missing.  Added "FONT_ASCENT %hd".
+_bdf_parse_properties: FONT_DESCENT property missing.  Added "FONT_DESCENT %hd".
+_bdf_parse_start: [line %ld] Missing "%s" line.
+bandito_complete_lives
+bdf_load_font: [line %ld] Font glyphs corrupted or missing fields.
+bdf_load_font: [line %ld] Font header corrupted or missing fields.
+beanLife
+classicBeanCount
+classicCurrentWave
+classicRequiredWaves
+extra-life
+finaleScreenBonusPerLife
+finaleScreenSpareLives
+gameOverContainer
+game_over
+game_over_real
+get_life
+inGameClassic
+inGameClassic.misscounters.cross%d
+is missing
+isGameOver
+life
+life-lose
+life_trigger
+misscounters.cross%d
+misses
+missing
+near_miss
+new_life_at
+no_misses_consecutive_total
+parse_path: Command %c: bad or missing parameters
+propertyDefinition '%s', alias target missing, skipped.
+propertyDefinition name missing, skipped.
+ps_parser_to_bytes: Missing closing delimiter `>'
+ps_parser_to_bytes: Missing starting delimiter `<'
+psh_hint_table_init: missing/incorrect hint masks
+skip_string: missing closing delimiter `>'
+super_fruit_gp_classic
+titles_for_menus/classic.tex

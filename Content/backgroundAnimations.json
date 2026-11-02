@@ -1,0 +1,280 @@
+{
+  "formatVersion": 1,
+  "source": {
+    "file": "Background.uiscreen",
+    "sha256": "907527f687084917da07acb276aca296d063220a535a890bec242c7d085a0941"
+  },
+  "components": [
+    {
+      "name": "",
+      "animations": []
+    },
+    {
+      "name": "shakeContainer",
+      "animations": []
+    },
+    {
+      "name": "shakeContainer.backgroundHolder",
+      "animations": [
+        {
+          "name": "fromResults",
+          "endTimeMS": 750,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 750,
+                  "interpolation": 0,
+                  "values": [
+                    232.0,
+                    128.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "modeSelect",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    -24.0,
+                    128.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "results",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    488.0,
+                    128.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "inGame",
+          "endTimeMS": 800,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 800,
+                  "interpolation": 0,
+                  "values": [
+                    232.0,
+                    224.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "mainMenu",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    360.0,
+                    128.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "returnToGame",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    232.0,
+                    224.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "stash",
+          "endTimeMS": 800,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 800,
+                  "interpolation": 0,
+                  "values": [
+                    232.0,
+                    224.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "extras",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    152.0,
+                    224.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "about",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    296.0,
+                    128.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "mainMenuSnap",
+          "endTimeMS": 200,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 200,
+                  "interpolation": 0,
+                  "values": [
+                    360.0,
+                    128.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shakeContainer.backgroundHolder.backgroundTexture1",
+      "animations": []
+    },
+    {
+      "name": "shakeContainer.backgroundHolder.backgroundTexture2",
+      "animations": []
+    }
+  ]
+}

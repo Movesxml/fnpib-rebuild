@@ -1,0 +1,122 @@
+{
+  "formatVersion": 1,
+  "screens": {
+    "Background": {
+      "output": "backgroundAnimations.json",
+      "components": 5,
+      "animations": 10,
+      "comments": 0,
+      "interpolations": {
+        "0": 10
+      },
+      "source": {
+        "file": "Background.uiscreen",
+        "sha256": "907527f687084917da07acb276aca296d063220a535a890bec242c7d085a0941"
+      }
+    },
+    "inGameChallengeHud": {
+      "output": "challengeAnimations.json",
+      "components": 142,
+      "animations": 135,
+      "comments": 0,
+      "interpolations": {
+        "0": 665,
+        "2": 16,
+        "3": 112,
+        "5": 1,
+        "7": 1
+      },
+      "source": {
+        "file": "inGameChallengeHud.uiscreen",
+        "sha256": "46c05eab2ce87726294741ceaa873b21ca3b89f8f94ed065ace9aea0c5dd538c"
+      }
+    },
+    "inGameChallengeBackground": {
+      "output": "challengeBackgroundAnimations.json",
+      "components": 13,
+      "animations": 17,
+      "comments": 0,
+      "interpolations": {
+        "0": 54,
+        "1": 15,
+        "2": 2
+      },
+      "source": {
+        "file": "inGameChallengeBackground.uiscreen",
+        "sha256": "4a7ac260541636f5108d34d7860fdeef272a84d20bde257c8ac5eff29238f151"
+      }
+    },
+    "inGameChallengeScoreScreen": {
+      "output": "challengeScoreAnimations.json",
+      "components": 48,
+      "animations": 34,
+      "comments": 4,
+      "interpolations": {
+        "0": 88,
+        "3": 5
+      },
+      "source": {
+        "file": "inGameChallengeScoreScreen.uiscreen",
+        "sha256": "1def28e520bd1341886854baadb8ea1e6343037e39d15a2fb4c8945a8b925d8c"
+      }
+    },
+    "inGameChallengeScoreScreenComplete": {
+      "output": "challengeScoreCompleteAnimations.json",
+      "components": 29,
+      "animations": 27,
+      "comments": 4,
+      "interpolations": {
+        "0": 60,
+        "2": 9,
+        "3": 22
+      },
+      "source": {
+        "file": "inGameChallengeScoreScreenComplete.uiscreen",
+        "sha256": "4f60df05886c0f80fb4194fd8ce8793686bddc7956926f17ad2e76b03705439a"
+      }
+    },
+    "inGameChallengeScoreScreenCompleteFailure": {
+      "output": "challengeScoreCompleteFailureAnimations.json",
+      "components": 18,
+      "animations": 4,
+      "comments": 0,
+      "interpolations": {
+        "0": 14,
+        "2": 5
+      },
+      "source": {
+        "file": "inGameChallengeScoreScreenCompleteFailure.uiscreen",
+        "sha256": "111901fa8bcf195ee0ebf18823e175d8a70965e7ba157fdf268084b3de1b97f9"
+      }
+    },
+    "inGameChallengeInstructionsScreen": {
+      "output": "challengeInstructionsAnimations.json",
+      "components": 21,
+      "animations": 10,
+      "comments": 0,
+      "interpolations": {
+        "0": 19,
+        "2": 5
+      },
+      "source": {
+        "file": "inGameChallengeInstructionsScreen.uiscreen",
+        "sha256": "f15d35956d170e7b0659e54671d48a54191addeb12c6915f0116e1eea3f7cd71"
+      }
+    },
+    "inGameChallengeMapScreen": {
+      "output": "challengeMapAnimations.json",
+      "components": 95,
+      "animations": 86,
+      "comments": 0,
+      "interpolations": {
+        "0": 223,
+        "1": 6,
+        "2": 1
+      },
+      "source": {
+        "file": "inGameChallengeMapScreen.uiscreen",
+        "sha256": "3bb47f0457a86fd56ade44b7f8b7a6935c3acbd11cdeaa9b75c852e0984db17b"
+      }
+    }
+  }
+}

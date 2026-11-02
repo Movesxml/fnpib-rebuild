@@ -1,0 +1,63 @@
+## 0005f614..0005f630
+0005f614  bx lr
+0005f618  push {r7,lr}
+0005f61a  mov r7,sp
+0005f61c  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f620  pop {r7,pc}
+0005f62c  movs r0,#0x5
+0005f62e  bx lr
+## 00039bd4..00039c64
+00039bd4  push {r4,r5,r6,r7,lr}
+00039bd6  movw r6,#0xc30a
+00039bda  mov r4,r0
+00039bdc  movt r6,#0x56
+00039be0  add r7,sp,#0xc
+00039be2  add r6,pc
+00039be4  ldrb r0,[r6,#0x4]  ; READ -> 005a5ef4
+00039be6  tst r0,#0x1
+00039bea  bne 0x00039c36  ; CONDITIONAL_JUMP -> 00039c36
+00039bec  adds r5,r6,#0x4
+00039bee  mov r0,r5  ; PARAM -> 005a5ef4
+00039bf0  blx 0x00415954  ; UNCONDITIONAL_CALL -> 00415954
+00039bf4  cbz r0,0x00039c36  ; CONDITIONAL_JUMP -> 00039c36
+00039bf6  movw r0,#0xba3
+00039bfa  movs r1,#0x5
+00039bfc  movt r0,#0x3e
+00039c00  add r0,pc  ; PARAM -> 0041a7a7
+00039c02  bl 0x002f69c4  ; UNCONDITIONAL_CALL -> 002f69c4
+00039c06  mov r1,r0
+00039c08  movw r0,#0xb97
+00039c0c  movt r0,#0x3e
+00039c10  str r1,[r6,#0x8]  ; WRITE -> 005a5ef8
+00039c12  add r0,pc  ; PARAM -> 0041a7ad
+00039c14  movs r1,#0x9
+00039c16  bl 0x002f69c4  ; UNCONDITIONAL_CALL -> 002f69c4
+00039c1a  mov r1,r0
+00039c1c  movw r0,#0xb8d
+00039c20  movt r0,#0x3e
+00039c24  str r1,[r6,#0xc]  ; WRITE -> 005a5efc
+00039c26  add r0,pc  ; PARAM -> 0041a7b7
+00039c28  movs r1,#0x7
+00039c2a  bl 0x002f69c4  ; UNCONDITIONAL_CALL -> 002f69c4
+00039c2e  str r0,[r6,#0x10]  ; WRITE -> 005a5f00
+00039c30  mov r0,r5  ; PARAM -> 005a5ef4
+00039c32  blx 0x00415964  ; UNCONDITIONAL_CALL -> 00415964
+00039c36  movs r1,#0x3
+00039c38  cbz r4,0x00039c5e  ; CONDITIONAL_JUMP -> 00039c5e
+00039c3a  mov r0,r4
+00039c3c  blx 0x004128e4  ; UNCONDITIONAL_CALL -> 004128e4
+00039c40  mov r1,r0
+00039c42  mov r0,r4
+00039c44  bl 0x002f69c4  ; UNCONDITIONAL_CALL -> 002f69c4
+00039c48  movs r2,#0x0
+00039c4a  movs r1,#0x3
+00039c4c  cmp r2,#0x2
+00039c4e  bgt 0x00039c5e  ; CONDITIONAL_JUMP -> 00039c5e
+00039c50  add.w r1,r6,r2, lsl #0x2
+00039c54  adds r2,#0x1
+00039c56  ldr r1,[r1,#0x8]  ; READ -> 005a5ef8  ; READ -> 005a5efc
+00039c58  cmp r0,r1
+00039c5a  bne 0x00039c4a  ; CONDITIONAL_JUMP -> 00039c4a
+00039c5c  subs r1,r2,#0x1
+00039c5e  mov r0,r1
+00039c60  pop {r4,r5,r6,r7,pc}

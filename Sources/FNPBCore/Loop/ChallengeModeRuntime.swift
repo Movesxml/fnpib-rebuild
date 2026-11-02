@@ -171,12 +171,19 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
         }
     }
 
+    /// The normal branch of FUN_00061128 makes Timer and challengeMods visible
+    /// and starts their real animate_in timelines after the first-round setup.
+    public mutating func startInitialRound() {
+        guard phase == .running, roundsPlayed == 0 else { return }
+        emitRunningHUDEvents()
+    }
+
     /// FUN_0005ffa8：状态 1 只由 bonusIntro 的真实播放完成回调推进；
     /// 条件与倒计时已在此前的外部回合 setup 中复位，这里不再次结算或选择。
     public mutating func completeBonusIntro() {
         guard phase == .bonusIntro else { return }
         phase = .running
-        events.append(.playAnimation(target: "Timer", name: "animate_in"))
+        emitRunningHUDEvents()
     }
 
     private mutating func prepareRound(challenge nextChallenge: ChallengeDefinition,
@@ -195,7 +202,16 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
                                      selectedFruitName: String?) {
         prepareRound(challenge: nextChallenge, selectedFruitName: selectedFruitName)
         phase = .running
+        emitRunningHUDEvents()
+    }
+
+    /// FUN_0005ffa8 restores both controls hidden by FUN_000606a4. Playing
+    /// animate_in alone does not undo the original explicit visibility write.
+    private mutating func emitRunningHUDEvents() {
+        events.append(.setVisible(target: "Timer", true))
         events.append(.playAnimation(target: "Timer", name: "animate_in"))
+        events.append(.setVisible(target: "challengeMods", true))
+        events.append(.playAnimation(target: "challengeMods", name: "animate_in"))
     }
 
     private mutating func startBonusIntro() {

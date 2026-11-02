@@ -1,0 +1,60 @@
+## 0030c6c0 -> FUN_0030c6c0
+0030c6c0  push {r4,r5,r6,r7,lr}
+0030c6c2  add r7,sp,#0xc
+0030c6c4  push.w r8
+0030c6c8  mov r5,r1
+0030c6ca  add.w r1,r0,#0x4c
+0030c6ce  add.w r4,r0,#0x2c
+0030c6d2  mov r8,r2
+0030c6d4  ldr r6,[r1,#0x0]
+0030c6d6  movs r0,#0x1
+0030c6d8  cmp r6,r4
+0030c6da  beq 0x0030c710  ; CONDITIONAL_JUMP -> 0030c710
+0030c6dc  ldr r0,[r6,#0x14]
+0030c6de  mov r1,r5
+0030c6e0  adds r0,#0x8
+0030c6e2  blx 0x00412874  ; UNCONDITIONAL_CALL -> 00412874 _strcmp
+0030c6e6  add.w r1,r6,#0x20
+0030c6ea  cmp r0,#0x0
+0030c6ec  bne 0x0030c6d4  ; CONDITIONAL_JUMP -> 0030c6d4
+0030c6ee  movs r0,#0x1
+0030c6f0  cbz r6,0x0030c710  ; CONDITIONAL_JUMP -> 0030c710
+0030c6f2  ldr r0,[r6,#0x18]
+0030c6f4  movw r1,#0xda0e
+0030c6f8  movt r1,#0x10
+0030c6fc  mov r2,r8
+0030c6fe  add r1,pc  ; PARAM -> 0041a110
+0030c700  adds r0,#0x8
+0030c702  blx 0x00412814  ; UNCONDITIONAL_CALL -> 00412814 _sscanf
+0030c706  mov r1,r0
+0030c708  movs r0,#0x2
+0030c70a  cmp r1,#0x1
+0030c70c  it eq
+0030c70e  mov.eq r0,#0x0
+0030c710  pop.w r8
+0030c714  pop {r4,r5,r6,r7,pc}
+
+## 0030c660 -> FUN_0030c660
+0030c660  push {r4,r5,r6,r7,lr}
+0030c662  mov r4,r1
+0030c664  add.w r1,r0,#0x4c
+0030c668  add.w r6,r0,#0x2c
+0030c66c  add r7,sp,#0xc
+0030c66e  ldr r5,[r1,#0x0]
+0030c670  movs r0,#0x0
+0030c672  cmp r5,r6
+0030c674  beq 0x0030c692  ; CONDITIONAL_JUMP -> 0030c692
+0030c676  ldr r0,[r5,#0x14]
+0030c678  mov r1,r4
+0030c67a  adds r0,#0x8
+0030c67c  blx 0x00412874  ; UNCONDITIONAL_CALL -> 00412874 _strcmp
+0030c680  add.w r1,r5,#0x20
+0030c684  cmp r0,#0x0
+0030c686  bne 0x0030c66e  ; CONDITIONAL_JUMP -> 0030c66e
+0030c688  movs r0,#0x0
+0030c68a  cmp r5,#0x0
+0030c68c  itt ne
+0030c68e  ldr.ne r0,[r5,#0x18]
+0030c690  add.ne r0,#0x8
+0030c692  pop {r4,r5,r6,r7,pc}
+

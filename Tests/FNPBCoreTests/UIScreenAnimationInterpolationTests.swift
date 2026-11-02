@@ -13,23 +13,28 @@ final class UIScreenAnimationInterpolationTests: XCTestCase {
         var player = try makePlayer(interpolations: [2, 0, 3])
         XCTAssertEqual(try player.sample(component: "node", animation: "move",
                                          track: "position", atTimeMS: 250)[0],
-                       expected, accuracy: 0.0000001)
+                       expected * 10, accuracy: 0.0000001)
         // The destination key's mode must not affect the preceding segment.
         XCTAssertEqual(try player.sample(component: "node", animation: "move",
-                                         track: "position", atTimeMS: 750)[0], 1)
+                                         track: "position", atTimeMS: 1500)[0], 5)
     }
 
-    func testIdentityHoldAndBothVerifiedByteTables() throws {
+    func testModeOneUsesReleaseCosineEaseAndByteTables() throws {
         XCTAssertEqual(UIScreenInterpolation.curve(mode: 0, x: 0.37), 0.37)
         XCTAssertEqual(UIScreenInterpolation.curve(mode: 3, x: 0.75), 0)
-        XCTAssertNil(UIScreenInterpolation.curve(mode: 1, x: 0.5))
+        XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 1, x: 0)),
+                       0, accuracy: 0.0000001)
+        XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 1, x: 0.5)),
+                       0.5, accuracy: 0.0000001)
+        XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 1, x: 1)),
+                       1, accuracy: 0.0000001)
 
         XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 5, x: 0)), 0)
         XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 5, x: 1)), 1)
-        XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 5, x: 18.5 / 99)),
+        XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 5, x: 17.5 / 99)),
                        0.5 / 255, accuracy: 0.0000001)
         XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 5, x: 98.5 / 99)),
-                       233 / 255, accuracy: 0.0000001)
+                       239 / 255, accuracy: 0.0000001)
         XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 7, x: 0)), 0)
         XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 7, x: 1)), 1)
         XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 7, x: 0.5 / 99)),
@@ -43,7 +48,7 @@ final class UIScreenAnimationInterpolationTests: XCTestCase {
             "position": 3, "scale": 3, "rotation": 3,
             "colour": 4, "insideColour": 4, "outsideColour": 4,
             "texCoordPos": 2, "enabled": 1, "movescale": 1, "layer": 1,
-            "_Events_": 0,
+            "_Events_": 0, "comment": 0,
         ]
         for (track, count) in dimensions {
             XCTAssertNoThrow(try makePlayer(track: track, valueCount: count))
@@ -81,6 +86,25 @@ final class UIScreenAnimationInterpolationTests: XCTestCase {
         XCTAssertThrowsError(try makePlayer(track: "position", valueCount: 3,
                                             events: [UIScreenAnimationContent.Event(
                                                 command: "PlaySound", arguments: [])]))
+    }
+
+    func testCommentRequiresExactlyOneStringPayloadAndNoNumericValues() throws {
+        XCTAssertNoThrow(try makePlayer(track: "comment", valueCount: 0,
+                                        interpolations: [99, 0]))
+        XCTAssertThrowsError(try makePlayer(track: "comment", valueCount: 0,
+                                            comment: nil)) { error in
+            guard case .invalidTimeline(_, _, let reason)? = error as? UIScreenAnimationError else {
+                return XCTFail("unexpected error: \(error)")
+            }
+            XCTAssertTrue(reason.contains("invalid comment payload"))
+        }
+        XCTAssertThrowsError(try makePlayer(track: "position", valueCount: 3,
+                                            comment: "stray", forceComment: true)) { error in
+            guard case .invalidTimeline(_, _, let reason)? = error as? UIScreenAnimationError else {
+                return XCTFail("unexpected error: \(error)")
+            }
+            XCTAssertTrue(reason.contains("invalid comment payload"))
+        }
     }
 
     func testEmptyScreenRootTraversesChildrenAndUnknownRootThrows() throws {
@@ -147,16 +171,44 @@ final class UIScreenAnimationInterpolationTests: XCTestCase {
         XCTAssertEqual(census, [0: 665, 2: 16, 3: 112, 5: 1, 7: 1])
     }
 
+    func testEveryGeneratedChallengeScreenPassesProductionValidation() throws {
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let expected: [(String, Int, Int, Int)] = [
+            ("challengeAnimations.json", 142, 135, 0),
+            ("challengeBackgroundAnimations.json", 13, 17, 0),
+            ("challengeScoreAnimations.json", 48, 34, 4),
+            ("challengeScoreCompleteAnimations.json", 29, 27, 4),
+            ("challengeScoreCompleteFailureAnimations.json", 18, 4, 0),
+            ("challengeInstructionsAnimations.json", 21, 10, 0),
+            ("challengeMapAnimations.json", 95, 86, 0),
+        ]
+        for (file, componentCount, animationCount, commentCount) in expected {
+            let data = try Data(contentsOf: root.appendingPathComponent("Content/\(file)"))
+            let player = try UIScreenAnimationPlayer(data: data)
+            XCTAssertEqual(player.content.components.count, componentCount, file)
+            XCTAssertEqual(player.content.components.flatMap(\.animations).count,
+                           animationCount, file)
+            XCTAssertEqual(player.content.components.first?.name, "", file)
+            let comments = player.content.components.flatMap(\.animations).flatMap(\.tracks)
+                .filter { $0.name == "comment" }.flatMap(\.keyframes)
+            XCTAssertEqual(comments.count, commentCount, file)
+            XCTAssertTrue(comments.allSatisfy { $0.values.isEmpty && $0.comment != nil }, file)
+        }
+    }
+
     private func makePlayer(track: String = "position", valueCount: Int = 3,
                             interpolations: [Int] = [0, 0],
-                            events: [UIScreenAnimationContent.Event] = []) throws
+                            events: [UIScreenAnimationContent.Event] = [],
+                            comment: String? = "note",
+                            forceComment: Bool = false) throws
         -> UIScreenAnimationPlayer {
         let keys = interpolations.enumerated().map { index, interpolation in
             UIScreenAnimationContent.Keyframe(
                 timeMS: index * 1000, interpolation: interpolation,
-                values: track == "_Events_" ? [] :
-                    (0..<valueCount).map { Float($0 + index * 10) },
-                events: index == 0 ? events : [])
+                values: (0..<valueCount).map { Float($0 + index * 10) },
+                events: index == 0 ? events : [],
+                comment: track == "comment" || forceComment ? comment : nil)
         }
         return try UIScreenAnimationPlayer(content: content([
             component("node", animations: [UIScreenAnimationContent.Animation(

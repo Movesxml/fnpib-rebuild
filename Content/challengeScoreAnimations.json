@@ -1,0 +1,1734 @@
+{
+  "formatVersion": 1,
+  "source": {
+    "file": "inGameChallengeScoreScreen.uiscreen",
+    "sha256": "1def28e520bd1341886854baadb8ea1e6343037e39d15a2fb4c8945a8b925d8c"
+  },
+  "components": [
+    {
+      "name": "",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 347,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    868.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 189,
+                  "interpolation": 0,
+                  "values": [
+                    368.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 271,
+                  "interpolation": 0,
+                  "values": [
+                    378.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 347,
+                  "interpolation": 0,
+                  "values": [
+                    368.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-door-close"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 995,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 800,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 995,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 700,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-rotate"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.backing",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.poster",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.posterArt",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.posterArt.oval1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.posterArt.oval2",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.posterArt.border3",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.posterArt.border2",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.posterArt.border1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.posterArt.border4",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scoreText",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scoreCounterTotal",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1983,
+          "tracks": [
+            {
+              "name": "comment",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": "Required for flow"
+                },
+                {
+                  "timeMS": 1983,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": "Must loop"
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 347,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    -260.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 189,
+                  "interpolation": 0,
+                  "values": [
+                    -16.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 271,
+                  "interpolation": 0,
+                  "values": [
+                    -26.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 347,
+                  "interpolation": 0,
+                  "values": [
+                    -16.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 795,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 795,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.Success",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 15,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 15,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 14,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 14,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 421,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 163,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 163,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 295,
+                  "interpolation": 0,
+                  "values": [
+                    1.100000023841858,
+                    1.100000023841858,
+                    1.100000023841858
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 421,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.Success.bonusLabelPass",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusListFail",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusListFail.bonusLabel1Wrapper",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 14,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 14,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 405,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 405,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.BonusListFail.bonusLabel1Wrapper.bonusValue1",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusListFail.bonusLabel1Wrapper.bonusLabel1",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusListFail.bonusLabel2Wrapper",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 14,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 14,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 400,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.BonusListFail.bonusLabel2Wrapper.bonusLabel2",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.fruitResult",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    64.0,
+                    104.0,
+                    47.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    64.0,
+                    104.0,
+                    47.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 605,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 525,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 550,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 605,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    64.0,
+                    104.0,
+                    47.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    64.0,
+                    104.0,
+                    47.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 520,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "count-display"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.BonusList.fruitResult.fruitLabel",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.fruitResult.fruitScore",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.sliceResult",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    73.0,
+                    103.0,
+                    154.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 14,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 14,
+                  "interpolation": 0,
+                  "values": [
+                    73.0,
+                    103.0,
+                    154.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 850,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 710,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0099999904632568
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 745,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 800,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 850,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    73.0,
+                    103.0,
+                    154.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 745,
+                  "interpolation": 0,
+                  "values": [
+                    73.0,
+                    103.0,
+                    154.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 750,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "count-display"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.BonusList.sliceResult.sliceLabel",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.sliceResult.comboAmount",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.sliceResult.missAmount",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.sliceResult.sliceScore",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.reflexResult",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    187.0,
+                    58.0,
+                    58.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 14,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 14,
+                  "interpolation": 0,
+                  "values": [
+                    187.0,
+                    58.0,
+                    58.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1095,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 995,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1050,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1095,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    187.0,
+                    58.0,
+                    58.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 995,
+                  "interpolation": 0,
+                  "values": [
+                    187.0,
+                    58.0,
+                    58.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 1000,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "count-display"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.BonusList.reflexResult.reflexLabel",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.reflexResult.reflexScore",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.reflexResult.reflexTime",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.reflexResult.reflexS",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.divider",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    81.0,
+                    55.0,
+                    35.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1500,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    81.0,
+                    55.0,
+                    35.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1500,
+                  "interpolation": 0,
+                  "values": [
+                    81.0,
+                    55.0,
+                    35.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.BonusList.totalResult",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    81.0,
+                    55.0,
+                    35.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 14,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 14,
+                  "interpolation": 0,
+                  "values": [
+                    81.0,
+                    55.0,
+                    35.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1845,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 1750,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1800,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1845,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    81.0,
+                    55.0,
+                    35.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1750,
+                  "interpolation": 0,
+                  "values": [
+                    81.0,
+                    55.0,
+                    35.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.BonusList.totalResult.totalLabel",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.BonusList.totalResult.totalScore",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1967,
+          "tracks": [
+            {
+              "name": "comment",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": ""
+                },
+                {
+                  "timeMS": 1967,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": "Loop required for flow"
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.Fail",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 295,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 295,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resultsContainer.Fail.bonusLabelPass",
+      "animations": []
+    },
+    {
+      "name": "resultsContainer.Fail.dummyTimer",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 2250,
+          "tracks": [
+            {
+              "name": "enabled",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2250,
+                  "interpolation": 0,
+                  "values": [
+                    1
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainer",
+      "animations": [
+        {
+          "name": "animate_out",
+          "endTimeMS": 495,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    240.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 495,
+                  "interpolation": 0,
+                  "values": [
+                    500.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_wait",
+          "endTimeMS": 3300,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    240.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3300,
+                  "interpolation": 0,
+                  "values": [
+                    240.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "instructionsContainer.instructions",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainer.Success",
+      "animations": []
+    },
+    {
+      "name": "instructionsContainer.Success.newChallenge",
+      "animations": []
+    },
+    {
+      "name": "skipButton",
+      "animations": []
+    }
+  ]
+}

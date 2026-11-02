@@ -1,0 +1,271 @@
+<NoPermissionsSpecified>
+@"<IMAdScreenDismissDelegate>"
+@beanExtraLife
+@lifeScore
+@missAmount
+@misscounters.cross%d
+A_ACFacebookPermissionsKey
+CLASSIC
+CLASSIC_SCORES
+CLASSIC_SCORES_WEEKLY
+Dismiss
+DismissFullscreenAd
+Exceeds max permissible media limit.
+FBE:GrantPermission
+FBSession: One or more publish permission was requested without specifying an audience; use FBSessionDefaultAudienceJustMe, FBSessionDefaultAudienceFriends, or 
+FBSession: Publish or manage permissions are not permited to to be requested with read permissions.
+FBSession: Publish permissions were requested without specifying an audience; use FBSessionDefaultAudienceJustMe, FBSessionDefaultAudienceFriends, or FBSessionD
+FBSession: a permission request for publish or manage permissions contains unexpected read permissions
+FBSession: a permission request for read permissions contains unexpected publish or manage permissions
+FBSession: an attempt was made reauthorize permissions on an unopened session
+FBTestSession: Missing App ID or Secret; ensure that you have an .xcconfig file at:
+FN_PUSS_CHALLENGE_MISS
+FN_PUSS_CHALLENGE_MISSES
+FN_PUSS_CHALLENGE_NO_MISSES
+Game-over
+Google AdMob Banner did dismiss modal
+Google AdMob Interstitial did dismiss
+Google AdMob Interstitial will dismiss
+IMAdScreenDismissDelegate
+MISSING REQUIRED PARAMETER => '%@'
+Millennial banner did dismiss modal
+Millennial interstitial did dismiss
+Millennial interstitial will dismiss
+MillennialMediaAdModalDidDismiss
+MillennialMediaAdModalWillDismiss
+Missing ',' or ']' in array declaration
+Missing ',' or '}' in object declaration
+Missing ':' after object member name
+Missing '}' or object member name
+Missing hex digit in quad
+Missing hex quad
+Missing low character in surrogate pair
+Missing required TO param
+Pass identifier (%@) and/or serial number (%@) missing.
+Passbook Add Pass view controller dismissed.
+Permission to access calendar not granted.
+T@"<IMAdScreenDismissDelegate>",VadScreenDelegate
+T@"<IMAdScreenDismissDelegate>",Vdelegate
+T@"NSArray",C,N,V_permissions
+T@"NSArray",C,N,V_publishPermissions
+T@"NSArray",C,N,V_readPermissions
+T@"NSArray",C,V_initializedPermissions
+T@"NSArray",C,V_permissions
+T@"NSArray",C,V_reauthorizePermissions
+T@"NSString",&,N,VpermissionsKey
+T@"NSURL",&,N,V_cacheMissURL
+Tc,N,V_autoDismiss
+Tc,N,V_autoDismissOnResignActive
+Tc,N,V_dismissAnimated
+User dismissed confirmation prompt.
+VO_Life_%d
+VO_Life_1
+VO_Life_2
+VO_Life_3
+[InMobi] adView: ad screen dismissed.
+[InMobi] adView: ad screen will be dismissed.
+[InMobi] interstitial: ad screen dismissed.
+[InMobi] interstitial: ad screen will be dismissed.
+_ACFacebookPermissionsKey
+_autoDismiss
+_autoDismissOnResignActive
+_cacheMissURL
+_dismissAnimated
+_initializedPermissions
+_permissions
+_publishPermissions
+_readPermissions
+_reauthorizePermissions
+actionSheet:didDismissWithButtonIndex:
+actionSheet:willDismissWithButtonIndex:
+adDidDismiss:
+adDidDismissModalView
+adHasBeenDismissed
+adHasBeenDismissedCallback
+adHasBeenDismissedCallbackFunctionName
+adModalDidDismiss
+adModalDismissed
+adModalWasDismissed
+adModalWillDismiss
+adScreenDidDismiss:
+adScreenWillDismiss:
+adViewDidDismissScreen:
+adViewWillDismissScreen:
+adWillDismiss:
+adapterDidDismissFullScreenModal:
+adapterDidDismissInterstitial:
+adapterWillDismissFullScreenModal:
+adapterWillDismissInterstitial:
+addBasicInfoPermission:
+additionalModalViewDidDismiss
+alertView:didDismissWithButtonIndex:
+alertView:willDismissWithButtonIndex:
+areAllPermissionsReadPermissions:
+areRequiredPermissions:aSubsetOfPermissions:
+askUserPermissionToQuerySongsWithJSON:successCallback:errorCallback:
+authorizeWithPermissions:behavior:defaultAudience:isReauthorize:
+authorizeWithPermissions:defaultAudience:integratedAuth:FBAppAuth:safariAuth:fallback:isReauthorize:
+autoDismiss
+autoDismissOnResignActive
+bandito_complete_lives
+beanLife
+cacheMissURL
+calledWillDismissInterstitial_
+checkPermissionsForUserInteraction
+classicBeanCount
+classicCurrentWave
+classicRequiredWaves
+com.facebook.sdk:TokenInformationPermissionsKey
+completeReauthorizeWithAccessToken:expirationDate:permissions:
+createTokenFromString:permissions:expirationDate:loginType:refreshDate:
+customEventBannerDidDismissModal:
+customEventBannerWillDismissModal:
+customEventInterstitialDidDismiss:
+customEventInterstitialWillDismiss:
+didDismiss
+didDismissFullScreenModalFromAd:
+didDismissInterstitial
+didDismissModalViewForAd:
+didDismissScreen
+didDismissSelf_
+dismiss
+dismiss:
+dismissActionSheet
+dismissAd
+dismissAdAnimated:
+dismissAnimated
+dismissAnimated:
+dismissBrowserAnimated:
+dismissBrowserController:animated:
+dismissClickthroughViewController
+dismissFlag
+dismissInterstitial:
+dismissInterstitialAnimated:
+dismissModalViewController:animated:transparent:completion:
+dismissModalViewControllerAnimated:
+dismissMoviePlayerViewControllerAnimated
+dismissOverlayFromWindow:animated:
+dismissPopoverAnimated:
+dismissSocialViewController
+dismissVideoView
+dismissViewController:animated:
+dismissViewControllerAnimated:completion:
+dismissWidget
+dismissWithClickedButtonIndex:animated:
+dismissWithError:animated:
+dismissWithSuccess:animated:
+dismiss_button
+displayAgentDidDismissModal
+displaySetAdHasBeenDismissedCallback
+doAdDidDismissScreenCallback
+doAdWillDismissScreenCallback
+extra-life
+fb_permissions_ui_dismiss
+fb_permissions_ui_launch
+fb_share_sheet_dismiss
+field '%s' missing in date table
+finaleScreenBonusPerLife
+finaleScreenSpareLives
+fullScreenAdViewControllerDidDismissAd:
+gadmDidDismissFullScreenModal
+gadmDidDismissInterstitial
+gadmWillDismissFullScreenModal
+gadmWillDismissInterstitial
+gameOverContainer
+game_over
+game_over_real
+get_life
+greystripeDidDismissModalViewController
+greystripeWillDismissModalViewController
+imWebViewFormSubmissionStarted:
+inGameClassic
+inGameClassic.misscounters.cross%d
+initWithAppID:appSecret:machineUniqueUserTag:sessionUniqueUserTag:mode:permissions:tokenCachingStrategy:
+initWithAppID:permissions:defaultAudience:urlSchemeSuffix:tokenCacheStrategy:
+initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:
+initWithPermissions:
+initWithPublishPermissions:defaultAudience:
+initWithReadPermissions:
+initWithToken:permissions:expirationDate:loginType:refreshDate:
+initializeFromCachedToken:withPermissions:
+initializedPermissions
+injectPermissionsKey
+interstitialDidDismiss
+interstitialDidDismissScreen:
+interstitialWillDismiss
+interstitialWillDismissScreen:
+isBeingDismissed
+isGameOver
+isInsufficientPermissionError:resultIndex:
+isPublishPermission:
+kAdModalViewControllerDidDismissFullScreen
+life
+life-lose
+life_trigger
+logIfFoundUnexpectedPermissions:isRead:
+logIntegratedAuthInsights:permissions:
+mAdViewPermissionsCheck();
+m_isDismissing
+malformed pattern (missing ']')
+malformed pattern (missing arguments to '%%b')
+managerDidDismissInterstitial:
+managerWillDismissInterstitial:
+me/permissions
+misscounters.cross%d
+misses
+missing
+missing '[' after '%%f' in pattern
+modalDidDismiss:
+mp_dismissModalViewControllerAnimated:
+near_miss
+new_life_at
+no_misses_consecutive_total
+openActiveSessionWithPermissions:allowLoginUI:allowSystemAccount:isRead:defaultAudience:completionHandler:
+openActiveSessionWithPermissions:allowLoginUI:completionHandler:
+openActiveSessionWithPublishPermissions:defaultAudience:allowLoginUI:completionHandler:
+openActiveSessionWithReadPermissions:allowLoginUI:completionHandler:
+performAdDidDismissScreenCallback
+performAdWillDismissScreenCallback
+permissions
+permissionsKey
+permissionsString
+permissions_requested
+popoverControllerDidDismissPopover:
+popoverControllerShouldDismissPopover:
+postDismissCleanup
+publishPermissions
+readPermissions
+reauthorizePermissions
+reauthorizeWithPermissions:behavior:completionHandler:
+reauthorizeWithPermissions:isRead:behavior:defaultAudience:completionHandler:
+reauthorizeWithPublishPermissions:defaultAudience:completionHandler:
+reauthorizeWithReadPermissions:completionHandler:
+requestNewPublishPermissions:defaultAudience:completionHandler:
+requestNewReadPermissions:completionHandler:
+rmissions:%@>
+sendDidDismissModalViewControllerNotification
+sendPermissionsErrorToCallback:
+sendWillDismissModalViewControllerNotification
+sessionForUnitTestingWithPermissions:mode:sessionUniqueUserTag:
+sessionWithPrivateUserWithPermissions:
+sessionWithSharedUserWithPermissions:
+sessionWithSharedUserWithPermissions:uniqueUserTag:
+setAdHasBeenDismissedCallback:successCallback:errorCallback:
+setAutoDismiss:
+setAutoDismissOnResignActive:
+setCacheMissURL:
+setDismissAnimated:
+setInitializedPermissions:
+setPermissions:
+setPermissionsKey:
+setPublishPermissions:
+setReadPermissions:
+setReauthorizePermissions:
+shouldDismissOnAppClose
+super_fruit_gp_classic
+validateRequestForPermissions:defaultAudience:allowSystemAccount:isRead:
+viewControllerDidDismiss
+widgetButtonControllerDismissTriggered:
+willDismissInterstitial
+willDismissScreen
+window.addEventListener('click', function() { mAdViewPermissionsKey = '%@';}, true);

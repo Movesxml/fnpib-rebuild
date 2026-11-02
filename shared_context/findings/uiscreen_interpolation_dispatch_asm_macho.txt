@@ -1,0 +1,18 @@
+## 003e86e8 -> FUN_003e86e8
+003e86e8  push {r7,lr}
+003e86ea  vmov d0,r1,r1
+003e86ee  mov r7,sp
+003e86f0  cmp r0,#0x26
+003e86f2  bhi 0x003e8710  ; CONDITIONAL_JUMP -> 003e8710
+003e86f4  movw r1,#0x7960
+003e86f8  movt r1,#0x1c
+003e86fc  add r1,pc
+003e86fe  ldr r1,[r1,#0x14]  ; READ -> 005b0074
+003e8700  ldr.w r1,[r1,r0,lsl #0x2]
+003e8704  cbz r1,0x003e8710  ; CONDITIONAL_JUMP -> 003e8710
+003e8706  vmov r0,s0
+003e870a  blx r1
+003e870c  vmov d0,r0,r0
+003e8710  vmov r0,s0
+003e8714  pop {r7,pc}
+

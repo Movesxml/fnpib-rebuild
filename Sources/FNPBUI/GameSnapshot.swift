@@ -146,6 +146,53 @@ public struct ResultSummary: Sendable, Equatable {
     }
 }
 
+// MARK: - 挑战 HUD
+
+/// App 层对真实 ChallengeModeRuntime 与结算控制器的只读投影。
+/// UI 不自行推断回合结果、计划槽位或动画完成时间。
+public struct ChallengeHUDState: Sendable, Equatable {
+    public var challengeName: String
+    public var roundNumber: Int
+    public var roundCount: Int
+    public var timeRemaining: Double?
+    public var hudVisible: Bool
+    public var timerVisible: Bool
+    public var backgroundVisible: Bool
+    public var resultRawValue: Int?
+    public var resultVisible: Bool
+    public var resultFinished: Bool
+    public var canAdvance: Bool
+    public var errorMessage: String?
+
+    public init(
+        challengeName: String,
+        roundNumber: Int,
+        roundCount: Int,
+        timeRemaining: Double? = nil,
+        hudVisible: Bool = true,
+        timerVisible: Bool = true,
+        backgroundVisible: Bool = false,
+        resultRawValue: Int? = nil,
+        resultVisible: Bool = false,
+        resultFinished: Bool = false,
+        canAdvance: Bool = false,
+        errorMessage: String? = nil
+    ) {
+        self.challengeName = challengeName
+        self.roundNumber = roundNumber
+        self.roundCount = roundCount
+        self.timeRemaining = timeRemaining
+        self.hudVisible = hudVisible
+        self.timerVisible = timerVisible
+        self.backgroundVisible = backgroundVisible
+        self.resultRawValue = resultRawValue
+        self.resultVisible = resultVisible
+        self.resultFinished = resultFinished
+        self.canAdvance = canAdvance
+        self.errorMessage = errorMessage
+    }
+}
+
 // MARK: - 快照
 
 /// 界面层唯一输入。纯值、`Sendable`、无游戏类型依赖。
@@ -174,6 +221,8 @@ public struct GameSnapshot: Sendable, Equatable {
     public var combo: ComboBanner?
     /// 结算摘要（非结算阶段为 nil）。
     public var result: ResultSummary?
+    /// 挑战模式实时 HUD；其他模式为 nil。
+    public var challenge: ChallengeHUDState?
     /// 音效开关状态（pause 浮层上的开关）。
     public var soundOn: Bool
 
@@ -189,6 +238,7 @@ public struct GameSnapshot: Sendable, Equatable {
         pauseVisible: Bool = false,
         combo: ComboBanner? = nil,
         result: ResultSummary? = nil,
+        challenge: ChallengeHUDState? = nil,
         soundOn: Bool = true
     ) {
         self.phase = phase
@@ -202,6 +252,7 @@ public struct GameSnapshot: Sendable, Equatable {
         self.pauseVisible = pauseVisible
         self.combo = combo
         self.result = result
+        self.challenge = challenge
         self.soundOn = soundOn
     }
 
@@ -228,6 +279,10 @@ public enum UIIntent: Sendable, Equatable {
     case restart
     /// 退出回主菜单
     case quitToMenu
+    /// 普通挑战结果完成后，显式请求下一计划回合
+    case nextChallengeRound
+    /// 普通挑战结果完成后，显式清理并退出
+    case cleanupChallenge
     /// 音效开关
     case toggleSound
     /// 打开占位屏幕（v1 未实现的 15 个；App 层可忽略或暂弹提示）

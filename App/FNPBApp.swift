@@ -178,10 +178,17 @@ final class GameHost: ObservableObject {
     private(set) var originalContent: OriginalContent?
     private(set) var contentLoadError: String?
 
-    // MARK: 挑战回合装配
+    // MARK: 挑战回合装配与发售版 UISF 结算
     private var challengeAssembler: ChallengeRoundAssembler?
     private(set) var currentChallengeRound: ChallengeRound?
     private(set) var challengeConfigurationError: String?
+    private var challengeSettlement: ChallengeSettlementController?
+    private var challengeHUDAnimationPlayer: UIScreenAnimationPlayer?
+    private var challengeResultAnimationPlayer: UIScreenAnimationPlayer?
+    private var challengeBackgroundAnimationPlayer: UIScreenAnimationPlayer?
+    private var gameBackgroundAnimationPlayer: UIScreenAnimationPlayer?
+    private var challengeVisibleTargets: [String: Bool] = [:]
+    private var challengeBackgroundVisible = false
 
     // MARK: 发售版 Classic UISF 动画
     private var classicAnimationPlayer: UIScreenAnimationPlayer?
@@ -374,6 +381,27 @@ final class GameHost: ObservableObject {
     var currentState: GameState { state }
     var currentScore: Int32 { scoreSystem.total }
     var currentTotalFruitSliced: Int32 { statsRecorder.value(for: .totalfruit) }
+    var challengeHUD: ChallengeHUDState? {
+        guard currentMode == .challenge, let round = currentChallengeRound else { return nil }
+        let runtime = gameWorld.challenge
+        let controller = challengeSettlement
+        return ChallengeHUDState(
+            challengeName: round.challenge.name,
+            roundNumber: round.roundIndex + 1,
+            roundCount: challengeAssembler?.plan.count ?? 0,
+            timeRemaining: runtime?.endsOnTimer == true
+                ? Double(max(0, runtime?.countdown ?? 0)) : nil,
+            hudVisible: challengeVisibleTargets["inGameChallengeHud"] ?? true,
+            timerVisible: challengeVisibleTargets["Timer"] ?? (runtime?.endsOnTimer == true),
+            backgroundVisible: challengeBackgroundVisible,
+            resultRawValue: controller?.outcome.rawValue,
+            resultVisible: controller?.normalResultVisible ?? false,
+            resultFinished: controller?.isNormalResultFinished ?? false,
+            canAdvance: challengeAssembler.map {
+                $0.currentRoundIndex + 1 < $0.plan.count
+            } ?? false,
+            errorMessage: challengeConfigurationError)
+    }
     var classicHearts: [ClassicHeartState] {
         visibleClassicCrosses.sorted().compactMap { index in
             var scale = SIMD2<Float>(1, 1)
@@ -446,6 +474,7 @@ final class GameHost: ObservableObject {
             // 先推进已有 UISF 时间线，再跑控制器并启动本帧新动画；新动画从 0 ms 开始，
             // 完成 game_over 时产生的 game_over_real 会在同一逻辑帧被消费。
             advanceClassicAnimations(deltaSeconds: step)
+            advanceChallengeAnimations(deltaSeconds: step)
             gameWorld.tick(dt: step, state: &state, world: &store, services: services)
             consumeChallengeEvents()
             consumeClassicEvents()
@@ -495,6 +524,10 @@ final class GameHost: ObservableObject {
             Self.contentLogger.error("经典开局被拒绝：动画资源不可用")
             return false
         }
+        if mode == .challenge, !ensureChallengeAnimations() {
+            Self.contentLogger.error("挑战开局被拒绝：动画资源不可用")
+            return false
+        }
 
         currentMode = mode
         state = GameState()
@@ -538,6 +571,13 @@ final class GameHost: ObservableObject {
     /// 任一步失败都拒绝开局，不退回普通波、不用默认 tier/difficulty 冒充存档配置。
     private func configureMode(content: OriginalContent, mode: GameMode) -> Bool {
         challengeConfigurationError = nil
+        challengeSettlement = nil
+        challengeHUDAnimationPlayer?.reset()
+        challengeResultAnimationPlayer?.reset()
+        challengeBackgroundAnimationPlayer?.reset()
+        gameBackgroundAnimationPlayer?.reset()
+        challengeVisibleTargets.removeAll(keepingCapacity: false)
+        challengeBackgroundVisible = false
         switch mode {
         case .classic, .adventure:
             challengeAssembler = nil
@@ -581,6 +621,9 @@ final class GameHost: ObservableObject {
                 }
 
                 gameWorld.configureChallenge(round.runtime)
+                if !round.runtime.isBonusRound {
+                    gameWorld.startInitialChallengeRound()
+                }
                 challengeAssembler = assembler
                 currentChallengeRound = round
                 return true
@@ -593,23 +636,254 @@ final class GameHost: ObservableObject {
         }
     }
 
-    // MARK: 挑战事件消费
+    // MARK: 挑战资源、回合结算与事件消费
+
+    private func ensureChallengeAnimations() -> Bool {
+        if challengeHUDAnimationPlayer != nil,
+           challengeResultAnimationPlayer != nil,
+           challengeBackgroundAnimationPlayer != nil,
+           gameBackgroundAnimationPlayer != nil {
+            return true
+        }
+        do {
+            challengeHUDAnimationPlayer = try UIScreenAnimationPlayer(
+                data: OriginalContentBundle.readResource(named: "challengeAnimations"))
+            challengeResultAnimationPlayer = try UIScreenAnimationPlayer(
+                data: OriginalContentBundle.readResource(named: "challengeScoreAnimations"))
+            challengeBackgroundAnimationPlayer = try UIScreenAnimationPlayer(
+                data: OriginalContentBundle.readResource(named: "challengeBackgroundAnimations"))
+            gameBackgroundAnimationPlayer = try UIScreenAnimationPlayer(
+                data: OriginalContentBundle.readResource(named: "backgroundAnimations"))
+            return true
+        } catch {
+            challengeHUDAnimationPlayer = nil
+            challengeResultAnimationPlayer = nil
+            challengeBackgroundAnimationPlayer = nil
+            gameBackgroundAnimationPlayer = nil
+            challengeConfigurationError = "挑战动画加载失败：\(error.localizedDescription)"
+            Self.contentLogger.error("挑战动画加载失败：\(error.localizedDescription, privacy: .public)")
+            return false
+        }
+    }
+
+    /// 与 Classic 相同，先推进已有时间线，再让 GameWorld 产生本帧事件。
+    /// state 7 的回合分发只发生一次；成功后旧结果控制器立即退出装配。
+    private func advanceChallengeAnimations(deltaSeconds: Float) {
+        guard currentMode == .challenge else { return }
+        do {
+            if var player = gameBackgroundAnimationPlayer {
+                let output = try player.advance(deltaSeconds: deltaSeconds)
+                gameBackgroundAnimationPlayer = player
+                processChallengeAnimationOutput(output)
+            }
+            if var player = challengeHUDAnimationPlayer {
+                let output = try player.advance(deltaSeconds: deltaSeconds)
+                challengeHUDAnimationPlayer = player
+                processChallengeAnimationOutput(output)
+            }
+            guard var controller = challengeSettlement,
+                  var resultPlayer = challengeResultAnimationPlayer,
+                  var backgroundPlayer = challengeBackgroundAnimationPlayer else { return }
+            let output = try controller.update(
+                deltaSeconds: deltaSeconds,
+                resultPlayer: &resultPlayer,
+                backgroundPlayer: &backgroundPlayer,
+                canAnimateResultExit: canAnimateChallengeResultExit())
+            challengeSettlement = controller
+            challengeResultAnimationPlayer = resultPlayer
+            challengeBackgroundAnimationPlayer = backgroundPlayer
+            processChallengeAnimationOutput(output)
+            if controller.state == 7 {
+                try dispatchChallengeSettlement(controller)
+            }
+        } catch {
+            rejectChallenge("挑战动画／结算推进失败：\(error.localizedDescription)")
+        }
+    }
+
+    private func canAnimateChallengeResultExit() -> Bool {
+        guard let runtime = gameWorld.challenge else { return false }
+        // FUN_00062a28(parent)：普通 tier 且失败回合数==3 时跳过结果退场。
+        let suppressOutro = !runtime.isBonusRound
+            && (runtime.roundsPlayed - runtime.roundsPassed) == 3
+        return !suppressOutro
+    }
+
+    private func dispatchChallengeSettlement(_ controller: ChallengeSettlementController) throws {
+        challengeBackgroundVisible = false
+        switch controller.substate {
+        case 2:
+            guard var assembler = challengeAssembler, let content = originalContent else {
+                throw ChallengeHostError("下一回合缺少真实装配器或原始内容")
+            }
+            let round = try assembler.advanceToNextRound()
+            waveDirector.setChallengeFruit(round.fruitID)
+            waveDirector.beginGame(waves: content.challengeWaves.waves,
+                                   fruits: content.fruits.fruits)
+            guard waveDirector.configureChallengeWave(
+                customWave: round.challenge.customWave,
+                forceWave: round.challenge.forceWave) else {
+                throw ChallengeHostError("挑战 \(round.challenge.name) 的下一回合 customWave 无法配置")
+            }
+            // 保留 GameWorld 内同一 runtime 的累计回合结果，只替换当前回合定义与条件。
+            gameWorld.updateChallengeSettlement(
+                controllerState: controller.state,
+                substate: controller.substate,
+                nextChallenge: round.challenge,
+                nextSelectedFruitName: round.fruitName)
+            challengeAssembler = assembler
+            currentChallengeRound = round
+            challengeSettlement = nil
+        case 5:
+            gameWorld.updateChallengeSettlement(
+                controllerState: controller.state,
+                substate: controller.substate)
+            challengeSettlement = nil
+        default:
+            throw ChallengeHostError("未知挑战结算分发子状态：\(controller.substate)")
+        }
+    }
 
     private func consumeChallengeEvents() {
         for event in gameWorld.drainChallengeEvents() {
             switch event {
             case let .roundFinished(outcome):
-                challengeAssembler?.recordCurrentRoundOutcome(outcome)
+                finishChallengeRound(outcome: outcome)
             case let .playSound(key), let .playMusic(key):
                 audio.play(key)
-            case .playAnimation, .setVisible:
-                // UISF 挑战 HUD 接入前不伪造动画完成回调。
+            case let .playAnimation(target, name):
+                playChallengeAnimation(target: target, name: name)
+            case let .setVisible(target, visible):
+                challengeVisibleTargets[target] = visible
+            case .nextRound:
+                // state 7 已完成真实波次、水果和条件配置；此事件只是运行时通知。
                 break
-            case .nextRound, .cleanedUp:
-                // 只有真实结算控制器进入对应子状态后才会产生；由回合流程统一处理。
+            case .cleanedUp:
+                viewModel.finishGame()
+            }
+        }
+    }
+
+    private func finishChallengeRound(outcome: ChallengeOutcome) {
+        guard var assembler = challengeAssembler, let round = currentChallengeRound else {
+            rejectChallenge("回合结束时缺少真实挑战装配状态")
+            return
+        }
+        assembler.recordCurrentRoundOutcome(outcome)
+        challengeAssembler = assembler
+        saveData.challengeSession.recordRound(
+            challengeName: round.challenge.name,
+            tierIndex: assembler.tierIndex,
+            roundIndex: round.roundIndex,
+            outcome: outcome)
+        guard saveStore.saveMergingChallengeData(saveData) else {
+            rejectChallenge("挑战回合存档失败：\(saveStore.lastError?.localizedDescription ?? "unknown")")
+            return
+        }
+        // FUN_0006d80c 是独立 bonus 状态机，禁止误入普通结果控制器。
+        if round.runtime.isBonusRound {
+            rejectChallenge("bonus 回合尚未接入其独立结算状态机")
+            return
+        }
+        do {
+            guard var resultPlayer = challengeResultAnimationPlayer,
+                  var backgroundPlayer = challengeBackgroundAnimationPlayer else {
+                throw ChallengeHostError("普通回合结算缺少真实动画资源")
+            }
+            var controller = ChallengeSettlementController()
+            let output = try controller.beginNormalResults(
+                outcome: outcome,
+                resultPlayer: &resultPlayer,
+                backgroundPlayer: &backgroundPlayer)
+            challengeSettlement = controller
+            challengeResultAnimationPlayer = resultPlayer
+            challengeBackgroundAnimationPlayer = backgroundPlayer
+            challengeBackgroundVisible = true
+            processChallengeAnimationOutput(output)
+        } catch {
+            rejectChallenge("无法开始普通回合结算：\(error.localizedDescription)")
+        }
+    }
+
+    private func playChallengeAnimation(target: String, name: String) {
+        do {
+            if target == "Background" {
+                guard var player = gameBackgroundAnimationPlayer else {
+                    throw ChallengeHostError("独立 Background 屏幕动画资源不可用")
+                }
+                // PlayAnimation 的第一个参数是屏幕名；根组件递归定位 inGame。
+                let output = try player.playRecursively(component: "", animation: name)
+                gameBackgroundAnimationPlayer = player
+                processChallengeAnimationOutput(output)
+                return
+            }
+            guard var player = challengeHUDAnimationPlayer else {
+                throw ChallengeHostError("挑战 HUD 动画资源不可用")
+            }
+            // inGameChallengeHud 是屏幕名，生成资源的根组件名为空字符串。
+            let component = target == "inGameChallengeHud" ? "" : target
+            let output = try player.playRecursively(component: component, animation: name)
+            challengeHUDAnimationPlayer = player
+            processChallengeAnimationOutput(output)
+        } catch {
+            rejectChallenge("挑战动画 \(target)/\(name) 启动失败：\(error.localizedDescription)")
+        }
+    }
+
+    private func processChallengeAnimationOutput(_ output: [UIScreenAnimationOutput]) {
+        for item in output {
+            switch item {
+            case let .event(_, _, command, arguments):
+                switch command {
+                case "PlaySound":
+                    if let key = arguments.first { audio.play(key) }
+                case "PlayAnimation":
+                    if arguments.count == 2 {
+                        playChallengeAnimation(target: arguments[0], name: arguments[1])
+                    }
+                default:
+                    rejectChallenge("未支持的原始挑战动画事件：\(command)")
+                }
+            case .completed:
                 break
             }
         }
+    }
+
+    func requestNextChallengeRound() {
+        guard var controller = challengeSettlement,
+              var background = challengeBackgroundAnimationPlayer,
+              controller.isNormalResultFinished,
+              let assembler = challengeAssembler,
+              assembler.currentRoundIndex + 1 < assembler.plan.count else { return }
+        do {
+            let output = try controller.requestNextRound(backgroundPlayer: &background)
+            challengeSettlement = controller
+            challengeBackgroundAnimationPlayer = background
+            processChallengeAnimationOutput(output)
+        } catch {
+            rejectChallenge("无法请求下一挑战回合：\(error.localizedDescription)")
+        }
+    }
+
+    func requestChallengeCleanup() {
+        guard var controller = challengeSettlement,
+              var background = challengeBackgroundAnimationPlayer,
+              controller.isNormalResultFinished else { return }
+        do {
+            let output = try controller.requestCleanup(backgroundPlayer: &background)
+            challengeSettlement = controller
+            challengeBackgroundAnimationPlayer = background
+            processChallengeAnimationOutput(output)
+        } catch {
+            rejectChallenge("无法退出挑战回合：\(error.localizedDescription)")
+        }
+    }
+
+    private func rejectChallenge(_ message: String) {
+        challengeConfigurationError = message
+        Self.contentLogger.error("挑战流程已终止：\(message, privacy: .public)")
+        viewModel.finishGame()
     }
 
     // MARK: Classic UISF 动画消费
@@ -859,6 +1133,16 @@ final class GameHost: ObservableObject {
         return SIMD2<Float>(Float(bounds.width * screen.scale),
                             Float(bounds.height * screen.scale))
     }
+}
+
+private struct ChallengeHostError: LocalizedError {
+    let message: String
+
+    init(_ message: String) {
+        self.message = message
+    }
+
+    var errorDescription: String? { message }
 }
 
 // MARK: - 唯一保留的占位服务

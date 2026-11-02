@@ -242,9 +242,28 @@ public final class GameWorld: GameTicking {
         challenge = runtime
     }
 
+    public func startInitialChallengeRound() {
+        challenge?.startInitialRound()
+    }
+
     public func drainChallengeEvents() -> [ChallengeModeEvent] {
         guard challenge != nil else { return [] }
         return challenge!.drainEvents()
+    }
+
+    /// 将真实结算控制器的状态转发给当前运行时。这里必须保留同一实例，
+    /// 不能用下一回合装配器的新 runtime 替换，否则会清空累计回合结果。
+    public func updateChallengeSettlement(
+        controllerState: Int32,
+        substate: Int32,
+        nextChallenge: ChallengeDefinition? = nil,
+        nextSelectedFruitName: String? = nil
+    ) {
+        challenge?.updateSettlement(
+            controllerState: controllerState,
+            substate: substate,
+            nextChallenge: nextChallenge,
+            nextSelectedFruitName: nextSelectedFruitName)
     }
 
     /// 动画系统回报当前 game_over / game_over_real 已完成。

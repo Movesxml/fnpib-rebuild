@@ -1,0 +1,11 @@
+# 全局地址直接引用
+
+- 程序: FruitNinjaPuss
+
+## 005b0074
+
+- READ @ 003e86fe in FUN_003e86e8: ldr r1,[r1,#0x14]
+- PARAM @ 003e9c7c in FUN_003e9c58: mov r0,r5
+- PARAM @ 003e9c98 in FUN_003e9c58: mov r1,r5
+引用数: 3
+

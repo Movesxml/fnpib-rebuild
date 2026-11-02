@@ -1,0 +1,1484 @@
+{
+  "formatVersion": 1,
+  "source": {
+    "file": "inGameChallengeScoreScreenComplete.uiscreen",
+    "sha256": "4f60df05886c0f80fb4194fd8ce8793686bddc7956926f17ad2e76b03705439a"
+  },
+  "components": [
+    {
+      "name": "",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 455,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    -320.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 240,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 350,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    -10.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 455,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 240,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-door-close"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 690,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 690,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    -500.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-door-open"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "life_trigger",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.door",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.heading",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.poster",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.oval1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.oval2",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1_0",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1_0_1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.posterArt.border1_0_0",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.scorePoster.scoreCounterTotalDelay",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1000,
+          "tracks": [
+            {
+              "name": "comment",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": ""
+                },
+                {
+                  "timeMS": 1000,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": " "
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.scorePoster.scoreCounterTotal",
+      "animations": [
+        {
+          "name": "score_trigger",
+          "endTimeMS": 4000,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 120,
+                  "interpolation": 2,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1000,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 4000,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    188.0,
+                    0.0,
+                    0.0,
+                    190.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 120,
+                  "interpolation": 2,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1000,
+                  "interpolation": 0,
+                  "values": [
+                    188.0,
+                    0.0,
+                    0.0,
+                    190.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "final-score"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "comment",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": " "
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [],
+                  "comment": ""
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.scorePoster.scoreText",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.bonusPoster",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.bonusPoster.poster",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.bonusPoster.lifeBonus",
+      "animations": [
+        {
+          "name": "life_trigger",
+          "endTimeMS": 1695,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1595,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.2000000476837158
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1695,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 1500,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "popup-1"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.misscounters",
+      "animations": []
+    },
+    {
+      "name": "scoreContainer.bonusPoster.misscounters.cross1",
+      "animations": [
+        {
+          "name": "life_trigger",
+          "endTimeMS": 2195,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2005,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2095,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2195,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 2005,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Bonus-Explosion-1"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.misscounters.cross2",
+      "animations": [
+        {
+          "name": "life_trigger",
+          "endTimeMS": 2700,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2600,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2700,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Bonus-Explosion-3"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.misscounters.cross3",
+      "animations": [
+        {
+          "name": "life_trigger",
+          "endTimeMS": 4000,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2995,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3095,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3195,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 4000,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 2995,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Bonus-Explosion-5"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.misscounters.lifeScore2",
+      "animations": [
+        {
+          "name": "life_trigger",
+          "endTimeMS": 2700,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2600,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2700,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.misscounters.lifeScore3",
+      "animations": [
+        {
+          "name": "life_trigger",
+          "endTimeMS": 4000,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2995,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3095,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3195,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 4000,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.misscounters.lifeScore1",
+      "animations": [
+        {
+          "name": "life_trigger",
+          "endTimeMS": 2195,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2005,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2095,
+                  "interpolation": 0,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2195,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.finaleBonus",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 1195,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1005,
+                  "interpolation": 2,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1095,
+                  "interpolation": 2,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1195,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 1000,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "popup-1"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "life_trigger",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scoreContainer.bonusPoster.finaleScore",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 2500,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1505,
+                  "interpolation": 2,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1600,
+                  "interpolation": 2,
+                  "values": [
+                    1.2000000476837158,
+                    1.2000000476837158,
+                    1.100000023841858
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1695,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 1500,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "Bonus-Explosion-1"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "life_trigger",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger_setup",
+          "endTimeMS": 10,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 3,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 10,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "skipButton",
+      "animations": []
+    }
+  ]
+}

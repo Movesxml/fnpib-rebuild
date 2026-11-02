@@ -201,4 +201,22 @@ final class PersistenceTests: XCTestCase {
         XCTAssertNotNil(object["currentChallenge"])
         XCTAssertEqual(try JSONDecoder().decode(ChallengeSessionPersistent.self, from: encoded), session)
     }
+
+    func testChallengeSessionRecordsTierAndRoundSlotWithoutConfusingIndices() {
+        var session = ChallengeSessionPersistent.empty
+        session.recordRound(challengeName: "fruitAcross1", tierIndex: 2,
+                            roundIndex: 3, outcome: .pass)
+        session.recordRound(challengeName: "bombField1", tierIndex: 2,
+                            roundIndex: 4, outcome: .fail)
+        session.recordRound(challengeName: "fruitAcross1", tierIndex: 2,
+                            roundIndex: 3, outcome: .fail)
+        session.recordRound(challengeName: "ignored", tierIndex: 2,
+                            roundIndex: 0, outcome: .pending)
+
+        XCTAssertEqual(session.challenges, [
+            .init(name: "fruitAcross1", index: 2, challengeIndex: 3, result: 2),
+            .init(name: "bombField1", index: 2, challengeIndex: 4, result: 2),
+        ])
+        XCTAssertEqual(session.initialTierIndex(validTierCount: 3), 2)
+    }
 }

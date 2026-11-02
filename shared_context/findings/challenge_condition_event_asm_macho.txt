@@ -1,0 +1,92 @@
+## 0005ecf4..0005ed18
+0005ecf4  push {r4,r5,r7,lr}
+0005ecf6  mov r4,r0
+0005ecf8  add r7,sp,#0x8
+0005ecfa  ldr.w r5,[r4,#0x1c]!
+0005ecfe  b 0x0005ed02  ; UNCONDITIONAL_JUMP -> 0005ed02
+0005ed00  ldr r5,[r5,#0x0]
+0005ed02  cmp r5,r4
+0005ed04  it eq
+0005ed06  pop.eq {r4,r5,r7,pc}
+0005ed08  ldr r0,[r5,#0x8]
+0005ed0a  ldr r1,[r0,#0x58]
+0005ed0c  cmp r1,#0x1
+0005ed0e  bne 0x0005ed00  ; CONDITIONAL_JUMP -> 0005ed00
+0005ed10  ldr r1,[r0,#0x0]
+0005ed12  ldr r1,[r1,#0x30]
+0005ed14  blx r1
+0005ed16  b 0x0005ed00  ; UNCONDITIONAL_JUMP -> 0005ed00
+## 0005ed00..0005ed18
+0005ed00  ldr r5,[r5,#0x0]
+0005ed02  cmp r5,r4
+0005ed04  it eq
+0005ed06  pop.eq {r4,r5,r7,pc}
+0005ed08  ldr r0,[r5,#0x8]
+0005ed0a  ldr r1,[r0,#0x58]
+0005ed0c  cmp r1,#0x1
+0005ed0e  bne 0x0005ed00  ; CONDITIONAL_JUMP -> 0005ed00
+0005ed10  ldr r1,[r0,#0x0]
+0005ed12  ldr r1,[r1,#0x30]
+0005ed14  blx r1
+0005ed16  b 0x0005ed00  ; UNCONDITIONAL_JUMP -> 0005ed00
+## 0005f1cc..0005f21c
+0005f1cc  push {r4,r7,lr}
+0005f1ce  mov r4,r0
+0005f1d0  vmov d16,r1,r1
+0005f1d4  vldr.32 s0,[r4,#0x64]
+0005f1d8  add r7,sp,#0x4
+0005f1da  vsub.f32 d0,d0,d16
+0005f1de  vcmpe.f32 s0,#0
+0005f1e2  vstr.32 s0,[r4,#0x64]
+0005f1e6  vmrs apsr,fpscr
+0005f1ea  bls 0x0005f1f4  ; CONDITIONAL_JUMP -> 0005f1f4
+0005f1ec  ldr.w r1,[r4,#0x5c]!
+0005f1f0  movs r2,#0x0
+0005f1f2  b 0x0005f20e  ; UNCONDITIONAL_JUMP -> 0005f20e
+0005f1f4  bl 0x000065c4  ; UNCONDITIONAL_CALL -> 000065c4
+0005f1f8  movs r1,#0x1
+0005f1fa  bl 0x00006a84  ; UNCONDITIONAL_CALL -> 00006a84
+0005f1fe  mov r3,r4
+0005f200  movs r2,#0x0
+0005f202  ldr.w r1,[r3,#0x5c]!
+0005f206  cmp r0,#0x0
+0005f208  it eq
+0005f20a  ldr.eq r2,[r4,#0x58]
+0005f20c  mov r4,r3
+0005f20e  movs r0,#0x0
+0005f210  str r2,[r4,#0x0]
+0005f212  cmp r2,r1
+0005f214  it ne
+0005f216  mov.ne r0,#0x1
+0005f218  pop {r4,r7,pc}
+## 0005f0b8..0005f100
+0005f0b8  push {r4,r5,r6,r7,lr}
+0005f0ba  mov r4,r0
+0005f0bc  movw r0,#0x9f7e
+0005f0c0  movt r0,#0x47
+0005f0c4  ldr r1,[r4,#0x50]
+0005f0c6  add r0,pc
+0005f0c8  add r7,sp,#0xc
+0005f0ca  ldr r6,[r0,#0x0]  ; READ -> 004d9048
+0005f0cc  ldr r0,[r6,#0x5c]  ; READ -> 005f8e04
+0005f0ce  bl 0x00027508  ; UNCONDITIONAL_CALL -> 00027508
+0005f0d2  mov r5,r0
+0005f0d4  ldr r1,[r4,#0x60]
+0005f0d6  ldr r0,[r6,#0x5c]  ; READ -> 005f8e04
+0005f0d8  bl 0x00027508  ; UNCONDITIONAL_CALL -> 00027508
+0005f0dc  mov r2,r0
+0005f0de  add.w r0,r4,#0x64
+0005f0e2  mov r1,r5
+0005f0e4  bl 0x00039c74  ; UNCONDITIONAL_CALL -> 00039c74
+0005f0e8  mov r1,r0
+0005f0ea  movs r0,#0x0
+0005f0ec  cmp r1,#0x1
+0005f0ee  mov r1,r0
+0005f0f0  ldr r2,[r4,#0x5c]
+0005f0f2  it eq
+0005f0f4  ldr.eq r1,[r4,#0x58]
+0005f0f6  str r1,[r4,#0x5c]
+0005f0f8  cmp r1,r2
+0005f0fa  it ne
+0005f0fc  mov.ne r0,#0x1
+0005f0fe  pop {r4,r5,r6,r7,pc}

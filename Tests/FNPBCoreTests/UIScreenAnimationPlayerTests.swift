@@ -142,6 +142,25 @@ final class UIScreenAnimationPlayerTests: XCTestCase {
                                                track: "missing", atTimeMS: 0))
     }
 
+    func testChallengeBackgroundPreservesOriginalPlayAnimationEvent() throws {
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        var player = try UIScreenAnimationPlayer(data: Data(contentsOf:
+            root.appendingPathComponent("Content/challengeBackgroundAnimations.json")))
+        let output = try player.play(component: "backgroundControl", animation: "animate_in")
+        XCTAssertTrue(output.contains(.event(
+            component: "backgroundControl", animation: "animate_in",
+            command: "PlayAnimation", arguments: ["Background", "inGame"])))
+
+        var gameBackground = try UIScreenAnimationPlayer(data: Data(contentsOf:
+            root.appendingPathComponent("Content/backgroundAnimations.json")))
+        XCTAssertEqual(gameBackground.content.components.count, 5)
+        XCTAssertEqual(gameBackground.content.components.flatMap(\.animations).count, 10)
+        _ = try gameBackground.playRecursively(component: "", animation: "inGame")
+        XCTAssertTrue(gameBackground.isPlaying(
+            component: "shakeContainer.backgroundHolder", animation: "inGame"))
+    }
+
     func testRecursivePlayStartsParentThenChildrenInResourceOrderAndSkipsMissingAnimations() throws {
         let intro1 = makeAnimation("intro", endTimeMS: 100, events: [(0, "intro1-0")])
         let intro2 = makeAnimation("intro", endTimeMS: 200, events: [(0, "intro2-0")])

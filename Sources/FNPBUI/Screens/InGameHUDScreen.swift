@@ -62,6 +62,10 @@ public struct InGameHUDScreen: View {
                     .allowsHitTesting(false)
                 }
 
+                if let challenge = snapshot.challenge {
+                    challengeHUD(challenge)
+                }
+
                 // 原 pause 位于逻辑画布 (0,320)，不是右上角；美术与触摸尺寸仍待闭合。
                 pauseButton
                     .padding(.horizontal, proxy.size.width >= proxy.size.height ? 34 : 18)
@@ -71,6 +75,71 @@ public struct InGameHUDScreen: View {
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .background(Color.clear)
+    }
+
+    // MARK: 挑战实时状态与结果导航
+
+    private func challengeHUD(_ challenge: ChallengeHUDState) -> some View {
+        ZStack {
+            if challenge.hudVisible {
+                VStack(spacing: 3) {
+                    Text(challenge.challengeName)
+                        .font(.system(size: 17, weight: .heavy, design: .rounded))
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                    Text("ROUND \(challenge.roundNumber) / \(challenge.roundCount)")
+                        .font(.system(size: 12, weight: .bold, design: .rounded).monospacedDigit())
+                    if let remaining = challenge.timeRemaining, challenge.timerVisible {
+                        Text("\(max(0, Int(ceil(remaining)))) s")
+                            .font(.system(size: 24, weight: .black, design: .rounded).monospacedDigit())
+                    }
+                }
+                .foregroundStyle(UIPalette.parchment)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 9)
+                .background(RoundedRectangle(cornerRadius: 14).fill(Color.black.opacity(0.35)))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(.top, 14)
+                .allowsHitTesting(false)
+            }
+
+            if challenge.resultRawValue != nil,
+               challenge.backgroundVisible,
+               challenge.resultVisible || challenge.resultFinished {
+                VStack(spacing: 14) {
+                    Text(challenge.resultRawValue == 1 ? "ROUND COMPLETE" : "ROUND FAILED")
+                        .font(.system(size: 27, weight: .black, design: .rounded))
+                        .foregroundStyle(UIPalette.parchment)
+                    if challenge.resultFinished {
+                        HStack(spacing: 12) {
+                            if challenge.canAdvance {
+                                PillButton(title: "NEXT", prominent: true, compact: true) {
+                                    actions.send(.nextChallengeRound)
+                                }
+                            }
+                            PillButton(title: "MAP", compact: true) {
+                                actions.send(.cleanupChallenge)
+                            }
+                        }
+                        .frame(maxWidth: 360)
+                    }
+                }
+                .padding(24)
+                .background(RoundedRectangle(cornerRadius: 20).fill(UIPalette.panelFill))
+                .padding(.horizontal, 24)
+            }
+
+            if let error = challenge.errorMessage {
+                Text(error)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(UIPalette.parchment)
+                    .multilineTextAlignment(.center)
+                    .padding(16)
+                    .background(RoundedRectangle(cornerRadius: 14).fill(UIPalette.accent))
+                    .padding(24)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            }
+        }
     }
 
     // MARK: 原图集生命图标

@@ -1,0 +1,4274 @@
+{
+  "formatVersion": 1,
+  "source": {
+    "file": "inGameChallengeMapScreen.uiscreen",
+    "sha256": "3bb47f0457a86fd56ade44b7f8b7a6935c3acbd11cdeaa9b75c852e0984db17b"
+  },
+  "components": [
+    {
+      "name": "",
+      "animations": []
+    },
+    {
+      "name": "actContainer",
+      "animations": [
+        {
+          "name": "start_game",
+          "endTimeMS": 2195,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2000,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2195,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    858.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 189,
+                  "interpolation": 0,
+                  "values": [
+                    368.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 271,
+                  "interpolation": 0,
+                  "values": [
+                    378.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 347,
+                  "interpolation": 0,
+                  "values": [
+                    368.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 2000,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-rotate"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_in",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    630.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "act_change",
+          "endTimeMS": 3695,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1695,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1695,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1900,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3695,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    368.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 1900,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-stop"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "timeMS": 3500,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-rotate"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "actContainer.backing",
+      "animations": []
+    },
+    {
+      "name": "actContainer.actPoster",
+      "animations": []
+    },
+    {
+      "name": "actContainer.border1",
+      "animations": []
+    },
+    {
+      "name": "actContainer.border2",
+      "animations": []
+    },
+    {
+      "name": "actContainer.border3",
+      "animations": []
+    },
+    {
+      "name": "actContainer.border4",
+      "animations": []
+    },
+    {
+      "name": "actContainer.actLabel",
+      "animations": []
+    },
+    {
+      "name": "challengeContainer",
+      "animations": [
+        {
+          "name": "start_game",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_in",
+          "endTimeMS": 202,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 202,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 200,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-stop"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "act_change",
+          "endTimeMS": 1695,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 200,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1695,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 200,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-stop"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "timeMS": 1500,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-rotate"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 297,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 98,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 297,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-rotate"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner",
+      "animations": []
+    },
+    {
+      "name": "challengeContainer.spinner.backing",
+      "animations": []
+    },
+    {
+      "name": "challengeContainer.spinner.iconSlot1",
+      "animations": []
+    },
+    {
+      "name": "challengeContainer.spinner.iconSlot2",
+      "animations": []
+    },
+    {
+      "name": "challengeContainer.spinner.iconSlot3",
+      "animations": []
+    },
+    {
+      "name": "challengeContainer.spinner.iconSlot4",
+      "animations": []
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNode_1",
+      "animations": [
+        {
+          "name": "animate_stop",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_delay",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset",
+          "endTimeMS": 520,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    247.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    428.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 520,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1800,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1800,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset_in",
+          "endTimeMS": 450,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    247.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 50,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 450,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNode_2",
+      "animations": [
+        {
+          "name": "animate_stop",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_delay",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset",
+          "endTimeMS": 520,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    204.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    385.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 520,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1800,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1800,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset_in",
+          "endTimeMS": 950,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    204.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 550,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 950,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNode_3",
+      "animations": [
+        {
+          "name": "animate_stop",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_delay",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset",
+          "endTimeMS": 520,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    160.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    341.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 520,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1800,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1800,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset_in",
+          "endTimeMS": 1450,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    160.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 1050,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1450,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNode_4",
+      "animations": [
+        {
+          "name": "animate_stop",
+          "endTimeMS": 1100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_delay",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset",
+          "endTimeMS": 520,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    297.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 520,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1800,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1800,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset_in",
+          "endTimeMS": 2950,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    116.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 1550,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    246.0,
+                    204.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1950,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2950,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.clickNowText",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 1,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 495,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "act_change",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 995,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 1,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 505,
+                  "interpolation": 1,
+                  "values": [
+                    0.8999999761581421,
+                    0.8999999761581421,
+                    0.8999999761581421
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 995,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodePass_1",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "challenge-tick"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodePass_2",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "challenge-tick"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodePass_3",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "challenge-tick"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodePass_4",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "challenge-tick"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodeFail_1",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "gank"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodeFail_2",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "gank"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodeFail_3",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "gank"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "challengeContainer.spinner.adventureNodeFail_4",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 0,
+          "tracks": [
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "gank"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bossChallengeContainer",
+      "animations": []
+    },
+    {
+      "name": "bossChallengeContainer.spinner",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 200,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 198,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": [
+                {
+                  "timeMS": 200,
+                  "interpolation": 0,
+                  "values": [],
+                  "events": [
+                    {
+                      "command": "PlaySound",
+                      "arguments": [
+                        "ui-panel-stop"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "act_change",
+          "endTimeMS": 88,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 88,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 2,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    260.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bossChallengeContainer.spinner.backing",
+      "animations": []
+    },
+    {
+      "name": "bossChallengeContainer.spinner.iconSlot",
+      "animations": []
+    },
+    {
+      "name": "bossChallengeContainer.spinner.adventureNode_1",
+      "animations": [
+        {
+          "name": "animate_stop",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_delay",
+          "endTimeMS": 100,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 100,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset",
+          "endTimeMS": 520,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    247.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    428.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 520,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 1800,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 1800,
+                  "interpolation": 0,
+                  "values": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    150.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_reset_in",
+          "endTimeMS": 450,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    90.0,
+                    247.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 50,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 450,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    250.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bossChallengeContainer.spinner.finaleHeading",
+      "animations": []
+    },
+    {
+      "name": "bossChallengeContainer.spinner.adventureNodeFail_1",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bossChallengeContainer.spinner.adventureNodePass_1",
+      "animations": [
+        {
+          "name": "animate_trigger",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bossChallengeContainer.spinner.clickNowText",
+      "animations": [
+        {
+          "name": "animate_in",
+          "endTimeMS": 500,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 1,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 245,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    228.0,
+                    176.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_idle",
+          "endTimeMS": 995,
+          "tracks": [
+            {
+              "name": "scale",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 1,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 500,
+                  "interpolation": 1,
+                  "values": [
+                    0.8999999761581421,
+                    0.8999999761581421,
+                    0.8999999761581421
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 995,
+                  "interpolation": 0,
+                  "values": [
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer",
+      "animations": [
+        {
+          "name": "map_in",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    2.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "start_game",
+          "endTimeMS": 347,
+          "tracks": [
+            {
+              "name": "position",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    -256.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 189,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 271,
+                  "interpolation": 0,
+                  "values": [
+                    -10.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 347,
+                  "interpolation": 0,
+                  "values": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "act_change",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_out",
+          "endTimeMS": 300,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 300,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act1.title",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.area",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 2995,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2995,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.corner1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.corner2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.corner3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.corner4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.edge1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.edge2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.edge3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.border.edge4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act1.picture",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2505,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act1.pictureColoured",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2745,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2740,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    254.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2740,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act2",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 2995,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2745,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2995,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act2.title",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.area",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2745,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2740,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2495,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2740,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.corner1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.corner2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.corner3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.corner4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.edge1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.edge2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.edge3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.border.edge4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act2.picture",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act2.pictureColoured",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    254.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act3",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act3.title",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.area",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 2995,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2755,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2995,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2495,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.corner1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.corner2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.corner3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.corner4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.edge1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.edge2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.edge3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.border.edge4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act3.picture",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2745,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2495,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2745,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act3.pictureColoured",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    254.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act4",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2745,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2745,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2495,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2745,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    120.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act4.title",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 2995,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2995,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 2495,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.corner1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.corner2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.corner3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.corner4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.edge1",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.edge2",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.edge3",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.border.edge4",
+      "animations": []
+    },
+    {
+      "name": "progressUIContainer.map.act4.picture",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    1.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    113.0,
+                    61.0,
+                    6.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "progressUIContainer.map.act4.pictureColoured",
+      "animations": [
+        {
+          "name": "animate_appear",
+          "endTimeMS": 3000,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 3000,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        },
+        {
+          "name": "animate_disappear",
+          "endTimeMS": 2750,
+          "tracks": [
+            {
+              "name": "colour",
+              "keyframes": [
+                {
+                  "timeMS": 0,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    254.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2500,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    255.0
+                  ],
+                  "events": []
+                },
+                {
+                  "timeMS": 2750,
+                  "interpolation": 0,
+                  "values": [
+                    255.0,
+                    255.0,
+                    255.0,
+                    0.0
+                  ],
+                  "events": []
+                }
+              ]
+            },
+            {
+              "name": "_Events_",
+              "keyframes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

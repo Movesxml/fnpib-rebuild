@@ -1,0 +1,177 @@
+## 0005ec7c -> FUN_0005ec7c
+0005ec7c  push {r4,r5,r6,r7,lr}
+0005ec7e  mov r6,r0
+0005ec80  mov r5,r1
+0005ec82  ldr r0,[r6,#0x2c]
+0005ec84  add r7,sp,#0xc
+0005ec86  cmp r0,#0x0
+0005ec88  it ne
+0005ec8a  pop.ne {r4,r5,r6,r7,pc}
+0005ec8c  mov r0,r6
+0005ec8e  bl 0x0005ed18  ; UNCONDITIONAL_CALL -> 0005ed18 FUN_0005ed18
+0005ec92  mov r0,r6
+0005ec94  movs r2,#0x0
+0005ec96  ldr.w r1,[r0,#0x1c]!
+0005ec9a  cmp r1,r0
+0005ec9c  beq 0x0005ecec  ; CONDITIONAL_JUMP -> 0005ecec
+0005ec9e  mov r2,r1
+0005eca0  cmp r5,#0x1
+0005eca2  bne 0x0005ecb4  ; CONDITIONAL_JUMP -> 0005ecb4
+0005eca4  ldr r3,[r2,#0x8]
+0005eca6  ldrb.w r4,[r3,#0x54]
+0005ecaa  cbz r4,0x0005ecb4  ; CONDITIONAL_JUMP -> 0005ecb4
+0005ecac  ldr r4,[r3,#0x5c]
+0005ecae  movs r3,#0x2
+0005ecb0  cmp r4,#0x2
+0005ecb2  beq 0x0005ecf0  ; CONDITIONAL_JUMP -> 0005ecf0
+0005ecb4  ldr r2,[r2,#0x0]
+0005ecb6  cmp r2,r0
+0005ecb8  bne 0x0005eca0  ; CONDITIONAL_JUMP -> 0005eca0
+0005ecba  movs r3,#0x0
+0005ecbc  cmp r1,r0
+0005ecbe  beq 0x0005ecea  ; CONDITIONAL_JUMP -> 0005ecea
+0005ecc0  ldr r4,[r1,#0x8]
+0005ecc2  ldr r2,[r4,#0x58]
+0005ecc4  cmp r2,#0x1
+0005ecc6  bne 0x0005ece0  ; CONDITIONAL_JUMP -> 0005ece0
+0005ecc8  movs r2,#0x0
+0005ecca  cmp r5,#0x1
+0005eccc  bne 0x0005ecec  ; CONDITIONAL_JUMP -> 0005ecec
+0005ecce  ldrb.w r3,[r4,#0x54]
+0005ecd2  movs r2,#0x0
+0005ecd4  cbz r3,0x0005ecec  ; CONDITIONAL_JUMP -> 0005ecec
+0005ecd6  ldr r4,[r4,#0x5c]
+0005ecd8  movs r2,#0x0
+0005ecda  movs r3,#0x1
+0005ecdc  cmp r4,#0x1
+0005ecde  bne 0x0005ecec  ; CONDITIONAL_JUMP -> 0005ecec
+0005ece0  ldr r1,[r1,#0x0]
+0005ece2  mov r2,r3
+0005ece4  cmp r1,r0
+0005ece6  bne 0x0005ecc0  ; CONDITIONAL_JUMP -> 0005ecc0
+0005ece8  b 0x0005ecec  ; UNCONDITIONAL_JUMP -> 0005ecec
+0005ecea  movs r2,#0x0
+0005ecec  and r3,r2,#0x1
+0005ecf0  str r3,[r6,#0x2c]
+0005ecf2  pop {r4,r5,r6,r7,pc}
+
+## 0005edc8 -> FUN_0005edc8
+0005edc8  push {r4,r5,r6,r7,lr}
+0005edca  mov r4,r0
+0005edcc  add r7,sp,#0xc
+0005edce  mov r5,r4
+0005edd0  ldr.w r6,[r5,#0x1c]!
+0005edd4  b 0x0005ede0  ; UNCONDITIONAL_JUMP -> 0005ede0
+0005edd6  ldr r0,[r6,#0x8]
+0005edd8  ldr r1,[r0,#0x0]
+0005edda  ldr r1,[r1,#0x14]
+0005eddc  blx r1
+0005edde  ldr r6,[r6,#0x0]
+0005ede0  cmp r6,r5
+0005ede2  bne 0x0005edd6  ; CONDITIONAL_JUMP -> 0005edd6
+0005ede4  mov r0,r4
+0005ede6  movs r1,#0x1
+0005ede8  movs r6,#0x1
+0005edea  bl 0x0005ec7c  ; UNCONDITIONAL_CALL -> 0005ec7c FUN_0005ec7c
+0005edee  ldr r0,[r4,#0x2c]
+0005edf0  cmp r0,#0x0
+0005edf2  it ne
+0005edf4  pop.ne {r4,r5,r6,r7,pc}
+0005edf6  mov r0,r5
+0005edf8  str r6,[r4,#0x2c]
+0005edfa  ldr r0,[r0,#0x0]
+0005edfc  cmp r0,r5
+0005edfe  beq 0x0005ee0c  ; CONDITIONAL_JUMP -> 0005ee0c
+0005ee00  ldr r1,[r0,#0x8]
+0005ee02  ldr r1,[r1,#0x58]
+0005ee04  cmp r1,#0x2
+0005ee06  beq 0x0005edfa  ; CONDITIONAL_JUMP -> 0005edfa
+0005ee08  movs r0,#0x2
+0005ee0a  str r0,[r4,#0x2c]
+0005ee0c  pop {r4,r5,r6,r7,pc}
+
+## 0005ed54 -> FUN_0005ed54
+0005ed54  push {r4,r5,r6,r7,lr}
+0005ed56  add r7,sp,#0xc
+0005ed58  push {r8,r10,r11}
+0005ed5c  sub sp,#0x4
+0005ed5e  mov r5,r0
+0005ed60  movs r0,#0x0
+0005ed62  str r0,[r5,#0x2c]
+0005ed64  mov r11,r1
+0005ed66  str r0,[r5,#0x24]
+0005ed68  ldr.w r10,[r11,#0x0]
+0005ed6c  cmp r10,r11
+0005ed6e  beq 0x0005edb2  ; CONDITIONAL_JUMP -> 0005edb2
+0005ed70  add.w r6,r5,#0x1c
+0005ed74  add.w r8,r5,#0x4
+0005ed78  add.w r1,r10,#0x8
+0005ed7c  mov r0,r8
+0005ed7e  bl 0x0005f510  ; UNCONDITIONAL_CALL -> 0005f510 FUN_0005f510
+0005ed82  ldr r4,[r0,#0x0]
+0005ed84  str r4,[sp,#0x0]  ; WRITE -> Stack[-0x24]
+0005ed86  cbz r4,0x0005edaa  ; CONDITIONAL_JUMP -> 0005edaa
+0005ed88  ldr r0,[r4,#0x0]
+0005ed8a  ldr r1,[r0,#0x8]
+0005ed8c  mov r0,r4
+0005ed8e  blx r1
+0005ed90  ldr r0,[r4,#0x0]
+0005ed92  ldr r1,[r0,#0x2c]
+0005ed94  mov r0,r4
+0005ed96  blx r1
+0005ed98  cmp r0,#0x5
+0005ed9a  itt eq
+0005ed9c  ldr.eq r0,[r4,#0x64]
+0005ed9e  str.eq r0,[r5,#0x24]
+0005eda0  mov r0,r6
+0005eda2  mov r1,r6
+0005eda4  mov r2,sp
+0005eda6  bl 0x0005f630  ; UNCONDITIONAL_CALL -> 0005f630 FUN_0005f630
+0005edaa  ldr.w r10,[r10,#0x0]
+0005edae  cmp r10,r11
+0005edb0  bne 0x0005ed78  ; CONDITIONAL_JUMP -> 0005ed78
+0005edb2  add sp,#0x4
+0005edb4  pop.w {r8,r10,r11}
+0005edb8  pop {r4,r5,r6,r7,pc}
+
+## 0005ecf4 -> FUN_0005ecf4
+0005ecf4  push {r4,r5,r7,lr}
+0005ecf6  mov r4,r0
+0005ecf8  add r7,sp,#0x8
+0005ecfa  ldr.w r5,[r4,#0x1c]!
+0005ecfe  b 0x0005ed02  ; UNCONDITIONAL_JUMP -> 0005ed02
+0005ed00  ldr r5,[r5,#0x0]
+0005ed02  cmp r5,r4
+
+## 0005ec34 -> FUN_0005ec34
+0005ec34  push {r4,r5,r6,r7,lr}
+0005ec36  add r7,sp,#0xc
+0005ec38  push.w r8
+0005ec3c  mov r8,r0
+0005ec3e  mov r6,r8
+0005ec40  ldr.w r4,[r6,#0x1c]!
+0005ec44  cmp r4,r6
+0005ec46  beq 0x0005ec76  ; CONDITIONAL_JUMP -> 0005ec76
+0005ec48  vmov d0,r1,r1
+0005ec4c  movs r0,#0x0
+0005ec4e  mov r1,r4
+0005ec50  ldr r1,[r1,#0x0]
+0005ec52  subs r0,#0x1
+0005ec54  cmp r1,r6
+0005ec56  bne 0x0005ec50  ; CONDITIONAL_JUMP -> 0005ec50
+0005ec58  cbz r0,0x0005ec76  ; CONDITIONAL_JUMP -> 0005ec76
+0005ec5a  vmov r5,s0
+0005ec5e  ldr r0,[r4,#0x8]
+0005ec60  ldr r1,[r0,#0x0]
+0005ec62  ldr r2,[r1,#0x28]
+0005ec64  mov r1,r5
+0005ec66  blx r2
+0005ec68  ldr r4,[r4,#0x0]
+0005ec6a  cmp r4,r6
+0005ec6c  bne 0x0005ec5e  ; CONDITIONAL_JUMP -> 0005ec5e
+0005ec6e  mov r0,r8
+0005ec70  movs r1,#0x0
+0005ec72  bl 0x0005ec7c  ; UNCONDITIONAL_CALL -> 0005ec7c FUN_0005ec7c
+0005ec76  pop.w r8
+0005ec7a  pop {r4,r5,r6,r7,pc}
+

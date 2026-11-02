@@ -784,6 +784,31 @@ final class GameWorldTests: XCTestCase {
         XCTAssertNil(rig.world.challenge)
         XCTAssertTrue(rig.world.drainChallengeEvents().isEmpty)
     }
+
+    func testChallengeSettlementForwarderPreservesAccumulatedRoundResults() {
+        let rig = Rig()
+        rig.world.configureChallenge(ChallengeModeRuntime(
+            tier: ChallengeTierDefinition(),
+            challenge: ChallengeDefinition(name: "first", timeLimit: 1),
+            conditionDefinitions: []))
+        var state = runnableState()
+        var entities: any EntityStore = GenerationOrderStore()
+        rig.world.tick(dt: 1, state: &state, world: &entities, services: rig.services)
+        _ = rig.world.drainChallengeEvents()
+        XCTAssertEqual(rig.world.challenge?.roundResults, [.pass])
+
+        rig.world.updateChallengeSettlement(
+            controllerState: 7,
+            substate: 2,
+            nextChallenge: ChallengeDefinition(name: "second", timeLimit: 2),
+            nextSelectedFruitName: "apple")
+
+        XCTAssertEqual(rig.world.challenge?.challenge.name, "second")
+        XCTAssertEqual(rig.world.challenge?.selectedFruitName, "apple")
+        XCTAssertEqual(rig.world.challenge?.roundResults, [.pass])
+        XCTAssertEqual(rig.world.challenge?.phase, .running)
+        XCTAssertTrue(rig.world.drainChallengeEvents().contains(.nextRound))
+    }
 }
 
 // ============================================================================

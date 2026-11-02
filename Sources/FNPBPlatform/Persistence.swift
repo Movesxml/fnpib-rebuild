@@ -163,6 +163,28 @@ public struct ChallengeSessionPersistent: Codable, Equatable, Sendable {
         challenges = try container.decodeIfPresent([ChallengeRecord].self, forKey: .challenges) ?? []
     }
 
+    /// 记录一个已完成回合。FUN_00028b20/FUN_0002a878 的字段链表明：
+    /// `index` 是 tier 索引，`challengeIndex` 是该 tier 计划中的回合槽位，
+    /// `name` 是挑战名称；原版以挑战名称定位记录，因此同名记录更新而非追加。
+    public mutating func recordRound(
+        challengeName: String,
+        tierIndex: Int32,
+        roundIndex: Int,
+        outcome: ChallengeOutcome
+    ) {
+        guard outcome != .pending, roundIndex >= 0, roundIndex <= Int(Int32.max) else { return }
+        let record = ChallengeRecord(
+            name: challengeName,
+            index: tierIndex,
+            challengeIndex: Int32(roundIndex),
+            result: outcome.rawValue)
+        if let existing = challenges.firstIndex(where: { $0.name == challengeName }) {
+            challenges[existing] = record
+        } else {
+            challenges.append(record)
+        }
+    }
+
     /// FUN_000619d0：忽略越界记录，使用有效记录中的最高 tier；空新存档为 0。
     public func initialTierIndex(validTierCount: Int) -> Int32 {
         let valid = challenges.map(\.index).filter {

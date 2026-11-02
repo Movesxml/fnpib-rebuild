@@ -117,6 +117,14 @@ final class AppViewModel: FNPBUIViewModel {
         case .quitToMenu:
             quitToMenu()
 
+        case .nextChallengeRound:
+            host?.requestNextChallengeRound()
+            refreshSnapshot()
+
+        case .cleanupChallenge:
+            host?.requestChallengeCleanup()
+            refreshSnapshot()
+
         case .toggleSound:
             toggleSound()
 
@@ -232,6 +240,7 @@ final class AppViewModel: FNPBUIViewModel {
         next.lives = max(0, Int(Constants.MissPenalty.threshold) - Int(state.missedFruitCount))
         next.classicHearts = mode == .classic ? host.classicHearts : []
         next.combo = comboBanner(count: comboCount, windowTimer: state.comboWindowTimer)
+        next.challenge = mode == .challenge ? host.challengeHUD : nil
         next.pauseVisible = (phase == .paused)
         if phase == .results {
             next.result = result

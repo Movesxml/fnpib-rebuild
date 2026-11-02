@@ -1,0 +1,36 @@
+## 0038d5d0..0038d650
+0038d5d0  ldrh r3,[r0,#0x8]
+0038d5d2  vmov d16,r1,r1
+0038d5d6  ldr r0,[r0,#0x4]
+0038d5d8  sub.w r9,r3,#0x1
+0038d5dc  vmov d17,r9,r9
+0038d5e0  vcvt.f32.s32 d17,d17
+0038d5e4  vmul.f32 d16,d17,d16
+0038d5e8  vcvt.u32.f32 d0,d16
+0038d5ec  vmov r1,s0
+0038d5f0  adds r2,r1,#0x1
+0038d5f2  cmp r2,r3
+0038d5f4  bcs 0x0038d630  ; CONDITIONAL_JUMP -> 0038d630
+0038d5f6  ldrb r2,[r0,r2]
+0038d5f8  vmov d17,r1,r1
+0038d5fc  ldrb r0,[r0,r1]
+0038d5fe  vldr.32 s0,[pc,#0x4c]  ; READ -> 0038d64c
+0038d602  vmov d18,r2,r2
+0038d606  vmov d19,r0,r0
+0038d60a  vcvt.f32.u32 d18,d18
+0038d60e  vcvt.f32.u32 d20,d19
+0038d612  vcvt.f32.u32 d19,d17
+0038d616  vmul.f32 d18,d18,d0
+0038d61a  vmul.f32 d17,d20,d0
+0038d61e  vsub.f32 d16,d16,d19
+0038d622  vsub.f32 d18,d18,d17
+0038d626  vmul.f32 d16,d16,d18
+0038d62a  vadd.f32 d0,d17,d16
+0038d62e  b 0x0038d644  ; UNCONDITIONAL_JUMP -> 0038d644
+0038d630  ldrb.w r0,[r0,r9]
+0038d634  vldr.32 s0,[pc,#0x14]  ; READ -> 0038d64c
+0038d638  vmov d16,r0,r0
+0038d63c  vcvt.f32.u32 d16,d16
+0038d640  vmul.f32 d0,d16,d0
+0038d644  vmov r0,s0
+0038d648  bx lr

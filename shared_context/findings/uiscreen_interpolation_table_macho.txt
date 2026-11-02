@@ -1,0 +1,18 @@
+# 数据段常量读取
+
+- 程序: FruitNinjaPuss
+
+- `ptr:0x005b0074:0x0:u32`: 读取失败 Unable to read bytes at ram:005b0074
+
+- `ptr:0x005b0074:0x8:u32`: 读取失败 Unable to read bytes at ram:005b0074
+
+- `ptr:0x005b0074:0xc:u32`: 读取失败 Unable to read bytes at ram:005b0074
+
+- `ptr:0x005b0074:0x14:u32`: 读取失败 Unable to read bytes at ram:005b0074
+
+- `ptr:0x005b0074:0x1c:u32`: 读取失败 Unable to read bytes at ram:005b0074
+
+- `bytes:0x005b0074:0x9c`: 读取失败 Unable to read bytes at ram:005b0074
+
+- `0x0006c99a` +4B: 02 17 29 3e
+

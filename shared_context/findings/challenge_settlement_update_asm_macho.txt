@@ -1,0 +1,22 @@
+## 000686e8..00068745
+000686e8  push {r4,r5,r6,r7,lr}
+000686ea  add r7,sp,#0xc
+000686ec  push.w r8
+000686f0  sub sp,#0x30
+000686f2  movw r8,#0x940
+000686f6  mov r4,r0
+000686f8  movt r8,#0x47
+000686fc  vldr.32 s0,[pc,#0x1c4]  ; READ -> 000688c4
+00068700  add r8,pc
+00068702  mov r5,r1
+00068704  ldr.w r0,[r8,#0x0]  ; READ -> 004d9044
+00068708  ldr r0,[r0,#0x0]  ; READ -> 0068e100
+0006870a  str r0,[sp,#0x2c]  ; WRITE -> Stack[-0x1c]
+0006870c  vldr.32 s2,[r4,#0xb8]
+00068710  vadd.f32 d0,d1,d0
+00068714  vstr.32 s0,[r4,#0xb8]
+00068718  ldr.w r0,[r4,#0xac]
+0006871c  vmov d0,d0
+00068720  cmp r0,#0x6
+00068722  bhi.w 0x000688ac  ; CONDITIONAL_JUMP -> 000688ac
+00068726  tbb [pc,r0]  ; DATA -> 0006872a

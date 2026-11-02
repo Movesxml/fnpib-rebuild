@@ -1,0 +1,222 @@
+## 0005ec7c
+0005ec7c  push {r4,r5,r6,r7,lr}
+0005ec7e  mov r6,r0
+0005ec80  mov r5,r1
+0005ec82  ldr r0,[r6,#0x2c]
+0005ec84  add r7,sp,#0xc
+0005ec86  cmp r0,#0x0
+0005ec88  it ne
+0005ec8a  pop.ne {r4,r5,r6,r7,pc}
+0005ec8c  mov r0,r6
+0005ec8e  bl 0x0005ed18  ; UNCONDITIONAL_CALL -> 0005ed18
+0005ec92  mov r0,r6
+## 0005ed4c
+0005ed4c  bx lr
+0005ed50  bx lr
+0005ed54  push {r4,r5,r6,r7,lr}
+0005ed56  add r7,sp,#0xc
+0005ed58  push {r8,r10,r11}
+0005ed5c  sub sp,#0x4
+0005ed5e  mov r5,r0
+0005ed60  movs r0,#0x0
+0005ed62  str r0,[r5,#0x2c]
+## 0005ed50
+0005ed50  bx lr
+0005ed54  push {r4,r5,r6,r7,lr}
+0005ed56  add r7,sp,#0xc
+0005ed58  push {r8,r10,r11}
+0005ed5c  sub sp,#0x4
+0005ed5e  mov r5,r0
+0005ed60  movs r0,#0x0
+0005ed62  str r0,[r5,#0x2c]
+0005ed64  mov r11,r1
+0005ed66  str r0,[r5,#0x24]
+## 0005f5e4
+0005f5e4  pop {r4,r7,pc}
+0005f5e8  bx lr
+0005f5ec  push {r7,lr}
+0005f5ee  mov r7,sp
+0005f5f0  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f5f4  pop {r7,pc}
+0005f5f8  movs r0,#0x3
+0005f5fa  bx lr
+## 0005f5e8
+0005f5e8  bx lr
+0005f5ec  push {r7,lr}
+0005f5ee  mov r7,sp
+0005f5f0  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f5f4  pop {r7,pc}
+0005f5f8  movs r0,#0x3
+0005f5fa  bx lr
+0005f5fc  bx lr
+## 0005f5ec
+0005f5ec  push {r7,lr}
+0005f5ee  mov r7,sp
+0005f5f0  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f5f4  pop {r7,pc}
+0005f5f8  movs r0,#0x3
+0005f5fa  bx lr
+0005f5fc  bx lr
+0005f600  push {r7,lr}
+0005f602  mov r7,sp
+## 0005f5fc
+0005f5fc  bx lr
+0005f600  push {r7,lr}
+0005f602  mov r7,sp
+0005f604  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f608  pop {r7,pc}
+0005f60c  movs r0,#0x4
+0005f60e  bx lr
+0005f610  movs r0,#0x0
+0005f612  bx lr
+## 0005f80c
+0005f80c  bx lr
+0005f810  push {r7,lr}
+0005f812  mov r7,sp
+0005f814  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f818  pop {r7,pc}
+0005f81c  push {r7,lr}
+0005f81e  ldr r1,[r0,#0x0]
+0005f820  mov r7,sp
+0005f822  ldr r1,[r1,#0x48]
+## 0005f810
+0005f810  push {r7,lr}
+0005f812  mov r7,sp
+0005f814  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f818  pop {r7,pc}
+0005f81c  push {r7,lr}
+0005f81e  ldr r1,[r0,#0x0]
+0005f820  mov r7,sp
+0005f822  ldr r1,[r1,#0x48]
+0005f824  blx r1
+0005f826  pop {r7,pc}
+## 0005f81c
+0005f81c  push {r7,lr}
+0005f81e  ldr r1,[r0,#0x0]
+0005f820  mov r7,sp
+0005f822  ldr r1,[r1,#0x48]
+0005f824  blx r1
+0005f826  pop {r7,pc}
+0005f828  push {r7,lr}
+0005f82a  ldr r1,[r0,#0x0]
+0005f82c  mov r7,sp
+0005f82e  ldr r1,[r1,#0x48]
+0005f830  blx r1
+0005f832  pop {r7,pc}
+## 0005f828
+0005f828  push {r7,lr}
+0005f82a  ldr r1,[r0,#0x0]
+0005f82c  mov r7,sp
+0005f82e  ldr r1,[r1,#0x48]
+0005f830  blx r1
+0005f832  pop {r7,pc}
+0005f834  movs r0,#0x2
+0005f836  bx lr
+0005f838  movs r0,#0x1
+0005f83a  bx lr
+0005f83c  push {r7,lr}
+0005f83e  movw r1,#0x97fc
+## 0005f82c
+0005f82c  mov r7,sp
+0005f82e  ldr r1,[r1,#0x48]
+0005f830  blx r1
+0005f832  pop {r7,pc}
+0005f834  movs r0,#0x2
+0005f836  bx lr
+0005f838  movs r0,#0x1
+0005f83a  bx lr
+0005f83c  push {r7,lr}
+0005f83e  movw r1,#0x97fc
+0005f842  mov r7,sp
+## 0005f83c
+0005f83c  push {r7,lr}
+0005f83e  movw r1,#0x97fc
+0005f842  mov r7,sp
+0005f844  movt r1,#0x47
+0005f848  add r1,pc
+0005f84a  ldr r2,[r1,#0x0]  ; READ -> 004d9048  ; PARAM -> 005f8da8
+0005f84c  ldr r1,[r0,#0x50]
+0005f84e  ldr r0,[r2,#0x5c]  ; READ -> 005f8e04
+0005f850  bl 0x00027508  ; UNCONDITIONAL_CALL -> 00027508
+## 0005f858
+0005f858  bx lr
+0005f85c  push {r7,lr}
+0005f85e  mov r7,sp
+0005f860  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f864  pop {r7,pc}
+0005f868  push {r7,lr}
+0005f86a  ldr r1,[r0,#0x0]
+0005f86c  mov r7,sp
+0005f86e  ldr r1,[r1,#0x48]
+## 0005f85c
+0005f85c  push {r7,lr}
+0005f85e  mov r7,sp
+0005f860  blx 0x00415914  ; UNCONDITIONAL_CALL -> 00415914
+0005f864  pop {r7,pc}
+0005f868  push {r7,lr}
+0005f86a  ldr r1,[r0,#0x0]
+0005f86c  mov r7,sp
+0005f86e  ldr r1,[r1,#0x48]
+0005f870  blx r1
+0005f872  pop {r7,pc}
+## 0005f868
+0005f868  push {r7,lr}
+0005f86a  ldr r1,[r0,#0x0]
+0005f86c  mov r7,sp
+0005f86e  ldr r1,[r1,#0x48]
+0005f870  blx r1
+0005f872  pop {r7,pc}
+0005f874  push {r7,lr}
+0005f876  ldr r1,[r0,#0x0]
+0005f878  mov r7,sp
+0005f87a  ldr r1,[r1,#0x48]
+0005f87c  blx r1
+0005f87e  pop {r7,pc}
+## 0005f874
+0005f874  push {r7,lr}
+0005f876  ldr r1,[r0,#0x0]
+0005f878  mov r7,sp
+0005f87a  ldr r1,[r1,#0x48]
+0005f87c  blx r1
+0005f87e  pop {r7,pc}
+0005f880  movs r0,#0x1
+0005f882  bx lr
+0005f884  movs r0,#0x1
+0005f886  bx lr
+0005f888  push {r7,lr}
+0005f88a  movs r0,#0x0
+## 0005f880
+0005f880  movs r0,#0x1
+0005f882  bx lr
+0005f884  movs r0,#0x1
+0005f886  bx lr
+0005f888  push {r7,lr}
+0005f88a  movs r0,#0x0
+0005f88c  mov r7,sp
+0005f88e  bl 0x0001cd94  ; UNCONDITIONAL_CALL -> 0001cd94
+0005f892  pop {r7,pc}
+0005f894  push {r4,r7,lr}
+0005f896  add r7,sp,#0x4
+## 0005f884
+0005f884  movs r0,#0x1
+0005f886  bx lr
+0005f888  push {r7,lr}
+0005f88a  movs r0,#0x0
+0005f88c  mov r7,sp
+0005f88e  bl 0x0001cd94  ; UNCONDITIONAL_CALL -> 0001cd94
+0005f892  pop {r7,pc}
+0005f894  push {r4,r7,lr}
+0005f896  add r7,sp,#0x4
+0005f898  mov r4,r0
+0005f89a  bl 0x0005f8a4  ; UNCONDITIONAL_CALL -> 0005f8a4
+## 0005f888
+0005f888  push {r7,lr}
+0005f88a  movs r0,#0x0
+0005f88c  mov r7,sp
+0005f88e  bl 0x0001cd94  ; UNCONDITIONAL_CALL -> 0001cd94
+0005f892  pop {r7,pc}
+0005f894  push {r4,r7,lr}
+0005f896  add r7,sp,#0x4
+0005f898  mov r4,r0
+0005f89a  bl 0x0005f8a4  ; UNCONDITIONAL_CALL -> 0005f8a4
+0005f89e  mov r0,r4

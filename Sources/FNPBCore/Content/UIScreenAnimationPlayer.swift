@@ -29,6 +29,9 @@ public struct UIScreenAnimationContent: Codable, Equatable, Sendable {
         public var interpolation: Int
         public var values: [Float]
         public var events: [Event]
+        /// String payload used only by the resource's non-numeric `comment` track.
+        /// Optional keeps existing numeric-only JSON and constructors source-compatible.
+        public var comment: String?
     }
 
     public struct Event: Codable, Equatable, Sendable {
@@ -53,12 +56,12 @@ public enum UIScreenAnimationError: Error, Equatable, Sendable {
     case invalidDelta(Float)
 }
 
-/// Verified functors behind FUN_003e86e8. Only modes used by the original
-/// Challenge resource are reconstructed; other modes remain explicit errors.
+/// Verified functors behind FUN_003e86e8. Only modes used by the reconstructed
+/// Challenge screens are implemented; other modes remain explicit errors.
 enum UIScreenInterpolation {
     static func isSupported(mode: Int) -> Bool {
         switch mode {
-        case 0, 2, 3, 5, 7: return true
+        case 0, 1, 2, 3, 5, 7: return true
         default: return false
         }
     }
@@ -67,6 +70,10 @@ enum UIScreenInterpolation {
         switch mode {
         case 0:
             return x
+        case 1:
+            // FUN_003e7dc4: Float input and π constant, double sin, then Float output.
+            let phase = (x + 1.5) * Float(bitPattern: 0x4049_0fdb)
+            return Float((sin(Double(phase)) + 1) * 0.5)
         case 2:
             // FUN_003e7e0c: exact Float base 0x402df854, with the original
             // multiplication/addition order preserved.
@@ -370,7 +377,7 @@ public struct UIScreenAnimationPlayer: Sendable {
 
     private static func expectedValueCount(for trackName: String) -> Int? {
         switch trackName {
-        case "_Events_": return 0
+        case "_Events_", "comment": return 0
         case "enabled", "movescale", "layer": return 1
         case "position", "scale", "rotation": return 3
         case "colour", "insideColour", "outsideColour": return 4
@@ -424,8 +431,16 @@ public struct UIScreenAnimationPlayer: Sendable {
                                 animation: animation.name,
                                 reason: "invalid value count in \(track.name)")
                         }
+                        guard (track.name == "comment") == (keyframe.comment != nil) else {
+                            throw UIScreenAnimationError.invalidTimeline(
+                                component: component.name,
+                                animation: animation.name,
+                                reason: "invalid comment payload in \(track.name)")
+                        }
                         for event in keyframe.events {
-                            guard event.command == "PlaySound", event.arguments.count == 1 else {
+                            let validEvent = (event.command == "PlaySound" && event.arguments.count == 1)
+                                || (event.command == "PlayAnimation" && event.arguments.count == 2)
+                            guard validEvent else {
                                 throw UIScreenAnimationError.invalidTimeline(
                                     component: component.name,
                                     animation: animation.name,
@@ -434,7 +449,7 @@ public struct UIScreenAnimationPlayer: Sendable {
                         }
                         // FUN_003e5554 uses each keyframe's outgoing interpolation.
                         // Validate the first key too: it controls the first segment.
-                        if track.name != "enabled", track.name != "_Events_",
+                        if track.name != "enabled", track.name != "_Events_", track.name != "comment",
                            !UIScreenInterpolation.isSupported(mode: keyframe.interpolation) {
                             throw UIScreenAnimationError.unsupportedInterpolation(
                                 component: component.name,
