@@ -100,6 +100,18 @@ struct ContentView: View {
                 RenderAnchorView()
             }
 
+            // 真实地图组件在游戏渲染层之上保序绘制；透明层不接收触摸。
+            if let map = vm.snapshot.challenge?.map,
+               let renderer = host.renderDriver,
+               let adapter = host.challengeMapQuadAdapter {
+                ChallengeMapTextureOverlay(
+                    metalContext: renderer.metalContext,
+                    adapter: adapter,
+                    components: map.components)
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+            }
+
             // 触摸层仅在真正游玩时挂载：paused 下若仍接收触摸，
             // began 会写入 GameState 的触摸输入状态，恢复后污染切割逻辑。
             if vm.snapshot.phase == .playing {
@@ -179,6 +191,7 @@ final class GameHost: ObservableObject {
     private(set) var contentLoadError: String?
 
     // MARK: 挑战回合装配与发售版 UISF 结算
+    private(set) var challengeMapQuadAdapter: ChallengeMapQuadAdapter?
     private var challengeAssembler: ChallengeRoundAssembler?
     private(set) var currentChallengeRound: ChallengeRound?
     private(set) var challengeConfigurationError: String?
@@ -376,6 +389,10 @@ final class GameHost: ObservableObject {
 
         // T-024：回填渲染数据源（放最后：此时 self 的全部存储属性已初始化）。
         renderer?.host = self
+        if let renderer {
+            challengeMapQuadAdapter = ChallengeMapQuadAdapter(
+                device: renderer.metalContext.device)
+        }
         if let resolvedError {
             Self.contentLogger.error("原始内容加载失败：\(resolvedError, privacy: .public)")
         }

@@ -12,7 +12,7 @@ public enum OrderedQuadPassError: Error, Equatable {
 public final class OrderedQuadPass {
     private let pipelineState: MTLRenderPipelineState
 
-    public static let vertexStride = MemoryLayout<OrderedTextureVertex>.stride
+    nonisolated public static let vertexStride = MemoryLayout<OrderedTextureVertex>.stride
 
     public init(device: MTLDevice, shaderLibrary: MTLLibrary,
                 colorPixelFormat: MTLPixelFormat) throws {
