@@ -24,15 +24,22 @@
 - width/height `83.0`
 - originFromCenter 未写入，因此使用构造默认值 false，effectiveOrigin 仍为 `[83.5,0.0,0.0]`。
 
-## 正交投影与根视口：已证实和未证实边界
+## 正交投影与根视口
 
 - `FUN_003f032c` 生成设备像素正交投影：x 映射为 `2*x/deviceWidth-1`，y 映射为 `1-2*y/deviceHeight`，即左上原点、y 向下。
-- `FUN_003cd778` 的 scaleToViewportMode 分支包含固定 `[1,1]`、两轴比值、统一最小比值及其他轴向模式。构造注册的默认字符串为 `Scale`，但枚举映射和设备设计尺寸的运行时写入链尚未全部闭合。
-- `FUN_003f08a0` 分别计算两个设计尺寸/设备尺寸比值；`FUN_003f08fc` 取较小值。`FUN_003ed7d0` 还将该较小值封顶为 4 后写入另一渲染器对象，不能把这一步误当成所有 UIScreen 根矩阵都固定封顶。
-- 在这些运行时值闭合前，核心布局投影只输出 UISF 逻辑坐标，不宣称现有 SwiftUI `proxy.width/480` 就是官方公式，也不实现特殊屏幕拉伸。
+- `FUN_003ecb20` 返回单例对象 `DAT_005b0738`。设备尺寸位于该对象的 `+0x1c4/+0x1c8`，设计尺寸位于 `+0x33c/+0x340`；后两个偏移纠正了早期按错误地址基准得出的记录。
+- `FUN_003ed85c` 从 `+0x33c/+0x340` 读取设计宽高。发售资源 `xml/FruitNinjaPuss_SkuLayout.xml` 的 `~iPhone` skuDefinition 明确写入 viewportWidth `480`、viewportHeight `320`；`FUN_0001dde4` 以同一 `~iPhone` 标识加载该配置。
+- `FUN_003f08a0` 输出 `[deviceWidth/designWidth, deviceHeight/designHeight]`；`FUN_003f08fc` 返回两轴比值中的较小值。因此 `~iPhone` 的基准公式是 `[deviceWidth/480, deviceHeight/320]`，不是倒数。
+- `FUN_003ec940` 按索引初始化字符串表：0 `None`、1 `KeepAspect`、2 `ScaleX`、3 `ScaleY`、4 `Scale`。`FUN_003ec8bc` 用同一张表把属性文本转成枚举。构造默认 `Scale` 因而是模式 4。
+- `FUN_003cd778` 的原始汇编闭合全部分支：0 为 `[1,1]`；1 两轴均为 `min(xRatio,yRatio)`；2 两轴均为 xRatio；3 两轴均为 yRatio；4 为 `[xRatio,yRatio]`；default 也为 `[xRatio,yRatio]`。模式 2 和 3 的统一轴向不能从反编译栈变量猜测，已分别由 `003cd7d0` 和 `003cd7e2` 的读取位置确认。
+- 生产资源 `inGameChallengeMapScreen.uiscreen` 根组件没有覆盖 scaleToViewportMode，所以走默认模式 4，根缩放为 `[deviceWidth/480,deviceHeight/320]`。这不是等比缩放，也不带居中留边。
+- `FUN_003ed7d0` 将统一最小比值封顶为 4 后写入另一渲染器对象；这一步不属于上述 UIScreen 根矩阵，不得给挑战地图根缩放额外封顶。
+- nine-patch、字体排版和纹理采样仍不在本 finding 的闭合范围内，不得以根视口公式已闭合为由宣称这些行为完成。
 
 ## 证据文件（本地工作记录，不作为运行时资源）
 
+- `assets_raw/xml/FruitNinjaPuss_SkuLayout.xml`（bxml 原始资源）
+- `build/ContentJSON/FruitNinjaPuss_SkuLayout.json`（结构解码副本）
 - `build/uiscreen_layout_registration_macho.md`
 - `build/uiscreen_component_methods_macho.md`
 - `build/uiscreen_transform_exact_macho.md`
@@ -43,3 +50,7 @@
 - `build/uiscreen_viewport_root_exact_macho.md`
 - `build/uiscreen_viewport_scale_exact_macho.md`
 - `build/uiscreen_viewport_device_scale_macho.md`
+- `build/viewport_root_assembly_macho.txt`
+- `build/viewport_scale_enum_table_macho.md`
+- `build/viewport_design_accessors_macho.md`
+- `build/viewport_design_caller_macho.md`

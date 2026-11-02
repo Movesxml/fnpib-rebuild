@@ -215,6 +215,161 @@ final class UIScreenLayoutProjectionTests: XCTestCase {
         }
     }
 
+    func testRootViewportScaleModesUseVerifiedRatiosAndUnknownFallsBackToScale() throws {
+        let cases: [(UIScreenViewportScaleMode, UIScreenPoint3)] = [
+            (.none, UIScreenPoint3(x: 1, y: 1, z: 1)),
+            (.keepAspect, UIScreenPoint3(x: 1.5, y: 1.5, z: 1)),
+            (.scaleX, UIScreenPoint3(x: 2, y: 2, z: 1)),
+            (.scaleY, UIScreenPoint3(x: 1.5, y: 1.5, z: 1)),
+            (.scale, UIScreenPoint3(x: 2, y: 1.5, z: 1)),
+        ]
+
+        for (mode, expected) in cases {
+            let viewport = try UIScreenRootViewport(
+                deviceWidth: 960, deviceHeight: 480, scaleToViewportMode: mode)
+            assertPoint(viewport.rootScale, expected)
+            XCTAssertEqual(viewport.xRatio, 2)
+            XCTAssertEqual(viewport.yRatio, 1.5)
+        }
+
+        let unknown = UIScreenViewportScaleMode(rawValue: 99)
+        let unknownViewport = try UIScreenRootViewport(
+            deviceWidth: 960, deviceHeight: 480, scaleToViewportMode: unknown)
+        assertPoint(unknownViewport.rootScale, UIScreenPoint3(x: 2, y: 1.5, z: 1))
+        XCTAssertFalse(unknown.isVerified)
+        XCTAssertEqual(UIScreenViewportScaleMode.verifiedModes.map(\.rawValue), [0, 1, 2, 3, 4])
+    }
+
+    func testRootViewportRejectsNonFiniteAndNonPositiveDimensions() throws {
+        let invalidDeviceCases: [(String, Float, Float)] = [
+            ("deviceWidth", .nan, 320),
+            ("deviceWidth", .infinity, 320),
+            ("deviceWidth", 0, 320),
+            ("deviceWidth", -1, 320),
+            ("deviceHeight", 480, .nan),
+            ("deviceHeight", 480, .infinity),
+            ("deviceHeight", 480, 0),
+            ("deviceHeight", 480, -1),
+        ]
+
+        for (expectedName, width, height) in invalidDeviceCases {
+            XCTAssertThrowsError(try UIScreenRootViewport(
+                deviceWidth: width, deviceHeight: height)) { error in
+                guard case let UIScreenRootViewportError.invalidDimension(name, _) = error else {
+                    XCTFail("expected invalidDimension, got \(error)")
+                    return
+                }
+                XCTAssertEqual(name, expectedName)
+            }
+        }
+
+        let invalidDesignCases: [(String, Float, Float)] = [
+            ("designWidth", .nan, 320),
+            ("designWidth", 0, 320),
+            ("designHeight", 480, .infinity),
+            ("designHeight", 480, -320),
+        ]
+
+        for (expectedName, designWidth, designHeight) in invalidDesignCases {
+            XCTAssertThrowsError(try UIScreenRootViewport(
+                deviceWidth: 480, deviceHeight: 320,
+                designWidth: designWidth, designHeight: designHeight)) { error in
+                guard case let UIScreenRootViewportError.invalidDimension(name, _) = error else {
+                    XCTFail("expected invalidDimension, got \(error)")
+                    return
+                }
+                XCTAssertEqual(name, expectedName)
+            }
+        }
+    }
+
+    func testDeviceProjectionAppliesRootScaleOnceAndKeepsLocalMatricesLogical() throws {
+        let viewport = try UIScreenRootViewport(deviceWidth: 960, deviceHeight: 480)
+        XCTAssertEqual(viewport.scaleToViewportMode, .scale)
+        assertPoint(viewport.rootScale, UIScreenPoint3(x: 2, y: 1.5, z: 1))
+
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "static", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(
+                    position: [10, 20, 0], scale: [2, 3, 1], origin: [1, 2, 0],
+                    rotation: [0, 0, 0], width: 4, height: 6, originFromCenter: false)),
+            UIScreenAnimationContent.Component(
+                name: "child", animations: [], parentIndex: 0,
+                layout: UIScreenAnimationContent.Component.Layout(position: [5, 10, 0])),
+        ]))
+
+        let logical = try UIScreenLayoutProjection.project(player)
+        let device = try UIScreenLayoutProjection.projectDevicePixels(player, viewport: viewport)
+        XCTAssertEqual(device.components.count, logical.components.count)
+
+        let staticLogical = logical.components[0]
+        let staticDevice = device.components[0]
+        XCTAssertEqual(staticDevice.position, staticLogical.position)
+        XCTAssertEqual(staticDevice.localMatrix, staticLogical.localMatrix)
+        XCTAssertEqual(staticDevice.worldMatrix, viewport.rootScaleMatrix * staticLogical.worldMatrix)
+        assertPoint(staticDevice.worldOrigin, UIScreenPoint3(x: 16, y: 21, z: 0))
+        assertPoint(staticDevice.worldCorners.minimumXMinimumY, UIScreenPoint3(x: 16, y: 21, z: 0))
+        assertPoint(staticDevice.worldCorners.maximumXMinimumY, UIScreenPoint3(x: 32, y: 21, z: 0))
+        assertPoint(staticDevice.worldCorners.maximumXMaximumY, UIScreenPoint3(x: 32, y: 48, z: 0))
+        assertPoint(staticDevice.worldCorners.minimumXMaximumY, UIScreenPoint3(x: 16, y: 48, z: 0))
+
+        let childLogical = logical.components[1]
+        let childDevice = device.components[1]
+        XCTAssertEqual(childDevice.position, childLogical.position)
+        XCTAssertEqual(childDevice.localMatrix, childLogical.localMatrix)
+        XCTAssertEqual(childDevice.worldMatrix, viewport.rootScaleMatrix * childLogical.worldMatrix)
+        XCTAssertNotEqual(childDevice.worldMatrix,
+            viewport.rootScaleMatrix * viewport.rootScaleMatrix * childLogical.worldMatrix)
+    }
+
+    func testProductionChallengeMapDeviceProjectionUsesDefaultScaleAndCoversAll95Components() throws {
+        let player = try productionChallengeMapPlayer()
+        XCTAssertEqual(player.content.components.count, 95)
+        let viewport = try UIScreenRootViewport(deviceWidth: 960, deviceHeight: 480)
+        let logical = try UIScreenLayoutProjection.project(player)
+        let device = try UIScreenLayoutProjection.projectDevicePixels(player, viewport: viewport)
+        XCTAssertEqual(device.components.count, 95)
+        XCTAssertEqual(device.components.map(\.name), logical.components.map(\.name))
+
+        for (logicalComponent, deviceComponent) in zip(logical.components, device.components) {
+            XCTAssertEqual(deviceComponent.position, logicalComponent.position)
+            XCTAssertEqual(deviceComponent.localMatrix, logicalComponent.localMatrix)
+            XCTAssertEqual(deviceComponent.effectiveOrigin, logicalComponent.effectiveOrigin)
+            XCTAssertEqual(deviceComponent.worldMatrix,
+                           viewport.rootScaleMatrix * logicalComponent.worldMatrix)
+            assertPoint(deviceComponent.worldOrigin,
+                        scaled(logicalComponent.worldOrigin, by: viewport.rootScale),
+                        accuracy: 0.0001)
+            assertPoint(deviceComponent.worldCorners.minimumXMinimumY,
+                        scaled(logicalComponent.worldCorners.minimumXMinimumY, by: viewport.rootScale),
+                        accuracy: 0.0001)
+            assertPoint(deviceComponent.worldCorners.maximumXMinimumY,
+                        scaled(logicalComponent.worldCorners.maximumXMinimumY, by: viewport.rootScale),
+                        accuracy: 0.0001)
+            assertPoint(deviceComponent.worldCorners.maximumXMaximumY,
+                        scaled(logicalComponent.worldCorners.maximumXMaximumY, by: viewport.rootScale),
+                        accuracy: 0.0001)
+            assertPoint(deviceComponent.worldCorners.minimumXMaximumY,
+                        scaled(logicalComponent.worldCorners.minimumXMaximumY, by: viewport.rootScale),
+                        accuracy: 0.0001)
+        }
+
+        let slot = try XCTUnwrap(device.components.first {
+            $0.name == "challengeContainer.spinner.iconSlot1"
+        })
+        XCTAssertEqual(slot.position, UIScreenPoint3(x: 126, y: 42.5, z: 0))
+        XCTAssertEqual(slot.origin, UIScreenPoint3(x: 83.5, y: 0, z: 0))
+        XCTAssertEqual(slot.width, 83)
+        XCTAssertEqual(slot.height, 83)
+        XCTAssertFalse(slot.originFromCenter)
+        XCTAssertEqual(slot.effectiveOrigin, UIScreenPoint3(x: 83.5, y: 0, z: 0))
+    }
+
+    private func scaled(_ point: UIScreenPoint3, by scale: UIScreenPoint3) -> UIScreenPoint3 {
+        UIScreenPoint3(x: point.x * scale.x, y: point.y * scale.y, z: point.z * scale.z)
+    }
+
     private func productionChallengeMapPlayer() throws -> UIScreenAnimationPlayer {
         let data = try Data(contentsOf: repositoryRoot()
             .appendingPathComponent("Content/challengeMapAnimations.json"))
