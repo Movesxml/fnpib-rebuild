@@ -394,7 +394,7 @@ final class GameHost: ObservableObject {
             hudVisible: challengeVisibleTargets["inGameChallengeHud"] ?? true,
             timerVisible: challengeVisibleTargets["Timer"] ?? (runtime?.endsOnTimer == true),
             backgroundVisible: challengeBackgroundVisible,
-            resultRawValue: controller?.outcome.rawValue,
+            resultRawValue: controller.map { Int($0.outcome.rawValue) },
             resultVisible: controller?.normalResultVisible ?? false,
             resultFinished: controller?.isNormalResultFinished ?? false,
             canAdvance: challengeAssembler.map {
