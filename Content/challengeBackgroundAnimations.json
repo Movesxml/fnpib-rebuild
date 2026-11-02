@@ -7,7 +7,9 @@
   "components": [
     {
       "name": "",
-      "animations": []
+      "animations": [],
+      "parentIndex": -1,
+      "layout": {}
     },
     {
       "name": "backgroundControl",
@@ -120,7 +122,12 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "width": 480.0,
+        "height": 320.0
+      }
     },
     {
       "name": "panelLeft",
@@ -319,19 +326,66 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 240.0,
+        "height": 320.0,
+        "enabled": true,
+        "inputEnabled": false,
+        "layer": 1
+      }
     },
     {
       "name": "panelLeft.doorLeft",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/adventureprogress/doorLeft.tex",
+        "position": [
+          -16.0,
+          0.0,
+          0.0
+        ],
+        "width": 256.0,
+        "height": 320.0
+      }
     },
     {
       "name": "panelLeft.poster",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/menus/basicPoster.tex",
+        "position": [
+          4.5,
+          7.0,
+          0.0
+        ],
+        "width": 210.0,
+        "height": 310.0
+      }
     },
     {
       "name": "panelLeft.pauseTweak",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/adventureProgress/pauseTweak.tex",
+        "position": [
+          7.0,
+          281.5,
+          0.0
+        ],
+        "width": 34.0,
+        "height": 34.0,
+        "layer": 2
+      }
     },
     {
       "name": "panelRight",
@@ -557,19 +611,77 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          240.0,
+          0.0,
+          0.0
+        ],
+        "width": 240.0,
+        "height": 320.0,
+        "inputEnabled": false,
+        "layer": 1
+      }
     },
     {
       "name": "panelRight.doorRight",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "texture": "textures/adventureprogress/doorRight.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 256.0,
+        "height": 320.0
+      }
     },
     {
       "name": "panelRight.livesText",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "text": "FN_PUSS_LIVES",
+        "position": [
+          87.5,
+          224.0,
+          0.0
+        ],
+        "width": 84.0,
+        "height": 30.0,
+        "colour": [
+          255.0,
+          228.0,
+          176.0,
+          255.0
+        ],
+        "fontSize": 22.0
+      }
     },
     {
       "name": "panelRight.misscounters",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "position": [
+          9.5,
+          252.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 225.0,
+        "height": 67.0,
+        "enabled": true,
+        "layer": 4294967295
+      }
     },
     {
       "name": "panelRight.misscounters.cross1",
@@ -728,7 +840,30 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 9,
+      "layout": {
+        "texture": "textures/adventureProgress/resultsLife.tex",
+        "position": [
+          189.5,
+          34.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 64.0,
+        "height": 64.0,
+        "enabled": true,
+        "originFromCenter": true
+      }
     },
     {
       "name": "panelRight.misscounters.cross3",
@@ -887,7 +1022,30 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 9,
+      "layout": {
+        "texture": "textures/adventureProgress/resultsLife.tex",
+        "position": [
+          49.0,
+          34.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 64.0,
+        "height": 64.0,
+        "enabled": true,
+        "originFromCenter": true
+      }
     },
     {
       "name": "panelRight.misscounters.cross2",
@@ -1046,7 +1204,30 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 9,
+      "layout": {
+        "texture": "textures/adventureProgress/resultsLife.tex",
+        "position": [
+          119.5,
+          34.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 64.0,
+        "height": 64.0,
+        "enabled": true,
+        "originFromCenter": true
+      }
     }
   ]
 }

@@ -9,8 +9,82 @@ public struct UIScreenAnimationContent: Codable, Equatable, Sendable {
     }
 
     public struct Component: Codable, Equatable, Sendable {
+        public struct Layout: Codable, Equatable, Sendable {
+            public var texture: String?
+            public var text: String?
+            public var position: [Float]?
+            public var scale: [Float]?
+            public var origin: [Float]?
+            public var rotation: [Float]?
+            public var width: Float?
+            public var height: Float?
+            public var colour: [Float]?
+            public var enabled: Bool?
+            public var inputEnabled: Bool?
+            public var originFromCenter: Bool?
+            public var texCoordPos: [Float]?
+            public var texCoordSize: [Float]?
+            public var layer: Int?
+            public var fontName: String?
+            public var fontSize: Float?
+            public var alignment: String?
+            public var drawNinePatch: Bool?
+            public var allowStretchX: Bool?
+            public var allowStretchY: Bool?
+            public var maintainViewportWidth: Bool?
+            public var maintainViewportHeight: Bool?
+
+            public init(
+                texture: String? = nil, text: String? = nil,
+                position: [Float]? = nil, scale: [Float]? = nil,
+                origin: [Float]? = nil, rotation: [Float]? = nil,
+                width: Float? = nil, height: Float? = nil, colour: [Float]? = nil,
+                enabled: Bool? = nil, inputEnabled: Bool? = nil,
+                originFromCenter: Bool? = nil, texCoordPos: [Float]? = nil,
+                texCoordSize: [Float]? = nil, layer: Int? = nil,
+                fontName: String? = nil, fontSize: Float? = nil,
+                alignment: String? = nil, drawNinePatch: Bool? = nil,
+                allowStretchX: Bool? = nil, allowStretchY: Bool? = nil,
+                maintainViewportWidth: Bool? = nil, maintainViewportHeight: Bool? = nil
+            ) {
+                self.texture = texture
+                self.text = text
+                self.position = position
+                self.scale = scale
+                self.origin = origin
+                self.rotation = rotation
+                self.width = width
+                self.height = height
+                self.colour = colour
+                self.enabled = enabled
+                self.inputEnabled = inputEnabled
+                self.originFromCenter = originFromCenter
+                self.texCoordPos = texCoordPos
+                self.texCoordSize = texCoordSize
+                self.layer = layer
+                self.fontName = fontName
+                self.fontSize = fontSize
+                self.alignment = alignment
+                self.drawNinePatch = drawNinePatch
+                self.allowStretchX = allowStretchX
+                self.allowStretchY = allowStretchY
+                self.maintainViewportWidth = maintainViewportWidth
+                self.maintainViewportHeight = maintainViewportHeight
+            }
+        }
+
         public var name: String
         public var animations: [Animation]
+        public var parentIndex: Int?
+        public var layout: Layout?
+
+        public init(name: String, animations: [Animation],
+                    parentIndex: Int? = nil, layout: Layout? = nil) {
+            self.name = name
+            self.animations = animations
+            self.parentIndex = parentIndex
+            self.layout = layout
+        }
     }
 
     public struct Animation: Codable, Equatable, Sendable {
@@ -54,6 +128,8 @@ public enum UIScreenAnimationError: Error, Equatable, Sendable {
     case unknownAnimation(component: String, animation: String)
     case unknownTrack(component: String, animation: String, track: String)
     case invalidDelta(Float)
+    case invalidParentIndex(component: String, parentIndex: Int)
+    case invalidLayout(component: String, reason: String)
 }
 
 /// Verified functors behind FUN_003e86e8. Only modes used by the reconstructed
@@ -391,12 +467,57 @@ public struct UIScreenAnimationPlayer: Sendable {
         }
     }
 
+    private static func validateParentIndices(
+        _ components: [UIScreenAnimationContent.Component]) throws {
+        for (index, component) in components.enumerated() {
+            guard let parentIndex = component.parentIndex else { continue }
+            guard parentIndex >= -1, parentIndex < components.count, parentIndex != index,
+                  index != 0 || parentIndex == -1 else {
+                throw UIScreenAnimationError.invalidParentIndex(
+                    component: component.name, parentIndex: parentIndex)
+            }
+        }
+    }
+
+    private static func validateLayout(
+        _ layout: UIScreenAnimationContent.Component.Layout,
+        componentName: String) throws {
+        func requireVector(_ values: [Float]?, count: Int, name: String) throws {
+            guard let values else { return }
+            guard values.count == count, values.allSatisfy({ $0.isFinite }) else {
+                throw UIScreenAnimationError.invalidLayout(
+                    component: componentName,
+                    reason: "\(name) must have \(count) finite values")
+            }
+        }
+        try requireVector(layout.position, count: 3, name: "position")
+        try requireVector(layout.scale, count: 3, name: "scale")
+        try requireVector(layout.origin, count: 3, name: "origin")
+        try requireVector(layout.rotation, count: 3, name: "rotation")
+        try requireVector(layout.texCoordPos, count: 2, name: "texCoordPos")
+        try requireVector(layout.texCoordSize, count: 2, name: "texCoordSize")
+        try requireVector(layout.colour, count: 4, name: "colour")
+        for (name, value) in [("width", layout.width), ("height", layout.height),
+                              ("fontSize", layout.fontSize)] {
+            guard let value else { continue }
+            guard value.isFinite, value >= 0 else {
+                throw UIScreenAnimationError.invalidLayout(
+                    component: componentName,
+                    reason: "\(name) must be finite and non-negative")
+            }
+        }
+    }
+
     private static func validate(_ content: UIScreenAnimationContent) throws {
         guard content.formatVersion == 1 else {
             throw UIScreenAnimationError.unsupportedFormat(content.formatVersion)
         }
+        try validateParentIndices(content.components)
         var componentNames = Set<String>()
         for component in content.components {
+            if let layout = component.layout {
+                try validateLayout(layout, componentName: component.name)
+            }
             guard componentNames.insert(component.name).inserted else {
                 throw UIScreenAnimationError.duplicateComponent(component.name)
             }

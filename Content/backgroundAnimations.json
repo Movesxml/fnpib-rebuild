@@ -7,11 +7,23 @@
   "components": [
     {
       "name": "",
-      "animations": []
+      "animations": [],
+      "parentIndex": -1,
+      "layout": {
+        "inputEnabled": false,
+        "maintainViewportWidth": false,
+        "maintainViewportHeight": false
+      }
     },
     {
       "name": "shakeContainer",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "width": 480.0,
+        "height": 320.0,
+        "originFromCenter": false
+      }
     },
     {
       "name": "shakeContainer.backgroundHolder",
@@ -266,15 +278,58 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          360.0,
+          128.0,
+          0.0
+        ],
+        "scale": [
+          5.139999866485596,
+          5.139999866485596,
+          1.0
+        ],
+        "width": 125.0,
+        "height": 100.0,
+        "originFromCenter": true,
+        "allowStretchY": false
+      }
     },
     {
       "name": "shakeContainer.backgroundHolder.backgroundTexture1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/menu_background/sanRicardo.tex",
+        "position": [
+          0.10000000149011612,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.19999694824219,
+        "originFromCenter": true
+      }
     },
     {
       "name": "shakeContainer.backgroundHolder.backgroundTexture2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/menu_background/sanRicardo1.tex",
+        "origin": [
+          -50.0,
+          0.0,
+          0.0
+        ],
+        "originFromCenter": true
+      }
     }
   ]
 }

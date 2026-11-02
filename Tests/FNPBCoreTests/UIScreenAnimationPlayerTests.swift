@@ -215,6 +215,157 @@ final class UIScreenAnimationPlayerTests: XCTestCase {
         }
     }
 
+    func testLegacyJSONWithoutLayoutOrParentIndexStillDecodes() throws {
+        let json = """
+        {
+          "formatVersion": 1,
+          "source": {
+            "file": "legacy.uiscreen",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "components": [
+            {
+              "name": "",
+              "animations": []
+            }
+          ]
+        }
+        """
+        let player = try UIScreenAnimationPlayer(data: Data(json.utf8))
+        XCTAssertEqual(player.content.components.count, 1)
+        XCTAssertNil(player.content.components[0].parentIndex)
+        XCTAssertNil(player.content.components[0].layout)
+    }
+
+    func testParentIndexAndLayoutRoundTripExactly() throws {
+        let layout = UIScreenAnimationContent.Component.Layout(
+            texture: "textures/adventureprogress/iconSlot.tex",
+            text: "slot",
+            position: [126, 42.5, 0],
+            scale: [1, 1, 1],
+            origin: [83.5, 0, 0],
+            rotation: [0, 0, 0],
+            width: 83,
+            height: 83,
+            colour: [1, 0.5, 0.25, 1],
+            enabled: true,
+            inputEnabled: false,
+            originFromCenter: false,
+            texCoordPos: [0, 0],
+            texCoordSize: [1, 1],
+            layer: 2,
+            fontName: "Arial",
+            fontSize: 12.5,
+            alignment: "CenterCentre",
+            drawNinePatch: false,
+            allowStretchX: true,
+            allowStretchY: false,
+            maintainViewportWidth: true,
+            maintainViewportHeight: false)
+
+        let content = makeContent([
+            UIScreenAnimationContent.Component(
+                name: "",
+                animations: [],
+                parentIndex: -1,
+                layout: layout),
+            UIScreenAnimationContent.Component(
+                name: "child",
+                animations: [],
+                parentIndex: 0,
+                layout: nil),
+        ])
+
+        let encoded = try JSONEncoder().encode(content)
+        let decoded = try JSONDecoder().decode(UIScreenAnimationContent.self, from: encoded)
+        XCTAssertEqual(decoded, content)
+
+        let player = try UIScreenAnimationPlayer(data: encoded)
+        XCTAssertEqual(player.content.components[0].parentIndex, -1)
+        XCTAssertEqual(player.content.components[0].layout, layout)
+        XCTAssertEqual(player.content.components[1].parentIndex, 0)
+        XCTAssertNil(player.content.components[1].layout)
+    }
+
+    func testInvalidLayoutDimensionsAreRejected() throws {
+        let badPosition = UIScreenAnimationContent.Component.Layout(position: [1, 2])
+        XCTAssertThrowsError(try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "",
+                animations: [],
+                parentIndex: -1,
+                layout: badPosition),
+        ]))) { error in
+            XCTAssertEqual(
+                error as? UIScreenAnimationError,
+                .invalidLayout(
+                    component: "",
+                    reason: "position must have 3 finite values"))
+        }
+
+        let badColour = UIScreenAnimationContent.Component.Layout(colour: [1, 0, 0])
+        XCTAssertThrowsError(try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "",
+                animations: [],
+                parentIndex: -1,
+                layout: badColour),
+        ]))) { error in
+            XCTAssertEqual(
+                error as? UIScreenAnimationError,
+                .invalidLayout(
+                    component: "",
+                    reason: "colour must have 4 finite values"))
+        }
+    }
+
+    func testInvalidParentIndexIsRejected() throws {
+        let outOfRange = makeContent([
+            UIScreenAnimationContent.Component(name: "", animations: [], parentIndex: -1),
+            UIScreenAnimationContent.Component(name: "child", animations: [], parentIndex: 2),
+        ])
+        XCTAssertThrowsError(try UIScreenAnimationPlayer(content: outOfRange)) { error in
+            XCTAssertEqual(
+                error as? UIScreenAnimationError,
+                .invalidParentIndex(component: "child", parentIndex: 2))
+        }
+
+        let selfParent = makeContent([
+            UIScreenAnimationContent.Component(name: "", animations: [], parentIndex: -1),
+            UIScreenAnimationContent.Component(name: "child", animations: [], parentIndex: 1),
+        ])
+        XCTAssertThrowsError(try UIScreenAnimationPlayer(content: selfParent)) { error in
+            XCTAssertEqual(
+                error as? UIScreenAnimationError,
+                .invalidParentIndex(component: "child", parentIndex: 1))
+        }
+    }
+
+    func testNegativeLayoutSizeIsRejected() throws {
+        let layout = UIScreenAnimationContent.Component.Layout(width: -1)
+        let content = makeContent([
+            UIScreenAnimationContent.Component(
+                name: "",
+                animations: [],
+                parentIndex: -1,
+                layout: layout),
+        ])
+        XCTAssertThrowsError(try UIScreenAnimationPlayer(content: content)) { error in
+            XCTAssertEqual(
+                error as? UIScreenAnimationError,
+                .invalidLayout(
+                    component: "",
+                    reason: "width must be finite and non-negative"))
+        }
+    }
+
+    func testComponentMemberwiseInitializationRemainsSourceCompatible() {
+        let component = UIScreenAnimationContent.Component(name: "legacy", animations: [])
+        XCTAssertEqual(component.name, "legacy")
+        XCTAssertNil(component.parentIndex)
+        XCTAssertNil(component.layout)
+    }
+
     private func makeComponent(_ name: String,
                                animations: [UIScreenAnimationContent.Animation])
         -> UIScreenAnimationContent.Component {

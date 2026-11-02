@@ -1,3 +1,11 @@
+"""Regenerate verified challenge artwork from the release resources.
+
+PVRTC inputs remain read-only. RGBA32 products are copied byte-for-byte
+from the independently verified asset-pipeline output, never recompressed.
+
+Only format 12 and format 14 payloads verified as PVRTC4 are handled here.
+"""
+
 from pathlib import Path
 import sys
 
@@ -7,15 +15,104 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools/AssetPipeline/vendor"))
 import texture2ddecoder  # noqa: E402
 
-source = ROOT / "assets_raw/textures/adventureProgress/challengeAtlas.tex"
-data = source.read_bytes()
-assert len(data) == 12 + 1024 * 1024 // 2
-assert data[:12] == bytes.fromhex("0a 0a 0c 00 00 04 00 04 ff ff ff ff")
-rgba = texture2ddecoder.decode_pvrtc(data[12:], 1024, 1024, True)
-assert len(rgba) == 1024 * 1024 * 4
-# 12-byte legacy header, format_id=12, 1024x1024, 4 bpp PVRTC payload.
-# Decoding produces the release question/fruit/star atlas; the old INDEX4 preview
-# was compressed bytes visualised as greyscale and must not be shipped.
-output = ROOT / "Content/challengeAtlas.png"
-Image.frombytes("RGBA", (1024, 1024), rgba).save(output)
-print(output)
+RAW_DIR = ROOT / "assets_raw/textures"
+PNG_DIR = ROOT / "assets_png/textures"
+OUT_DIR = ROOT / "Content"
+HEADER_LEN = 12
+
+PVRTC_SPECS = (
+    {"source": "adventureProgress/challengeAtlas.tex", "output": "challengeAtlas.png",
+     "size": 1024, "format_id": 12,
+     "header": bytes.fromhex("0a 0a 0c 00 00 04 00 04 ff ff ff ff")},
+    {"source": "adventureProgress/cross.tex", "output": "challengeCross.png",
+     "size": 128, "format_id": 12,
+     "header": bytes.fromhex("07 07 0c 00 80 00 80 00 ff ff ff ff")},
+    {"source": "adventureProgress/tick.tex", "output": "challengeTick.png",
+     "size": 128, "format_id": 12,
+     "header": bytes.fromhex("07 07 0c 00 80 00 80 00 ff ff ff ff")},
+    {"source": "adventureProgress/locations.tex", "output": "challengeLocations.png",
+     "size": 512, "format_id": 12,
+     "header": bytes.fromhex("09 09 0c 00 00 02 00 02 ff ff ff ff")},
+    {"source": "adventureProgress/flipper.tex", "output": "challengeFlipper.png",
+     "size": 256, "format_id": 12,
+     "header": bytes.fromhex("08 08 0c 00 00 01 00 01 ff ff ff ff")},
+    {"source": "adventureProgress/doorLeft.tex", "output": "challengeDoorLeft.png",
+     "size": 512, "format_id": 14,
+     "header": bytes.fromhex("09 09 0e 00 00 02 00 02 ff ff ff ff")},
+    {"source": "adventureProgress/doorRight.tex", "output": "challengeDoorRight.png",
+     "size": 512, "format_id": 14,
+     "header": bytes.fromhex("09 09 0e 00 00 02 00 02 ff ff ff ff")},
+    {"source": "adventureProgress/resultsLife.tex", "output": "challengeResultsLife.png",
+     "size": 128, "format_id": 12,
+     "header": bytes.fromhex("07 07 0c 00 80 00 80 00 ff ff ff ff")},
+    {"source": "adventureProgress/pauseTweak.tex", "output": "challengePauseTweak.png",
+     "size": 64, "format_id": 12,
+     "header": bytes.fromhex("06 06 0c 00 40 00 40 00 ff ff ff ff")},
+    {"source": "menus/basicPoster.tex", "output": "challengeBasicPoster.png",
+     "size": 512, "format_id": 12,
+     "header": bytes.fromhex("09 09 0c 00 00 02 00 02 ff ff ff ff")},
+    {"source": "menus/posterDeco01.tex", "output": "challengePosterDeco01.png",
+     "size": 128, "format_id": 12,
+     "header": bytes.fromhex("07 07 0c 00 80 00 80 00 ff ff ff ff")},
+    {"source": "menus/posterOval.tex", "output": "challengePosterOval.png",
+     "size": 128, "format_id": 12,
+     "header": bytes.fromhex("07 07 0c 00 80 00 80 00 ff ff ff ff")},
+    {"source": "pause_menu/pause_button.tex", "output": "challengePauseButton.png",
+     "size": 64, "format_id": 12,
+     "header": bytes.fromhex("06 06 0c 00 40 00 40 00 ff ff ff ff")},
+)
+
+COPY_SPECS = (
+    {"source": "adventureProgress/iconSlot.png", "output": "challengeIconSlot.png"},
+    {"source": "adventureProgress/iconShadow.png", "output": "challengeIconShadow.png"},
+    {"source": "adventureProgress/divider.png", "output": "challengeDivider.png"},
+    {"source": "adventureProgress/pachinkoCircle.png", "output": "challengePachinkoCircle.png"},
+    {"source": "menus/posterDeco02.png", "output": "challengePosterDeco02.png"},
+)
+
+
+def decode_pvrtc_spec(spec: dict) -> Path:
+    source = RAW_DIR / spec["source"]
+    output = OUT_DIR / spec["output"]
+    size = spec["size"]
+    format_id = spec["format_id"]
+    assert format_id in (12, 14), (source, format_id)
+    data = source.read_bytes()
+    expected_len = HEADER_LEN + size * size // 2
+    assert len(data) == expected_len, (source, len(data), expected_len)
+    header = data[:HEADER_LEN]
+    assert header == spec["header"], (source, header.hex(), spec["header"].hex())
+    assert int.from_bytes(header[2:4], "little") == format_id
+    assert int.from_bytes(header[4:6], "little") == size
+    assert int.from_bytes(header[6:8], "little") == size
+    payload = data[HEADER_LEN:]
+    assert len(payload) == size * size // 2, (source, len(payload), size * size // 2)
+    # The third argument is is2bpp. These are all verified 4bpp payloads.
+    rgba = texture2ddecoder.decode_pvrtc(payload, size, size, False)
+    assert len(rgba) == size * size * 4, (source, len(rgba), size * size * 4)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    Image.frombytes("RGBA", (size, size), rgba).save(output)
+    assert output.is_file() and output.stat().st_size > 0
+    return output
+
+
+def copy_png_spec(spec: dict[str, str]) -> Path:
+    source = PNG_DIR / spec["source"]
+    output = OUT_DIR / spec["output"]
+    source_data = source.read_bytes()
+    assert source_data[:8] == b"\x89PNG\r\n\x1a\n", source
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(source_data)
+    assert output.read_bytes() == source_data, output
+    return output
+
+
+def main() -> None:
+    outputs = [decode_pvrtc_spec(spec) for spec in PVRTC_SPECS]
+    outputs.extend(copy_png_spec(spec) for spec in COPY_SPECS)
+    for output in outputs:
+        print(output)
+
+
+if __name__ == "__main__":
+    main()

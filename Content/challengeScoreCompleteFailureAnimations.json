@@ -7,7 +7,11 @@
   "components": [
     {
       "name": "",
-      "animations": []
+      "animations": [],
+      "parentIndex": -1,
+      "layout": {
+        "enabled": false
+      }
     },
     {
       "name": "scoreContainer",
@@ -143,55 +147,266 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "inputEnabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "scoreContainer.door",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/adventureprogress/doorLeft.tex",
+        "position": [
+          481.0,
+          -2.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          270.0
+        ],
+        "width": 322.0,
+        "height": 480.0
+      }
     },
     {
       "name": "scoreContainer.heading",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "text": "GAME_TEXTURE_01",
+        "position": [
+          31.0,
+          12.0,
+          0.0
+        ],
+        "width": 420.0,
+        "height": 80.0,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 60.0
+      }
     },
     {
       "name": "scoreContainer.scorePoster",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          126.0,
+          88.0,
+          0.0
+        ],
+        "origin": [
+          -18.0,
+          -6.0,
+          0.0
+        ],
+        "width": 190.0,
+        "height": 200.0
+      }
     },
     {
       "name": "scoreContainer.scorePoster.poster",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "texture": "textures/menus/basicPoster.tex",
+        "position": [
+          22.5,
+          11.5,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 190.0
+      }
     },
     {
       "name": "scoreContainer.scorePoster.posterArt",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 230.0,
+        "height": 200.0
+      }
     },
     {
       "name": "scoreContainer.scorePoster.posterArt.oval1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "texture": "textures/menus/posterOval.tex",
+        "position": [
+          113.5,
+          82.5,
+          0.0
+        ],
+        "width": 104.0,
+        "height": 104.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          200.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.scorePoster.posterArt.oval2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "texture": "textures/menus/posterOval.tex",
+        "position": [
+          9.5,
+          82.5,
+          0.0
+        ],
+        "width": 104.0,
+        "height": 104.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          220.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.scorePoster.posterArt.border1_0",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          29.0,
+          15.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.scorePoster.posterArt.border1_0_1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          29.0,
+          145.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.scorePoster.posterArt.border1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          145.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0
+      }
     },
     {
       "name": "scoreContainer.scorePoster.posterArt.border1_0_0",
-      "animations": []
+      "animations": [],
+      "parentIndex": 6,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          15.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.scorePoster.scoreCounterTotalDelay",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {}
     },
     {
       "name": "scoreContainer.scorePoster.scoreCounterTotal",
@@ -309,15 +524,65 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 4,
+      "layout": {
+        "text": "(20)",
+        "position": [
+          114.5,
+          140.5,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 80.0,
+        "colour": [
+          188.0,
+          0.0,
+          0.0,
+          190.0
+        ],
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 60.0
+      }
     },
     {
       "name": "scoreContainer.scorePoster.scoreText",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "text": "GAME_TEXTURE_54",
+        "position": [
+          44.00001907348633,
+          29.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 140.0,
+        "height": 50.0,
+        "colour": [
+          90.0,
+          60.0,
+          26.0,
+          255.0
+        ],
+        "layer": 4294967295,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 35.0
+      }
     },
     {
       "name": "skipButton",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "width": 480.0,
+        "height": 320.0
+      }
     },
     {
       "name": "dummyTimer",
@@ -353,7 +618,11 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "inputEnabled": false
+      }
     }
   ]
 }

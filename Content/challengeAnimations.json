@@ -7,103 +7,584 @@
   "components": [
     {
       "name": "",
-      "animations": []
+      "animations": [],
+      "parentIndex": -1,
+      "layout": {
+        "enabled": false,
+        "inputEnabled": false,
+        "maintainViewportWidth": false,
+        "maintainViewportHeight": true
+      }
     },
     {
       "name": "challengeMods",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          240.0,
+          160.0,
+          40.0
+        ],
+        "width": 480.0,
+        "height": 320.0,
+        "enabled": true,
+        "originFromCenter": true,
+        "allowStretchX": false,
+        "allowStretchY": false
+      }
     },
     {
       "name": "challengeMods.Slopes",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -153.0,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 320.0,
+        "enabled": false,
+        "originFromCenter": false
+      }
     },
     {
       "name": "challengeMods.Slopes.Slope1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -39.50001907348633,
+          312.5000305175781,
+          -10.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          20.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          23.5
+        ],
+        "width": 650.0,
+        "height": 38.0,
+        "layer": 4294967295
+      }
     },
     {
       "name": "challengeMods.Slopes.Slope2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -56.50088882446289,
+          63.99979019165039,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          -23.5
+        ],
+        "width": 650.0,
+        "height": 38.0,
+        "layer": 100
+      }
     },
     {
       "name": "challengeMods.Slopes.pin",
-      "animations": []
+      "animations": [],
+      "parentIndex": 2,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          187.5,
+          170.0,
+          -5.0
+        ],
+        "layer": 100
+      }
     },
     {
       "name": "challengeMods.BouncyCircle",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceCircle.tex",
+        "position": [
+          0.0,
+          160.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          48.0,
+          0.0
+        ],
+        "width": 192.0,
+        "height": 96.0,
+        "enabled": false,
+        "originFromCenter": true
+      }
     },
     {
       "name": "challengeMods.Pachinko",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "enabled": false
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          -36.5,
+          133.0,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          114.0,
+          133.0,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          266.0,
+          134.5,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          414.5,
+          133.5,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko5",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          39.0,
+          7.0,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko6",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          190.5,
+          9.0,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko7",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          340.0,
+          9.0,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko8",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          38.0,
+          257.5,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko9",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          188.5,
+          257.0,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko.Pachinko10",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          340.5,
+          257.0,
+          -10.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "width": 128.0,
+        "height": 128.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.HalfPipe",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 320.0,
+        "enabled": false
+      }
     },
     {
       "name": "challengeMods.HalfPipe.halfpipe1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 18,
+      "layout": {
+        "texture": "textures/adventureprogress/halfpipe.tex",
+        "position": [
+          -5.5,
+          39.5,
+          0.0
+        ],
+        "width": 256.0,
+        "height": 280.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.HalfPipe.halfpipe2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 18,
+      "layout": {
+        "texture": "textures/adventureprogress/halfpipe.tex",
+        "position": [
+          227.0,
+          39.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 256.0,
+        "height": 280.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "challengeMods.HalfPipe.halfpipe1_1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 18,
+      "layout": {
+        "texture": "textures/adventureprogress/halfpipe.tex",
+        "position": [
+          -260.5,
+          39.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 256.0,
+        "height": 280.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "challengeMods.HalfPipe.halfpipe1_2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 18,
+      "layout": {
+        "texture": "textures/adventureprogress/halfpipe.tex",
+        "position": [
+          483.5,
+          39.5,
+          0.0
+        ],
+        "width": 256.0,
+        "height": 280.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.BounceCircleSide",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceCircle.tex",
+        "position": [
+          -336.0,
+          64.0,
+          0.0
+        ],
+        "width": 192.0,
+        "height": 96.0,
+        "enabled": false
+      }
     },
     {
       "name": "challengeMods.Windows5x3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "enabled": false,
+        "layer": 4294967294
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window1",
@@ -273,7 +754,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          88.0,
+          260.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window2",
@@ -443,7 +951,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          163.0,
+          260.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window3",
@@ -613,7 +1148,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          238.5,
+          260.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window4",
@@ -783,7 +1345,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          314.0,
+          260.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window5",
@@ -953,7 +1542,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          389.5,
+          260.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window6",
@@ -1123,7 +1739,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          88.0,
+          60.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window7",
@@ -1293,7 +1936,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          163.0,
+          60.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window8",
@@ -1463,7 +2133,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          238.5,
+          60.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window9",
@@ -1633,7 +2330,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          314.0,
+          60.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window10",
@@ -1803,7 +2527,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          389.5,
+          60.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window11",
@@ -1973,7 +2724,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          88.0,
+          161.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window12",
@@ -2143,7 +2921,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          163.0,
+          161.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window13",
@@ -2313,7 +3118,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          238.5,
+          161.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window14",
@@ -2483,7 +3315,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          314.0,
+          161.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows5x3.window15",
@@ -2653,43 +3512,244 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 24,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          389.0,
+          161.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "originFromCenter": true,
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Pachinko3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "enabled": false,
+        "layer": 1
+      }
     },
     {
       "name": "challengeMods.Pachinko3.Pachinko1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          -36.0,
+          202.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 100.0,
+        "height": 100.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko3.Pachinko2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          114.0,
+          201.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 100.0,
+        "height": 100.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko3.Pachinko3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          264.0,
+          202.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 100.0,
+        "height": 100.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko3.Pachinko4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          414.5,
+          202.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 100.0,
+        "height": 100.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko3.Pachinko5",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          38.5,
+          52.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 100.0,
+        "height": 100.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko3.Pachinko6",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          189.5,
+          52.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 100.0,
+        "height": 100.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.Pachinko3.Pachinko7",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          340.0,
+          52.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 100.0,
+        "height": 100.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "challengeMods.WindowsMiddleRow",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "enabled": false,
+        "layer": 0
+      }
     },
     {
       "name": "challengeMods.WindowsMiddleRow.window1",
@@ -2872,7 +3932,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 48,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          128.0,
+          162.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsMiddleRow.window2",
@@ -3042,7 +4121,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 48,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          241.0,
+          162.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsMiddleRow.window3",
@@ -3212,11 +4310,45 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 48,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          350.0,
+          162.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "enabled": false,
+        "layer": 4294967294
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1",
@@ -3386,7 +4518,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          240.0,
+          154.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_0",
@@ -3556,7 +4712,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          240.0,
+          46.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_1",
@@ -3726,7 +4906,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          155.0,
+          70.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_2",
@@ -3896,7 +5100,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          129.0,
+          155.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_3",
@@ -4066,7 +5294,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          155.0,
+          240.0,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_4",
@@ -4236,7 +5488,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          240.0,
+          275.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_5",
@@ -4406,7 +5682,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          325.0,
+          240.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_6",
@@ -4576,7 +5876,31 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          350.0,
+          155.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.WindowsCircle.window1_7",
@@ -4746,39 +6070,183 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 52,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          325.0,
+          70.5,
+          0.0
+        ],
+        "scale": [
+          0.8500000238418579,
+          0.8500000238418579,
+          1.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.VerticalSlope1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": false,
+        "originFromCenter": true
+      }
     },
     {
       "name": "challengeMods.VerticalSlope1.Slope1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 62,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          90.0
+        ],
+        "width": 400.0,
+        "height": 32.0,
+        "enabled": true,
+        "originFromCenter": true
+      }
     },
     {
       "name": "challengeMods.VerticalSlope2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": false,
+        "originFromCenter": true
+      }
     },
     {
       "name": "challengeMods.VerticalSlope2.Slope1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 64,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          90.0
+        ],
+        "width": 400.0,
+        "height": 32.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "challengeMods.BounceCircleTwoBig",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 320.0,
+        "enabled": false
+      }
     },
     {
       "name": "challengeMods.BounceCircleTwoBig.BouncyCircle1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 66,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceCircle.tex",
+        "position": [
+          -132.5,
+          180.0,
+          0.0
+        ],
+        "scale": [
+          1.5,
+          1.5,
+          1.5
+        ],
+        "width": 192.0,
+        "height": 96.0
+      }
     },
     {
       "name": "challengeMods.BounceCircleTwoBig.BouncyCircle2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 66,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceCircle.tex",
+        "position": [
+          323.0,
+          180.0,
+          0.0
+        ],
+        "scale": [
+          1.5,
+          1.5,
+          1.5
+        ],
+        "width": 192.0,
+        "height": 96.0
+      }
     },
     {
       "name": "challengeMods.Windows3x3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 320.0,
+        "enabled": false,
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window1",
@@ -4948,7 +6416,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          131.0,
+          163.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window2",
@@ -5118,7 +6605,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          241.0,
+          163.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window3",
@@ -5288,7 +6794,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          351.0,
+          163.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window4",
@@ -5458,7 +6983,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          131.0,
+          62.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window5",
@@ -5628,7 +7172,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          241.0,
+          62.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window6",
@@ -5798,7 +7361,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          351.0,
+          62.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window7",
@@ -5968,7 +7550,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          131.0,
+          264.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window8",
@@ -6138,7 +7739,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          241.0,
+          264.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.Windows3x3.window9",
@@ -6308,19 +7928,84 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 69,
+      "layout": {
+        "texture": "textures\\adventureprogress\\shutterwindow.tex",
+        "position": [
+          351.0,
+          264.0,
+          0.0
+        ],
+        "origin": [
+          50.0,
+          50.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.25,
+          1.0
+        ],
+        "layer": 99
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -157.0,
+          0.0
+        ],
+        "enabled": false
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft.slope_1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 79,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -31.0,
+          188.0,
+          -10.0
+        ],
+        "origin": [
+          60.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          10.5
+        ],
+        "width": 720.0,
+        "height": 38.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft.slope_2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 79,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -80.50007629394531,
+          304.5000305175781,
+          -9.999429702758789
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          10.5
+        ],
+        "width": 700.0,
+        "height": 38.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft.pin_2_2",
@@ -6360,7 +8045,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 79,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          197.5,
+          139.5,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft.pin_2_2_0",
@@ -6400,7 +8096,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 79,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          21.5,
+          171.5,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft.pin_2_2_1",
@@ -6440,7 +8147,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 79,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          408.5,
+          102.0,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft.pin_2_2_2",
@@ -6480,7 +8198,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 79,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          136.5,
+          256.0,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesLeft.pin_2_2_3",
@@ -6520,19 +8249,72 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 79,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          347.0,
+          214.0,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -157.0,
+          0.0
+        ],
+        "enabled": false,
+        "layer": 100
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight.slope1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 87,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -105.50045776367188,
+          84.49947357177734,
+          -9.999690055847168
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          -10.5
+        ],
+        "width": 700.0,
+        "height": 38.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight.slope2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 87,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -78.50007629394531,
+          187.9996337890625,
+          -9.999759674072266
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          -10.5
+        ],
+        "width": 700.0,
+        "height": 38.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight.pin1",
@@ -6572,7 +8354,23 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 87,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          213.0,
+          143.0,
+          -10.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          5.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight.pin2",
@@ -6612,7 +8410,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 87,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          12.0,
+          104.5,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight.pin3",
@@ -6652,7 +8461,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 87,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          415.5,
+          181.0,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight.pin4",
@@ -6692,7 +8512,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 87,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          86.5,
+          219.5,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.TwoSlopesRight.pin5",
@@ -6732,47 +8563,179 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 87,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkocircle.tex",
+        "position": [
+          305.5,
+          258.5,
+          -10.0
+        ],
+        "width": 52.0,
+        "height": 52.0
+      }
     },
     {
       "name": "challengeMods.trampoline",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "enabled": false
+      }
     },
     {
       "name": "challengeMods.trampoline.trampoline1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 95,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -84.5,
+          298.0,
+          -10.0
+        ],
+        "width": 300.0,
+        "height": 24.0
+      }
     },
     {
       "name": "challengeMods.trampoline.trampoline1_0",
-      "animations": []
+      "animations": [],
+      "parentIndex": 95,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          220.5,
+          298.0,
+          -10.0
+        ],
+        "width": 320.0,
+        "height": 24.0
+      }
     },
     {
       "name": "challengeMods.trampoline.pin1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 95,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          171.5,
+          266.0,
+          -5.0
+        ]
+      }
     },
     {
       "name": "challengeMods.trampoline.pin1_0",
-      "animations": []
+      "animations": [],
+      "parentIndex": 95,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          434.5,
+          264.5,
+          -5.0
+        ]
+      }
     },
     {
       "name": "challengeMods.trampoline.pin1_1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 95,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          -37.0,
+          264.5,
+          -10.0
+        ]
+      }
     },
     {
       "name": "challengeMods.SlopesFast",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          -240.0,
+          -160.0,
+          0.0
+        ],
+        "enabled": false,
+        "layer": 0
+      }
     },
     {
       "name": "challengeMods.SlopesFast.Slope1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 101,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -39.0000114440918,
+          322.0000305175781,
+          -0.0045900000259280205
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          23.5
+        ],
+        "width": 600.0,
+        "height": 38.0,
+        "layer": 100
+      }
     },
     {
       "name": "challengeMods.SlopesFast.Slope2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 101,
+      "layout": {
+        "texture": "textures/adventureprogress/bounceFlat.tex",
+        "position": [
+          -45.0,
+          79.0,
+          -10.004500389099121
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          -23.5
+        ],
+        "width": 600.0,
+        "height": 38.0
+      }
     },
     {
       "name": "challengeMods.SlopesFast.pin",
-      "animations": []
+      "animations": [],
+      "parentIndex": 101,
+      "layout": {
+        "texture": "textures/adventureprogress/pachinkoCircle.tex",
+        "position": [
+          192.5,
+          185.0,
+          0.0
+        ],
+        "layer": 100
+      }
     },
     {
       "name": "pause",
@@ -6943,7 +8906,20 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "texture": "textures/pause_menu/pause_button.tex",
+        "position": [
+          0.0,
+          300.0,
+          0.0
+        ],
+        "width": 32.0,
+        "height": 32.0,
+        "enabled": true,
+        "layer": 3
+      }
     },
     {
       "name": "Timer",
@@ -7018,11 +8994,53 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          32.0,
+          -38.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 32.0,
+        "enabled": false,
+        "originFromCenter": true,
+        "layer": 1,
+        "allowStretchX": false,
+        "allowStretchY": false
+      }
     },
     {
       "name": "Timer.countdownBase",
-      "animations": []
+      "animations": [],
+      "parentIndex": 106,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 60.0,
+        "height": 60.0,
+        "originFromCenter": true,
+        "layer": 4294967295
+      }
     },
     {
       "name": "Timer.countdownModel",
@@ -7062,7 +9080,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 106,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          -60.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 60.0,
+        "height": 60.0,
+        "originFromCenter": true,
+        "layer": 4294967295
+      }
     },
     {
       "name": "Timer.text",
@@ -7263,7 +9308,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 106,
+      "layout": {
+        "text": "0:00",
+        "position": [
+          1.0,
+          -2.0,
+          0.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929,
+          0.800000011920929
+        ],
+        "width": 100.0,
+        "height": 64.0,
+        "originFromCenter": true,
+        "layer": 1,
+        "fontSize": 38.0
+      }
     },
     {
       "name": "instructionsText",
@@ -7342,11 +9406,51 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "text": "HERE ARE YOUR INSTRUCTIONS",
+        "position": [
+          75.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 330.0,
+        "height": 35.0,
+        "colour": [
+          255.0,
+          228.0,
+          176.0,
+          255.0
+        ],
+        "enabled": false,
+        "layer": 1,
+        "fontSize": 16.0
+      }
     },
     {
       "name": "popups",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          240.0,
+          160.0,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 320.0,
+        "enabled": true,
+        "originFromCenter": true,
+        "layer": 2,
+        "allowStretchX": false,
+        "allowStretchY": false
+      }
     },
     {
       "name": "popups.slice",
@@ -7465,7 +9569,19 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 70.0,
+        "enabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "popups.slice.labelTop",
@@ -7525,7 +9641,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 112,
+      "layout": {
+        "text": "FN_PUSS_SLICE_BONUS_X_FRUIT",
+        "position": [
+          -50.0,
+          -23.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 30.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 16.0
+      }
     },
     {
       "name": "popups.slice.labelBottom",
@@ -7585,7 +9720,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 112,
+      "layout": {
+        "text": "FN_PUSS_SLICE_BONUS_COMBO",
+        "position": [
+          -50.0,
+          4.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 30.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 16.0
+      }
     },
     {
       "name": "popups.bonus_1",
@@ -7704,7 +9858,19 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 70.0,
+        "enabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "popups.bonus_1.label",
@@ -7764,7 +9930,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 115,
+      "layout": {
+        "text": "GAME_TEXTURE_49",
+        "position": [
+          -50.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 30.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 16.0
+      }
     },
     {
       "name": "popups.bonus_2",
@@ -7883,7 +10068,19 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 70.0,
+        "enabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "popups.bonus_2.label",
@@ -7943,7 +10140,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 117,
+      "layout": {
+        "text": "GAME_TEXTURE_49",
+        "position": [
+          -50.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 30.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 16.0
+      }
     },
     {
       "name": "popups.bonus_3",
@@ -8062,7 +10278,19 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 70.0,
+        "enabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "popups.bonus_3.label",
@@ -8122,7 +10350,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 119,
+      "layout": {
+        "text": "GAME_TEXTURE_49",
+        "position": [
+          -50.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 30.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 16.0
+      }
     },
     {
       "name": "popups.challengeEnd",
@@ -8245,7 +10492,19 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 70.0,
+        "enabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "popups.challengeEnd.label",
@@ -8305,7 +10564,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 121,
+      "layout": {
+        "text": "FN_PUSS_COMPLETE",
+        "position": [
+          -50.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 30.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 16.0
+      }
     },
     {
       "name": "popups.challengeEnd.texture",
@@ -8365,7 +10643,18 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 121,
+      "layout": {
+        "texture": "textures\\effects\\challengeComplete.tex",
+        "position": [
+          -25.0,
+          0.0,
+          0.0
+        ],
+        "width": 60.0,
+        "height": 60.0
+      }
     },
     {
       "name": "popups.fruitNumber",
@@ -8494,19 +10783,77 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 30.0,
+        "enabled": false,
+        "originFromCenter": true,
+        "layer": 2
+      }
     },
     {
       "name": "popups.fruitNumber.label",
-      "animations": []
+      "animations": [],
+      "parentIndex": 124,
+      "layout": {
+        "text": "FN_PUSS_TO_GO",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 50.0,
+        "enabled": true,
+        "originFromCenter": true,
+        "layer": 1,
+        "fontSize": 15.0,
+        "alignment": "BottomCenter"
+      }
     },
     {
       "name": "popups.fruitNumber.value",
-      "animations": []
+      "animations": [],
+      "parentIndex": 124,
+      "layout": {
+        "text": "1",
+        "position": [
+          -0.0002300000051036477,
+          -11.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 50.0,
+        "enabled": true,
+        "originFromCenter": true,
+        "layer": 1,
+        "fontSize": 40.0,
+        "alignment": "TopCenter"
+      }
     },
     {
       "name": "popups.numbers",
-      "animations": []
+      "animations": [],
+      "parentIndex": 111,
+      "layout": {
+        "text": "0123456789",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 300.0,
+        "height": 50.0,
+        "enabled": false,
+        "fontSize": 40.0
+      }
     },
     {
       "name": "popups.pinataBonus",
@@ -9255,7 +11602,19 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 70.0,
+        "enabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "popups.pinataBonus.labelTop",
@@ -9782,7 +12141,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 128,
+      "layout": {
+        "text": "GAME_TEXTURE_49",
+        "position": [
+          -50.0,
+          -23.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 40.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 20.0
+      }
     },
     {
       "name": "popups.pinataBonus.labelBottom",
@@ -10309,7 +12687,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 128,
+      "layout": {
+        "text": "+100",
+        "position": [
+          -50.0,
+          4.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 40.0,
+        "enabled": true,
+        "layer": 1,
+        "fontSize": 25.0
+      }
     },
     {
       "name": "popups.quickShot",
@@ -10431,7 +12828,20 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 111,
+      "layout": {
+        "position": [
+          201.0,
+          135.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 30.0,
+        "enabled": false,
+        "originFromCenter": true,
+        "layer": 2
+      }
     },
     {
       "name": "popups.quickShot.label",
@@ -10511,7 +12921,23 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 131,
+      "layout": {
+        "text": "FN_PUSS_REFLEX",
+        "position": [
+          0.0,
+          -29.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 50.0,
+        "enabled": true,
+        "originFromCenter": true,
+        "layer": 1,
+        "fontSize": 17.0,
+        "alignment": "CenterCenter"
+      }
     },
     {
       "name": "popups.quickShot.value",
@@ -10591,11 +13017,38 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 131,
+      "layout": {
+        "text": "0.02s",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 50.0,
+        "enabled": true,
+        "originFromCenter": true,
+        "layer": 1,
+        "fontSize": 30.0
+      }
     },
     {
       "name": "bonusIntro",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          -0.5,
+          -42.5,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 440.0,
+        "enabled": true,
+        "layer": 2
+      }
     },
     {
       "name": "bonusIntro.intro1",
@@ -10678,7 +13131,21 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 134,
+      "layout": {
+        "text": "FN_PUSS_BONUS_INTRO_1",
+        "position": [
+          55.0,
+          -30.0,
+          0.0
+        ],
+        "width": 360.0,
+        "height": 50.0,
+        "enabled": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 40.0
+      }
     },
     {
       "name": "bonusIntro.intro2",
@@ -10762,7 +13229,21 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 134,
+      "layout": {
+        "text": "FN_PUSS_BONUS_INTRO_2",
+        "position": [
+          55.0,
+          430.0,
+          0.0
+        ],
+        "width": 360.0,
+        "height": 50.0,
+        "enabled": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 40.0
+      }
     },
     {
       "name": "bonusIntro.intro3",
@@ -10861,7 +13342,28 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 134,
+      "layout": {
+        "text": "GAME_TEXTURE_42",
+        "position": [
+          240.0,
+          -100.0,
+          0.0
+        ],
+        "scale": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "width": 360.0,
+        "height": 120.0,
+        "enabled": true,
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 80.0,
+        "alignment": "CenterCenter"
+      }
     },
     {
       "name": "bonusScoreCounter",
@@ -10946,7 +13448,16 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          380.0,
+          0.0,
+          0.0
+        ],
+        "enabled": false
+      }
     },
     {
       "name": "bonusScoreCounter.texture",
@@ -10996,11 +13507,39 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 138,
+      "layout": {
+        "texture": "textures/hud/hud_fruit.tex",
+        "position": [
+          18.5,
+          23.0,
+          0.0
+        ],
+        "origin": [
+          20.0,
+          20.0,
+          0.0
+        ],
+        "width": 40.0,
+        "height": 40.0
+      }
     },
     {
       "name": "bonusScoreCounter.text",
-      "animations": []
+      "animations": [],
+      "parentIndex": 138,
+      "layout": {
+        "position": [
+          40.5,
+          6.5,
+          0.0
+        ],
+        "width": 128.0,
+        "height": 32.0,
+        "fontSize": 34.0,
+        "alignment": "CenterLeft"
+      }
     },
     {
       "name": "bonusCheer",
@@ -11112,7 +13651,22 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "text": "FN_PUSS_SLICE",
+        "position": [
+          240.0,
+          280.0,
+          0.0
+        ],
+        "width": 200.0,
+        "height": 70.0,
+        "enabled": false,
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 50.0
+      }
     }
   ]
 }

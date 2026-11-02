@@ -3,6 +3,7 @@ from __future__ import annotations
 import collections
 import hashlib
 import json
+import math
 from pathlib import Path
 
 from extract_uiscreen import FormatError, parse_file
@@ -26,6 +27,89 @@ VALUE_COUNTS = {
     "outsideColour": 4,
     "texCoordPos": 2,
 }
+
+LAYOUT_KEYS = (
+    "texture", "text", "position", "scale", "origin", "rotation", "width", "height",
+    "colour", "enabled", "inputEnabled", "originFromCenter", "texCoordPos", "texCoordSize",
+    "layer", "fontName", "fontSize", "alignment", "drawNinePatch", "allowStretchX",
+    "allowStretchY", "maintainViewportWidth", "maintainViewportHeight",
+)
+LAYOUT_VECTOR_SIZES = {
+    "position": 3, "scale": 3, "origin": 3, "rotation": 3,
+    "texCoordPos": 2, "texCoordSize": 2, "colour": 4,
+}
+LAYOUT_NONNEGATIVE_NUMBERS = {"width", "height", "fontSize"}
+LAYOUT_STRING_KEYS = {"texture", "text", "fontName", "alignment"}
+LAYOUT_BOOL_KEYS = {
+    "enabled", "inputEnabled", "originFromCenter", "drawNinePatch", "allowStretchX",
+    "allowStretchY", "maintainViewportWidth", "maintainViewportHeight",
+}
+
+
+def is_finite_number(value: object) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def validate_layout(component_name: str, stem: str, component: dict) -> dict:
+    properties = component.get("properties")
+    if not isinstance(properties, dict):
+        raise FormatError(f"{stem}/{component_name}: missing UIAM properties object")
+    layout = {}
+    for key in LAYOUT_KEYS:
+        if key not in properties:
+            continue
+        value = properties[key]
+        layout[key] = value
+        if key in LAYOUT_VECTOR_SIZES:
+            expected = LAYOUT_VECTOR_SIZES[key]
+            if not isinstance(value, list) or len(value) != expected:
+                raise FormatError(f"{stem}/{component_name}: {key} must have {expected} values")
+            if any(not is_finite_number(item) for item in value):
+                raise FormatError(f"{stem}/{component_name}: {key} contains a non-finite value")
+        elif key in LAYOUT_NONNEGATIVE_NUMBERS:
+            if not is_finite_number(value) or value < 0:
+                raise FormatError(f"{stem}/{component_name}: invalid non-negative {key}")
+        elif key in LAYOUT_STRING_KEYS:
+            if not isinstance(value, str):
+                raise FormatError(f"{stem}/{component_name}: {key} must be a string")
+        elif key in LAYOUT_BOOL_KEYS:
+            if not isinstance(value, bool):
+                raise FormatError(f"{stem}/{component_name}: {key} must be a boolean")
+        elif key == "layer":
+            if not isinstance(value, int) or isinstance(value, bool):
+                raise FormatError(f"{stem}/{component_name}: layer must be an integer")
+        else:
+            raise AssertionError(f"unhandled layout key {key!r}")
+    return layout
+
+
+def validate_parent_indices(components: list[dict], stem: str) -> None:
+    count = len(components)
+    for index, component in enumerate(components):
+        parent_index = component["parentIndex"]
+        if not isinstance(parent_index, int) or isinstance(parent_index, bool):
+            raise FormatError(f"{stem}: parentIndex at {index} is not an integer")
+        if parent_index < -1 or parent_index >= count or parent_index == index:
+            raise FormatError(f"{stem}: invalid parentIndex {parent_index} at {index}")
+        if index == 0 and parent_index != -1:
+            raise FormatError(f"{stem}: root parentIndex must be -1")
+
+
+def validate_map_icon_slot1(components: list[dict], stem: str) -> None:
+    if stem != "inGameChallengeMapScreen":
+        return
+    matches = [c for c in components if c["name"].endswith(".iconSlot1")]
+    if len(matches) != 1:
+        raise FormatError(f"{stem}: expected exactly one iconSlot1, got {len(matches)}")
+    layout = matches[0]["layout"]
+    expected = {
+        "texture": "textures/adventureprogress/iconSlot.tex",
+        "position": [126.0, 42.5, 0.0], "origin": [83.5, 0.0, 0.0],
+        "scale": [1.0, 1.0, 1.0], "width": 83.0, "height": 83.0,
+    }
+    for key, value in expected.items():
+        if layout.get(key) != value:
+            raise FormatError(f"{stem}/iconSlot1: {key} {layout.get(key)!r} != {value!r}")
 
 # Counts are a regression lock for the exact release resources, not a filter.
 # Every component, animation, keyframe and event must survive conversion.
@@ -103,9 +187,16 @@ def build(stem: str) -> tuple[dict, dict]:
                 "endTimeMS": animation["end_time_ms"],
                 "tracks": tracks,
             })
-        # Keep every source component and animation, including the root and empty ones.
-        components.append({"name": name, "animations": animations})
+        # Static values remain local to this component; no transform is inferred here.
+        components.append({
+            "name": name,
+            "animations": animations,
+            "parentIndex": component["parent_index"],
+            "layout": validate_layout(name, stem, component),
+        })
 
+    validate_parent_indices(components, stem)
+    validate_map_icon_slot1(components, stem)
     animation_count = sum(len(component["animations"]) for component in components)
     if len(components) != expected_components:
         raise FormatError(f"{stem}: expected {expected_components} components, got {len(components)}")

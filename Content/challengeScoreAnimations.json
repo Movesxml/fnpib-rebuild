@@ -7,7 +7,11 @@
   "components": [
     {
       "name": "",
-      "animations": []
+      "animations": [],
+      "parentIndex": -1,
+      "layout": {
+        "enabled": true
+      }
     },
     {
       "name": "scoreContainer",
@@ -155,47 +159,295 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          368.0,
+          116.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 240.0,
+        "height": 320.0,
+        "enabled": true,
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "layer": 1
+      }
     },
     {
       "name": "scoreContainer.backing",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/adventureprogress/flipper.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "scoreContainer.poster",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/menus/basicPoster.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 190.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "scoreContainer.posterArt",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 225.0,
+        "height": 180.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "scoreContainer.posterArt.oval1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "texture": "textures/menus/posterOval.tex",
+        "position": [
+          2.0,
+          -24.41666030883789,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 104.0,
+        "height": 104.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          220.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.posterArt.oval2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "texture": "textures/menus/posterOval.tex",
+        "position": [
+          2.0,
+          -24.500080108642578,
+          0.0
+        ],
+        "origin": [
+          104.0,
+          0.0,
+          0.0
+        ],
+        "width": 104.0,
+        "height": 104.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          220.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.posterArt.border3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          1.0,
+          -91.0,
+          0.0
+        ],
+        "origin": [
+          84.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.posterArt.border2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          1.0,
+          39.0,
+          0.0
+        ],
+        "origin": [
+          84.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.posterArt.border1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          1.0,
+          39.0,
+          0.0
+        ],
+        "origin": [
+          -36.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0
+      }
     },
     {
       "name": "scoreContainer.posterArt.border4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 4,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          1.0,
+          -91.0,
+          0.0
+        ],
+        "origin": [
+          -36.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "scoreContainer.scoreText",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "text": "GAME_TEXTURE_54",
+        "position": [
+          0.0,
+          -54.000091552734375,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 140.0,
+        "height": 50.0,
+        "colour": [
+          90.0,
+          60.0,
+          26.0,
+          255.0
+        ],
+        "originFromCenter": true,
+        "layer": 4294967295,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 35.0
+      }
     },
     {
       "name": "scoreContainer.scoreCounterTotal",
@@ -229,7 +481,27 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 1,
+      "layout": {
+        "text": "(20)",
+        "position": [
+          2.530669927597046,
+          30.999950408935547,
+          0.0
+        ],
+        "width": 128.0,
+        "height": 80.0,
+        "colour": [
+          189.0,
+          50.0,
+          33.0,
+          255.0
+        ],
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 54.0
+      }
     },
     {
       "name": "resultsContainer",
@@ -353,7 +625,19 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          -16.0,
+          0.0,
+          0.0
+        ],
+        "width": 256.0,
+        "height": 320.0,
+        "inputEnabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "resultsContainer.Success",
@@ -483,15 +767,56 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 13,
+      "layout": {
+        "position": [
+          129.5,
+          55.0,
+          0.0
+        ],
+        "scale": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 210.0,
+        "height": 80.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "resultsContainer.Success.bonusLabelPass",
-      "animations": []
+      "animations": [],
+      "parentIndex": 14,
+      "layout": {
+        "text": "FN_PUSS_SUCCESS",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 190.0,
+        "height": 80.0,
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 50.0
+      }
     },
     {
       "name": "resultsContainer.BonusListFail",
-      "animations": []
+      "animations": [],
+      "parentIndex": 13,
+      "layout": {
+        "position": [
+          28.0,
+          323.5,
+          0.0
+        ],
+        "width": 200.0,
+        "height": 120.0,
+        "enabled": true
+      }
     },
     {
       "name": "resultsContainer.BonusListFail.bonusLabel1Wrapper",
@@ -618,15 +943,57 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 16,
+      "layout": {
+        "position": [
+          0.0,
+          50.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 30.0,
+        "colour": [
+          255.0,
+          228.0,
+          176.0,
+          255.0
+        ]
+      }
     },
     {
       "name": "resultsContainer.BonusListFail.bonusLabel1Wrapper.bonusValue1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 17,
+      "layout": {
+        "text": "%d/%d",
+        "position": [
+          136.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 20.0,
+        "fontSize": 20.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusListFail.bonusLabel1Wrapper.bonusLabel1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 17,
+      "layout": {
+        "text": "Fruit Cut",
+        "position": [
+          13.0,
+          0.0,
+          0.0
+        ],
+        "width": 115.0,
+        "height": 20.0,
+        "fontSize": 16.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusListFail.bonusLabel2Wrapper",
@@ -753,15 +1120,49 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 16,
+      "layout": {
+        "position": [
+          0.0,
+          83.0,
+          0.0
+        ],
+        "width": 150.0,
+        "height": 30.0
+      }
     },
     {
       "name": "resultsContainer.BonusListFail.bonusLabel2Wrapper.bonusLabel2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 20,
+      "layout": {
+        "text": "Hit Bomb!",
+        "position": [
+          13.0,
+          0.0,
+          0.0
+        ],
+        "width": 115.0,
+        "height": 20.0,
+        "fontSize": 16.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList",
-      "animations": []
+      "animations": [],
+      "parentIndex": 13,
+      "layout": {
+        "position": [
+          28.0,
+          100.0,
+          0.0
+        ],
+        "width": 200.0,
+        "height": 200.0,
+        "enabled": true
+      }
     },
     {
       "name": "resultsContainer.BonusList.fruitResult",
@@ -915,15 +1316,60 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 22,
+      "layout": {
+        "position": [
+          100.0,
+          15.0,
+          0.0
+        ],
+        "width": 200.0,
+        "height": 30.0,
+        "colour": [
+          64.0,
+          104.0,
+          47.0,
+          255.0
+        ],
+        "originFromCenter": true
+      }
     },
     {
       "name": "resultsContainer.BonusList.fruitResult.fruitLabel",
-      "animations": []
+      "animations": [],
+      "parentIndex": 23,
+      "layout": {
+        "text": "Fruit",
+        "position": [
+          -42.0,
+          0.0,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 26.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.fruitResult.fruitScore",
-      "animations": []
+      "animations": [],
+      "parentIndex": 23,
+      "layout": {
+        "text": "%d%%",
+        "position": [
+          51.00004959106445,
+          -2.999919891357422,
+          0.0
+        ],
+        "width": 80.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 32.0,
+        "alignment": "CenterRight"
+      }
     },
     {
       "name": "resultsContainer.BonusList.sliceResult",
@@ -1087,23 +1533,94 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 22,
+      "layout": {
+        "position": [
+          57.0,
+          66.0,
+          0.0
+        ],
+        "colour": [
+          73.0,
+          103.0,
+          154.0,
+          255.0
+        ],
+        "originFromCenter": true
+      }
     },
     {
       "name": "resultsContainer.BonusList.sliceResult.sliceLabel",
-      "animations": []
+      "animations": [],
+      "parentIndex": 26,
+      "layout": {
+        "text": "FN_PUSS_SLICE",
+        "position": [
+          0.0,
+          -16.0,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 22.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.sliceResult.comboAmount",
-      "animations": []
+      "animations": [],
+      "parentIndex": 26,
+      "layout": {
+        "text": "6 combos",
+        "position": [
+          0.0,
+          14.0,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 14.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.sliceResult.missAmount",
-      "animations": []
+      "animations": [],
+      "parentIndex": 26,
+      "layout": {
+        "text": "2 misses",
+        "position": [
+          0.0,
+          30.0,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 14.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.sliceResult.sliceScore",
-      "animations": []
+      "animations": [],
+      "parentIndex": 26,
+      "layout": {
+        "text": "%d%%",
+        "position": [
+          94.0,
+          0.0,
+          0.0
+        ],
+        "width": 80.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 32.0,
+        "alignment": "CenterRight"
+      }
     },
     {
       "name": "resultsContainer.BonusList.reflexResult",
@@ -1267,23 +1784,96 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 22,
+      "layout": {
+        "position": [
+          98.0,
+          122.0,
+          0.0
+        ],
+        "width": 190.0,
+        "height": 40.0,
+        "colour": [
+          187.0,
+          58.0,
+          58.0,
+          255.0
+        ],
+        "originFromCenter": true
+      }
     },
     {
       "name": "resultsContainer.BonusList.reflexResult.reflexLabel",
-      "animations": []
+      "animations": [],
+      "parentIndex": 31,
+      "layout": {
+        "text": "FN_PUSS_REFLEX",
+        "position": [
+          -40.0,
+          -4.0,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 16.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.reflexResult.reflexScore",
-      "animations": []
+      "animations": [],
+      "parentIndex": 31,
+      "layout": {
+        "text": "%d%%",
+        "position": [
+          53.0,
+          -5.0,
+          0.0
+        ],
+        "width": 80.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 32.0,
+        "alignment": "CenterRight"
+      }
     },
     {
       "name": "resultsContainer.BonusList.reflexResult.reflexTime",
-      "animations": []
+      "animations": [],
+      "parentIndex": 31,
+      "layout": {
+        "text": "0.554",
+        "position": [
+          -40.0,
+          15.0,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 14.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.reflexResult.reflexS",
-      "animations": []
+      "animations": [],
+      "parentIndex": 31,
+      "layout": {
+        "text": "s",
+        "position": [
+          -2.0,
+          19.0,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 30.0,
+        "originFromCenter": true,
+        "fontSize": 10.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.divider",
@@ -1351,7 +1941,24 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 22,
+      "layout": {
+        "texture": "textures/adventureProgress/divider.tex",
+        "position": [
+          3.0,
+          145.0,
+          0.0
+        ],
+        "width": 190.0,
+        "height": 4.0,
+        "colour": [
+          81.0,
+          55.0,
+          35.0,
+          0.0
+        ]
+      }
     },
     {
       "name": "resultsContainer.BonusList.totalResult",
@@ -1491,11 +2098,46 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 22,
+      "layout": {
+        "position": [
+          97.0,
+          177.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 190.0,
+        "height": 50.0,
+        "colour": [
+          81.0,
+          55.0,
+          35.0,
+          255.0
+        ],
+        "originFromCenter": true
+      }
     },
     {
       "name": "resultsContainer.BonusList.totalResult.totalLabel",
-      "animations": []
+      "animations": [],
+      "parentIndex": 37,
+      "layout": {
+        "text": "GAME_TEXTURE_50",
+        "position": [
+          -30.000080108642578,
+          10.0,
+          0.0
+        ],
+        "height": 50.0,
+        "originFromCenter": true,
+        "fontSize": 28.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "resultsContainer.BonusList.totalResult.totalScore",
@@ -1529,7 +2171,22 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 37,
+      "layout": {
+        "text": "(20)",
+        "position": [
+          56.0,
+          4.0,
+          0.0
+        ],
+        "width": 70.0,
+        "height": 50.0,
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/bronic.TTF",
+        "fontSize": 32.0,
+        "alignment": "TopRight"
+      }
     },
     {
       "name": "resultsContainer.Fail",
@@ -1597,11 +2254,34 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 13,
+      "layout": {
+        "position": [
+          36.0,
+          117.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 70.0
+      }
     },
     {
       "name": "resultsContainer.Fail.bonusLabelPass",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "text": "FN_PUSS_FAILED",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 70.0,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 60.0
+      }
     },
     {
       "name": "resultsContainer.Fail.dummyTimer",
@@ -1637,7 +2317,9 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 40,
+      "layout": {}
     },
     {
       "name": "instructionsContainer",
@@ -1712,23 +2394,85 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          240.0,
+          0.0,
+          0.0
+        ],
+        "width": 240.0,
+        "height": 320.0,
+        "inputEnabled": false,
+        "layer": 1
+      }
     },
     {
       "name": "instructionsContainer.instructions",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "text": "Do something or other",
+        "position": [
+          39.0,
+          140.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 160.0,
+        "fontSize": 24.0,
+        "alignment": "TopLeft"
+      }
     },
     {
       "name": "instructionsContainer.Success",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "position": [
+          35.5,
+          18.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 180.0
+      }
     },
     {
       "name": "instructionsContainer.Success.newChallenge",
-      "animations": []
+      "animations": [],
+      "parentIndex": 45,
+      "layout": {
+        "text": "NEW CHALLENGE!",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 100.0,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 40.0
+      }
     },
     {
       "name": "skipButton",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 320.0
+      }
     }
   ]
 }

@@ -89,6 +89,201 @@ class Reader:
             cursor = found + 1
 
 
+PROP_GROUP_HEADER = b"\x00\x07\xaa\xa1"
+PROP_GROUP_COUNT = b"\x00\x07\xbb\xb1"
+PROP_GROUP_END = b"\x00\x07\xff\xf1"
+PROP_RECORD_HEADER = b"\x00\x07\xde\xe1"
+PROP_RECORD_HEADER_2 = b"\xff\xff\xff\xff"
+
+PROPERTY_CATEGORIES: dict[str, str] = {}
+
+
+def _register_properties(category: str, names: tuple[str, ...]) -> None:
+    for name in names:
+        if name in PROPERTY_CATEGORIES:
+            raise RuntimeError(f"duplicate static property mapping: {name!r}")
+        PROPERTY_CATEGORIES[name] = category
+
+
+_register_properties("string", (
+    "KeyName", "alignment", "comment", "description", "fontName", "fruitType", "fruittype",
+    "headingFont", "leaderboardType", "model", "orientation", "paintTexture", "text",
+    "texture", "textureDisabled", "textureEnabled",
+))
+_register_properties("bool", (
+    "allowStretchX", "allowStretchY", "autoScrollEnabled", "childrenCodeGenerated",
+    "clipsChildren", "confineToHeight", "descriptionConfineToHeight", "drawNinePatch",
+    "drawninepatch", "enabled", "headingConfineToHeight", "inputEnabled", "localiseText",
+    "maintainViewportHeight", "maintainViewportWidth", "originFromCenter", "recreateFruit",
+    "respondsToBackButton", "useGradient",
+))
+_register_properties("u32", (
+    "descriptionLines", "dropShadowStyle", "enteriesStepSize", "headingMaxLines", "layer",
+    "maxEnteries", "maxLines", "numPages", "screenPriority", "textMaxLines", "updateMask",
+))
+_register_properties("f32", (
+    "autoScrollSpeed", "bevelSize", "descriptionFontSize", "descriptionHeight",
+    "descriptionSpacing", "descriptionWidth", "fontSize", "fruitScale", "fruitscale",
+    "headingHeight", "headingSpacing", "headingWidth", "height", "innerGlowSize",
+    "paintTextureHeight", "paintTextureWidth", "radius", "softShadowSize", "strokeSize",
+    "textBoxHeight", "textBoxWidth", "verticalSpacing", "width",
+))
+_register_properties("vec2", ("backgroundtarget", "texCoordPos", "texCoordSize"))
+_register_properties("vec3", (
+    "addPosition", "descriptionPosition", "enteriesPosition", "errorPosition", "fruitOffset",
+    "fruitRotation", "fruitRotationSpeed", "headingPosition", "loadingPosition", "modelSize",
+    "origin", "paintTextOffset", "position", "rotation", "scale", "softShadowOffset",
+    "textBoxOffset", "textRotation",
+))
+_register_properties("vec4", (
+    "NormalStateColour", "bevelColourA", "bevelColourB", "colour", "descriptionColour",
+    "headingColour", "innerGlowColour", "insideColour", "outsideColour", "paintColour",
+    "softShadowColour", "strokeColour", "textColour",
+))
+
+
+def property_category(name: str) -> str:
+    category = PROPERTY_CATEGORIES.get(name)
+    if category is None:
+        raise FormatError(f"unknown static property name {name!r}")
+    return category
+
+
+def _require_property_range(reader: Reader, offset: int, size: int) -> None:
+    if offset < 0 or size < 0 or offset + size > len(reader.data):
+        raise FormatError(f"truncated property record at 0x{offset:x}")
+
+
+def _read_property_u32(reader: Reader, offset: int) -> int:
+    _require_property_range(reader, offset, 4)
+    return reader.u32(offset)
+
+
+def _read_property_f32(reader: Reader, offset: int) -> float:
+    _require_property_range(reader, offset, 4)
+    return reader.f32(offset)
+
+
+def _parse_vec_metadata(
+    reader: Reader, cursor: int, name: str, record_offset: int,
+) -> tuple[list[int], int]:
+    """Consume the resource's variable type metadata and its exact 1,0 terminator."""
+    metadata: list[int] = []
+    while True:
+        token = _read_property_u32(reader, cursor)
+        cursor += 4
+        if token == 1 and _read_property_u32(reader, cursor) == 0:
+            cursor += 4
+            if not metadata:
+                raise FormatError(f"{name!r}: empty vec metadata at 0x{record_offset:x}")
+            return metadata, cursor
+        metadata.append(token)
+        if len(metadata) > 8:
+            raise FormatError(f"{name!r}: more than 8 vec metadata words at 0x{record_offset:x}")
+
+
+def parse_property_record(reader: Reader, offset: int) -> tuple[dict[str, Any], int]:
+    record_offset = offset
+    name, cursor = reader.string(offset)
+    try:
+        category = property_category(name)
+    except FormatError as error:
+        raise FormatError(f"{error} at 0x{record_offset:x}") from error
+    reader.require(cursor, PROP_RECORD_HEADER)
+    cursor += 4
+    reader.require(cursor, PROP_RECORD_HEADER_2)
+    cursor += 4
+    metadata: list[int] = []
+    raw_value: int | None = None
+
+    if category in ("vec2", "vec3", "vec4"):
+        dimension = {"vec2": 2, "vec3": 3, "vec4": 4}[category]
+        metadata, cursor = _parse_vec_metadata(reader, cursor, name, record_offset)
+        value: Any = []
+        for _ in range(dimension):
+            value.append(_read_property_f32(reader, cursor))
+            cursor += 4
+    else:
+        header = [_read_property_u32(reader, cursor + index * 4) for index in range(3)]
+        cursor += 12
+        if header != [0, 1, 0]:
+            raise FormatError(f"{name!r}: invalid scalar header {header!r} at 0x{record_offset:x}")
+        if category == "string":
+            value, cursor = reader.string(cursor)
+        else:
+            raw_value = _read_property_u32(reader, cursor)
+            cursor += 4
+            if category == "bool":
+                if raw_value not in (0, 1):
+                    raise FormatError(f"{name!r}: invalid bool {raw_value} at 0x{record_offset:x}")
+                value = bool(raw_value)
+            elif category == "f32":
+                value = reader.f32(cursor - 4)
+            elif category == "u32":
+                value = raw_value
+            else:
+                raise RuntimeError(f"unhandled property category {category!r}")
+
+    trailer = _read_property_u32(reader, cursor)
+    cursor += 4
+    if trailer != 0:
+        raise FormatError(f"{name!r}: invalid property trailer at 0x{record_offset:x}")
+    return {
+        "name": name, "category": category, "offset": record_offset,
+        "end_offset": cursor, "metadata": metadata, "raw_value": raw_value,
+        "trailer": trailer, "value": value,
+    }, cursor
+
+
+def parse_static_properties(
+    reader: Reader, start: int, limit: int,
+) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], int]:
+    cursor = start
+    properties: dict[str, Any] = {}
+    records: list[dict[str, Any]] = []
+    groups: list[dict[str, Any]] = []
+    seen: dict[str, int] = {}
+    while True:
+        if cursor + 4 > limit:
+            raise FormatError(f"static property area has no UIAM before 0x{limit:x}")
+        if reader.data[cursor:cursor + 4] == b"UIAM":
+            return properties, records, groups, cursor
+        reader.require(cursor, PROP_GROUP_HEADER)
+        if cursor + 20 > limit:
+            raise FormatError(f"truncated property group header at 0x{cursor:x}")
+        group_offset = cursor
+        group_flags = reader.u32(cursor + 4)
+        group_id = reader.u32(cursor + 8)
+        reader.require(cursor + 12, PROP_GROUP_COUNT)
+        property_count = reader.u32(cursor + 16)
+        cursor += 20
+        group_property_names: list[str] = []
+        for _ in range(property_count):
+            record, cursor = parse_property_record(reader, cursor)
+            if cursor > limit:
+                raise FormatError(f"property at 0x{record['offset']:x} extends past UIAM")
+            name = record["name"]
+            if name in seen:
+                raise FormatError(
+                    f"duplicate static property {name!r} at 0x{record['offset']:x}; "
+                    f"first at 0x{seen[name]:x}")
+            seen[name] = record["offset"]
+            record["group_id"] = group_id
+            record["group_flags"] = group_flags
+            properties[name] = record["value"]
+            records.append(record)
+            group_property_names.append(name)
+        reader.require(cursor, PROP_GROUP_END)
+        cursor += 4
+        if cursor > limit:
+            raise FormatError(f"property group end extends past 0x{limit:x}")
+        groups.append({
+            "offset": group_offset, "flags": group_flags, "group_id": group_id,
+            "property_count": property_count, "end_offset": cursor,
+            "properties": group_property_names,
+        })
+
+
 def parse_event(reader: Reader, offset: int, end: int) -> tuple[dict[str, Any], int]:
     reader.require(offset, b"UIEC")
     command, cursor = reader.string(offset + 4)
@@ -194,11 +389,16 @@ def parse_file(path: Path) -> dict[str, Any]:
         reader.require(component_offset, b"UICH")
         name, after_name = reader.string(component_offset + 20)
         parent = reader.i32(after_name)
-        animation_maps = reader.positions(b"UIAM", after_name, component_end)
-        component_ends = reader.positions(b"UIME", after_name, component_end)
-        if len(animation_maps) != 1 or len(component_ends) != 1:
-            raise FormatError(f"UICH {name!r}: UIAM/UIME count mismatch")
-        map_offset = animation_maps[0]
+        post_parent_start = after_name + 4
+        static_start = post_parent_start + 16
+        if static_start > component_end:
+            raise FormatError(f"UICH {name!r}: post-parent fields outside component")
+        post_parent_16 = data[post_parent_start:static_start].hex()
+        properties, property_records, property_groups, map_offset = parse_static_properties(
+            reader, static_start, component_end)
+        component_ends = reader.positions(b"UIME", map_offset, component_end)
+        if len(component_ends) != 1 or map_offset >= component_ends[0]:
+            raise FormatError(f"UICH {name!r}: invalid UIAM/UIME range")
         reader.require(map_offset + 4, b"UIAB")
         animation_count = reader.u32(map_offset + 8)
         animation_positions = reader.positions(b"USAM", map_offset + 12, component_ends[0])
@@ -214,6 +414,12 @@ def parse_file(path: Path) -> dict[str, Any]:
             "name": name,
             "parent_index": parent,
             "component_offset": component_offset,
+            "post_parent_16": post_parent_16,
+            "static_start": static_start,
+            "uiam_offset": map_offset,
+            "properties": properties,
+            "property_groups": property_groups,
+            "property_records": property_records,
             "animations": [
                 {**asdict(animation), "end_time_ms": animation.end_time_ms}
                 for animation in animations
@@ -232,12 +438,41 @@ def parse_file(path: Path) -> dict[str, Any]:
     }
 
 
+def verify_layout(path: Path) -> None:
+    report = parse_file(path)
+    for component in report["components"]:
+        for record in component["property_records"]:
+            if not (component["static_start"] <= record["offset"]
+                    < record["end_offset"] <= component["uiam_offset"]):
+                raise FormatError(f"property outside static range: {record}")
+    matches = [component for component in report["components"] if component["name"] == "iconSlot1"]
+    if len(matches) != 1:
+        raise FormatError(f"expected exactly one iconSlot1, got {len(matches)}")
+    expected = {
+        "texture": "textures/adventureprogress/iconSlot.tex",
+        "scale": [1.0, 1.0, 1.0],
+        "origin": [83.5, 0.0, 0.0],
+        "position": [126.0, 42.5, 0.0],
+        "width": 83.0,
+        "height": 83.0,
+    }
+    for name, expected_value in expected.items():
+        actual = matches[0]["properties"].get(name)
+        if actual != expected_value:
+            raise FormatError(f"iconSlot1.{name}: expected {expected_value!r}, got {actual!r}")
+    print(f"OK layout {path}: {len(report['components'])} components")
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Extract and validate release UISF animation timelines.")
+    parser = argparse.ArgumentParser(description="Extract and validate release UISF layout and animations.")
     parser.add_argument("paths", nargs="*", type=Path)
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--verify-layout", type=Path, metavar="PATH")
     args = parser.parse_args()
+    if args.verify_layout is not None:
+        verify_layout(args.verify_layout)
+        return
     root = Path(__file__).resolve().parents[1]
     paths = sorted((root / "assets_raw/xml/screens").glob("*.uiscreen")) if args.all else args.paths
     if not paths:

@@ -7,7 +7,11 @@
   "components": [
     {
       "name": "",
-      "animations": []
+      "animations": [],
+      "parentIndex": -1,
+      "layout": {
+        "enabled": false
+      }
     },
     {
       "name": "actContainer",
@@ -258,35 +262,193 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          368.0,
+          116.0,
+          0.0
+        ],
+        "width": 250.0,
+        "height": 320.0,
+        "enabled": true,
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "layer": 1
+      }
     },
     {
       "name": "actContainer.backing",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/adventureprogress/flipper.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "actContainer.actPoster",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/menus/basicPoster.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 190.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "actContainer.border1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          -44.0,
+          45.00008010864258,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 88.0,
+        "originFromCenter": true,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "actContainer.border2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          -44.0,
+          -46.999820709228516,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 88.5,
+        "originFromCenter": true,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "actContainer.border3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          45.0,
+          45.00004959106445,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 88.0,
+        "originFromCenter": true,
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "actContainer.border4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          45.0,
+          -46.99925994873047,
+          0.0
+        ],
+        "width": 85.0,
+        "height": 88.5,
+        "originFromCenter": true,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "actContainer.actLabel",
-      "animations": []
+      "animations": [],
+      "parentIndex": 1,
+      "layout": {
+        "text": "FN_PUSS_CHALLENGE_MAP_TITLE",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 100.0,
+        "height": 50.0,
+        "colour": [
+          189.0,
+          50.0,
+          33.0,
+          255.0
+        ],
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 40.0
+      }
     },
     {
       "name": "challengeContainer",
@@ -526,31 +688,154 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          372.0,
+          109.0,
+          0.0
+        ],
+        "width": 250.0,
+        "height": 320.0,
+        "enabled": false,
+        "originFromCenter": true,
+        "layer": 1
+      }
     },
     {
       "name": "challengeContainer.spinner",
-      "animations": []
+      "animations": [],
+      "parentIndex": 9,
+      "layout": {
+        "position": [
+          -132.0,
+          -109.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          -34.5,
+          -17.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0
+      }
     },
     {
       "name": "challengeContainer.spinner.backing",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/flipper.tex",
+        "position": [
+          128.5,
+          17.0,
+          0.0
+        ],
+        "origin": [
+          94.0,
+          0.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0,
+        "inputEnabled": false
+      }
     },
     {
       "name": "challengeContainer.spinner.iconSlot1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/iconSlot.tex",
+        "position": [
+          126.0,
+          42.5,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          83.5,
+          0.0,
+          0.0
+        ],
+        "width": 83.0,
+        "height": 83.0,
+        "inputEnabled": false
+      }
     },
     {
       "name": "challengeContainer.spinner.iconSlot2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/iconSlot.tex",
+        "position": [
+          126.5,
+          42.5,
+          0.0
+        ],
+        "origin": [
+          -3.5,
+          0.0,
+          0.0
+        ],
+        "width": 83.0,
+        "height": 83.0,
+        "inputEnabled": false
+      }
     },
     {
       "name": "challengeContainer.spinner.iconSlot3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/iconSlot.tex",
+        "position": [
+          126.0,
+          126.5,
+          0.0
+        ],
+        "origin": [
+          83.5,
+          0.0,
+          0.0
+        ],
+        "width": 83.0,
+        "height": 83.0,
+        "inputEnabled": false
+      }
     },
     {
       "name": "challengeContainer.spinner.iconSlot4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/iconSlot.tex",
+        "position": [
+          126.5,
+          126.5,
+          0.0
+        ],
+        "origin": [
+          -3.5,
+          0.0,
+          0.0
+        ],
+        "width": 83.0,
+        "height": 83.0,
+        "inputEnabled": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNode_1",
@@ -780,7 +1065,38 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/challengeAtlas.tex",
+        "position": [
+          125.5,
+          46.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          79.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.10000000149011612,
+          0.3330000042915344
+        ],
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNode_2",
@@ -1010,7 +1326,38 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/challengeAtlas.tex",
+        "position": [
+          130.0,
+          46.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          -4.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.10000000149011612,
+          0.3330000042915344
+        ],
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNode_3",
@@ -1240,7 +1587,38 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/challengeAtlas.tex",
+        "position": [
+          125.5,
+          130.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          79.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.10000000149011612,
+          0.3330000042915344
+        ],
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNode_4",
@@ -1481,7 +1859,38 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/challengeAtlas.tex",
+        "position": [
+          129.5,
+          130.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          -4.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.10000000149011612,
+          0.3330000042915344
+        ],
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.clickNowText",
@@ -1646,7 +2055,33 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "text": "FN_PUSS_CLICK_TO_CHOOSE",
+        "position": [
+          129.00039672851562,
+          29.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 178.0,
+        "height": 30.0,
+        "colour": [
+          255.0,
+          228.0,
+          176.0,
+          255.0
+        ],
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "fontSize": 14.0,
+        "alignment": "CenterCenter"
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodePass_1",
@@ -1675,7 +2110,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/tick.tex",
+        "position": [
+          125.5,
+          46.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          79.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodePass_2",
@@ -1704,7 +2164,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/tick.tex",
+        "position": [
+          130.0,
+          46.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          -4.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodePass_3",
@@ -1733,7 +2218,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/tick.tex",
+        "position": [
+          125.5,
+          130.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          79.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodePass_4",
@@ -1762,7 +2272,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/tick.tex",
+        "position": [
+          129.5,
+          130.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          -4.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodeFail_1",
@@ -1791,7 +2326,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/cross.tex",
+        "position": [
+          125.5,
+          46.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          79.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodeFail_2",
@@ -1820,7 +2380,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/cross.tex",
+        "position": [
+          130.0,
+          46.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          -4.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodeFail_3",
@@ -1849,7 +2434,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/cross.tex",
+        "position": [
+          125.5,
+          130.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          79.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "challengeContainer.spinner.adventureNodeFail_4",
@@ -1878,11 +2488,49 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/adventureprogress/cross.tex",
+        "position": [
+          129.5,
+          130.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          -4.0,
+          0.0,
+          0.0
+        ],
+        "width": 76.0,
+        "height": 76.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "bossChallengeContainer",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          368.0,
+          116.0,
+          0.0
+        ],
+        "width": 250.0,
+        "height": 320.0,
+        "enabled": false,
+        "originFromCenter": true,
+        "layer": 1
+      }
     },
     {
       "name": "bossChallengeContainer.spinner",
@@ -2021,15 +2669,65 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 29,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          -34.5,
+          -17.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0
+      }
     },
     {
       "name": "bossChallengeContainer.spinner.backing",
-      "animations": []
+      "animations": [],
+      "parentIndex": 30,
+      "layout": {
+        "texture": "textures/adventureprogress/flipper.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0,
+        "inputEnabled": false,
+        "originFromCenter": true
+      }
     },
     {
       "name": "bossChallengeContainer.spinner.iconSlot",
-      "animations": []
+      "animations": [],
+      "parentIndex": 30,
+      "layout": {
+        "texture": "textures/adventureProgress/iconSlot.tex",
+        "position": [
+          0.0,
+          10.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 104.0,
+        "height": 104.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "bossChallengeContainer.spinner.adventureNode_1",
@@ -2259,11 +2957,58 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 30,
+      "layout": {
+        "texture": "textures/adventureprogress/challengeAtlas.tex",
+        "position": [
+          0.0,
+          10.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 96.0,
+        "height": 96.0,
+        "originFromCenter": true,
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.10000000149011612,
+          0.3330000042915344
+        ],
+        "layer": 4294967295,
+        "drawNinePatch": false
+      }
     },
     {
       "name": "bossChallengeContainer.spinner.finaleHeading",
-      "animations": []
+      "animations": [],
+      "parentIndex": 30,
+      "layout": {
+        "text": "FN_PUSS_BONUS_INTRO_1",
+        "position": [
+          0.0,
+          -67.00010681152344,
+          0.0
+        ],
+        "width": 170.0,
+        "height": 50.0,
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 34.0
+      }
     },
     {
       "name": "bossChallengeContainer.spinner.adventureNodeFail_1",
@@ -2305,7 +3050,27 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 30,
+      "layout": {
+        "texture": "textures/adventureprogress/cross.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "layer": 4294967295
+      }
     },
     {
       "name": "bossChallengeContainer.spinner.adventureNodePass_1",
@@ -2347,7 +3112,27 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 30,
+      "layout": {
+        "texture": "textures/adventureprogress/tick.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 85.0,
+        "height": 85.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "layer": 4294967295
+      }
     },
     {
       "name": "bossChallengeContainer.spinner.clickNowText",
@@ -2470,7 +3255,28 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 30,
+      "layout": {
+        "text": "FN_PUSS_CLICK_TO_BEGIN",
+        "position": [
+          0.0,
+          74.99993133544922,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 30.0,
+        "colour": [
+          255.0,
+          228.0,
+          176.0,
+          255.0
+        ],
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "fontSize": 18.0,
+        "alignment": "CenterCenter"
+      }
     },
     {
       "name": "progressUIContainer",
@@ -2668,11 +3474,42 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 240.0,
+        "height": 320.0,
+        "enabled": false,
+        "inputEnabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "progressUIContainer.map",
-      "animations": []
+      "animations": [],
+      "parentIndex": 38,
+      "layout": {
+        "position": [
+          18.0,
+          19.0,
+          0.0
+        ],
+        "width": 185.0,
+        "height": 280.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          255.0
+        ],
+        "enabled": true,
+        "layer": 1
+      }
     },
     {
       "name": "progressUIContainer.map.act1",
@@ -2751,15 +3588,67 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 39,
+      "layout": {
+        "position": [
+          -6.0,
+          209.0,
+          0.0
+        ],
+        "width": 198.0,
+        "height": 80.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          120.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.title",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "text": "FN_PUSS_ACT_1",
+        "position": [
+          69.5,
+          13.5,
+          0.0
+        ],
+        "width": 120.0,
+        "height": 30.0,
+        "colour": [
+          70.0,
+          50.0,
+          40.0,
+          255.0
+        ],
+        "fontSize": 20.0
+      }
     },
     {
       "name": "progressUIContainer.map.act1.area",
-      "animations": []
+      "animations": [],
+      "parentIndex": 40,
+      "layout": {
+        "text": "FN_PUSS_SAN_RICARDO",
+        "position": [
+          69.5,
+          43.5,
+          0.0
+        ],
+        "width": 120.0,
+        "height": 20.0,
+        "colour": [
+          188.0,
+          60.0,
+          20.0,
+          255.0
+        ],
+        "fontSize": 14.0
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border",
@@ -2838,39 +3727,223 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 40,
+      "layout": {
+        "position": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "width": 199.0,
+        "height": 80.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.corner1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          40.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.corner2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.corner3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.corner4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          40.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.edge1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          71.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.edge2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          71.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.edge3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.border.edge4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 43,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.picture",
@@ -2971,7 +4044,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          2.0,
+          16.5,
+          0.0
+        ],
+        "width": 80.0,
+        "height": 50.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.5,
+          0.75
+        ],
+        "texCoordSize": [
+          -0.5,
+          0.25
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act1.pictureColoured",
@@ -3072,7 +4170,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 40,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          2.0,
+          16.5,
+          0.0
+        ],
+        "width": 80.0,
+        "height": 50.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.75
+        ],
+        "texCoordSize": [
+          -0.5,
+          0.25
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2",
@@ -3151,15 +4274,67 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 39,
+      "layout": {
+        "position": [
+          -6.0,
+          135.0,
+          0.0
+        ],
+        "width": 198.0,
+        "height": 80.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          120.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.title",
-      "animations": []
+      "animations": [],
+      "parentIndex": 54,
+      "layout": {
+        "text": "FN_PUSS_ACT_2",
+        "position": [
+          7.5,
+          13.5,
+          0.0
+        ],
+        "width": 120.0,
+        "height": 30.0,
+        "colour": [
+          70.0,
+          50.0,
+          40.0,
+          255.0
+        ],
+        "fontSize": 20.0
+      }
     },
     {
       "name": "progressUIContainer.map.act2.area",
-      "animations": []
+      "animations": [],
+      "parentIndex": 54,
+      "layout": {
+        "text": "FN_PUSS_CAT_CANTINA",
+        "position": [
+          7.5,
+          43.5,
+          0.0
+        ],
+        "width": 120.0,
+        "height": 20.0,
+        "colour": [
+          106.0,
+          83.0,
+          126.0,
+          255.0
+        ],
+        "fontSize": 14.0
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border",
@@ -3238,39 +4413,223 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 54,
+      "layout": {
+        "position": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "width": 199.0,
+        "height": 80.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.corner1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          40.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.corner2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.corner3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.corner4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          40.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.edge1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          71.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.edge2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          71.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.edge3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.border.edge4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 57,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.picture",
@@ -3371,7 +4730,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 54,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          108.0,
+          13.5,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 50.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.5
+        ],
+        "texCoordSize": [
+          0.5,
+          0.25
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act2.pictureColoured",
@@ -3472,7 +4856,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 54,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          108.0,
+          13.5,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 50.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ],
+        "texCoordPos": [
+          0.5,
+          0.5
+        ],
+        "texCoordSize": [
+          0.5,
+          0.25
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3",
@@ -3551,15 +4960,67 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 39,
+      "layout": {
+        "position": [
+          -6.0,
+          61.0,
+          0.0
+        ],
+        "width": 198.0,
+        "height": 80.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          120.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.title",
-      "animations": []
+      "animations": [],
+      "parentIndex": 68,
+      "layout": {
+        "text": "FN_PUSS_ACT_3",
+        "position": [
+          71.5,
+          13.5,
+          0.0
+        ],
+        "width": 120.0,
+        "height": 30.0,
+        "colour": [
+          70.0,
+          50.0,
+          40.0,
+          255.0
+        ],
+        "fontSize": 20.0
+      }
     },
     {
       "name": "progressUIContainer.map.act3.area",
-      "animations": []
+      "animations": [],
+      "parentIndex": 68,
+      "layout": {
+        "text": "FN_PUSS_SKY_CASTLE",
+        "position": [
+          71.5,
+          43.5,
+          0.0
+        ],
+        "width": 120.0,
+        "height": 20.0,
+        "colour": [
+          78.0,
+          112.0,
+          155.0,
+          255.0
+        ],
+        "fontSize": 14.0
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border",
@@ -3638,39 +5099,223 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 68,
+      "layout": {
+        "position": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "width": 199.0,
+        "height": 80.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.corner1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          40.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.corner2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.corner3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.corner4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          40.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 40.0,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.edge1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          71.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.edge2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          71.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.edge3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.border.edge4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 71,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.picture",
@@ -3771,7 +5416,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 68,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          -4.5,
+          13.5,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 50.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.5,
+          0.25
+        ],
+        "texCoordSize": [
+          -0.5,
+          0.25
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act3.pictureColoured",
@@ -3872,7 +5542,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 68,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          -4.5,
+          13.5,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 50.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.25
+        ],
+        "texCoordSize": [
+          -0.5,
+          0.25
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4",
@@ -3951,11 +5646,45 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 39,
+      "layout": {
+        "position": [
+          -6.0,
+          -5.0,
+          0.0
+        ],
+        "width": 198.0,
+        "height": 70.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          120.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.title",
-      "animations": []
+      "animations": [],
+      "parentIndex": 82,
+      "layout": {
+        "text": "FN_PUSS_FINALE",
+        "position": [
+          9.5,
+          19.5,
+          0.0
+        ],
+        "width": 110.0,
+        "height": 30.0,
+        "colour": [
+          70.0,
+          50.0,
+          40.0,
+          255.0
+        ],
+        "fontSize": 20.0
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border",
@@ -4034,39 +5763,228 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 82,
+      "layout": {
+        "position": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 199.0,
+        "height": 80.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.corner1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          35.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 35.0
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.corner2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          149.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 35.0,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.corner3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 35.0,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.corner4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          0.0,
+          35.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 35.0,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.edge1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          61.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.edge2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          61.5,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.edge3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          49.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.border.edge4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 84,
+      "layout": {
+        "texture": "textures/menus/posterDeco02.tex",
+        "position": [
+          99.5,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 8.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.picture",
@@ -4167,7 +6085,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 82,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          103.5,
+          10.5,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 50.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          255.0
+        ],
+        "texCoordPos": [
+          0.5,
+          0.0
+        ],
+        "texCoordSize": [
+          -0.5,
+          0.25
+        ]
+      }
     },
     {
       "name": "progressUIContainer.map.act4.pictureColoured",
@@ -4268,7 +6211,32 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 82,
+      "layout": {
+        "texture": "textures/adventureProgress/locations.tex",
+        "position": [
+          103.5,
+          10.5,
+          0.0
+        ],
+        "width": 90.0,
+        "height": 50.0,
+        "colour": [
+          255.0,
+          255.0,
+          255.0,
+          0.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -0.5,
+          0.25
+        ]
+      }
     }
   ]
 }

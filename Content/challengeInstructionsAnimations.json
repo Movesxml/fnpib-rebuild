@@ -7,7 +7,11 @@
   "components": [
     {
       "name": "",
-      "animations": []
+      "animations": [],
+      "parentIndex": -1,
+      "layout": {
+        "enabled": true
+      }
     },
     {
       "name": "instructionsContainerLeft",
@@ -86,7 +90,20 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 240.0,
+        "height": 320.0,
+        "enabled": true,
+        "inputEnabled": false,
+        "layer": 2
+      }
     },
     {
       "name": "instructionsContainerLeft.instructions",
@@ -139,7 +156,27 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 1,
+      "layout": {
+        "text": "Do something or other",
+        "position": [
+          16.5,
+          169.0,
+          0.0
+        ],
+        "width": 190.0,
+        "height": 120.0,
+        "colour": [
+          190.0,
+          40.0,
+          30.0,
+          255.0
+        ],
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 36.0,
+        "alignment": "CenterCenter"
+      }
     },
     {
       "name": "instructionsContainerLeft.iconShadow",
@@ -189,7 +226,23 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/adventureprogress/iconShadow.tex",
+        "position": [
+          111.5,
+          96.5,
+          0.0
+        ],
+        "origin": [
+          69.0,
+          69.0,
+          0.0
+        ],
+        "width": 138.0,
+        "height": 138.0
+      }
     },
     {
       "name": "instructionsContainerLeft.icon",
@@ -276,7 +329,37 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 1,
+      "layout": {
+        "texture": "textures/adventureprogress/challengeAtlas.tex",
+        "position": [
+          113.5,
+          94.0,
+          0.0
+        ],
+        "scale": [
+          2.0,
+          2.0,
+          1.0
+        ],
+        "origin": [
+          32.0,
+          32.0,
+          0.0
+        ],
+        "width": 64.0,
+        "height": 64.0,
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          0.10000000149011612,
+          0.3330000042915344
+        ],
+        "layer": 4294967295
+      }
     },
     {
       "name": "instructionsContainerRight",
@@ -354,11 +437,26 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          868.0,
+          116.0,
+          0.0
+        ],
+        "width": 240.0,
+        "height": 320.0,
+        "inputEnabled": false,
+        "originFromCenter": true,
+        "layer": 2
+      }
     },
     {
       "name": "instructionsContainerRight.scoreCounterTotalDelay",
-      "animations": []
+      "animations": [],
+      "parentIndex": 5,
+      "layout": {}
     },
     {
       "name": "instructionsContainerRight.spinner",
@@ -412,55 +510,329 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 5,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.backing",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/adventureprogress/flipper.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 188.0,
+        "height": 197.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.poster",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "texture": "textures/menus/basicPoster.tex",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 180.0,
+        "height": 190.0,
+        "originFromCenter": true
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.posterArt",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "position": [
+          -114.0,
+          -90.00023651123047,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 225.0,
+        "height": 180.0,
+        "originFromCenter": false
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.posterArt.oval1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/menus/posterOval.tex",
+        "position": [
+          114.0,
+          68.5,
+          0.0
+        ],
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 104.0,
+        "height": 104.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          220.0
+        ],
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.posterArt.oval2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/menus/posterOval.tex",
+        "position": [
+          114.0,
+          68.5,
+          0.0
+        ],
+        "origin": [
+          104.0,
+          0.0,
+          0.0
+        ],
+        "width": 104.0,
+        "height": 104.0,
+        "colour": [
+          113.0,
+          61.0,
+          6.0,
+          220.0
+        ],
+        "texCoordPos": [
+          0.0,
+          0.0
+        ],
+        "texCoordSize": [
+          1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.posterArt.border3",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          113.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          84.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          1.0,
+          1.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.posterArt.border2",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          113.0,
+          130.0,
+          0.0
+        ],
+        "origin": [
+          84.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          1.0,
+          0.0
+        ],
+        "texCoordSize": [
+          -1.0,
+          1.0
+        ]
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.posterArt.border1",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          113.0,
+          130.0,
+          0.0
+        ],
+        "origin": [
+          -36.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.posterArt.border4",
-      "animations": []
+      "animations": [],
+      "parentIndex": 10,
+      "layout": {
+        "texture": "textures/menus/posterDeco01.tex",
+        "position": [
+          113.0,
+          0.0,
+          0.0
+        ],
+        "origin": [
+          -36.0,
+          0.0,
+          0.0
+        ],
+        "width": 50.0,
+        "height": 50.0,
+        "texCoordPos": [
+          0.0,
+          1.0
+        ],
+        "texCoordSize": [
+          1.0,
+          -1.0
+        ]
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.scoreCounterTotal",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "text": "(20)",
+        "position": [
+          0.0,
+          34.99995040893555,
+          0.0
+        ],
+        "width": 94.0,
+        "height": 80.0,
+        "colour": [
+          190.0,
+          40.0,
+          30.0,
+          255.0
+        ],
+        "originFromCenter": true,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 60.0
+      }
     },
     {
       "name": "instructionsContainerRight.spinner.scoreText",
-      "animations": []
+      "animations": [],
+      "parentIndex": 7,
+      "layout": {
+        "text": "GAME_TEXTURE_54",
+        "position": [
+          -69.0,
+          -74.00013732910156,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "width": 140.0,
+        "height": 50.0,
+        "colour": [
+          90.0,
+          60.0,
+          26.0,
+          255.0
+        ],
+        "layer": 4294967295,
+        "fontName": "FontsTrueType/miserable.TTF",
+        "fontSize": 35.0
+      }
     },
     {
       "name": "skipButton",
-      "animations": []
+      "animations": [],
+      "parentIndex": 0,
+      "layout": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": 480.0,
+        "height": 320.0
+      }
     },
     {
       "name": "dummyTimer",
@@ -496,7 +868,11 @@
             }
           ]
         }
-      ]
+      ],
+      "parentIndex": 0,
+      "layout": {
+        "inputEnabled": false
+      }
     }
   ]
 }
