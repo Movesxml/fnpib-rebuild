@@ -10,8 +10,16 @@ def s8(value):
     return value - 0x100 if value & 0x80 else value
 
 
+def word(data: bytes, offset: int) -> int:
+    """ARM reads bytes 0–2 signed and byte 3 unsigned."""
+    return sum(
+        (data[offset + index] if index == 3 else s8(data[offset + index])) << (8 * index)
+        for index in range(4)
+    ) & MASK
+
+
 def original_hash(raw: bytes) -> int:
-    if not raw:
+    if not raw or raw[0] == 0:
         return 0
     data = bytes(byte + 0x20 if 0x41 <= byte <= 0x5A else byte for byte in raw)
     a = GOLDEN
@@ -20,9 +28,9 @@ def original_hash(raw: bytes) -> int:
     length = len(data)
     offset = 0
     while length - offset >= 12:
-        a = (a + int.from_bytes(data[offset:offset + 4], "little")) & MASK
-        b = (b + int.from_bytes(data[offset + 4:offset + 8], "little")) & MASK
-        c = (c + int.from_bytes(data[offset + 8:offset + 12], "little")) & MASK
+        a = (a + word(data, offset)) & MASK
+        b = (b + word(data, offset + 4)) & MASK
+        c = (c + word(data, offset + 8)) & MASK
         a, b, c = mix(a, b, c)
         offset += 12
     c = (c + length) & MASK
@@ -32,11 +40,11 @@ def original_hash(raw: bytes) -> int:
         if len(tail) > index:
             value = tail[index] if shift == 24 else s8(tail[index])
             c = (c + (value << shift)) & MASK
-    for index, shift in ((6, 24), (5, 16), (4, 8)):
+    for index, shift in ((7, 24), (6, 16), (5, 8), (4, 0)):
         if len(tail) > index:
             value = tail[index] if shift == 24 else s8(tail[index])
             b = (b + (value << shift)) & MASK
-    for index, shift in ((2, 24), (1, 16), (0, 0)):
+    for index, shift in ((3, 24), (2, 16), (1, 8), (0, 0)):
         if len(tail) > index:
             value = tail[index] if shift == 24 else s8(tail[index])
             a = (a + (value << shift)) & MASK
@@ -60,7 +68,8 @@ def main():
     vectors = {}
     for length in range(14):
         vectors[f"len{length}"] = bytes(range(0x41, 0x41 + length))
-    for name in ("", "apple", "APPLE", "FastFruit1", "bombPairs1", "LEFT_RIGHT", "é", "你好"):
+    for name in ("", "apple", "APPLE", "Apple", "FastFruit1", "bombPairs1", "LEFT_RIGHT",
+                 "é", "aé", "éa", "ééa", "aéé", "你好", "ééééééé"):
         vectors[name] = name.encode("utf-8")
     result = {name: {"utf8": raw.hex(), "hash": f"0x{original_hash(raw):08x}"}
               for name, raw in vectors.items()}

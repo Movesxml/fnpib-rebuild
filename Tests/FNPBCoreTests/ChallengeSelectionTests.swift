@@ -120,8 +120,8 @@ final class ChallengeSelectionTests: XCTestCase {
 
         let picked = selector.select(rng: rng, persistence: store)
         XCTAssertEqual(picked?.name, "b", "priority 且未游玩应直接选中")
-        XCTAssertEqual(store.snapshot(forKey: "challenge:b")?.cooldown, 4)
-        XCTAssertEqual(store.snapshot(forKey: "challenge:b")?.current, 0)
+        XCTAssertEqual(store.snapshot(forKey: ChallengeGroupSelector.challengeKey(challenges[1]))?.cooldown, 4)
+        XCTAssertEqual(store.snapshot(forKey: ChallengeGroupSelector.challengeKey(challenges[1]))?.current, 0)
         XCTAssertTrue(selector.hasSelectablePriority, "b 仍未游玩，标志应保持 true")
     }
 
@@ -135,7 +135,7 @@ final class ChallengeSelectionTests: XCTestCase {
                                              selection: weight(20, 0.2),
                                              challenges: challenges)
         let store = ChallengeSelectionMemoryStore()
-        store.setSnapshot(ChallengeSelectionSnapshot(current: 0, cooldown: 3), forKey: "challenge:b")
+        store.setSnapshot(ChallengeSelectionSnapshot(current: 0, cooldown: 3), forKey: ChallengeGroupSelector.challengeKey(challenges[1]))
         var selector = ChallengeGroupSelector(group: group, persistence: store)
         let rng = ScriptedRandom(ints: [0])
 
@@ -154,7 +154,7 @@ final class ChallengeSelectionTests: XCTestCase {
                                              selection: weight(20, 0.2),
                                              challenges: challenges)
         let store = ChallengeSelectionMemoryStore()
-        store.setPlayCount(1, forKey: "challenge:b")
+        store.setPlayCount(1, forKey: ChallengeGroupSelector.challengeKey(challenges[1]))
         var selector = ChallengeGroupSelector(group: group, persistence: store)
         // roll = 0 → 命中第一个项 a
         let rng = ScriptedRandom(ints: [0])
@@ -175,7 +175,7 @@ final class ChallengeSelectionTests: XCTestCase {
         var selector = ChallengeGroupSelector(group: group, persistence: store)
         XCTAssertTrue(selector.hasSelectablePriority)
 
-        store.setPlayCount(1, forKey: "challenge:a")
+        store.setPlayCount(1, forKey: ChallengeGroupSelector.challengeKey(challenges[0]))
         // 触发一次选择刷新标志
         _ = selector.select(rng: ScriptedRandom(ints: [0]), persistence: store)
         XCTAssertFalse(selector.hasSelectablePriority)
@@ -278,14 +278,14 @@ final class ChallengeSelectionTests: XCTestCase {
                                              challenges: [challenge])
         let store = ChallengeSelectionMemoryStore()
         store.setSnapshot(ChallengeSelectionSnapshot(current: 0, cooldown: 5),
-                          forKey: "challenge:only")
+                          forKey: ChallengeGroupSelector.challengeKey(challenge))
         var selector = ChallengeGroupSelector(group: group, persistence: store)
 
         let picked = selector.select(rng: ScriptedRandom(ints: [0]), persistence: store)
         XCTAssertEqual(picked?.name, "only", "零总权重时原版仍选索引 0")
         // regrow 递减一次 cooldown；零权重回退不再次清除该项。
-        XCTAssertEqual(store.snapshot(forKey: "challenge:only")?.cooldown, 4)
-        XCTAssertEqual(store.snapshot(forKey: "challenge:only")?.current, 0)
+        XCTAssertEqual(store.snapshot(forKey: ChallengeGroupSelector.challengeKey(challenge))?.cooldown, 4)
+        XCTAssertEqual(store.snapshot(forKey: ChallengeGroupSelector.challengeKey(challenge))?.current, 0)
     }
 
     // MARK: 8. 特殊挑战组
@@ -410,5 +410,36 @@ final class ChallengeSelectionTests: XCTestCase {
         XCTAssertEqual(plan.outcome(at: 1), .pass)
         XCTAssertNil(plan.challenge(at: 2))
         XCTAssertNil(plan.outcome(at: 2))
+    }
+
+    // MARK: 10. 原版哈希 key 与组／挑战分表
+
+    func testSelectionKeysUseOnlyOriginalNameHash() {
+        let challenge = ChallengeDefinition(name: "Hash/Name")
+        let group = ChallengeGroupDefinition(name: "Hash/Name")
+        let expected = OriginalStringHash.hash("Hash/Name")
+
+        XCTAssertEqual(ChallengeGroupSelector.challengeKey(challenge), .challenge(expected))
+        XCTAssertEqual(ChallengeTierSelector.groupKey(group: group), .group(expected))
+        XCTAssertNotEqual(ChallengeGroupSelector.challengeKey(challenge),
+                          ChallengeTierSelector.groupKey(group: group))
+    }
+
+    func testSameHashUsesIndependentMemoryTablesAndGroupHasNoPlays() {
+        let hash = OriginalStringHash.hash("same-name")
+        let group = ChallengeSelectionKey.group(hash)
+        let challenge = ChallengeSelectionKey.challenge(hash)
+        let store = ChallengeSelectionMemoryStore()
+        store.setSnapshot(ChallengeSelectionSnapshot(current: 11, cooldown: 2), forKey: group)
+        store.setSnapshot(ChallengeSelectionSnapshot(current: 33, cooldown: 4), forKey: challenge)
+        store.setPlayCount(7, forKey: challenge)
+        store.setPlayCount(99, forKey: group)
+
+        XCTAssertEqual(store.snapshot(forKey: group),
+                       ChallengeSelectionSnapshot(current: 11, cooldown: 2))
+        XCTAssertEqual(store.snapshot(forKey: challenge),
+                       ChallengeSelectionSnapshot(current: 33, cooldown: 4))
+        XCTAssertEqual(store.playCount(forKey: challenge), 7)
+        XCTAssertEqual(store.playCount(forKey: group), 0)
     }
 }

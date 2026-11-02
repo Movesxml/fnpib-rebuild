@@ -1,4 +1,5 @@
 import Foundation
+import FNPBCore
 
 // ============================================================================
 // Persistence — 存档读写（macho M08 / M09）
@@ -32,45 +33,142 @@ import Foundation
 //     原存档的容器路径未从二进制闭合 [待验证]，默认取标准 ApplicationSupport/<bundleID>/。
 // ============================================================================
 
+// MARK: - challengeDataPersistent
+
+/// FUN_00028ffc / FUN_0002a6cc：组和挑战是两张独立表。
+/// name 保存名称哈希的 Int32 位模式；只有挑战记录包含 plays。
+public struct ChallengeDataPersistent: Codable, Equatable, Sendable {
+    public struct GroupRecord: Codable, Equatable, Sendable {
+        public var name: Int32
+        public var chance: Int32
+        public var death: Int32
+
+        public init(name: Int32, chance: Int32, death: Int32) {
+            self.name = name
+            self.chance = chance
+            self.death = death
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            name = try container.decodeIfPresent(Int32.self, forKey: .name) ?? 0
+            chance = try container.decodeIfPresent(Int32.self, forKey: .chance) ?? 0
+            death = try container.decodeIfPresent(Int32.self, forKey: .death) ?? 0
+        }
+    }
+
+    public struct ChallengeRecord: Codable, Equatable, Sendable {
+        public var name: Int32
+        public var chance: Int32
+        public var death: Int32
+        public var plays: Int32
+
+        public init(name: Int32, chance: Int32, death: Int32, plays: Int32 = 0) {
+            self.name = name
+            self.chance = chance
+            self.death = death
+            self.plays = plays
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            name = try container.decodeIfPresent(Int32.self, forKey: .name) ?? 0
+            chance = try container.decodeIfPresent(Int32.self, forKey: .chance) ?? 0
+            death = try container.decodeIfPresent(Int32.self, forKey: .death) ?? 0
+            plays = try container.decodeIfPresent(Int32.self, forKey: .plays) ?? 0
+        }
+    }
+
+    public var groups: [GroupRecord]
+    public var challenges: [ChallengeRecord]
+    /// 尚未解析的旧 plist Data 以 base64 保留；旧字符串保持原文。
+    public var legacyRaw: String?
+
+    public static let empty = ChallengeDataPersistent()
+
+    public init(groups: [GroupRecord] = [],
+                challenges: [ChallengeRecord] = [],
+                legacyRaw: String? = nil) {
+        self.groups = groups
+        self.challenges = challenges
+        self.legacyRaw = legacyRaw
+    }
+
+    public init(legacyRaw: String?) {
+        groups = []
+        challenges = []
+        self.legacyRaw = legacyRaw
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case groups = "grp"
+        case challenges = "chl"
+        case legacyRaw
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        groups = try container.decodeIfPresent([GroupRecord].self, forKey: .groups) ?? []
+        challenges = try container.decodeIfPresent([ChallengeRecord].self, forKey: .challenges) ?? []
+        legacyRaw = try container.decodeIfPresent(String.self, forKey: .legacyRaw)
+    }
+}
+
 // MARK: - 存档数据
 
 public struct SaveData: Codable, Equatable, Sendable {
-
-    /// 原 "version"
     public var version: Int
-    /// 原 "highscore" + "%shighscore"（模式前缀 → 分数）
     public var highscores: [String: Int32]
-    /// 原 "critical_chance"：FUN_00028350 按整数读取、FUN_000292e0 按 %d 保存。
-    /// 这是每局暴击动态分母初值，不是 WaveInfo.criticalChance 的浮点系数。
+    /// 每局暴击动态分母初值，不是 WaveInfo.criticalChance 的浮点系数。
     public var criticalChance: Int32
-    /// 原 "rated"
     public var rated: Bool
-    /// 原 "challengeData"（原为 XML/二进制块，这里以 base64 保真携带）
     public var challengeData: String?
-    /// 统计键（§3.4）：键名与原版一致
     public var stats: [String: Int32]
+    public var challengeDataPersistent: ChallengeDataPersistent
 
     public enum CodingKeys: String, CodingKey {
         case version
-        case highscores       = "highscore"
-        case criticalChance   = "critical_chance"
+        case highscores = "highscore"
+        case criticalChance = "critical_chance"
         case rated
         case challengeData
         case stats
+        case challengeDataPersistent
     }
 
     public init(version: Int = SaveData.currentVersion,
                 highscores: [String: Int32] = [:],
-                criticalChance: Int32 = 70,       // FUN_00027c70：存档 +0x100 = 0x46
+                criticalChance: Int32 = 70,
                 rated: Bool = false,
                 challengeData: String? = nil,
-                stats: [String: Int32] = [:]) {
+                stats: [String: Int32] = [:],
+                challengeDataPersistent: ChallengeDataPersistent = .empty) {
         self.version = version
         self.highscores = highscores
         self.criticalChance = criticalChance
         self.rated = rated
         self.challengeData = challengeData
         self.stats = stats
+        self.challengeDataPersistent = challengeDataPersistent
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decodeIfPresent(Int.self, forKey: .version) ?? SaveData.currentVersion
+        highscores = try container.decodeIfPresent([String: Int32].self, forKey: .highscores) ?? [:]
+        criticalChance = try container.decodeIfPresent(Int32.self, forKey: .criticalChance) ?? 70
+        rated = try container.decodeIfPresent(Bool.self, forKey: .rated) ?? false
+        challengeData = try container.decodeIfPresent(String.self, forKey: .challengeData)
+        stats = try container.decodeIfPresent([String: Int32].self, forKey: .stats) ?? [:]
+
+        // 旧 JSON 的扁平 Data 在 JSON 中也是 base64 字符串；先保留原文，
+        // 否则再按新对象解码。字段缺失使用空表，不让整份旧存档解码失败。
+        if let raw = try container.decodeIfPresent(String.self, forKey: .challengeDataPersistent) {
+            challengeDataPersistent = ChallengeDataPersistent(legacyRaw: raw)
+        } else {
+            challengeDataPersistent = try container.decodeIfPresent(
+                ChallengeDataPersistent.self, forKey: .challengeDataPersistent) ?? .empty
+        }
     }
 
     public static let currentVersion = 1
@@ -88,6 +186,7 @@ public enum SaveKeys {
     public static let criticalChance = "critical_chance"
     public static let rated          = "rated"
     public static let challengeData  = "challengeData"
+    public static let challengeDataPersistent = "challengeDataPersistent"
 
     /// 复刻原版 sprintf("%shighscore", mode)：前缀直接拼接，无分隔符
     public static func highscoreKey(mode: String) -> String {
@@ -210,6 +309,10 @@ extension SaveStore {
            let encoded = stringValue(challenge) {
             save.challengeData = encoded
         }
+        if let persistent = legacyValues[SaveKeys.challengeDataPersistent],
+           let encoded = stringValue(persistent) {
+            save.challengeDataPersistent = ChallengeDataPersistent(legacyRaw: encoded)
+        }
 
         // "%shighscore"：凡是 "highscore" 结尾的扁平键都搬进 highscores 子字典
         // 注意遍历顺序：先处理具名模式，再让 "highscore" 本身落到 default
@@ -244,7 +347,7 @@ extension SaveStore {
     private static func isReservedKey(_ key: String) -> Bool {
         switch key {
         case SaveKeys.version, SaveKeys.highscore, SaveKeys.criticalChance,
-             SaveKeys.rated, SaveKeys.challengeData:
+             SaveKeys.rated, SaveKeys.challengeData, SaveKeys.challengeDataPersistent:
             return true
         default:
             return key.hasSuffix("highscore")
@@ -282,5 +385,61 @@ extension SaveStore {
         if let data = value as? Data { return data.base64EncodedString() }
         if let number = value as? NSNumber { return number.stringValue }
         return nil
+    }
+}
+
+// MARK: - ChallengeSelectionPersisting 的真实磁盘适配
+
+extension SaveStore: ChallengeSelectionPersisting {
+    public func snapshot(forKey key: ChallengeSelectionKey) -> ChallengeSelectionSnapshot? {
+        let persistent = load().challengeDataPersistent
+        switch key {
+        case .group(let hash):
+            let record = persistent.groups.first { UInt32(bitPattern: $0.name) == hash }
+            return record.map { ChallengeSelectionSnapshot(current: $0.chance, cooldown: $0.death) }
+        case .challenge(let hash):
+            let record = persistent.challenges.first { UInt32(bitPattern: $0.name) == hash }
+            return record.map { ChallengeSelectionSnapshot(current: $0.chance, cooldown: $0.death) }
+        }
+    }
+
+    public func setSnapshot(_ snapshot: ChallengeSelectionSnapshot,
+                            forKey key: ChallengeSelectionKey) {
+        var data = load()
+        var persistent = data.challengeDataPersistent
+        switch key {
+        case .group(let hash):
+            if let index = persistent.groups.firstIndex(where: {
+                UInt32(bitPattern: $0.name) == hash
+            }) {
+                persistent.groups[index].chance = snapshot.current
+                persistent.groups[index].death = snapshot.cooldown
+            } else {
+                persistent.groups.append(.init(name: Int32(bitPattern: hash),
+                                               chance: snapshot.current,
+                                               death: snapshot.cooldown))
+            }
+        case .challenge(let hash):
+            if let index = persistent.challenges.firstIndex(where: {
+                UInt32(bitPattern: $0.name) == hash
+            }) {
+                persistent.challenges[index].chance = snapshot.current
+                persistent.challenges[index].death = snapshot.cooldown
+            } else {
+                persistent.challenges.append(.init(name: Int32(bitPattern: hash),
+                                                   chance: snapshot.current,
+                                                   death: snapshot.cooldown,
+                                                   plays: 0))
+            }
+        }
+        data.challengeDataPersistent = persistent
+        _ = save(data)
+    }
+
+    public func playCount(forKey key: ChallengeSelectionKey) -> Int32 {
+        guard case .challenge(let hash) = key else { return 0 }
+        return load().challengeDataPersistent.challenges.first {
+            UInt32(bitPattern: $0.name) == hash
+        }?.plays ?? 0
     }
 }

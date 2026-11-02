@@ -1,4 +1,5 @@
 import XCTest
+import FNPBCore
 import FNPBPlatform
 
 final class PersistenceTests: XCTestCase {
@@ -28,5 +29,117 @@ final class PersistenceTests: XCTestCase {
         XCTAssertEqual(store.load().criticalChance, 37)
         let text = try String(contentsOf: store.fileURL, encoding: .utf8)
         XCTAssertTrue(text.contains("\"critical_chance\" : 37"))
+    }
+
+    func testLegacyJSONWithoutPersistentChallengeKeepsExistingValues() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = SaveStore(directory: directory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let json = """
+        {
+          "version": 1,
+          "highscore": { "default": 123 },
+          "critical_chance": 42,
+          "rated": true,
+          "stats": { "slashes": 9 }
+        }
+        """
+        try json.write(to: store.fileURL, atomically: true, encoding: .utf8)
+
+        let loaded = store.load()
+        XCTAssertEqual(loaded.highscores["default"], 123)
+        XCTAssertEqual(loaded.criticalChance, 42)
+        XCTAssertTrue(loaded.rated)
+        XCTAssertEqual(loaded.stats["slashes"], 9)
+        XCTAssertEqual(loaded.challengeDataPersistent, .empty)
+    }
+
+    func testLegacyPersistentRawStringAndDataArePreserved() throws {
+        let rawData = Data([0x01, 0x02, 0x03])
+        let migratedData = SaveStore.migrate(
+            legacyValues: [SaveKeys.challengeDataPersistent: rawData])
+        XCTAssertEqual(migratedData.challengeDataPersistent.legacyRaw,
+                       rawData.base64EncodedString())
+
+        let migratedString = SaveStore.migrate(
+            legacyValues: [SaveKeys.challengeDataPersistent: "raw-string"])
+        XCTAssertEqual(migratedString.challengeDataPersistent.legacyRaw, "raw-string")
+
+        let encoded = try JSONEncoder().encode(migratedString)
+        let decoded = try JSONDecoder().decode(SaveData.self, from: encoded)
+        XCTAssertEqual(decoded.challengeDataPersistent.legacyRaw, "raw-string")
+    }
+
+    func testLegacyRawJSONStringSurvivesLoadAndRoundTrip() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = SaveStore(directory: directory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try #"{"version":1,"challengeDataPersistent":"legacy-raw-blob"}"#.write(
+            to: store.fileURL, atomically: true, encoding: .utf8)
+
+        let loaded = store.load()
+        XCTAssertEqual(loaded.challengeDataPersistent.legacyRaw, "legacy-raw-blob")
+        let decoded = try JSONDecoder().decode(SaveData.self,
+                                               from: try JSONEncoder().encode(loaded))
+        XCTAssertEqual(decoded.challengeDataPersistent.legacyRaw, "legacy-raw-blob")
+    }
+
+    func testDiskAdapterPersistsSnapshotAndPreservesChallengePlays() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let hash = OriginalStringHash.hash("disk-challenge")
+        let key = ChallengeSelectionKey.challenge(hash)
+        var save = SaveData.default
+        save.challengeDataPersistent = ChallengeDataPersistent(challenges: [
+            .init(name: Int32(bitPattern: hash), chance: 5, death: 1, plays: 9)
+        ])
+        XCTAssertTrue(SaveStore(directory: directory).save(save))
+
+        let second = SaveStore(directory: directory)
+        XCTAssertEqual(second.snapshot(forKey: key),
+                       ChallengeSelectionSnapshot(current: 5, cooldown: 1))
+        XCTAssertEqual(second.playCount(forKey: key), 9)
+        second.setSnapshot(ChallengeSelectionSnapshot(current: 8, cooldown: 3), forKey: key)
+
+        let third = SaveStore(directory: directory)
+        XCTAssertEqual(third.snapshot(forKey: key),
+                       ChallengeSelectionSnapshot(current: 8, cooldown: 3))
+        XCTAssertEqual(third.playCount(forKey: key), 9)
+    }
+
+    func testDiskAdapterKeepsSameHashInIndependentTables() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let hash = OriginalStringHash.hash("same-disk-name")
+        let group = ChallengeSelectionKey.group(hash)
+        let challenge = ChallengeSelectionKey.challenge(hash)
+        let store = SaveStore(directory: directory)
+        store.setSnapshot(ChallengeSelectionSnapshot(current: 4, cooldown: 2), forKey: group)
+        store.setSnapshot(ChallengeSelectionSnapshot(current: 12, cooldown: 6), forKey: challenge)
+
+        let reopened = SaveStore(directory: directory)
+        XCTAssertEqual(reopened.snapshot(forKey: group),
+                       ChallengeSelectionSnapshot(current: 4, cooldown: 2))
+        XCTAssertEqual(reopened.snapshot(forKey: challenge),
+                       ChallengeSelectionSnapshot(current: 12, cooldown: 6))
+        XCTAssertEqual(reopened.playCount(forKey: group), 0)
+        XCTAssertEqual(reopened.playCount(forKey: challenge), 0)
+    }
+
+    func testGroupRecordDoesNotInventOriginalPlaysField() throws {
+        let persistent = ChallengeDataPersistent(groups: [
+            .init(name: 7, chance: 20, death: 4)
+        ])
+        let data = try JSONEncoder().encode(persistent)
+        let object = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let groups = try XCTUnwrap(object["grp"] as? [[String: Any]])
+        XCTAssertEqual(groups.count, 1)
+        XCTAssertNil(groups[0]["plays"])
     }
 }

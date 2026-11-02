@@ -23,6 +23,14 @@ import Foundation
 // 与任务卡措辞的已知差异见文件末尾「实现差异」注释块。
 // ============================================================================
 
+// MARK: - 持久化 key
+
+/// 原版组与挑战使用两张独立 map；分类必须与 UInt32 哈希一起构成键。
+public enum ChallengeSelectionKey: Hashable, Sendable {
+    case group(UInt32)
+    case challenge(UInt32)
+}
+
 // MARK: - 20 字节权重项
 
 /// 原版容器项（20 字节）。偏移语义见文件头表格。
@@ -159,40 +167,38 @@ public struct ChallengeSelectionSnapshot: Sendable, Equatable {
     }
 }
 
-/// 原版持久化读写（`FUN_0002b2a8(全局+0x154, key)`）。
-///
-/// ⚠️ 原版 key 是挑战/组的 Int32 哈希（`FUN_002f69c4` 小写哈希），本卡不实现哈希，
-///   以名称字符串为 key（见风险点）。
+/// 原版持久化读写：组使用 save+0x13c，挑战使用 save+0x154。
+/// key 是名称经 FUN_002f69c4 得到的 UInt32 位模式，并保留组／挑战分类。
 public protocol ChallengeSelectionPersisting: AnyObject {
-    /// 读取 current/cooldown 快照；无记录返回 nil。
-    func snapshot(forKey key: String) -> ChallengeSelectionSnapshot?
-    /// 写回 current/cooldown 快照（原版 map 条目 +0/+4）。
-    func setSnapshot(_ snapshot: ChallengeSelectionSnapshot, forKey key: String)
-    /// 读取游玩次数（原版 map 条目 +8）。
-    func playCount(forKey key: String) -> Int32
+    func snapshot(forKey key: ChallengeSelectionKey) -> ChallengeSelectionSnapshot?
+    func setSnapshot(_ snapshot: ChallengeSelectionSnapshot, forKey key: ChallengeSelectionKey)
+    /// 只有挑战记录含 plays；组记录在原版没有此字段。
+    func playCount(forKey key: ChallengeSelectionKey) -> Int32
 }
 
-/// 内存实现，供测试与后续接线使用。
+/// 内存实现仅供测试；正式 App 必须使用 SaveStore 的持久化适配。
 public final class ChallengeSelectionMemoryStore: ChallengeSelectionPersisting {
-    public private(set) var snapshots: [String: ChallengeSelectionSnapshot] = [:]
-    public private(set) var playCounts: [String: Int32] = [:]
+    public private(set) var snapshots: [ChallengeSelectionKey: ChallengeSelectionSnapshot] = [:]
+    public private(set) var playCounts: [ChallengeSelectionKey: Int32] = [:]
 
     public init() {}
 
-    public func snapshot(forKey key: String) -> ChallengeSelectionSnapshot? {
+    public func snapshot(forKey key: ChallengeSelectionKey) -> ChallengeSelectionSnapshot? {
         snapshots[key]
     }
 
-    public func setSnapshot(_ snapshot: ChallengeSelectionSnapshot, forKey key: String) {
+    public func setSnapshot(_ snapshot: ChallengeSelectionSnapshot, forKey key: ChallengeSelectionKey) {
         snapshots[key] = snapshot
     }
 
-    public func playCount(forKey key: String) -> Int32 {
-        playCounts[key] ?? 0
+    public func playCount(forKey key: ChallengeSelectionKey) -> Int32 {
+        guard case .challenge = key else { return 0 }
+        return playCounts[key] ?? 0
     }
 
-    /// 测试辅助：模拟一次游玩（原版 FUN_00060108 的 +8 自增）。
-    public func setPlayCount(_ count: Int32, forKey key: String) {
+    /// 测试辅助：模拟挑战游玩次数，不提供组 plays 的非原版状态。
+    public func setPlayCount(_ count: Int32, forKey key: ChallengeSelectionKey) {
+        guard case .challenge = key else { return }
         playCounts[key] = count
     }
 }
@@ -202,8 +208,6 @@ public final class ChallengeSelectionMemoryStore: ChallengeSelectionPersisting {
 /// 一个挑战组的选择器：持有该组的挑战与权重容器，以及原版组对象 +0xC 的
 /// 「存在可优先挑战」标志。
 public struct ChallengeGroupSelector: Sendable {
-    public static let challengeKeyPrefix = "challenge:"
-
     public let group: ChallengeGroupDefinition
     public private(set) var table: ChallengeWeightTable
     /// 原版组对象 +0xC（`FUN_0006ebdc` 维护）。
@@ -228,8 +232,8 @@ public struct ChallengeGroupSelector: Sendable {
         self.hasSelectablePriority = Self.computePriority(group: group, persistence: persistence)
     }
 
-    public static func challengeKey(_ challenge: ChallengeDefinition) -> String {
-        challengeKeyPrefix + challenge.name
+    public static func challengeKey(_ challenge: ChallengeDefinition) -> ChallengeSelectionKey {
+        .challenge(OriginalStringHash.hash(challenge.name))
     }
 
     private static func computePriority(group: ChallengeGroupDefinition,
@@ -290,8 +294,6 @@ public struct ChallengeGroupSelector: Sendable {
 ///
 /// 与组内选择器的差异（macho）：本层**先 regrow 再扫组标志**。
 public struct ChallengeTierSelector: Sendable {
-    public static let groupKeyPrefix = "group:"
-
     public let tier: ChallengeTierDefinition
     public private(set) var groupTable: ChallengeWeightTable
     public private(set) var selectors: [ChallengeGroupSelector]
@@ -303,7 +305,7 @@ public struct ChallengeTierSelector: Sendable {
                 specialChallenges: ChallengeSpecialGroupDefinition? = nil) {
         self.tier = tier
         let entries = tier.groups.enumerated().map { index, group -> ChallengeWeightEntry in
-            let key = Self.groupKey(tier: tier, group: group, index: index)
+            let key = Self.groupKey(group: group)
             let snapshot = persistence.snapshot(forKey: key)
             return ChallengeWeightEntry(
                 base: group.selection.chanceSelect,
@@ -323,11 +325,8 @@ public struct ChallengeTierSelector: Sendable {
         }
     }
 
-    public static func groupKey(tier: ChallengeTierDefinition,
-                                group: ChallengeGroupDefinition,
-                                index: Int) -> String {
-        let suffix = group.name.isEmpty ? "#\(index)" : group.name
-        return groupKeyPrefix + tier.name + "/" + suffix
+    public static func groupKey(group: ChallengeGroupDefinition) -> ChallengeSelectionKey {
+        .group(OriginalStringHash.hash(group.name))
     }
 
     /// FUN_0006ed78：tier 内选一个组，再对该组调 FUN_0006ec3c 选挑战。
@@ -366,7 +365,7 @@ public struct ChallengeTierSelector: Sendable {
     private func writeBackGroupTable(persistence: any ChallengeSelectionPersisting) {
         for index in tier.groups.indices {
             guard let snapshot = groupTable.snapshot(at: index) else { continue }
-            let key = Self.groupKey(tier: tier, group: tier.groups[index], index: index)
+            let key = Self.groupKey(group: tier.groups[index])
             persistence.setSnapshot(snapshot, forKey: key)
         }
     }
@@ -531,7 +530,7 @@ public struct ChallengeRoundPlan: Sendable, Equatable {
 // ============================================================================
 // 已核实的实现边界
 //
-// 1) 持久化 key 暂用名称，不宣称兼容原版 Int32 哈希存档。
+// 1) 持久化 key 使用原版名称哈希，并按组／挑战分表；SaveStore 已提供磁盘适配。
 // 2) 生产随机源为已验证 OriginalLCGRandom；测试使用脚本化 RandomSource。
 // 3) 特殊组核心已闭合；App 的 tier/difficulty 与回合 UI 尚未接线。
 // 4) [待验证] 持久化恢复状态的 FPToFixed 舍入与真机全序列尚未闭合。

@@ -1,8 +1,8 @@
 import XCTest
 @testable import FNPBCore
 
-/// 常量由 build/verify_original_hash.py 按 ARM 指令独立转写生成；
-/// 不在测试内复制生产算法，也不调用生产实现生成预期。
+/// 常量由 reverse/verify_original_hash.py 与 reverse/verify_original_hash.js
+/// 按 ARM 指令独立转写交叉生成；不在测试内复制生产算法或自生成预期。
 final class OriginalStringHashTests: XCTestCase {
     func testEmptyAndLeadingNULReturnZero() {
         XCTAssertEqual(OriginalStringHash.hash(""), 0)
@@ -12,16 +12,16 @@ final class OriginalStringHashTests: XCTestCase {
     func testLengthBoundariesOneThroughThirteen() {
         let vectors: [(String, UInt32)] = [
             ("a", 0x25ab_5c50),
-            ("ab", 0x19fd_290c),
-            ("abc", 0x10bc_9c1d),
-            ("abcd", 0x61fd_352b),
-            ("abcde", 0x93e3_dea9),
-            ("abcdef", 0x23da_8fa0),
-            ("abcdefg", 0xf475_6a7b),
-            ("abcdefgh", 0xbcd0_fc10),
-            ("abcdefghi", 0xf503_1d14),
-            ("abcdefghij", 0x71a7_2bd6),
-            ("abcdefghijk", 0x7687_6f7b),
+            ("ab", 0xc04f_e20f),
+            ("abc", 0x4135_6ec8),
+            ("abcd", 0x3088_2150),
+            ("abcde", 0x13cb_68b5),
+            ("abcdef", 0xbe04_a489),
+            ("abcdefg", 0x5f57_92e0),
+            ("abcdefgh", 0xb4ae_016a),
+            ("abcdefghi", 0x348e_7980),
+            ("abcdefghij", 0xc8e7_ce2a),
+            ("abcdefghijk", 0x6169_0951),
             ("abcdefghijkl", 0xdc6b_0534),
             ("abcdefghijklm", 0x0660_5e01),
         ]
@@ -31,24 +31,24 @@ final class OriginalStringHashTests: XCTestCase {
     }
 
     func testRealNamesAndASCIICaseFolding() {
-        XCTAssertEqual(OriginalStringHash.hash("apple"), 0xdc0b_024b)
-        XCTAssertEqual(OriginalStringHash.hash("APPLE"), 0xdc0b_024b)
-        XCTAssertEqual(OriginalStringHash.hash("Apple"), 0xdc0b_024b)
-        XCTAssertEqual(OriginalStringHash.hash("FastFruit1"), 0xc9f6_5984)
-        XCTAssertEqual(OriginalStringHash.hash("bombPairs1"), 0xb646_d4eb)
-        XCTAssertEqual(OriginalStringHash.hash("LEFT_RIGHT"), 0x8147_e43a)
+        XCTAssertEqual(OriginalStringHash.hash("apple"), 0xaa39_7683)
+        XCTAssertEqual(OriginalStringHash.hash("APPLE"), 0xaa39_7683)
+        XCTAssertEqual(OriginalStringHash.hash("Apple"), 0xaa39_7683)
+        XCTAssertEqual(OriginalStringHash.hash("FastFruit1"), 0x9309_b8a0)
+        XCTAssertEqual(OriginalStringHash.hash("bombPairs1"), 0xc8f8_2107)
+        XCTAssertEqual(OriginalStringHash.hash("LEFT_RIGHT"), 0xdb57_0e76)
     }
 
-    func testUTF8HighBytesRetainOriginalSignedTailLoads() {
+    func testUTF8HighBytesRetainOriginalSignedLoads() {
         let vectors: [(String, UInt32)] = [
-            ("é", 0xf399_49b6),
-            ("aé", 0xb1ef_5ace),
-            ("éa", 0x8a6a_de4a),
-            ("ééa", 0x241f_ce19),
-            ("aéé", 0xe6b4_a11f),
-            ("你好", 0x20bc_09a2),
-            // 14 个 UTF-8 字节：先走 12 字节主循环，再走 2 字节尾部。
-            ("ééééééé", 0xd666_fc68),
+            ("é", 0xd69f_c251),
+            ("aé", 0xc91b_6a87),
+            ("éa", 0x3fe2_d9a8),
+            ("ééa", 0x6331_7174),
+            ("aéé", 0xf900_3d43),
+            ("你好", 0x9749_104e),
+            // 14 个 UTF-8 字节：主循环的前三字节同样有符号加载。
+            ("ééééééé", 0xe58e_c078),
         ]
         for (input, expected) in vectors {
             XCTAssertEqual(OriginalStringHash.hash(input), expected, input)

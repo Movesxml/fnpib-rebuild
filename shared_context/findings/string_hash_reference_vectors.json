@@ -9,43 +9,43 @@
   },
   "len2": {
     "utf8": "4142",
-    "hash": "0x19fd290c"
+    "hash": "0xc04fe20f"
   },
   "len3": {
     "utf8": "414243",
-    "hash": "0x10bc9c1d"
+    "hash": "0x41356ec8"
   },
   "len4": {
     "utf8": "41424344",
-    "hash": "0x61fd352b"
+    "hash": "0x30882150"
   },
   "len5": {
     "utf8": "4142434445",
-    "hash": "0x93e3dea9"
+    "hash": "0x13cb68b5"
   },
   "len6": {
     "utf8": "414243444546",
-    "hash": "0x23da8fa0"
+    "hash": "0xbe04a489"
   },
   "len7": {
     "utf8": "41424344454647",
-    "hash": "0xf4756a7b"
+    "hash": "0x5f5792e0"
   },
   "len8": {
     "utf8": "4142434445464748",
-    "hash": "0xbcd0fc10"
+    "hash": "0xb4ae016a"
   },
   "len9": {
     "utf8": "414243444546474849",
-    "hash": "0xf5031d14"
+    "hash": "0x348e7980"
   },
   "len10": {
     "utf8": "4142434445464748494a",
-    "hash": "0x71a72bd6"
+    "hash": "0xc8e7ce2a"
   },
   "len11": {
     "utf8": "4142434445464748494a4b",
-    "hash": "0x76876f7b"
+    "hash": "0x61690951"
   },
   "len12": {
     "utf8": "4142434445464748494a4b4c",
@@ -61,30 +61,54 @@
   },
   "apple": {
     "utf8": "6170706c65",
-    "hash": "0xdc0b024b"
+    "hash": "0xaa397683"
   },
   "APPLE": {
     "utf8": "4150504c45",
-    "hash": "0xdc0b024b"
+    "hash": "0xaa397683"
+  },
+  "Apple": {
+    "utf8": "4170706c65",
+    "hash": "0xaa397683"
   },
   "FastFruit1": {
     "utf8": "46617374467275697431",
-    "hash": "0xc9f65984"
+    "hash": "0x9309b8a0"
   },
   "bombPairs1": {
     "utf8": "626f6d62506169727331",
-    "hash": "0xb646d4eb"
+    "hash": "0xc8f82107"
   },
   "LEFT_RIGHT": {
     "utf8": "4c4546545f5249474854",
-    "hash": "0x8147e43a"
+    "hash": "0xdb570e76"
   },
   "é": {
     "utf8": "c3a9",
-    "hash": "0xf39949b6"
+    "hash": "0xd69fc251"
+  },
+  "aé": {
+    "utf8": "61c3a9",
+    "hash": "0xc91b6a87"
+  },
+  "éa": {
+    "utf8": "c3a961",
+    "hash": "0x3fe2d9a8"
+  },
+  "ééa": {
+    "utf8": "c3a9c3a961",
+    "hash": "0x63317174"
+  },
+  "aéé": {
+    "utf8": "61c3a9c3a9",
+    "hash": "0xf9003d43"
   },
   "你好": {
     "utf8": "e4bda0e5a5bd",
-    "hash": "0x20bc09a2"
+    "hash": "0x9749104e"
+  },
+  "ééééééé": {
+    "utf8": "c3a9c3a9c3a9c3a9c3a9c3a9c3a9",
+    "hash": "0xe58ec078"
   }
 }
