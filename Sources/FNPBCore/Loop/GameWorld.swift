@@ -246,6 +246,14 @@ public final class GameWorld: GameTicking {
         challenge?.startInitialRound()
     }
 
+    public func startInitialChallengeBonusIntro() {
+        challenge?.startInitialBonusIntro()
+    }
+
+    public func completeChallengeBonusIntro() {
+        challenge?.completeBonusIntro()
+    }
+
     public func drainChallengeEvents() -> [ChallengeModeEvent] {
         guard challenge != nil else { return [] }
         return challenge!.drainEvents()

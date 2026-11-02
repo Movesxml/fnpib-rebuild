@@ -23,7 +23,7 @@ final class UIScreenAnimationInterpolationTests: XCTestCase {
     func testEqualTimeKeysUseLastValueAndRetainEveryEvent() throws {
         func key(_ time: Int, _ value: Float) -> UIScreenAnimationContent.Keyframe {
             UIScreenAnimationContent.Keyframe(timeMS: time, interpolation: 0,
-                                               values: [value, value, value])
+                                               values: [value, value, value], events: [])
         }
         func event(_ name: String) -> UIScreenAnimationContent.Keyframe {
             UIScreenAnimationContent.Keyframe(

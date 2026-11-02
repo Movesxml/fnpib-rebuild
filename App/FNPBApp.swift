@@ -621,11 +621,18 @@ final class GameHost: ObservableObject {
                 }
 
                 gameWorld.configureChallenge(round.runtime)
-                if !round.runtime.isBonusRound {
+                if round.runtime.isBonusRound {
+                    gameWorld.startInitialChallengeBonusIntro()
+                } else {
                     gameWorld.startInitialChallengeRound()
                 }
                 challengeAssembler = assembler
                 currentChallengeRound = round
+                if round.runtime.isBonusRound {
+                    // Start the queued resource animation now. Otherwise the first
+                    // frame would mistake "not started yet" for a completed intro.
+                    consumeChallengeEvents()
+                }
                 return true
             } catch {
                 challengeConfigurationError = String(describing: error)
@@ -680,6 +687,13 @@ final class GameHost: ObservableObject {
                 let output = try player.advance(deltaSeconds: deltaSeconds)
                 challengeHUDAnimationPlayer = player
                 processChallengeAnimationOutput(output)
+            }
+            if gameWorld.challenge?.phase == .bonusIntro,
+               let player = challengeHUDAnimationPlayer,
+               try !player.isPlayingRecursively(component: "bonusIntro", animation: "play") {
+                // FUN_0005ffa8 runs before the game update: resume on this frame,
+                // then let GameWorld consume the restored HUD events below.
+                gameWorld.completeChallengeBonusIntro()
             }
             guard var controller = challengeSettlement,
                   var resultPlayer = challengeResultAnimationPlayer,

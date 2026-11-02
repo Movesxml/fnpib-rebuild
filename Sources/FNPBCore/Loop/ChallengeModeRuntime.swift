@@ -173,9 +173,17 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
 
     /// The normal branch of FUN_00061128 makes Timer and challengeMods visible
     /// and starts their real animate_in timelines after the first-round setup.
+    /// A first bonus round must enter its intro instead of the ordinary HUD path.
     public mutating func startInitialRound() {
-        guard phase == .running, roundsPlayed == 0 else { return }
+        guard phase == .running, roundsPlayed == 0, !isBonusRound else { return }
         emitRunningHUDEvents()
+    }
+
+    /// FUN_00060514: an initial bonus round starts bonusIntro/play and its music.
+    /// It does not settle a round or discard the accumulated round results.
+    public mutating func startInitialBonusIntro() {
+        guard phase == .running, roundsPlayed == 0, isBonusRound else { return }
+        startBonusIntro()
     }
 
     /// FUN_0005ffa8：状态 1 只由 bonusIntro 的真实播放完成回调推进；

@@ -245,6 +245,60 @@ final class ChallengeModeRuntimeTests: XCTestCase {
         XCTAssertTrue(runtime.drainEvents().contains(.cleanedUp))
     }
 
+    func testInitialBonusIntroFreezesRoundUntilRealCompletion() {
+        let tier = ChallengeTierDefinition(name: "finalTier", bossID: "BOSS_1")
+        var runtime = makeRuntime(
+            tier: tier,
+            challenge: ChallengeDefinition(name: "initialBonus", timeLimit: 2))
+        runtime.startInitialBonusIntro()
+        XCTAssertEqual(runtime.phase, .bonusIntro)
+        XCTAssertEqual(runtime.drainEvents(), [
+            .playAnimation(target: "bonusIntro", name: "play"),
+            .playMusic("Music-bonus"),
+        ])
+
+        runtime.update(dt: 100, frame: ChallengeFrame())
+        XCTAssertEqual(runtime.phase, .bonusIntro)
+        XCTAssertEqual(runtime.countdown, 2)
+        XCTAssertEqual(runtime.roundsPlayed, 0)
+        XCTAssertTrue(runtime.drainEvents().isEmpty)
+
+        runtime.completeBonusIntro()
+        XCTAssertEqual(runtime.phase, .running)
+        XCTAssertEqual(runtime.countdown, 2)
+        let events = runtime.drainEvents()
+        XCTAssertTrue(events.contains(.setVisible(target: "Timer", true)))
+        XCTAssertTrue(events.contains(.playAnimation(target: "Timer", name: "animate_in")))
+        XCTAssertTrue(events.contains(.setVisible(target: "challengeMods", true)))
+        XCTAssertTrue(events.contains(.playAnimation(target: "challengeMods", name: "animate_in")))
+        runtime.update(dt: 1, frame: ChallengeFrame())
+        XCTAssertEqual(runtime.countdown, 1)
+        XCTAssertEqual(runtime.phase, .running)
+    }
+
+    func testInitialOrdinaryRoundDoesNotTakeBonusIntroPath() {
+        var runtime = makeRuntime(challenge: ChallengeDefinition(name: "ordinary", timeLimit: 2))
+        runtime.startInitialBonusIntro()
+        XCTAssertEqual(runtime.phase, .running)
+        XCTAssertTrue(runtime.drainEvents().isEmpty)
+        runtime.startInitialRound()
+        XCTAssertTrue(runtime.drainEvents().contains(.playAnimation(
+            target: "challengeMods", name: "animate_in")))
+    }
+
+    func testBonusSettlementSubstateThreeSuspendsWithoutFabricatedNavigation() {
+        let tier = ChallengeTierDefinition(name: "finalTier", bossID: "BOSS_1")
+        var runtime = makeRuntime(
+            tier: tier,
+            challenge: ChallengeDefinition(name: "bonus", timeLimit: 1))
+        runtime.update(dt: 1, frame: ChallengeFrame())
+        XCTAssertEqual(runtime.phase, .settling)
+        _ = runtime.drainEvents()
+        runtime.updateSettlement(controllerState: 7, substate: 3)
+        XCTAssertEqual(runtime.phase, .suspended)
+        XCTAssertTrue(runtime.drainEvents().isEmpty)
+    }
+
     func testNextRoundWaitsForExplicitSelectionAndThenResetsRuntime() {
         var runtime = makeRuntime(challenge: ChallengeDefinition(name: "first", timeLimit: 1))
         runtime.update(dt: 1, frame: ChallengeFrame())
