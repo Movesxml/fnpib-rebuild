@@ -174,6 +174,8 @@ public protocol ChallengeSelectionPersisting: AnyObject {
     func setSnapshot(_ snapshot: ChallengeSelectionSnapshot, forKey key: ChallengeSelectionKey)
     /// 只有挑战记录含 plays；组记录在原版没有此字段。
     func playCount(forKey key: ChallengeSelectionKey) -> Int32
+    /// FUN_00060108：回合产生非 pending 结果后，当前挑战 plays 加一。
+    func incrementPlayCount(forKey key: ChallengeSelectionKey)
 }
 
 /// 内存实现仅供测试；正式 App 必须使用 SaveStore 的持久化适配。
@@ -194,6 +196,11 @@ public final class ChallengeSelectionMemoryStore: ChallengeSelectionPersisting {
     public func playCount(forKey key: ChallengeSelectionKey) -> Int32 {
         guard case .challenge = key else { return 0 }
         return playCounts[key] ?? 0
+    }
+
+    public func incrementPlayCount(forKey key: ChallengeSelectionKey) {
+        guard case .challenge = key else { return }
+        playCounts[key] = (playCounts[key] ?? 0) &+ 1
     }
 
     /// 测试辅助：模拟挑战游玩次数，不提供组 plays 的非原版状态。
@@ -385,7 +392,8 @@ public struct ChallengeTierSelector: Sendable {
     public mutating func planRound(persistence: any ChallengeSelectionPersisting,
                                    rng: any RandomSource,
                                    difficulty: Int32 = 0,
-                                   tierIndex: Int32 = 0) -> ChallengeRoundPlan {
+                                   tierIndex: Int32 = 0,
+                                   roundCount: Int32? = nil) -> ChallengeRoundPlan {
         var mustSelectQueue: [(challenge: ChallengeDefinition, groupIndex: Int)] = []
         for index in tier.groups.indices {
             guard selectors.indices.contains(index) else { continue }
@@ -406,7 +414,7 @@ public struct ChallengeTierSelector: Sendable {
             mustSelectQueue.append((picked, -1))
         }
 
-        let slotCount = max(0, Int(tier.numRounds))
+        let slotCount = max(0, Int(roundCount ?? tier.numRounds))
         var order = Array(0..<slotCount)
         Self.shufflePairwise(&order, rng: rng)
 
@@ -427,6 +435,16 @@ public struct ChallengeTierSelector: Sendable {
         return ChallengeRoundPlan(
             slots: slots,
             remainingMustSelect: mustSelectQueue[queueIndex...].map(\.challenge))
+    }
+
+    /// FUN_0005fc1c：min==max 时不推进 RNG；否则用同一个量化浮点随机值
+    /// 计算 min + (max-min)*rand，再向零取整。nextFloat 上界不包含 1。
+    public static func rollRoundCount(tier: ChallengeTierDefinition,
+                                      rng: any RandomSource) -> Int32 {
+        let lower = tier.numRoundsMin
+        let upper = tier.numRoundsMax
+        guard lower != upper else { return lower }
+        return Int32(Float(lower) + Float(upper - lower) * rng.nextFloat())
     }
 
     /// FUN_0005f94c：新局只清特殊组计数，权重和持久化快照保持不变。

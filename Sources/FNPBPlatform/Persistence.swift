@@ -114,6 +114,60 @@ public struct ChallengeDataPersistent: Codable, Equatable, Sendable {
     }
 }
 
+// MARK: - 挑战会话进度
+
+/// 新运行时使用的 challengeData 已解码视图。旧 challengeData 原始 Data 仍由
+/// SaveData.challengeData 原样保留；在完整旧 plist 迁移完成前不把两者混为一谈。
+public struct ChallengeSessionPersistent: Codable, Equatable, Sendable {
+    public struct ChallengeRecord: Codable, Equatable, Sendable {
+        public var name: String
+        public var index: Int32
+        public var challengeIndex: Int32
+        public var result: Int32
+
+        public init(name: String, index: Int32, challengeIndex: Int32, result: Int32) {
+            self.name = name
+            self.index = index
+            self.challengeIndex = challengeIndex
+            self.result = result
+        }
+    }
+
+    /// 原 XML 键名是 currentChallenge；FUN_000619d0 把它作为难度读取。
+    public var difficulty: Int32
+    public var challenges: [ChallengeRecord]
+
+    public static let empty = ChallengeSessionPersistent()
+
+    public init(difficulty: Int32 = 0, challenges: [ChallengeRecord] = []) {
+        self.difficulty = difficulty
+        self.challenges = challenges
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case difficulty = "currentChallenge"
+        case challenges = "challenge"
+    }
+
+    /// FUN_000619d0：忽略越界记录，使用有效记录中的最高 tier；空新存档为 0。
+    public func initialTierIndex(validTierCount: Int) -> Int32 {
+        let valid = challenges.map(\.index).filter {
+            $0 >= 0 && Int($0) < validTierCount
+        }
+        return valid.max() ?? 0
+    }
+
+    /// FUN_000619d0 的原始比较是 UInt32：负存档值不会变成负难度，
+    /// 而会按无符号大值钳到 roundCount-1；0 始终保持为 0。
+    public func clampedDifficulty(roundCount: Int32) -> Int32 {
+        guard roundCount > 0 else { return 0 }
+        let saved = UInt32(bitPattern: difficulty)
+        guard saved != 0 else { return 0 }
+        let upper = UInt32(bitPattern: roundCount - 1)
+        return Int32(bitPattern: min(saved, upper))
+    }
+}
+
 // MARK: - 存档数据
 
 public struct SaveData: Codable, Equatable, Sendable {
@@ -125,6 +179,7 @@ public struct SaveData: Codable, Equatable, Sendable {
     public var challengeData: String?
     public var stats: [String: Int32]
     public var challengeDataPersistent: ChallengeDataPersistent
+    public var challengeSession: ChallengeSessionPersistent
 
     public enum CodingKeys: String, CodingKey {
         case version
@@ -134,6 +189,7 @@ public struct SaveData: Codable, Equatable, Sendable {
         case challengeData
         case stats
         case challengeDataPersistent
+        case challengeSession
     }
 
     public init(version: Int = SaveData.currentVersion,
@@ -142,7 +198,8 @@ public struct SaveData: Codable, Equatable, Sendable {
                 rated: Bool = false,
                 challengeData: String? = nil,
                 stats: [String: Int32] = [:],
-                challengeDataPersistent: ChallengeDataPersistent = .empty) {
+                challengeDataPersistent: ChallengeDataPersistent = .empty,
+                challengeSession: ChallengeSessionPersistent = .empty) {
         self.version = version
         self.highscores = highscores
         self.criticalChance = criticalChance
@@ -150,6 +207,7 @@ public struct SaveData: Codable, Equatable, Sendable {
         self.challengeData = challengeData
         self.stats = stats
         self.challengeDataPersistent = challengeDataPersistent
+        self.challengeSession = challengeSession
     }
 
     public init(from decoder: Decoder) throws {
@@ -160,6 +218,8 @@ public struct SaveData: Codable, Equatable, Sendable {
         rated = try container.decodeIfPresent(Bool.self, forKey: .rated) ?? false
         challengeData = try container.decodeIfPresent(String.self, forKey: .challengeData)
         stats = try container.decodeIfPresent([String: Int32].self, forKey: .stats) ?? [:]
+        challengeSession = try container.decodeIfPresent(
+            ChallengeSessionPersistent.self, forKey: .challengeSession) ?? .empty
 
         // 旧 JSON 的扁平 Data 在 JSON 中也是 base64 字符串；新格式则是对象。
         // 两种表示必须分别尝试：decodeIfPresent(String) 遇到对象会抛 typeMismatch，
@@ -451,5 +511,15 @@ extension SaveStore: ChallengeSelectionPersisting {
         return load().challengeDataPersistent.challenges.first {
             UInt32(bitPattern: $0.name) == hash
         }?.plays ?? 0
+    }
+
+    public func incrementPlayCount(forKey key: ChallengeSelectionKey) {
+        guard case .challenge(let hash) = key else { return }
+        var data = load()
+        guard let index = data.challengeDataPersistent.challenges.firstIndex(where: {
+            UInt32(bitPattern: $0.name) == hash
+        }) else { return }
+        data.challengeDataPersistent.challenges[index].plays &+= 1
+        _ = save(data)
     }
 }

@@ -193,6 +193,25 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         XCTAssertEqual(runtime.conditions.condition(named: definition.name)?.current, .pass)
     }
 
+    func testRecordingOutcomeUpdatesPlanAndPersistentPlayCountOnce() throws {
+        let challenge = makeChallenge(name: "played", size: .normal)
+        let store = ChallengeSelectionMemoryStore()
+        var assembler = try ChallengeRoundAssembler(
+            catalog: makeCatalog(challenges: [challenge], numRounds: 1),
+            fruits: makeFruits(),
+            conditionDefinitions: [],
+            persistence: store,
+            random: AssemblerRandom(),
+            tierIndex: 0)
+        let key = ChallengeGroupSelector.challengeKey(challenge)
+
+        assembler.recordCurrentRoundOutcome(.pending)
+        XCTAssertEqual(store.playCount(forKey: key), 0)
+        assembler.recordCurrentRoundOutcome(.pass)
+        XCTAssertEqual(store.playCount(forKey: key), 1)
+        XCTAssertEqual(assembler.plan.outcome(at: 0), .pass)
+    }
+
     func testPlanExhaustedThrowsWithoutChangingCurrentRound() throws {
         let catalog = makeCatalog(
             challenges: [makeChallenge(name: "c1", size: .normal)], numRounds: 1)

@@ -178,6 +178,11 @@ final class GameHost: ObservableObject {
     private(set) var originalContent: OriginalContent?
     private(set) var contentLoadError: String?
 
+    // MARK: 挑战回合装配
+    private var challengeAssembler: ChallengeRoundAssembler?
+    private(set) var currentChallengeRound: ChallengeRound?
+    private(set) var challengeConfigurationError: String?
+
     // MARK: 发售版 Classic UISF 动画
     private var classicAnimationPlayer: UIScreenAnimationPlayer?
     private(set) var classicAnimationLoadError: String?
@@ -442,6 +447,7 @@ final class GameHost: ObservableObject {
             // 完成 game_over 时产生的 game_over_real 会在同一逻辑帧被消费。
             advanceClassicAnimations(deltaSeconds: step)
             gameWorld.tick(dt: step, state: &state, world: &store, services: services)
+            consumeChallengeEvents()
             consumeClassicEvents()
         }
         renderInterpolationAlpha = alpha
@@ -521,10 +527,89 @@ final class GameHost: ObservableObject {
         scoreSystem.reset()
         comboTracker.reset(state: &state)
         statsRecorder.reset()
-        waveDirector.beginGame(waves: content.waves.waves, fruits: content.fruits.fruits)
+        guard configureMode(content: content, mode: mode) else { return false }
         shouldRunDisplayLink = true
         displayLink.start()
         return true
+    }
+
+    /// 挑战接线顺序与 FUN_00061128 / WaveManager setup 对齐：
+    /// 回合装配 → 注入挑战水果 → beginGame → customWave → 激活条件运行时。
+    /// 任一步失败都拒绝开局，不退回普通波、不用默认 tier/difficulty 冒充存档配置。
+    private func configureMode(content: OriginalContent, mode: GameMode) -> Bool {
+        challengeConfigurationError = nil
+        switch mode {
+        case .classic, .adventure:
+            challengeAssembler = nil
+            currentChallengeRound = nil
+            waveDirector.setChallengeFruit(nil)
+            gameWorld.configureChallenge(nil)
+            waveDirector.beginGame(waves: content.waves.waves, fruits: content.fruits.fruits)
+            return true
+
+        case .challenge:
+            do {
+                let tierIndex = saveData.challengeSession.initialTierIndex(
+                    validTierCount: content.challengeCatalog.tiers.count)
+                guard tierIndex >= 0, Int(tierIndex) < content.challengeCatalog.tiers.count else {
+                    challengeConfigurationError = "挑战 tier 越界：\(tierIndex)"
+                    return false
+                }
+                let tier = content.challengeCatalog.tiers[Int(tierIndex)]
+                let roundCount = ChallengeTierSelector.rollRoundCount(tier: tier, rng: rng)
+                let difficulty = saveData.challengeSession.clampedDifficulty(roundCount: roundCount)
+                var assembler = try ChallengeRoundAssembler(
+                    catalog: content.challengeCatalog,
+                    fruits: content.fruits.fruits,
+                    conditionDefinitions: content.challengeConditions,
+                    persistence: saveStore,
+                    random: rng,
+                    tierIndex: tierIndex,
+                    difficulty: difficulty,
+                    roundCount: roundCount)
+                let round = try assembler.startFirstRound()
+
+                waveDirector.setChallengeFruit(round.fruitID)
+                waveDirector.beginGame(waves: content.challengeWaves.waves,
+                                       fruits: content.fruits.fruits)
+                guard waveDirector.configureChallengeWave(
+                    customWave: round.challenge.customWave,
+                    forceWave: round.challenge.forceWave) else {
+                    challengeConfigurationError =
+                        "挑战 \(round.challenge.name) 的 customWave 无法配置"
+                    return false
+                }
+
+                gameWorld.configureChallenge(round.runtime)
+                challengeAssembler = assembler
+                currentChallengeRound = round
+                return true
+            } catch {
+                challengeConfigurationError = String(describing: error)
+                Self.contentLogger.error(
+                    "挑战开局被拒绝：\(error.localizedDescription, privacy: .public)")
+                return false
+            }
+        }
+    }
+
+    // MARK: 挑战事件消费
+
+    private func consumeChallengeEvents() {
+        for event in gameWorld.drainChallengeEvents() {
+            switch event {
+            case let .roundFinished(outcome):
+                challengeAssembler?.recordCurrentRoundOutcome(outcome)
+            case let .playSound(key), let .playMusic(key):
+                audio.play(key)
+            case .playAnimation, .setVisible:
+                // UISF 挑战 HUD 接入前不伪造动画完成回调。
+                break
+            case .nextRound, .cleanedUp:
+                // 只有真实结算控制器进入对应子状态后才会产生；由回合流程统一处理。
+                break
+            }
+        }
     }
 
     // MARK: Classic UISF 动画消费

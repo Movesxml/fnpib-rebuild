@@ -92,7 +92,8 @@ public struct ChallengeRoundAssembler {
                 random: any RandomSource,
                 tierIndex: Int32,
                 difficulty: Int32 = 0,
-                predicateP: Int32 = 0) throws {
+                predicateP: Int32 = 0,
+                roundCount: Int32? = nil) throws {
         guard tierIndex >= 0, Int(tierIndex) < catalog.tiers.count else {
             throw ChallengeRoundAssemblerError.tierIndexOutOfBounds(
                 index: tierIndex, count: catalog.tiers.count)
@@ -128,16 +129,21 @@ public struct ChallengeRoundAssembler {
         self.namesByFruitID = names
         self.weights = ChallengeFruitWeightMap.make(from: fruits)
 
-        try assembleInitialRound()
+        try assembleInitialRound(roundCount: roundCount)
     }
 
     /// 生成计划后，严格按“默认初选 → 非 normal 覆盖 → 条件激活”装配首回合。
-    private mutating func assembleInitialRound() throws {
+    private mutating func assembleInitialRound(roundCount requestedRoundCount: Int32?) throws {
+        // FUN_0005fc1c 先确定本局槽位数，FUN_0006ee88 再构建并洗牌。
+        // App 需要先按该数量钳制难度，因此可传入同一个已抽取值，禁止重复抽随机数。
+        let roundCount = requestedRoundCount
+            ?? ChallengeTierSelector.rollRoundCount(tier: tier, rng: random)
         plan = tierSelector.planRound(
             persistence: persistence,
             rng: random,
             difficulty: difficulty,
-            tierIndex: tierIndex)
+            tierIndex: tierIndex,
+            roundCount: roundCount)
 
         guard plan.count > 0 else {
             throw ChallengeRoundAssemblerError.emptyPlan(tierIndex: tierIndex)
@@ -227,6 +233,16 @@ public struct ChallengeRoundAssembler {
             fruitID: nextFruitID,
             fruitName: name,
             runtime: nextRuntime)
+    }
+
+    /// FUN_00060108：结果写回当前槽位，并只给当前挑战累计一次 plays。
+    public mutating func recordCurrentRoundOutcome(_ outcome: ChallengeOutcome) {
+        guard outcome != .pending, plan.challenge(at: currentRoundIndex) != nil else { return }
+        plan.record(outcome, at: currentRoundIndex)
+        if let challenge = plan.challenge(at: currentRoundIndex) {
+            persistence.incrementPlayCount(
+                forKey: ChallengeGroupSelector.challengeKey(challenge))
+        }
     }
 
     public func fruitName(for fruitID: Int32) throws -> String {

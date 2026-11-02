@@ -398,6 +398,37 @@ final class ChallengeSelectionTests: XCTestCase {
 
     // MARK: 9. 回合结果接口
 
+    func testRoundCountUsesOriginalFloatRangeAndTruncation() {
+        let tier = ChallengeTierDefinition(numRounds: 4, numRoundsMin: 3, numRoundsMax: 7)
+        XCTAssertEqual(ChallengeTierSelector.rollRoundCount(
+            tier: tier, rng: ScriptedRandom(ints: [0])), 3)
+        XCTAssertEqual(ChallengeTierSelector.rollRoundCount(
+            tier: tier, rng: ScriptedRandom(ints: [500_000])), 5)
+        XCTAssertEqual(ChallengeTierSelector.rollRoundCount(
+            tier: tier, rng: ScriptedRandom(ints: [999_999])), 6,
+                       "浮点随机上界不包含 1，不能直接取 nextInt(max-min+1)")
+    }
+
+    func testFixedRoundCountDoesNotConsumeRandomness() {
+        let tier = ChallengeTierDefinition(numRounds: 4, numRoundsMin: 4, numRoundsMax: 4)
+        let rng = ScriptedRandom(ints: [999_999])
+        XCTAssertEqual(ChallengeTierSelector.rollRoundCount(tier: tier, rng: rng), 4)
+        XCTAssertEqual(rng.floatCallCount, 0)
+        XCTAssertEqual(rng.intCallCount, 0)
+    }
+
+    func testPlanUsesRolledRoundCountInsteadOfStaticNumRounds() {
+        let challenge = ChallengeDefinition(name: "a", selection: weight(20, 0.2))
+        let tier = ChallengeTierDefinition(
+            numRounds: 4, numRoundsMin: 1, numRoundsMax: 2,
+            groups: [ChallengeGroupDefinition(name: "g", challenges: [challenge])])
+        let store = ChallengeSelectionMemoryStore()
+        var selector = ChallengeTierSelector(tier: tier, persistence: store)
+        let count = ChallengeTierSelector.rollRoundCount(tier: tier, rng: ScriptedRandom())
+        let plan = selector.planRound(persistence: store, rng: ScriptedRandom(), roundCount: count)
+        XCTAssertEqual(plan.count, 1)
+    }
+
     func testRoundPlanRecordAndLookup() {
         let a = ChallengeDefinition(name: "a", selection: weight(20, 0.2))
         var plan = ChallengeRoundPlan(slots: [nil, a])

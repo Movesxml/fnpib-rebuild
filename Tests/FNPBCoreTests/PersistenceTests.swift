@@ -164,5 +164,27 @@ final class PersistenceTests: XCTestCase {
         XCTAssertEqual(saved.stats["slashes"], 23)
         XCTAssertEqual(reopened.snapshot(forKey: key),
                        ChallengeSelectionSnapshot(current: 17, cooldown: 4))
+        reopened.incrementPlayCount(forKey: key)
+        XCTAssertEqual(SaveStore(directory: directory).playCount(forKey: key), 1)
+    }
+
+    func testChallengeSessionSelectsHighestValidTierAndClampsUnsignedDifficulty() throws {
+        let session = ChallengeSessionPersistent(difficulty: 9, challenges: [
+            .init(name: "a", index: 0, challengeIndex: 0, result: 1),
+            .init(name: "b", index: 2, challengeIndex: 1, result: 1),
+            .init(name: "invalid", index: 8, challengeIndex: 0, result: 1),
+            .init(name: "negative", index: -1, challengeIndex: 0, result: 1),
+        ])
+        XCTAssertEqual(session.initialTierIndex(validTierCount: 3), 2)
+        XCTAssertEqual(session.initialTierIndex(validTierCount: 0), 0)
+        XCTAssertEqual(session.clampedDifficulty(roundCount: 4), 3)
+        XCTAssertEqual(ChallengeSessionPersistent(difficulty: 0).clampedDifficulty(roundCount: 4), 0)
+        XCTAssertEqual(ChallengeSessionPersistent(difficulty: -1).clampedDifficulty(roundCount: 4), 3)
+        XCTAssertEqual(ChallengeSessionPersistent.empty.initialTierIndex(validTierCount: 3), 0)
+
+        let encoded = try JSONEncoder().encode(session)
+        let object = try XCTUnwrap(try JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        XCTAssertNotNil(object["currentChallenge"])
+        XCTAssertEqual(try JSONDecoder().decode(ChallengeSessionPersistent.self, from: encoded), session)
     }
 }
