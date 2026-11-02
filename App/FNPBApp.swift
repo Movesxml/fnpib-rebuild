@@ -730,7 +730,11 @@ final class GameHost: ObservableObject {
                     gameWorld.updateChallengeSettlement(controllerState: 7, substate: 3)
                     challengeBonusSettlement = nil
                     challengeBackgroundVisible = false
-                    challengeBackgroundAnimationPlayer = nil
+                    // bonus host 持有并退出了旧背景；后续普通结果仍需要
+                    // 同一原始 UISF 的独立新播放器，不能遗留 nil 到下一回合。
+                    challengeBackgroundAnimationPlayer = try UIScreenAnimationPlayer(
+                        data: OriginalContentBundle.readResource(
+                            named: "challengeBackgroundAnimations"))
                     try beginChallengeMap()
                 }
                 return
