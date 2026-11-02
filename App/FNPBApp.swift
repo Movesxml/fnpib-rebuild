@@ -469,9 +469,11 @@ final class GameHost: ObservableObject {
         iconTargets: [String: Int32],
         visibleTargets: [String: Bool]
     ) throws -> [ChallengeMapLayoutComponent] {
+        let orderedComponents = projection.orderedVisibleComponents(
+            visibleTargets: visibleTargets)
         var result: [ChallengeMapLayoutComponent] = []
-        result.reserveCapacity(projection.components.count)
-        for component in projection.components {
+        result.reserveCapacity(orderedComponents.count)
+        for component in orderedComponents {
             guard let worldMatrix = ChallengeMapLayoutMatrix4(
                 elements: component.worldMatrix.elements),
                   component.texCoord.position.count == 2,
@@ -513,7 +515,8 @@ final class GameHost: ObservableObject {
                 absoluteRGBA: ChallengeMapLayoutColor(
                     red: component.absoluteRGBA.red, green: component.absoluteRGBA.green,
                     blue: component.absoluteRGBA.blue, alpha: component.absoluteRGBA.alpha),
-                // setVisible targets this component only. No unverified parent inheritance.
+                // The Core draw list has already applied this node's override and
+                // excluded every descendant of a hidden parent.
                 enabled: visibleTargets[component.name] ?? component.enabled,
                 screenVisibility: component.screenVisibility,
                 texturePath: component.texturePath,
