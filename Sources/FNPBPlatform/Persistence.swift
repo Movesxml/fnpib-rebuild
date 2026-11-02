@@ -161,13 +161,14 @@ public struct SaveData: Codable, Equatable, Sendable {
         challengeData = try container.decodeIfPresent(String.self, forKey: .challengeData)
         stats = try container.decodeIfPresent([String: Int32].self, forKey: .stats) ?? [:]
 
-        // 旧 JSON 的扁平 Data 在 JSON 中也是 base64 字符串；先保留原文，
-        // 否则再按新对象解码。字段缺失使用空表，不让整份旧存档解码失败。
-        if let raw = try container.decodeIfPresent(String.self, forKey: .challengeDataPersistent) {
+        // 旧 JSON 的扁平 Data 在 JSON 中也是 base64 字符串；新格式则是对象。
+        // 两种表示必须分别尝试：decodeIfPresent(String) 遇到对象会抛 typeMismatch，
+        // 不能因此让 load() 把整份有效新存档回退成默认值。
+        if let raw = try? container.decode(String.self, forKey: .challengeDataPersistent) {
             challengeDataPersistent = ChallengeDataPersistent(legacyRaw: raw)
         } else {
-            challengeDataPersistent = try container.decodeIfPresent(
-                ChallengeDataPersistent.self, forKey: .challengeDataPersistent) ?? .empty
+            challengeDataPersistent = (try? container.decode(
+                ChallengeDataPersistent.self, forKey: .challengeDataPersistent)) ?? .empty
         }
     }
 
@@ -256,6 +257,15 @@ public final class SaveStore {
             lastError = error
             return false
         }
+    }
+
+    /// GameHost 的旧快照负责高分等宿主字段，挑战选择器则直接写当前磁盘。
+    /// 保存宿主快照前合并最新挑战表，避免暂停或结算把权重、冷却和 plays 覆盖回旧值。
+    @discardableResult
+    public func saveMergingChallengeData(_ saveData: SaveData) -> Bool {
+        var merged = saveData
+        merged.challengeDataPersistent = load().challengeDataPersistent
+        return save(merged)
     }
 
     // MARK: 目录

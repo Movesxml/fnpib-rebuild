@@ -142,4 +142,27 @@ final class PersistenceTests: XCTestCase {
         XCTAssertEqual(groups.count, 1)
         XCTAssertNil(groups[0]["plays"])
     }
+
+    func testSavingStaleHostSnapshotMergesLatestChallengeData() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = SaveStore(directory: directory)
+        var staleHostSnapshot = SaveData.default
+        staleHostSnapshot.highscores["classic"] = 10
+        XCTAssertTrue(store.save(staleHostSnapshot))
+
+        let key = ChallengeSelectionKey.challenge(OriginalStringHash.hash("merge-challenge"))
+        store.setSnapshot(ChallengeSelectionSnapshot(current: 17, cooldown: 4), forKey: key)
+        staleHostSnapshot.highscores["classic"] = 99
+        staleHostSnapshot.stats["slashes"] = 23
+
+        XCTAssertTrue(store.saveMergingChallengeData(staleHostSnapshot))
+        let reopened = SaveStore(directory: directory)
+        let saved = reopened.load()
+        XCTAssertEqual(saved.highscores["classic"], 99)
+        XCTAssertEqual(saved.stats["slashes"], 23)
+        XCTAssertEqual(reopened.snapshot(forKey: key),
+                       ChallengeSelectionSnapshot(current: 17, cooldown: 4))
+    }
 }

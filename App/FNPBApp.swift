@@ -753,7 +753,8 @@ final class GameHost: ObservableObject {
     }
 
     private func persist() {
-        _ = saveStore.save(saveData)   // SaveStore.save(_:) -> Bool（Persistence.swift）
+        // 挑战选择器会绕过 GameHost 快照直接写盘；这里只合并该子树，不能用整份旧快照覆盖。
+        _ = saveStore.saveMergingChallengeData(saveData)
     }
 
     // MARK: 逻辑坐标
