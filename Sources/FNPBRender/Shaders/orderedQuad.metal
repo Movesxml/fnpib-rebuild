@@ -18,15 +18,15 @@ vertex OrderedVertexOut orderedQuad_vertex(
     constant OrderedVertex *vertices [[buffer(0)]],
     constant float2 &viewportSize [[buffer(1)]]
 ) {
-    OrderedVertex vertex = vertices[vertexID];
+    OrderedVertex v = vertices[vertexID];
     OrderedVertexOut out;
     out.position = float4(
-        vertex.position.x / viewportSize.x * 2.0 - 1.0,
-        1.0 - vertex.position.y / viewportSize.y * 2.0,
+        v.position.x / viewportSize.x * 2.0 - 1.0,
+        1.0 - v.position.y / viewportSize.y * 2.0,
         0.0,
         1.0);
-    out.uv = vertex.uv;
-    out.rgba = vertex.rgba;
+    out.uv = v.uv;
+    out.rgba = v.rgba;
     return out;
 }
 
