@@ -366,6 +366,188 @@ final class UIScreenLayoutProjectionTests: XCTestCase {
         XCTAssertEqual(slot.effectiveOrigin, UIScreenPoint3(x: 83.5, y: 0, z: 0))
     }
 
+    // MARK: - Original drawing attributes
+
+    func testCoreDrawingDefaultsUseWhiteOpaqueTexturelessIdentityUVAndEnabled() throws {
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(name: "defaults", animations: [], parentIndex: -1),
+        ]))
+        let component = try UIScreenLayoutProjection.project(player).components[0]
+        XCTAssertEqual(component.localRGBA, .white)
+        XCTAssertEqual(component.absoluteRGBA, .white)
+        XCTAssertTrue(component.enabled)
+        XCTAssertNil(component.texturePath)
+        XCTAssertEqual(component.texCoord.topLeft, [0, 0])
+        XCTAssertEqual(component.texCoord.topRight, [1, 0])
+        XCTAssertEqual(component.texCoord.bottomLeft, [0, 1])
+        XCTAssertEqual(component.texCoord.bottomRight, [1, 1])
+    }
+
+    func testColourAnimationUsesOriginalFloatOrderBeforeByteTruncation() throws {
+        let animation = UIScreenAnimationContent.Animation(
+            name: "fade", endTimeMS: 100, tracks: [
+                UIScreenAnimationContent.Track(name: "colour", keyframes: [
+                    keyframe(0, [0, 0, 0, 255]), keyframe(100, [25, 25, 25, 255]),
+                ]),
+            ])
+        var player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "tinted", animations: [animation], parentIndex: -1),
+        ]))
+        _ = try player.play(component: "tinted", animation: "fade")
+        let sampled = try player.sample(component: "tinted", animation: "fade",
+                                       track: "colour", atTimeMS: 40)
+        XCTAssertEqual(sampled[0].bitPattern, Float(9.999999046325684).bitPattern)
+        _ = try player.advance(deltaSeconds: 0.04)
+        let component = try UIScreenLayoutProjection.project(player).components[0]
+        // The common previous + delta * amount expression would incorrectly yield 10.
+        XCTAssertEqual(component.localRGBA,
+                       UIScreenRGBA(red: 9, green: 9, blue: 9, alpha: 255))
+        XCTAssertEqual(component.absoluteRGBA, component.localRGBA)
+    }
+
+    func testActiveColourTrackOverridesStaticAndTruncatesInterpolatedChannels() throws {
+        let layout = UIScreenAnimationContent.Component.Layout(colour: [0, 0, 0, 255])
+        let animation = UIScreenAnimationContent.Animation(
+            name: "fade", endTimeMS: 100, tracks: [
+                UIScreenAnimationContent.Track(name: "colour", keyframes: [
+                    keyframe(0, [0, 0, 0, 0]), keyframe(100, [255, 255, 255, 255]),
+                ]),
+            ])
+        var player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "tinted", animations: [animation], parentIndex: -1, layout: layout),
+        ]))
+        _ = try player.play(component: "tinted", animation: "fade")
+        _ = try player.advance(deltaSeconds: 0.05)
+        let component = try UIScreenLayoutProjection.project(player).components[0]
+        XCTAssertEqual(component.localRGBA,
+                       UIScreenRGBA(red: 127, green: 127, blue: 127, alpha: 127))
+        XCTAssertEqual(component.absoluteRGBA, component.localRGBA)
+    }
+
+    func testAbsoluteColourModulatesEveryAncestorLevelWithTruncation() throws {
+        let layout = UIScreenAnimationContent.Component.Layout(
+            colour: [200, 200, 200, 255])
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "grandparent", animations: [], parentIndex: -1, layout: layout),
+            UIScreenAnimationContent.Component(
+                name: "parent", animations: [], parentIndex: 0, layout: layout),
+            UIScreenAnimationContent.Component(
+                name: "child", animations: [], parentIndex: 1, layout: layout),
+        ]))
+        let projection = try UIScreenLayoutProjection.project(player)
+        XCTAssertEqual(projection.components[0].absoluteRGBA,
+                       UIScreenRGBA(red: 200, green: 200, blue: 200, alpha: 255))
+        XCTAssertEqual(projection.components[1].absoluteRGBA,
+                       UIScreenRGBA(red: 156, green: 156, blue: 156, alpha: 255))
+        XCTAssertEqual(projection.components[2].absoluteRGBA,
+                       UIScreenRGBA(red: 122, green: 122, blue: 122, alpha: 255))
+    }
+
+    func testEnabledDoesNotInheritAndDrawNinePatchIsNotTreatedAsEnabled() throws {
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "disabledParent", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(enabled: false)),
+            UIScreenAnimationContent.Component(
+                name: "child", animations: [], parentIndex: 0),
+            UIScreenAnimationContent.Component(
+                name: "ninePatch", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(
+                    enabled: true, drawNinePatch: true)),
+            UIScreenAnimationContent.Component(
+                name: "disabledNinePatch", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(
+                    enabled: false, drawNinePatch: true)),
+        ]))
+        let projection = try UIScreenLayoutProjection.project(player)
+        XCTAssertFalse(projection.components[0].enabled)
+        XCTAssertTrue(projection.components[1].enabled)
+        XCTAssertTrue(projection.components[2].enabled)
+        XCTAssertFalse(projection.components[3].enabled)
+    }
+
+    func testNegativeTextureCoordinateSizeIsNotNormalized() throws {
+        let layout = UIScreenAnimationContent.Component.Layout(
+            texture: "textures/icon.png", width: 10, height: 10,
+            texCoordPos: [0.1, 0.2], texCoordSize: [-0.5, -0.25])
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "uv", animations: [], parentIndex: -1, layout: layout),
+        ]))
+        let component = try UIScreenLayoutProjection.project(player).components[0]
+        XCTAssertEqual(component.texturePath, "textures/icon.png")
+        XCTAssertEqual(component.texCoord.topLeft, [0.1, 0.2])
+        XCTAssertEqual(component.texCoord.topRight, [-0.4, 0.2])
+        XCTAssertEqual(component.texCoord.bottomLeft, [0.1, -0.05])
+        XCTAssertEqual(component.texCoord.bottomRight, [-0.4, -0.05])
+    }
+
+    func testScreenVisibilityUsesStrictAABBBoundaries() throws {
+        func visible(position: [Float]) throws -> Bool {
+            let layout = UIScreenAnimationContent.Component.Layout(
+                position: position, width: 0, height: 0)
+            let player = try UIScreenAnimationPlayer(content: makeContent([
+                UIScreenAnimationContent.Component(
+                    name: "v", animations: [], parentIndex: -1, layout: layout),
+            ]))
+            return try UIScreenLayoutProjection.project(player).components[0].screenVisibility
+        }
+        XCTAssertTrue(try visible(position: [10, 10, 0]))
+        XCTAssertFalse(try visible(position: [0, 10, 0]))
+        XCTAssertTrue(try visible(position: [0.5, 10, 0]))
+        XCTAssertFalse(try visible(position: [480, 10, 0]))
+        XCTAssertTrue(try visible(position: [479.5, 10, 0]))
+        XCTAssertFalse(try visible(position: [10, 0, 0]))
+        XCTAssertTrue(try visible(position: [10, 0.5, 0]))
+        XCTAssertFalse(try visible(position: [10, 320, 0]))
+        XCTAssertTrue(try visible(position: [10, 319.5, 0]))
+    }
+
+    func testDeviceProjectionRecomputesVisibilityAndPreservesDrawingAttributes() throws {
+        let layout = UIScreenAnimationContent.Component.Layout(
+            texture: "textures/probe.png", position: [10, 310, 0], width: 10, height: 10,
+            colour: [12, 34, 56, 78], texCoordPos: [0.25, 0.5], texCoordSize: [0.5, 0.25])
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "tall", animations: [], parentIndex: -1, layout: layout),
+        ]))
+        let logical = try UIScreenLayoutProjection.project(player)
+        XCTAssertTrue(logical.components[0].screenVisibility)
+        let viewport = try UIScreenRootViewport(
+            deviceWidth: 960, deviceHeight: 480, scaleToViewportMode: .scaleX)
+        let device = try UIScreenLayoutProjection.projectDevicePixels(player, viewport: viewport)
+        XCTAssertFalse(device.components[0].screenVisibility)
+        let logicalComponent = logical.components[0]
+        let deviceComponent = device.components[0]
+        XCTAssertEqual(deviceComponent.localRGBA, logicalComponent.localRGBA)
+        XCTAssertEqual(deviceComponent.absoluteRGBA, logicalComponent.absoluteRGBA)
+        XCTAssertEqual(deviceComponent.enabled, logicalComponent.enabled)
+        XCTAssertEqual(deviceComponent.texturePath, logicalComponent.texturePath)
+        XCTAssertEqual(deviceComponent.texCoord, logicalComponent.texCoord)
+        XCTAssertEqual(deviceComponent.worldMatrix,
+                       viewport.rootScaleMatrix * logicalComponent.worldMatrix)
+    }
+
+    func testProductionChallengeMapCoreDrawingAttributesAreFiniteAndLegal() throws {
+        let projection = try UIScreenLayoutProjection.project(productionChallengeMapPlayer())
+        XCTAssertEqual(projection.components.count, 95)
+        for component in projection.components {
+            if let texturePath = component.texturePath {
+                XCTAssertFalse(texturePath.isEmpty, "\(component.name) has an empty texture path")
+            }
+            XCTAssertEqual(component.texCoord.position.count, 2)
+            XCTAssertEqual(component.texCoord.size.count, 2)
+            for value in component.texCoord.position + component.texCoord.size {
+                XCTAssertTrue(value.isFinite, "\(component.name) has non-finite texture coordinates")
+            }
+            XCTAssertEqual(component.localRGBA.bytes.count, 4)
+            XCTAssertEqual(component.absoluteRGBA.bytes.count, 4)
+        }
+    }
+
     private func scaled(_ point: UIScreenPoint3, by scale: UIScreenPoint3) -> UIScreenPoint3 {
         UIScreenPoint3(x: point.x * scale.x, y: point.y * scale.y, z: point.z * scale.z)
     }

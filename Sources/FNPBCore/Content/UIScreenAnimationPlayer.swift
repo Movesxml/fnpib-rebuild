@@ -418,6 +418,12 @@ public struct UIScreenAnimationPlayer: Sendable {
                 component: componentName, animation: animationName,
                 track: trackName, timeMS: previous.timeMS)
         }
+        if track.name == "colour" {
+            // FUN_003104d8 keeps this exact Float operation order before quantizing
+            // the animated RGBA channels back to bytes. Algebraically rearranging it
+            // changes truncation at boundaries such as 0 -> 25 with amount = 0.4.
+            return zip(previous.values, next.values).map { $1 - ($1 - $0) * (1 - amount) }
+        }
         return zip(previous.values, next.values).map { $0 + ($1 - $0) * amount }
     }
 

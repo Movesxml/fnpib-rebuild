@@ -104,6 +104,42 @@ public struct UIScreenProjectedCorners: Equatable, Sendable {
     }
 }
 
+/// RGBA bytes in the original component-property order.
+public struct UIScreenRGBA: Equatable, Sendable {
+    public let red: UInt8
+    public let green: UInt8
+    public let blue: UInt8
+    public let alpha: UInt8
+
+    public init(red: UInt8, green: UInt8, blue: UInt8, alpha: UInt8) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
+    }
+
+    public var bytes: [UInt8] { [red, green, blue, alpha] }
+    public static let white = UIScreenRGBA(red: 255, green: 255, blue: 255, alpha: 255)
+}
+
+/// Original UV corners; negative sizes intentionally preserve texture reversal.
+public struct UIScreenTexCoord: Equatable, Sendable {
+    public let position: [Float]
+    public let size: [Float]
+
+    public init(position: [Float], size: [Float]) {
+        precondition(position.count == 2, "UIScreenTexCoord position requires exactly 2 values")
+        precondition(size.count == 2, "UIScreenTexCoord size requires exactly 2 values")
+        self.position = position
+        self.size = size
+    }
+
+    public var topLeft: [Float] { position }
+    public var topRight: [Float] { [position[0] + size[0], position[1]] }
+    public var bottomLeft: [Float] { [position[0], position[1] + size[1]] }
+    public var bottomRight: [Float] { [position[0] + size[0], position[1] + size[1]] }
+}
+
 public struct UIScreenProjectedComponent: Equatable, Sendable {
     public let name: String
     public let index: Int
@@ -120,6 +156,12 @@ public struct UIScreenProjectedComponent: Equatable, Sendable {
     public let worldMatrix: UIScreenMatrix4
     public let worldOrigin: UIScreenPoint3
     public let worldCorners: UIScreenProjectedCorners
+    public let localRGBA: UIScreenRGBA
+    public let absoluteRGBA: UIScreenRGBA
+    public let enabled: Bool
+    public let texturePath: String?
+    public let texCoord: UIScreenTexCoord
+    public let screenVisibility: Bool
 
     public init(name: String,
                 index: Int,
@@ -135,7 +177,13 @@ public struct UIScreenProjectedComponent: Equatable, Sendable {
                 localMatrix: UIScreenMatrix4,
                 worldMatrix: UIScreenMatrix4,
                 worldOrigin: UIScreenPoint3,
-                worldCorners: UIScreenProjectedCorners) {
+                worldCorners: UIScreenProjectedCorners,
+                localRGBA: UIScreenRGBA,
+                absoluteRGBA: UIScreenRGBA,
+                enabled: Bool,
+                texturePath: String?,
+                texCoord: UIScreenTexCoord,
+                screenVisibility: Bool) {
         self.name = name
         self.index = index
         self.parentIndex = parentIndex
@@ -151,6 +199,12 @@ public struct UIScreenProjectedComponent: Equatable, Sendable {
         self.worldMatrix = worldMatrix
         self.worldOrigin = worldOrigin
         self.worldCorners = worldCorners
+        self.localRGBA = localRGBA
+        self.absoluteRGBA = absoluteRGBA
+        self.enabled = enabled
+        self.texturePath = texturePath
+        self.texCoord = texCoord
+        self.screenVisibility = screenVisibility
     }
 }
 
@@ -158,6 +212,7 @@ public enum UIScreenLayoutProjectionError: Error, Equatable, Sendable {
     case parentCycle(path: [String])
     case invalidParentIndex(component: String, parentIndex: Int)
     case invalidTrackValueCount(component: String, track: String, expected: Int, actual: Int)
+    case invalidColourValue(component: String, value: Float)
 }
 
 private struct MergedLayout {
@@ -169,9 +224,16 @@ private struct MergedLayout {
     let origin: UIScreenPoint3
     let originFromCenter: Bool
     let effectiveOrigin: UIScreenPoint3
+    let localRGBA: UIScreenRGBA
+    let enabled: Bool
+    let texturePath: String?
+    let texCoord: UIScreenTexCoord
 }
 
 public struct UIScreenLayoutProjection: Equatable, Sendable {
+    public static let logicalViewportWidth: Float = 480
+    public static let logicalViewportHeight: Float = 320
+
     public let components: [UIScreenProjectedComponent]
 
     public init(components: [UIScreenProjectedComponent]) {
@@ -206,6 +268,40 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                 try player.sampleActive(component: component.name, track: "rotation")
             }, fallback: rotation, component: component.name, track: "rotation")
 
+            let sampledColour = try sampledValues {
+                try player.sampleActive(component: component.name, track: "colour")
+            }
+            let colourValues = sampledColour ?? layout?.colour ?? [255, 255, 255, 255]
+            guard colourValues.count == 4 else {
+                throw UIScreenLayoutProjectionError.invalidTrackValueCount(
+                    component: component.name, track: "colour",
+                    expected: 4, actual: colourValues.count)
+            }
+            let localRGBA = try makeRGBA(colourValues, component: component.name)
+
+            let sampledEnabled = try sampledValues {
+                try player.sampleActive(component: component.name, track: "enabled")
+            }
+            if let sampledEnabled, sampledEnabled.count != 1 {
+                throw UIScreenLayoutProjectionError.invalidTrackValueCount(
+                    component: component.name, track: "enabled",
+                    expected: 1, actual: sampledEnabled.count)
+            }
+            let enabled = sampledEnabled.map { $0[0] != 0 } ?? layout?.enabled ?? true
+
+            let texCoordPos = layout?.texCoordPos ?? [0, 0]
+            let texCoordSize = layout?.texCoordSize ?? [1, 1]
+            guard texCoordPos.count == 2 else {
+                throw UIScreenLayoutProjectionError.invalidTrackValueCount(
+                    component: component.name, track: "texCoordPos",
+                    expected: 2, actual: texCoordPos.count)
+            }
+            guard texCoordSize.count == 2 else {
+                throw UIScreenLayoutProjectionError.invalidTrackValueCount(
+                    component: component.name, track: "texCoordSize",
+                    expected: 2, actual: texCoordSize.count)
+            }
+
             let effectiveOrigin: UIScreenPoint3
             if originFromCenter {
                 effectiveOrigin = UIScreenPoint3(
@@ -230,10 +326,15 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                 height: height,
                 origin: origin,
                 originFromCenter: originFromCenter,
-                effectiveOrigin: effectiveOrigin))
+                effectiveOrigin: effectiveOrigin,
+                localRGBA: localRGBA,
+                enabled: enabled,
+                texturePath: layout?.texture,
+                texCoord: UIScreenTexCoord(position: texCoordPos, size: texCoordSize)))
         }
 
         var worldMatrices = [UIScreenMatrix4](repeating: .identity, count: count)
+        var absoluteRGBAs = [UIScreenRGBA?](repeating: nil, count: count)
         var state = [Int](repeating: 0, count: count)
 
         for start in 0..<count {
@@ -268,6 +369,7 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
 
             while let index = stack.popLast() {
                 let parentWorld: UIScreenMatrix4
+                let parentAbsolute: UIScreenRGBA
                 if let parentIndex = contentComponents[index].parentIndex, parentIndex != -1 {
                     guard parentIndex >= 0, parentIndex < count else {
                         throw UIScreenLayoutProjectionError.invalidParentIndex(
@@ -275,10 +377,13 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                             parentIndex: parentIndex)
                     }
                     parentWorld = worldMatrices[parentIndex]
+                    parentAbsolute = absoluteRGBAs[parentIndex] ?? .white
                 } else {
                     parentWorld = .identity
+                    parentAbsolute = .white
                 }
                 worldMatrices[index] = parentWorld * localMatrices[index]
+                absoluteRGBAs[index] = modulate(mergedLayouts[index].localRGBA, by: parentAbsolute)
                 state[index] = 2
             }
         }
@@ -297,6 +402,11 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                     z: -merged.effectiveOrigin.z))
             }
 
+            let corners = UIScreenProjectedCorners(
+                minimumXMinimumY: corner(x: 0, y: 0),
+                maximumXMinimumY: corner(x: merged.width, y: 0),
+                maximumXMaximumY: corner(x: merged.width, y: merged.height),
+                minimumXMaximumY: corner(x: 0, y: merged.height))
             projected.append(UIScreenProjectedComponent(
                 name: contentComponents[index].name,
                 index: index,
@@ -312,11 +422,16 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                 localMatrix: localMatrices[index],
                 worldMatrix: worldMatrix,
                 worldOrigin: worldOrigin,
-                worldCorners: UIScreenProjectedCorners(
-                    minimumXMinimumY: corner(x: 0, y: 0),
-                    maximumXMinimumY: corner(x: merged.width, y: 0),
-                    maximumXMaximumY: corner(x: merged.width, y: merged.height),
-                    minimumXMaximumY: corner(x: 0, y: merged.height))))
+                worldCorners: corners,
+                localRGBA: merged.localRGBA,
+                absoluteRGBA: absoluteRGBAs[index] ?? merged.localRGBA,
+                enabled: merged.enabled,
+                texturePath: merged.texturePath,
+                texCoord: merged.texCoord,
+                screenVisibility: screenVisibility(
+                    corners: corners,
+                    viewportWidth: logicalViewportWidth,
+                    viewportHeight: logicalViewportHeight)))
         }
         return UIScreenLayoutProjection(components: projected)
     }
@@ -328,6 +443,47 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
             if case .unknownTrack = error { return nil }
             throw error
         }
+    }
+
+    /// Independent screen-space AABB visibility, not component enabled state.
+    static func screenVisibility(corners: UIScreenProjectedCorners,
+                                 viewportWidth: Float,
+                                 viewportHeight: Float) -> Bool {
+        let points = [corners.minimumXMinimumY, corners.maximumXMinimumY,
+                      corners.maximumXMaximumY, corners.minimumXMaximumY]
+        let left = points.map(\.x).min() ?? 0
+        let right = points.map(\.x).max() ?? 0
+        let top = points.map(\.y).min() ?? 0
+        let bottom = points.map(\.y).max() ?? 0
+        return right - left > -1
+            && bottom - top > -1
+            && right > 0
+            && left < viewportWidth
+            && bottom > 0
+            && top < viewportHeight
+    }
+
+    private static func makeRGBA(_ values: [Float], component: String) throws -> UIScreenRGBA {
+        func byte(_ value: Float) throws -> UInt8 {
+            guard value >= 0, value <= 255 else {
+                throw UIScreenLayoutProjectionError.invalidColourValue(
+                    component: component, value: value)
+            }
+            return UInt8(value.rounded(.towardZero))
+        }
+        return UIScreenRGBA(red: try byte(values[0]), green: try byte(values[1]),
+                            blue: try byte(values[2]), alpha: try byte(values[3]))
+    }
+
+    private static func modulate(_ local: UIScreenRGBA, by parent: UIScreenRGBA) -> UIScreenRGBA {
+        func channel(_ local: UInt8, _ parent: UInt8) -> UInt8 {
+            // FUN_003d8dd0: division, multiplication, then truncation at every level.
+            UInt8((Float(local) / 255.0 * Float(parent)).rounded(.towardZero))
+        }
+        return UIScreenRGBA(red: channel(local.red, parent.red),
+                            green: channel(local.green, parent.green),
+                            blue: channel(local.blue, parent.blue),
+                            alpha: channel(local.alpha, parent.alpha))
     }
 
     private static func vector3(_ values: [Float]?, fallback: UIScreenPoint3) -> UIScreenPoint3 {

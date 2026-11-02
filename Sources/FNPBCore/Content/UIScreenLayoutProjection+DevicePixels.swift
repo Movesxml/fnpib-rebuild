@@ -10,7 +10,16 @@ extension UIScreenLayoutProjection {
         let rootMatrix = viewport.rootScaleMatrix
 
         let components = logical.components.map { component in
-            UIScreenProjectedComponent(
+            let corners = UIScreenProjectedCorners(
+                minimumXMinimumY: rootMatrix.transformed(
+                    component.worldCorners.minimumXMinimumY),
+                maximumXMinimumY: rootMatrix.transformed(
+                    component.worldCorners.maximumXMinimumY),
+                maximumXMaximumY: rootMatrix.transformed(
+                    component.worldCorners.maximumXMaximumY),
+                minimumXMaximumY: rootMatrix.transformed(
+                    component.worldCorners.minimumXMaximumY))
+            return UIScreenProjectedComponent(
                 name: component.name,
                 index: component.index,
                 parentIndex: component.parentIndex,
@@ -25,15 +34,16 @@ extension UIScreenLayoutProjection {
                 localMatrix: component.localMatrix,
                 worldMatrix: rootMatrix * component.worldMatrix,
                 worldOrigin: rootMatrix.transformed(component.worldOrigin),
-                worldCorners: UIScreenProjectedCorners(
-                    minimumXMinimumY: rootMatrix.transformed(
-                        component.worldCorners.minimumXMinimumY),
-                    maximumXMinimumY: rootMatrix.transformed(
-                        component.worldCorners.maximumXMinimumY),
-                    maximumXMaximumY: rootMatrix.transformed(
-                        component.worldCorners.maximumXMaximumY),
-                    minimumXMaximumY: rootMatrix.transformed(
-                        component.worldCorners.minimumXMaximumY)))
+                worldCorners: corners,
+                localRGBA: component.localRGBA,
+                absoluteRGBA: component.absoluteRGBA,
+                enabled: component.enabled,
+                texturePath: component.texturePath,
+                texCoord: component.texCoord,
+                screenVisibility: Self.screenVisibility(
+                    corners: corners,
+                    viewportWidth: viewport.deviceWidth,
+                    viewportHeight: viewport.deviceHeight))
         }
 
         return UIScreenLayoutProjection(components: components)
