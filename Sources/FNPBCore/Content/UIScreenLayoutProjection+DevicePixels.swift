@@ -43,7 +43,9 @@ extension UIScreenLayoutProjection {
                 screenVisibility: Self.screenVisibility(
                     corners: corners,
                     viewportWidth: viewport.deviceWidth,
-                    viewportHeight: viewport.deviceHeight))
+                    viewportHeight: viewport.deviceHeight),
+                localLayer: component.localLayer,
+                effectiveLayer: component.effectiveLayer)
         }
 
         return UIScreenLayoutProjection(components: components)

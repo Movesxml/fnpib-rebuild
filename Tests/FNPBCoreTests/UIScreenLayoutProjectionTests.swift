@@ -550,6 +550,207 @@ final class UIScreenLayoutProjectionTests: XCTestCase {
         }
     }
 
+    // MARK: - Layer projection
+
+    func testLayerDefaultsToMinusOneAndStaticPositiveLayerIsPreserved() throws {
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "defaults", animations: [], parentIndex: -1),
+            UIScreenAnimationContent.Component(
+                name: "positive", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 7)),
+        ]))
+        let components = try UIScreenLayoutProjection.project(player).components
+        XCTAssertEqual(components[0].localLayer, -1)
+        XCTAssertEqual(components[0].effectiveLayer, -1)
+        XCTAssertEqual(components[1].localLayer, 7)
+        XCTAssertEqual(components[1].effectiveLayer, 7)
+    }
+
+    func testStaticUInt32MaxLayerRestoresToMinusOne() throws {
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "uint32Max", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 4_294_967_295)),
+        ]))
+        let component = try UIScreenLayoutProjection.project(player).components[0]
+        XCTAssertEqual(component.localLayer, -1)
+        XCTAssertEqual(component.effectiveLayer, -1)
+    }
+
+    func testLayerInheritsFromParentAndOwnNonNegativeLayerOverrides() throws {
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "parent", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 1)),
+            UIScreenAnimationContent.Component(
+                name: "inherits", animations: [], parentIndex: 0),
+            UIScreenAnimationContent.Component(
+                name: "overrides", animations: [], parentIndex: 0,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 5)),
+        ]))
+        let components = try UIScreenLayoutProjection.project(player).components
+        XCTAssertEqual(components[0].localLayer, 1)
+        XCTAssertEqual(components[0].effectiveLayer, 1)
+        XCTAssertEqual(components[1].localLayer, -1)
+        XCTAssertEqual(components[1].effectiveLayer, 1)
+        XCTAssertEqual(components[2].localLayer, 5)
+        XCTAssertEqual(components[2].effectiveLayer, 5)
+    }
+
+    func testLayerInheritancePropagatesThroughMultipleLevelsAndParentOrder() throws {
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "leaf", animations: [], parentIndex: 1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: -2)),
+            UIScreenAnimationContent.Component(
+                name: "middle", animations: [], parentIndex: 2),
+            UIScreenAnimationContent.Component(
+                name: "root", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 3)),
+            UIScreenAnimationContent.Component(
+                name: "leafOwn", animations: [], parentIndex: 1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 8)),
+        ]))
+        let components = try UIScreenLayoutProjection.project(player).components
+        XCTAssertEqual(components[0].localLayer, -2)
+        XCTAssertEqual(components[0].effectiveLayer, 3)
+        XCTAssertEqual(components[1].localLayer, -1)
+        XCTAssertEqual(components[1].effectiveLayer, 3)
+        XCTAssertEqual(components[2].effectiveLayer, 3)
+        XCTAssertEqual(components[3].localLayer, 8)
+        XCTAssertEqual(components[3].effectiveLayer, 8)
+    }
+
+    func testActiveLayerTrackOverridesStaticAndMissingTrackFallsBack() throws {
+        let track = UIScreenAnimationContent.Track(name: "layer", keyframes: [
+            keyframe(0, [5]), keyframe(100, [9]),
+        ])
+        let animation = UIScreenAnimationContent.Animation(
+            name: "raise", endTimeMS: 100, tracks: [track])
+        var player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "animated", animations: [animation], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 2)),
+            UIScreenAnimationContent.Component(
+                name: "staticOnly", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 2)),
+        ]))
+        _ = try player.play(component: "animated", animation: "raise")
+        _ = try player.advance(deltaSeconds: 0.05)
+        let components = try UIScreenLayoutProjection.project(player).components
+        XCTAssertEqual(components[0].localLayer, 7)
+        XCTAssertEqual(components[0].effectiveLayer, 7)
+        XCTAssertEqual(components[1].localLayer, 2)
+        XCTAssertEqual(components[1].effectiveLayer, 2)
+    }
+
+    func testAnimatedUInt32MaxFloatRoundsBackToMinusOne() throws {
+        let animation = UIScreenAnimationContent.Animation(
+            name: "maxLayer", endTimeMS: 0, tracks: [
+                UIScreenAnimationContent.Track(name: "layer", keyframes: [
+                    keyframe(0, [4_294_967_296]),
+                ]),
+            ])
+        var player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "sampledMax", animations: [animation], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 2)),
+        ]))
+        _ = try player.play(component: "sampledMax", animation: "maxLayer")
+        let component = try UIScreenLayoutProjection.project(player).components[0]
+        XCTAssertEqual(component.localLayer, -1)
+        XCTAssertEqual(component.effectiveLayer, -1)
+    }
+
+    func testInvalidStaticAndAnimatedLayerValuesThrowInsteadOfTrappingOrClamping() throws {
+        let staticPlayer = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "staticBad", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 4_294_967_296)),
+        ]))
+        XCTAssertThrowsError(try UIScreenLayoutProjection.project(staticPlayer)) { error in
+            XCTAssertEqual(error as? UIScreenLayoutProjectionError,
+                           .invalidLayerValue(component: "staticBad", value: "4294967296"))
+        }
+
+        for (name, value) in [("fractional", Float(1.5)), ("negative", Float(-2_147_483_904)),
+                              ("overflow", Float(4_294_967_296) * 2)] {
+            let animation = UIScreenAnimationContent.Animation(
+                name: "badLayer", endTimeMS: 0, tracks: [
+                    UIScreenAnimationContent.Track(name: "layer", keyframes: [
+                        keyframe(0, [value]),
+                    ]),
+                ])
+            var player = try UIScreenAnimationPlayer(content: makeContent([
+                UIScreenAnimationContent.Component(
+                    name: name, animations: [animation], parentIndex: -1),
+            ]))
+            _ = try player.play(component: name, animation: "badLayer")
+            XCTAssertThrowsError(try UIScreenLayoutProjection.project(player), name) { error in
+                guard case let UIScreenLayoutProjectionError.invalidLayerValue(component, _) = error else {
+                    return XCTFail("expected invalidLayerValue, got \(error)")
+                }
+                XCTAssertEqual(component, name)
+            }
+        }
+    }
+
+    func testDevicePixelProjectionPreservesBothLayerFields() throws {
+        let player = try UIScreenAnimationPlayer(content: makeContent([
+            UIScreenAnimationContent.Component(
+                name: "parent", animations: [], parentIndex: -1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: 1)),
+            UIScreenAnimationContent.Component(
+                name: "child", animations: [], parentIndex: 0),
+        ]))
+        let viewport = try UIScreenRootViewport(deviceWidth: 960, deviceHeight: 480)
+        let logical = try UIScreenLayoutProjection.project(player)
+        let device = try UIScreenLayoutProjection.projectDevicePixels(player, viewport: viewport)
+        XCTAssertEqual(device.components.map(\.localLayer), logical.components.map(\.localLayer))
+        XCTAssertEqual(device.components.map(\.effectiveLayer),
+                       logical.components.map(\.effectiveLayer))
+        XCTAssertEqual(device.components[0].localLayer, 1)
+        XCTAssertEqual(device.components[1].effectiveLayer, 1)
+    }
+
+    func testProductionChallengeMapLayerProjectionMatchesVerifiedStructure() throws {
+        let player = try productionChallengeMapPlayer()
+        let projection = try UIScreenLayoutProjection.project(player)
+        XCTAssertEqual(projection.components.count, 95)
+        XCTAssertEqual(player.content.components.filter {
+            $0.layout?.layer == 4_294_967_295
+        }.count, 15)
+        XCTAssertEqual(projection.components.filter { $0.localLayer == -1 }.count, 16)
+        XCTAssertFalse(player.content.components.contains { component in
+            component.animations.contains { animation in
+                animation.tracks.contains { $0.name == "layer" }
+            }
+        })
+
+        let byName = Dictionary(uniqueKeysWithValues: projection.components.map { ($0.name, $0) })
+        for name in ["actContainer", "challengeContainer", "bossChallengeContainer"] {
+            let component = try XCTUnwrap(byName[name])
+            XCTAssertEqual(component.localLayer, 1, name)
+            XCTAssertEqual(component.effectiveLayer, 1, name)
+        }
+        let progress = try XCTUnwrap(byName["progressUIContainer"])
+        XCTAssertEqual(progress.localLayer, 2)
+        XCTAssertEqual(progress.effectiveLayer, 2)
+        let screenRoot = try XCTUnwrap(byName[""])
+        XCTAssertEqual(screenRoot.localLayer, -1)
+        XCTAssertEqual(screenRoot.effectiveLayer, -1)
+
+        for component in projection.components where
+            component.name.contains(".spinner.adventureNode") {
+            XCTAssertEqual(component.localLayer, -1, component.name)
+            XCTAssertEqual(component.effectiveLayer, 1, component.name)
+        }
+        XCTAssertEqual(projection.components.filter {
+            $0.name.contains(".spinner.adventureNode")
+        }.count, 15)
+    }
+
     private func scaled(_ point: UIScreenPoint3, by scale: UIScreenPoint3) -> UIScreenPoint3 {
         UIScreenPoint3(x: point.x * scale.x, y: point.y * scale.y, z: point.z * scale.z)
     }

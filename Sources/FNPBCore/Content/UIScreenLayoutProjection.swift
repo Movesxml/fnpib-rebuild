@@ -162,6 +162,8 @@ public struct UIScreenProjectedComponent: Equatable, Sendable {
     public let texturePath: String?
     public let texCoord: UIScreenTexCoord
     public let screenVisibility: Bool
+    public let localLayer: Int32
+    public let effectiveLayer: Int32
 
     public init(name: String,
                 index: Int,
@@ -183,7 +185,9 @@ public struct UIScreenProjectedComponent: Equatable, Sendable {
                 enabled: Bool,
                 texturePath: String?,
                 texCoord: UIScreenTexCoord,
-                screenVisibility: Bool) {
+                screenVisibility: Bool,
+                localLayer: Int32 = -1,
+                effectiveLayer: Int32 = -1) {
         self.name = name
         self.index = index
         self.parentIndex = parentIndex
@@ -205,6 +209,8 @@ public struct UIScreenProjectedComponent: Equatable, Sendable {
         self.texturePath = texturePath
         self.texCoord = texCoord
         self.screenVisibility = screenVisibility
+        self.localLayer = localLayer
+        self.effectiveLayer = effectiveLayer
     }
 }
 
@@ -213,6 +219,7 @@ public enum UIScreenLayoutProjectionError: Error, Equatable, Sendable {
     case invalidParentIndex(component: String, parentIndex: Int)
     case invalidTrackValueCount(component: String, track: String, expected: Int, actual: Int)
     case invalidColourValue(component: String, value: Float)
+    case invalidLayerValue(component: String, value: String)
 }
 
 private struct MergedLayout {
@@ -228,6 +235,7 @@ private struct MergedLayout {
     let enabled: Bool
     let texturePath: String?
     let texCoord: UIScreenTexCoord
+    let localLayer: Int32
 }
 
 public struct UIScreenLayoutProjection: Equatable, Sendable {
@@ -289,6 +297,25 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
             }
             let enabled = sampledEnabled.map { $0[0] != 0 } ?? layout?.enabled ?? true
 
+            let sampledLayer = try sampledValues {
+                try player.sampleActive(component: component.name, track: "layer")
+            }
+            let localLayer: Int32
+            if let sampledLayer {
+                guard sampledLayer.count == 1 else {
+                    throw UIScreenLayoutProjectionError.invalidTrackValueCount(
+                        component: component.name, track: "layer",
+                        expected: 1, actual: sampledLayer.count)
+                }
+                localLayer = try layerValue(fromAnimated: sampledLayer[0],
+                                            component: component.name)
+            } else if let staticLayer = layout?.layer {
+                localLayer = try layerValue(fromStatic: staticLayer,
+                                            component: component.name)
+            } else {
+                localLayer = -1
+            }
+
             let texCoordPos = layout?.texCoordPos ?? [0, 0]
             let texCoordSize = layout?.texCoordSize ?? [1, 1]
             guard texCoordPos.count == 2 else {
@@ -330,11 +357,13 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                 localRGBA: localRGBA,
                 enabled: enabled,
                 texturePath: layout?.texture,
-                texCoord: UIScreenTexCoord(position: texCoordPos, size: texCoordSize)))
+                texCoord: UIScreenTexCoord(position: texCoordPos, size: texCoordSize),
+                localLayer: localLayer))
         }
 
         var worldMatrices = [UIScreenMatrix4](repeating: .identity, count: count)
         var absoluteRGBAs = [UIScreenRGBA?](repeating: nil, count: count)
+        var effectiveLayers = [Int32](repeating: -1, count: count)
         var state = [Int](repeating: 0, count: count)
 
         for start in 0..<count {
@@ -370,6 +399,7 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
             while let index = stack.popLast() {
                 let parentWorld: UIScreenMatrix4
                 let parentAbsolute: UIScreenRGBA
+                let inheritedLayer: Int32
                 if let parentIndex = contentComponents[index].parentIndex, parentIndex != -1 {
                     guard parentIndex >= 0, parentIndex < count else {
                         throw UIScreenLayoutProjectionError.invalidParentIndex(
@@ -378,12 +408,16 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                     }
                     parentWorld = worldMatrices[parentIndex]
                     parentAbsolute = absoluteRGBAs[parentIndex] ?? .white
+                    inheritedLayer = effectiveLayers[parentIndex]
                 } else {
                     parentWorld = .identity
                     parentAbsolute = .white
+                    inheritedLayer = -1
                 }
                 worldMatrices[index] = parentWorld * localMatrices[index]
                 absoluteRGBAs[index] = modulate(mergedLayouts[index].localRGBA, by: parentAbsolute)
+                let localLayer = mergedLayouts[index].localLayer
+                effectiveLayers[index] = localLayer < 0 ? inheritedLayer : localLayer
                 state[index] = 2
             }
         }
@@ -431,7 +465,9 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                 screenVisibility: screenVisibility(
                     corners: corners,
                     viewportWidth: logicalViewportWidth,
-                    viewportHeight: logicalViewportHeight)))
+                    viewportHeight: logicalViewportHeight),
+                localLayer: merged.localLayer,
+                effectiveLayer: effectiveLayers[index]))
         }
         return UIScreenLayoutProjection(components: projected)
     }
@@ -501,5 +537,32 @@ public struct UIScreenLayoutProjection: Equatable, Sendable {
                 component: component, track: track, expected: 3, actual: values.count)
         }
         return UIScreenPoint3(x: values[0], y: values[1], z: values[2])
+    }
+
+    /// The release resource stores a 32-bit layer bit pattern. JSON positive
+    /// values above Int32.max therefore represent negative Int32 layer values.
+    private static func layerValue(fromStatic value: Int, component: String) throws -> Int32 {
+        if let signed = Int32(exactly: value) { return signed }
+        if let bits = UInt32(exactly: value) { return Int32(bitPattern: bits) }
+        throw UIScreenLayoutProjectionError.invalidLayerValue(
+            component: component, value: String(value))
+    }
+
+    /// Float(UInt32.max) is 2^32, which is the resource animation encoding of
+    /// 0xffffffff. Handle it explicitly before any trapping integer conversion.
+    private static func layerValue(fromAnimated value: Float, component: String) throws -> Int32 {
+        guard value.isFinite, value == value.rounded(.towardZero) else {
+            throw UIScreenLayoutProjectionError.invalidLayerValue(
+                component: component, value: String(value))
+        }
+        if value == Float(UInt32.max) { return -1 }
+        if value >= -2_147_483_648, value < 2_147_483_648 {
+            return Int32(value)
+        }
+        if value >= 2_147_483_648, value < 4_294_967_296 {
+            return Int32(bitPattern: UInt32(value))
+        }
+        throw UIScreenLayoutProjectionError.invalidLayerValue(
+            component: component, value: String(value))
     }
 }
