@@ -131,6 +131,14 @@ public struct ChallengeSessionPersistent: Codable, Equatable, Sendable {
             self.challengeIndex = challengeIndex
             self.result = result
         }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+            index = try container.decodeIfPresent(Int32.self, forKey: .index) ?? 0
+            challengeIndex = try container.decodeIfPresent(Int32.self, forKey: .challengeIndex) ?? 0
+            result = try container.decodeIfPresent(Int32.self, forKey: .result) ?? 0
+        }
     }
 
     /// 原 XML 键名是 currentChallenge；FUN_000619d0 把它作为难度读取。
@@ -147,6 +155,12 @@ public struct ChallengeSessionPersistent: Codable, Equatable, Sendable {
     enum CodingKeys: String, CodingKey {
         case difficulty = "currentChallenge"
         case challenges = "challenge"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        difficulty = try container.decodeIfPresent(Int32.self, forKey: .difficulty) ?? 0
+        challenges = try container.decodeIfPresent([ChallengeRecord].self, forKey: .challenges) ?? []
     }
 
     /// FUN_000619d0：忽略越界记录，使用有效记录中的最高 tier；空新存档为 0。

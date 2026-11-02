@@ -212,6 +212,34 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         XCTAssertEqual(assembler.plan.outcome(at: 0), .pass)
     }
 
+    func testDuplicateOutcomeKeepsFirstResultAndDoesNotIncrementPlaysAgain() throws {
+        let challenge = makeChallenge(name: "dedupe", size: .normal)
+        let store = ChallengeSelectionMemoryStore()
+        var assembler = try ChallengeRoundAssembler(
+            catalog: makeCatalog(challenges: [challenge], numRounds: 2),
+            fruits: makeFruits(),
+            conditionDefinitions: [],
+            persistence: store,
+            random: AssemblerRandom(),
+            tierIndex: 0)
+        let key = ChallengeGroupSelector.challengeKey(challenge)
+
+        _ = try assembler.startFirstRound()
+        assembler.recordCurrentRoundOutcome(.pass)
+        assembler.recordCurrentRoundOutcome(.fail)
+        assembler.recordCurrentRoundOutcome(.pass)
+        XCTAssertEqual(assembler.plan.outcome(at: 0), .pass)
+        XCTAssertEqual(store.playCount(forKey: key), 1)
+
+        let next = try assembler.advanceToNextRound()
+        XCTAssertEqual(next.roundIndex, 1)
+        XCTAssertNil(assembler.plan.outcome(at: 1))
+        assembler.recordCurrentRoundOutcome(.fail)
+        XCTAssertEqual(assembler.plan.outcome(at: 0), .pass)
+        XCTAssertEqual(assembler.plan.outcome(at: 1), .fail)
+        XCTAssertEqual(store.playCount(forKey: key), 2)
+    }
+
     func testPlanExhaustedThrowsWithoutChangingCurrentRound() throws {
         let catalog = makeCatalog(
             challenges: [makeChallenge(name: "c1", size: .normal)], numRounds: 1)

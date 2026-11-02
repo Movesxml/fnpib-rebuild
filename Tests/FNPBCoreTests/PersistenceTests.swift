@@ -168,6 +168,20 @@ final class PersistenceTests: XCTestCase {
         XCTAssertEqual(SaveStore(directory: directory).playCount(forKey: key), 1)
     }
 
+    func testChallengeSessionDecodesMissingFieldsWithStableDefaults() throws {
+        let json = #"{"currentChallenge":2,"challenge":[{"name":"partial"}]}"#
+        let decoded = try JSONDecoder().decode(
+            ChallengeSessionPersistent.self, from: Data(json.utf8))
+        XCTAssertEqual(decoded.difficulty, 2)
+        XCTAssertEqual(decoded.challenges, [
+            .init(name: "partial", index: 0, challengeIndex: 0, result: 0)
+        ])
+
+        let empty = try JSONDecoder().decode(
+            ChallengeSessionPersistent.self, from: Data(#"{}"#.utf8))
+        XCTAssertEqual(empty, .empty)
+    }
+
     func testChallengeSessionSelectsHighestValidTierAndClampsUnsignedDifficulty() throws {
         let session = ChallengeSessionPersistent(difficulty: 9, challenges: [
             .init(name: "a", index: 0, challengeIndex: 0, result: 1),
