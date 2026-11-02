@@ -166,10 +166,15 @@ public struct ChallengeMapRoundHUDState: Sendable, Equatable, Identifiable {
 public struct ChallengeMapHUDState: Sendable, Equatable {
     public var controllerState: Int
     public var rounds: [ChallengeMapRoundHUDState]
+    /// Current logical 480×320 UIScreen projection; never reused after a failure.
+    public var components: [ChallengeMapLayoutComponent]
 
-    public init(controllerState: Int, rounds: [ChallengeMapRoundHUDState]) {
+    public init(controllerState: Int,
+                rounds: [ChallengeMapRoundHUDState],
+                components: [ChallengeMapLayoutComponent] = []) {
         self.controllerState = controllerState
         self.rounds = rounds
+        self.components = components
     }
 
     public var canSelect: Bool { controllerState == 7 }

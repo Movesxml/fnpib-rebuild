@@ -394,8 +394,22 @@ final class GameHost: ObservableObject {
         let runtime = gameWorld.challenge
         let controller = challengeSettlement
         var mapState: ChallengeMapHUDState?
+        var mapProjectionError: String?
         if let map = challengeMap, let input = map.snapshot {
             let spinner = input.isBonus ? "bossChallengeContainer.spinner" : "challengeContainer.spinner"
+            var components: [ChallengeMapLayoutComponent] = []
+            if let player = challengeMapAnimationPlayer {
+                do {
+                    components = try Self.makeChallengeMapComponents(
+                        from: UIScreenLayoutProjection.project(player),
+                        iconTargets: challengeIconTargets,
+                        visibleTargets: challengeVisibleTargets)
+                } catch {
+                    mapProjectionError = "挑战地图组件投影失败：\(error.localizedDescription)"
+                }
+            } else {
+                mapProjectionError = "挑战地图缺少 UIScreen 动画播放器"
+            }
             mapState = ChallengeMapHUDState(
                 controllerState: Int(map.state),
                 rounds: input.rounds.enumerated().map { index, round in
@@ -404,7 +418,8 @@ final class GameHost: ObservableObject {
                         challengeName: round.challengeName,
                         outcomeRawValue: round.outcome.map { Int($0.rawValue) },
                         iconIndex: challengeIconTargets["\(spinner).adventureNode_\(index + 1)"])
-                })
+                },
+                components: components)
         }
         var bonusState: ChallengeBonusHUDState?
         if let host = challengeBonusSettlement,
@@ -420,6 +435,13 @@ final class GameHost: ObservableObject {
                 isBonusFinished: host.isBonusFinished,
                 isFinished: host.isFinished,
                 lifeScoreVisible: (1...3).map { host.isLifeScoreVisible(index: Int32($0)) })
+        }
+        let errorMessage: String?
+        if let configurationError = challengeConfigurationError,
+           let projectionError = mapProjectionError {
+            errorMessage = "\(configurationError)；\(projectionError)"
+        } else {
+            errorMessage = challengeConfigurationError ?? mapProjectionError
         }
         return ChallengeHUDState(
             challengeName: round.challenge.name,
@@ -438,8 +460,70 @@ final class GameHost: ObservableObject {
             }) ?? false,
             map: mapState,
             bonus: bonusState,
-            errorMessage: challengeConfigurationError)
+            errorMessage: errorMessage)
     }
+
+    /// Converts Core values at the composition boundary; FNPBUI never imports Core.
+    private static func makeChallengeMapComponents(
+        from projection: UIScreenLayoutProjection,
+        iconTargets: [String: Int32],
+        visibleTargets: [String: Bool]
+    ) throws -> [ChallengeMapLayoutComponent] {
+        var result: [ChallengeMapLayoutComponent] = []
+        result.reserveCapacity(projection.components.count)
+        for component in projection.components {
+            guard let worldMatrix = ChallengeMapLayoutMatrix4(
+                elements: component.worldMatrix.elements),
+                  component.texCoord.position.count == 2,
+                  component.texCoord.size.count == 2 else {
+                throw ChallengeHostError("组件 \(component.name) 的矩阵或 UV 维度无效")
+            }
+            let corners = ChallengeMapLayoutCorners(
+                minimumXMinimumY: ChallengeMapLayoutPoint(
+                    x: component.worldCorners.minimumXMinimumY.x,
+                    y: component.worldCorners.minimumXMinimumY.y,
+                    z: component.worldCorners.minimumXMinimumY.z),
+                maximumXMinimumY: ChallengeMapLayoutPoint(
+                    x: component.worldCorners.maximumXMinimumY.x,
+                    y: component.worldCorners.maximumXMinimumY.y,
+                    z: component.worldCorners.maximumXMinimumY.z),
+                maximumXMaximumY: ChallengeMapLayoutPoint(
+                    x: component.worldCorners.maximumXMaximumY.x,
+                    y: component.worldCorners.maximumXMaximumY.y,
+                    z: component.worldCorners.maximumXMaximumY.z),
+                minimumXMaximumY: ChallengeMapLayoutPoint(
+                    x: component.worldCorners.minimumXMaximumY.x,
+                    y: component.worldCorners.minimumXMaximumY.y,
+                    z: component.worldCorners.minimumXMaximumY.z))
+            result.append(ChallengeMapLayoutComponent(
+                name: component.name,
+                index: component.index,
+                parentIndex: component.parentIndex,
+                worldMatrix: worldMatrix,
+                worldCorners: corners,
+                width: component.width,
+                height: component.height,
+                effectiveOrigin: ChallengeMapLayoutPoint(
+                    x: component.effectiveOrigin.x,
+                    y: component.effectiveOrigin.y,
+                    z: component.effectiveOrigin.z),
+                localRGBA: ChallengeMapLayoutColor(
+                    red: component.localRGBA.red, green: component.localRGBA.green,
+                    blue: component.localRGBA.blue, alpha: component.localRGBA.alpha),
+                absoluteRGBA: ChallengeMapLayoutColor(
+                    red: component.absoluteRGBA.red, green: component.absoluteRGBA.green,
+                    blue: component.absoluteRGBA.blue, alpha: component.absoluteRGBA.alpha),
+                // setVisible targets this component only. No unverified parent inheritance.
+                enabled: visibleTargets[component.name] ?? component.enabled,
+                screenVisibility: component.screenVisibility,
+                texturePath: component.texturePath,
+                texCoordPos: SIMD2(component.texCoord.position[0], component.texCoord.position[1]),
+                texCoordSize: SIMD2(component.texCoord.size[0], component.texCoord.size[1]),
+                iconIndex: iconTargets[component.name]))
+        }
+        return result
+    }
+
     var classicHearts: [ClassicHeartState] {
         visibleClassicCrosses.sorted().compactMap { index in
             var scale = SIMD2<Float>(1, 1)

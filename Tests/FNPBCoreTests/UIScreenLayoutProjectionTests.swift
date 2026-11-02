@@ -481,8 +481,10 @@ final class UIScreenLayoutProjectionTests: XCTestCase {
         XCTAssertEqual(component.texturePath, "textures/icon.png")
         XCTAssertEqual(component.texCoord.topLeft, [0.1, 0.2])
         XCTAssertEqual(component.texCoord.topRight, [-0.4, 0.2])
-        XCTAssertEqual(component.texCoord.bottomLeft, [0.1, -0.05])
-        XCTAssertEqual(component.texCoord.bottomRight, [-0.4, -0.05])
+        // Preserve the original Float addition, rather than treating decimal -0.05 as exact.
+        let expectedV = Float(0.2) + Float(-0.25)
+        XCTAssertEqual(component.texCoord.bottomLeft, [0.1, expectedV])
+        XCTAssertEqual(component.texCoord.bottomRight, [-0.4, expectedV])
     }
 
     func testScreenVisibilityUsesStrictAABBBoundaries() throws {
