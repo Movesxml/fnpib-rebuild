@@ -129,7 +129,7 @@ public struct ChallengeSettlementController: Sendable, Equatable {
         switch normalResultState {
         case .waitingForIntro:
             if try !resultPlayer.isPlayingRecursively(component: "", animation: "animate_in"),
-               !resultPlayer.isPlayingRecursively(component: "", animation: "s/challengeComplete.tex") {
+               try !resultPlayer.isPlayingRecursively(component: "", animation: "s/challengeComplete.tex") {
                 applyOutcome()
             }
         case .waitingForSuccessSequence:
@@ -140,7 +140,7 @@ public struct ChallengeSettlementController: Sendable, Equatable {
             }
         case .waitingForFailureIntro:
             if try !resultPlayer.isPlayingRecursively(component: "", animation: "animate_in"),
-               !resultPlayer.isPlayingRecursively(component: "", animation: "ins") {
+               try !resultPlayer.isPlayingRecursively(component: "", animation: "ins") {
                 return try finishNormalResult(
                     resultPlayer: &resultPlayer,
                     canAnimateResultExit: canAnimateResultExit)
