@@ -53,6 +53,98 @@ public enum UIScreenAnimationError: Error, Equatable, Sendable {
     case invalidDelta(Float)
 }
 
+/// Verified functors behind FUN_003e86e8. Only modes used by the original
+/// Challenge resource are reconstructed; other modes remain explicit errors.
+enum UIScreenInterpolation {
+    static func isSupported(mode: Int) -> Bool {
+        switch mode {
+        case 0, 2, 3, 5, 7: return true
+        default: return false
+        }
+    }
+
+    static func curve(mode: Int, x: Float) -> Float? {
+        switch mode {
+        case 0:
+            return x
+        case 2:
+            // FUN_003e7e0c: exact Float base 0x402df854, with the original
+            // multiplication/addition order preserved.
+            let e = Float(bitPattern: 0x402d_f854)
+            let exponent = 6 * (-2 * x + 1)
+            return 1 / (1 + powf(e, exponent))
+        case 3:
+            return 0
+        case 5:
+            return tableLookup(mode5Table, x: x)
+        case 7:
+            return tableLookup(mode7Table, x: x)
+        default:
+            return nil
+        }
+    }
+
+    /// FUN_0038d5d0: scale by count-1, truncate, then interpolate adjacent
+    /// UInt8 entries. Resource segments provide x in [0,1]; other domains are
+    /// rejected rather than assigned an unverified clamp or integer conversion.
+    private static func tableLookup(_ table: [UInt8], x: Float) -> Float? {
+        let last = table.count - 1
+        let scaled = x * Float(last)
+        guard scaled >= 0, scaled <= Float(last) else { return nil }
+        let index = Int(scaled)
+        if index + 1 < table.count {
+            let lower = Float(table[index]) / 255
+            let upper = Float(table[index + 1]) / 255
+            return lower + (scaled - Float(index)) * (upper - lower)
+        }
+        return Float(table[last]) / 255
+    }
+
+    /// Exact 100-byte table from FUN_0038cd18 (interpolation mode 5).
+    private static let mode5Table: [UInt8] = [
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0,
+        1, 1, 1, 1, 2, 2,
+        3, 3, 3, 3,
+        4, 5, 5, 6,
+        6, 7, 7, 8,
+        8, 9, 10, 10,
+        11, 12, 13, 13,
+        14, 15, 16, 17,
+        18, 19, 20, 21,
+        22, 24, 25, 26,
+        28, 29, 30, 32,
+        33, 36, 37, 39,
+        41, 43, 45, 46,
+        49, 51, 53, 56,
+        59, 61, 64, 67,
+        70, 73, 76, 80,
+        83, 87, 91, 95,
+        100, 105, 109, 115,
+        121, 126, 133, 140,
+        147, 156, 166, 176,
+        189, 203, 223, 255,
+    ]
+
+    /// Exact 100-byte table from FUN_0038d164 (interpolation mode 7).
+    private static let mode7Table: [UInt8] = [
+        0x00, 0x22, 0x36, 0x45, 0x51, 0x5C, 0x65, 0x6D,
+        0x74, 0x7B, 0x82, 0x88, 0x8E, 0x93, 0x98, 0x9C,
+        0xA1, 0xA5, 0xA9, 0xAC, 0xB0, 0xB3, 0xB7, 0xBA,
+        0xBC, 0xBF, 0xC2, 0xC5, 0xC8, 0xCA, 0xCC, 0xCF,
+        0xD1, 0xD3, 0xD5, 0xD7, 0xD8, 0xDB, 0xDC, 0xDE,
+        0xE0, 0xE1, 0xE3, 0xE4, 0xE6, 0xE7, 0xE8, 0xEA,
+        0xEB, 0xEC, 0xED, 0xEE, 0xEF, 0xF0, 0xF1, 0xF2,
+        0xF3, 0xF4, 0xF4, 0xF5, 0xF5, 0xF6, 0xF7, 0xF8,
+        0xF8, 0xF9, 0xF9, 0xF9, 0xFA, 0xFA, 0xFA, 0xFB,
+        0xFC, 0xFC, 0xFD, 0xFD, 0xFD, 0xFD, 0xFE, 0xFE,
+        0xFE, 0xFE, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+        0xFF, 0xFF, 0xFF, 0xFF,
+    ]
+}
+
 public enum UIScreenAnimationOutput: Equatable, Sendable {
     case event(component: String, animation: String, command: String, arguments: [String])
     case completed(component: String, animation: String)
@@ -128,8 +220,15 @@ public struct UIScreenAnimationPlayer: Sendable {
         }
         var children: [String: [String]] = [:]
         for component in content.components {
-            guard let dot = component.name.lastIndex(of: ".") else { continue }
-            children[String(component.name[..<dot]), default: []].append(component.name)
+            // The generated UISF screen root has the empty qualified name.
+            // Top-level components are its children; non-empty Classic queries
+            // keep the same parent-first traversal as before.
+            if component.name.isEmpty { continue }
+            if let dot = component.name.lastIndex(of: ".") {
+                children[String(component.name[..<dot]), default: []].append(component.name)
+            } else {
+                children["", default: []].append(component.name)
+            }
         }
         var ordered: [UIScreenAnimationContent.Component] = []
         func visit(_ name: String) {
@@ -220,7 +319,15 @@ public struct UIScreenAnimationPlayer: Sendable {
             let previous = track.keyframes[index - 1]
             if track.name == "enabled" { return previous.values }
             let span = Double(next.timeMS - previous.timeMS)
-            let amount = Float((timeMS - Double(previous.timeMS)) / span)
+            let x = Float((timeMS - Double(previous.timeMS)) / span)
+            // FUN_003e5554 reads previousKey[1]: the outgoing keyframe's
+            // interpolation mode drives this segment, not the destination key.
+            guard let amount = UIScreenInterpolation.curve(
+                mode: previous.interpolation, x: x) else {
+                throw UIScreenAnimationError.unsupportedInterpolation(
+                    component: componentName, animation: animationName,
+                    track: trackName, timeMS: previous.timeMS)
+            }
             return zip(previous.values, next.values).map { $0 + ($1 - $0) * amount }
         }
         return track.keyframes.last?.values ?? []
@@ -261,6 +368,17 @@ public struct UIScreenAnimationPlayer: Sendable {
         }
     }
 
+    private static func expectedValueCount(for trackName: String) -> Int? {
+        switch trackName {
+        case "_Events_": return 0
+        case "enabled", "movescale", "layer": return 1
+        case "position", "scale", "rotation": return 3
+        case "colour", "insideColour", "outsideColour": return 4
+        case "texCoordPos": return 2
+        default: return nil
+        }
+    }
+
     private static func validate(_ content: UIScreenAnimationContent) throws {
         guard content.formatVersion == 1 else {
             throw UIScreenAnimationError.unsupportedFormat(content.formatVersion)
@@ -282,8 +400,14 @@ public struct UIScreenAnimationPlayer: Sendable {
                                                                   reason: "negative endTimeMS")
                 }
                 for track in animation.tracks {
+                    guard let expectedValues = expectedValueCount(for: track.name) else {
+                        throw UIScreenAnimationError.invalidTimeline(
+                            component: component.name,
+                            animation: animation.name,
+                            reason: "unknown track \(track.name)")
+                    }
                     var previousTime = -1
-                    for (index, keyframe) in track.keyframes.enumerated() {
+                    for keyframe in track.keyframes {
                         guard keyframe.timeMS >= 0,
                               keyframe.timeMS > previousTime,
                               keyframe.timeMS <= animation.endTimeMS,
@@ -294,9 +418,6 @@ public struct UIScreenAnimationPlayer: Sendable {
                                 reason: "unordered/out-of-range/non-finite keyframe in \(track.name)")
                         }
                         previousTime = keyframe.timeMS
-                        let expectedValues = track.name == "_Events_" ? 0 :
-                            (track.name == "enabled" || track.name == "movescale" ? 1 :
-                                (track.name == "colour" ? 4 : 3))
                         guard keyframe.values.count == expectedValues else {
                             throw UIScreenAnimationError.invalidTimeline(
                                 component: component.name,
@@ -311,10 +432,10 @@ public struct UIScreenAnimationPlayer: Sendable {
                                     reason: "unsupported resource event")
                             }
                         }
-                        // In this verified subset, interpolation=0 on the destination key
-                        // is the linear segment. Other segment modes are not reconstructed.
-                        if index > 0, track.name != "enabled", track.name != "_Events_",
-                           keyframe.interpolation != 0 {
+                        // FUN_003e5554 uses each keyframe's outgoing interpolation.
+                        // Validate the first key too: it controls the first segment.
+                        if track.name != "enabled", track.name != "_Events_",
+                           !UIScreenInterpolation.isSupported(mode: keyframe.interpolation) {
                             throw UIScreenAnimationError.unsupportedInterpolation(
                                 component: component.name,
                                 animation: animation.name,
