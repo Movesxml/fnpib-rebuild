@@ -319,25 +319,30 @@ public struct UIScreenAnimationPlayer: Sendable {
                                                       track: trackName)
         }
         guard let first = track.keyframes.first else { return [] }
-        guard timeMS > Double(first.timeMS) else { return first.values }
-        for index in 1..<track.keyframes.count {
-            let next = track.keyframes[index]
-            if timeMS >= Double(next.timeMS) { continue }
-            let previous = track.keyframes[index - 1]
-            if track.name == "enabled" { return previous.values }
-            let span = Double(next.timeMS - previous.timeMS)
-            let x = Float((timeMS - Double(previous.timeMS)) / span)
-            // FUN_003e5554 reads previousKey[1]: the outgoing keyframe's
-            // interpolation mode drives this segment, not the destination key.
-            guard let amount = UIScreenInterpolation.curve(
-                mode: previous.interpolation, x: x) else {
-                throw UIScreenAnimationError.unsupportedInterpolation(
-                    component: componentName, animation: animationName,
-                    track: trackName, timeMS: previous.timeMS)
-            }
-            return zip(previous.values, next.values).map { $0 + ($1 - $0) * amount }
+        // FUN_003e5554/FUN_003e5750 advance while keyTime <= currentTime.
+        // Consequently the last of several equal-time keys is the outgoing key.
+        // Searching for the first strictly later key also avoids a zero-length
+        // interpolation span at a duplicated timestamp.
+        guard let nextIndex = track.keyframes.firstIndex(where: {
+            timeMS < Double($0.timeMS)
+        }) else {
+            return track.keyframes.last?.values ?? []
         }
-        return track.keyframes.last?.values ?? []
+        guard nextIndex > 0 else { return first.values }
+        let previous = track.keyframes[nextIndex - 1]
+        let next = track.keyframes[nextIndex]
+        if track.name == "enabled" { return previous.values }
+        let span = Double(next.timeMS - previous.timeMS)
+        let x = Float((timeMS - Double(previous.timeMS)) / span)
+        // The outgoing keyframe's interpolation mode drives this segment,
+        // not the destination key.
+        guard let amount = UIScreenInterpolation.curve(
+            mode: previous.interpolation, x: x) else {
+            throw UIScreenAnimationError.unsupportedInterpolation(
+                component: componentName, animation: animationName,
+                track: trackName, timeMS: previous.timeMS)
+        }
+        return zip(previous.values, next.values).map { $0 + ($1 - $0) * amount }
     }
 
     private func findAnimation(component componentName: String,
@@ -416,7 +421,10 @@ public struct UIScreenAnimationPlayer: Sendable {
                     var previousTime = -1
                     for keyframe in track.keyframes {
                         guard keyframe.timeMS >= 0,
-                              keyframe.timeMS > previousTime,
+                              // Release UISF resources contain equal-time keys.
+                              // Their order is significant: the last key at the
+                              // current timestamp wins, so only regression is invalid.
+                              keyframe.timeMS >= previousTime,
                               keyframe.timeMS <= animation.endTimeMS,
                               keyframe.values.allSatisfy({ $0.isFinite }) else {
                             throw UIScreenAnimationError.invalidTimeline(

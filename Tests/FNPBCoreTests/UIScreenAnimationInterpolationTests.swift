@@ -10,13 +10,46 @@ final class UIScreenAnimationInterpolationTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(UIScreenInterpolation.curve(mode: 2, x: 0.5)),
                        0.5, accuracy: 0.0000001)
 
-        var player = try makePlayer(interpolations: [2, 0, 3])
+        let player = try makePlayer(interpolations: [2, 0, 3])
         XCTAssertEqual(try player.sample(component: "node", animation: "move",
                                          track: "position", atTimeMS: 250)[0],
                        expected * 10, accuracy: 0.0000001)
-        // The destination key's mode must not affect the preceding segment.
+        // The second segment uses key 1's linear mode; key 2's constant mode
+        // applies only to the following segment. Linear 10...20 at 1500 ms is 15.
         XCTAssertEqual(try player.sample(component: "node", animation: "move",
-                                         track: "position", atTimeMS: 1500)[0], 5)
+                                         track: "position", atTimeMS: 1500)[0], 15)
+    }
+
+    func testEqualTimeKeysUseLastValueAndRetainEveryEvent() throws {
+        func key(_ time: Int, _ value: Float) -> UIScreenAnimationContent.Keyframe {
+            UIScreenAnimationContent.Keyframe(timeMS: time, interpolation: 0,
+                                               values: [value, value, value])
+        }
+        func event(_ name: String) -> UIScreenAnimationContent.Keyframe {
+            UIScreenAnimationContent.Keyframe(
+                timeMS: 0, interpolation: 0, values: [],
+                events: [UIScreenAnimationContent.Event(command: "PlaySound", arguments: [name])])
+        }
+        var player = try UIScreenAnimationPlayer(content: content([
+            component("node", animations: [UIScreenAnimationContent.Animation(
+                name: "move", endTimeMS: 2000, tracks: [
+                    UIScreenAnimationContent.Track(name: "position", keyframes: [
+                        key(0, 1), key(0, 7), key(1000, 11), key(1000, 21), key(2000, 31),
+                    ]),
+                    UIScreenAnimationContent.Track(name: "_Events_", keyframes: [
+                        event("first"), event("second"),
+                    ]),
+                ])]),
+        ]))
+        XCTAssertEqual(try player.play(component: "node", animation: "move").map {
+            guard case .event(_, _, _, let arguments) = $0 else { return "unexpected" }
+            return arguments[0]
+        }, ["first", "second"])
+        for (time, expected) in [(0.0, Float(7)), (500, 9), (1000, 21), (1500, 26), (2000, 31)] {
+            XCTAssertEqual(try player.sample(component: "node", animation: "move",
+                                             track: "position", atTimeMS: time)[0],
+                           expected, accuracy: 0.0000001, "at \(time) ms")
+        }
     }
 
     func testModeOneUsesReleaseCosineEaseAndByteTables() throws {
