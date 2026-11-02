@@ -390,6 +390,17 @@ final class GameHost: ObservableObject {
         guard currentMode == .challenge, let round = currentChallengeRound else { return nil }
         let runtime = gameWorld.challenge
         let controller = challengeSettlement
+        var mapState: ChallengeMapHUDState?
+        if let map = challengeMap, let input = map.snapshot {
+            mapState = ChallengeMapHUDState(
+                controllerState: Int(map.state),
+                rounds: input.rounds.enumerated().map { index, round in
+                    ChallengeMapRoundHUDState(
+                        id: index,
+                        challengeName: round.challengeName,
+                        outcomeRawValue: round.outcome.map { Int($0.rawValue) })
+                })
+        }
         return ChallengeHUDState(
             challengeName: round.challenge.name,
             roundNumber: round.roundIndex + 1,
@@ -405,6 +416,7 @@ final class GameHost: ObservableObject {
             canAdvance: challengeAssembler?.plan.outcomes.contains(where: {
                 $0 == nil
             }) ?? false,
+            map: mapState,
             errorMessage: challengeConfigurationError)
     }
     var classicHearts: [ClassicHeartState] {
@@ -719,6 +731,7 @@ final class GameHost: ObservableObject {
                     challengeBonusSettlement = nil
                     challengeBackgroundVisible = false
                     challengeBackgroundAnimationPlayer = nil
+                    try beginChallengeMap()
                 }
                 return
             }

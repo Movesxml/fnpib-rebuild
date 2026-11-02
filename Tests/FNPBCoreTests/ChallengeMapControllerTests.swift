@@ -153,28 +153,31 @@ final class ChallengeMapControllerTests: XCTestCase {
         }
     }
 
-    func testBonusIsExplicitlyUnsupportedAtState8() throws {
+    func testBonusUsesBossSpinnerAndSkipsNormalOutroWait() throws {
         var player = try makeMapPlayer()
-        let input = makeInput(isBonus: true)
+        let input = makeInput(currentRoundIndex: 0,
+                              outcomes: [.pass, nil, nil, nil],
+                              isBonus: true)
         var controller = ChallengeMapController()
 
         _ = try controller.begin(input: input, player: &player)
-        _ = try driveToState7(&controller, player: &player, input: input)
+        let outputs = try driveToState7(&controller, player: &player, input: input)
         XCTAssertEqual(controller.state, 7)
+        XCTAssertTrue(outputs.flatMap(\.commands).contains(
+            .setVisible(component: "bossChallengeContainer.spinner.adventureNodePass_1",
+                        visible: true)))
+        XCTAssertFalse(outputs.flatMap(\.commands).contains(
+            .setVisible(component: "challengeContainer.spinner.adventureNodePass_1",
+                        visible: true)))
 
-        _ = try controller.selectRound(index: 0, player: &player)
+        _ = try controller.selectRound(index: 1, player: &player)
         XCTAssertEqual(controller.state, 8)
 
-        do {
-            _ = try controller.update(deltaSeconds: 10,
-                                      input: input,
-                                      player: &player)
-            XCTFail("isBonus=true 应显式失败")
-        } catch let error as ChallengeMapControllerError {
-            XCTAssertEqual(error, .unsupportedBonus)
-        } catch {
-            XCTFail("unexpected error: \(error)")
-        }
+        let started = try controller.update(deltaSeconds: 1 / 60,
+                                            input: input,
+                                            player: &player)
+        XCTAssertEqual(controller.state, 9)
+        XCTAssertEqual(started.commands, [.startRound(1)])
     }
 
     func testUpdateRequiresBeginAndRejectsInvalidDelta() throws {

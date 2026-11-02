@@ -56,7 +56,6 @@ public enum ChallengeMapControllerError: Error, Equatable, Sendable {
     case invalidRoundIndex(current: Int, count: Int)
     case invalidDelta(Float)
     case unsupportedActChange
-    case unsupportedBonus
     case missingRoundSelection
 }
 
@@ -73,8 +72,6 @@ extension ChallengeMapControllerError: LocalizedError {
             return "无效 deltaSeconds：\(delta)"
         case .unsupportedActChange:
             return "暂不支持 actChange Challenge 地图分支"
-        case .unsupportedBonus:
-            return "暂不支持 bonus Challenge 地图分支"
         case .missingRoundSelection:
             return "地图退场前没有选择回合"
         }
@@ -173,11 +170,9 @@ public struct ChallengeMapController: Sendable, Equatable {
             break
 
         case 8:
-            if input.isBonus {
-                throw ChallengeMapControllerError.unsupportedBonus
-            }
-
-            let outroPlaying = try player.isPlayingRecursively(
+            // FUN_00069ef0 state 8：普通地图等待 progressUIContainer 退场；
+            // bonus 分支不等待该查询，直接进 state 9 并启动已选回合。
+            let outroPlaying = input.isBonus ? false : try player.isPlayingRecursively(
                 component: "progressUIContainer", animation: "animate_out")
             if !outroPlaying {
                 guard let selectedRoundIndex else {
@@ -230,8 +225,10 @@ public struct ChallengeMapController: Sendable, Equatable {
         let currentIndex = input.currentRoundIndex
         var animations: [UIScreenAnimationOutput] = []
         var commands: [ChallengeMapCommand] = []
+        let spinner = input.isBonus
+            ? "bossChallengeContainer.spinner" : "challengeContainer.spinner"
 
-        let currentNode = "challengeContainer.spinner.adventureNode_\(currentIndex + 1)"
+        let currentNode = "\(spinner).adventureNode_\(currentIndex + 1)"
         animations.append(contentsOf: try player.play(
             component: currentNode, animation: "animate_trigger"))
 
@@ -242,7 +239,7 @@ public struct ChallengeMapController: Sendable, Equatable {
                 commands.append(.playSound(sound))
 
                 let suffix = isPass ? "Pass" : "Fail"
-                let resultNode = "challengeContainer.spinner.adventureNode\(suffix)_\(currentIndex + 1)"
+                let resultNode = "\(spinner).adventureNode\(suffix)_\(currentIndex + 1)"
                 let resultTrigger = try playTriggerIfPresent(
                     component: resultNode, player: &player)
                 if resultTrigger.exists {
@@ -262,7 +259,7 @@ public struct ChallengeMapController: Sendable, Equatable {
         }
 
         for (index, round) in input.rounds.enumerated() where round.outcome == nil {
-            let node = "challengeContainer.spinner.adventureNode_\(index + 1)"
+            let node = "\(spinner).adventureNode_\(index + 1)"
             commands.append(.setVisible(component: node, visible: true))
         }
 

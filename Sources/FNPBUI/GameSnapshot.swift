@@ -148,6 +148,30 @@ public struct ResultSummary: Sendable, Equatable {
 
 // MARK: - 挑战 HUD
 
+public struct ChallengeMapRoundHUDState: Sendable, Equatable, Identifiable {
+    public var id: Int
+    public var challengeName: String
+    public var outcomeRawValue: Int?
+
+    public init(id: Int, challengeName: String, outcomeRawValue: Int?) {
+        self.id = id
+        self.challengeName = challengeName
+        self.outcomeRawValue = outcomeRawValue
+    }
+}
+
+public struct ChallengeMapHUDState: Sendable, Equatable {
+    public var controllerState: Int
+    public var rounds: [ChallengeMapRoundHUDState]
+
+    public init(controllerState: Int, rounds: [ChallengeMapRoundHUDState]) {
+        self.controllerState = controllerState
+        self.rounds = rounds
+    }
+
+    public var canSelect: Bool { controllerState == 7 }
+}
+
 /// App 层对真实 ChallengeModeRuntime 与结算控制器的只读投影。
 /// UI 不自行推断回合结果、计划槽位或动画完成时间。
 public struct ChallengeHUDState: Sendable, Equatable {
@@ -162,6 +186,7 @@ public struct ChallengeHUDState: Sendable, Equatable {
     public var resultVisible: Bool
     public var resultFinished: Bool
     public var canAdvance: Bool
+    public var map: ChallengeMapHUDState?
     public var errorMessage: String?
 
     public init(
@@ -176,6 +201,7 @@ public struct ChallengeHUDState: Sendable, Equatable {
         resultVisible: Bool = false,
         resultFinished: Bool = false,
         canAdvance: Bool = false,
+        map: ChallengeMapHUDState? = nil,
         errorMessage: String? = nil
     ) {
         self.challengeName = challengeName
@@ -189,6 +215,7 @@ public struct ChallengeHUDState: Sendable, Equatable {
         self.resultVisible = resultVisible
         self.resultFinished = resultFinished
         self.canAdvance = canAdvance
+        self.map = map
         self.errorMessage = errorMessage
     }
 }
@@ -281,6 +308,8 @@ public enum UIIntent: Sendable, Equatable {
     case quitToMenu
     /// 普通挑战结果完成后，显式请求下一计划回合
     case nextChallengeRound
+    /// 地图 state 7 选择一个尚未完成的回合
+    case selectChallengeMapRound(Int)
     /// 普通挑战结果完成后，显式清理并退出
     case cleanupChallenge
     /// 音效开关

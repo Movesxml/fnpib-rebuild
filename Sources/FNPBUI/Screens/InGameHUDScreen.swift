@@ -103,6 +103,28 @@ public struct InGameHUDScreen: View {
                 .allowsHitTesting(false)
             }
 
+            if let map = challenge.map {
+                VStack(spacing: 12) {
+                    Text("CHALLENGE MAP")
+                        .font(.system(size: 24, weight: .black, design: .rounded))
+                        .foregroundStyle(UIPalette.parchment)
+                    ForEach(map.rounds) { round in
+                        PillButton(
+                            title: "\(round.id + 1). \(round.challengeName)",
+                            prominent: round.outcomeRawValue == nil,
+                            compact: true
+                        ) {
+                            actions.send(.selectChallengeMapRound(round.id))
+                        }
+                        .disabled(!map.canSelect || round.outcomeRawValue != nil)
+                        .opacity(round.outcomeRawValue == nil ? 1 : 0.55)
+                    }
+                }
+                .padding(20)
+                .background(RoundedRectangle(cornerRadius: 20).fill(UIPalette.panelFill))
+                .padding(.horizontal, 24)
+            }
+
             if challenge.resultRawValue != nil,
                challenge.backgroundVisible,
                challenge.resultVisible || challenge.resultFinished {

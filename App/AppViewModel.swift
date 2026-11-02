@@ -121,6 +121,10 @@ final class AppViewModel: FNPBUIViewModel {
             host?.requestNextChallengeRound()
             refreshSnapshot()
 
+        case let .selectChallengeMapRound(index):
+            host?.requestChallengeMapRound(index: index)
+            refreshSnapshot()
+
         case .cleanupChallenge:
             host?.requestChallengeCleanup()
             refreshSnapshot()
