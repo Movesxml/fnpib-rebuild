@@ -209,7 +209,7 @@ final class ChallengeMapTexturePrimitiveTests: XCTestCase {
         for index in [Int32(0), 7, 8, 63] {
             assertFailure(ChallengeMapTextureResolver.resolve(
                 texturePath: path, iconIndex: index, bundle: bundle),
-                .imageUnavailable(.challengeAtlas))
+                .imageUnavailable(textureKey: .challengeAtlas))
         }
     }
 }
