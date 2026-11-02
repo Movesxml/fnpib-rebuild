@@ -598,25 +598,27 @@ final class UIScreenLayoutProjectionTests: XCTestCase {
         XCTAssertEqual(components[2].effectiveLayer, 5)
     }
 
-    func testLayerInheritancePropagatesThroughMultipleLevelsAndParentOrder() throws {
+    func testLayerInheritancePropagatesThroughMultipleLevels() throws {
+        // The strict content contract reserves component zero for the screen root.
         let player = try UIScreenAnimationPlayer(content: makeContent([
-            UIScreenAnimationContent.Component(
-                name: "leaf", animations: [], parentIndex: 1,
-                layout: UIScreenAnimationContent.Component.Layout(layer: -2)),
-            UIScreenAnimationContent.Component(
-                name: "middle", animations: [], parentIndex: 2),
             UIScreenAnimationContent.Component(
                 name: "root", animations: [], parentIndex: -1,
                 layout: UIScreenAnimationContent.Component.Layout(layer: 3)),
+            UIScreenAnimationContent.Component(
+                name: "middle", animations: [], parentIndex: 0),
+            UIScreenAnimationContent.Component(
+                name: "leaf", animations: [], parentIndex: 1,
+                layout: UIScreenAnimationContent.Component.Layout(layer: -2)),
             UIScreenAnimationContent.Component(
                 name: "leafOwn", animations: [], parentIndex: 1,
                 layout: UIScreenAnimationContent.Component.Layout(layer: 8)),
         ]))
         let components = try UIScreenLayoutProjection.project(player).components
-        XCTAssertEqual(components[0].localLayer, -2)
+        XCTAssertEqual(components[0].localLayer, 3)
         XCTAssertEqual(components[0].effectiveLayer, 3)
         XCTAssertEqual(components[1].localLayer, -1)
         XCTAssertEqual(components[1].effectiveLayer, 3)
+        XCTAssertEqual(components[2].localLayer, -2)
         XCTAssertEqual(components[2].effectiveLayer, 3)
         XCTAssertEqual(components[3].localLayer, 8)
         XCTAssertEqual(components[3].effectiveLayer, 8)
@@ -721,7 +723,9 @@ final class UIScreenLayoutProjectionTests: XCTestCase {
         XCTAssertEqual(player.content.components.filter {
             $0.layout?.layer == 4_294_967_295
         }.count, 15)
-        XCTAssertEqual(projection.components.filter { $0.localLayer == -1 }.count, 16)
+        // 75 components omit layer and 15 store UInt32.max; all restore to -1.
+        XCTAssertEqual(player.content.components.filter { $0.layout?.layer == nil }.count, 75)
+        XCTAssertEqual(projection.components.filter { $0.localLayer == -1 }.count, 90)
         XCTAssertFalse(player.content.components.contains { component in
             component.animations.contains { animation in
                 animation.tracks.contains { $0.name == "layer" }
