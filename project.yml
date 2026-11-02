@@ -150,6 +150,18 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.rendertests
         GENERATE_INFOPLIST_FILE: YES   # 数据/矩阵测试，不需要 App TEST_HOST
 
+  FNPBUITests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/FNPBUITests
+    dependencies:
+      - target: FNPBUI
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.fnpib.uitests
+        GENERATE_INFOPLIST_FILE: YES
+
 schemes:
   FNPIB:
     build:
@@ -157,6 +169,7 @@ schemes:
         FNPIB: all
         FNPBCoreTests: [test]
         FNPBRenderTests: [test]
+        FNPBUITests: [test]
     run:
       config: Debug
     test:
@@ -165,3 +178,4 @@ schemes:
       targets:
         - FNPBCoreTests
         - FNPBRenderTests
+        - FNPBUITests
