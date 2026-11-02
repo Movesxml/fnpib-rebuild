@@ -237,7 +237,8 @@ public struct ChallengeRoundAssembler {
 
     /// FUN_00060108：结果写回当前槽位，并只给当前挑战累计一次 plays。
     public mutating func recordCurrentRoundOutcome(_ outcome: ChallengeOutcome) {
-        guard outcome != .pending, plan.outcome(at: currentRoundIndex) == .pending else { return }
+        // outcomes 的 nil 才表示尚未记录；Optional(.pending) 不是空槽位。
+        guard outcome != .pending, plan.outcome(at: currentRoundIndex) == nil else { return }
         plan.record(outcome, at: currentRoundIndex)
         if let challenge = plan.challenge(at: currentRoundIndex) {
             persistence.incrementPlayCount(

@@ -141,4 +141,89 @@ final class UIScreenAnimationPlayerTests: XCTestCase {
         XCTAssertThrowsError(try player.sample(component: "misscounters.cross1", animation: "out",
                                                track: "missing", atTimeMS: 0))
     }
+
+    func testRecursivePlayStartsParentThenChildrenInResourceOrderAndSkipsMissingAnimations() throws {
+        let intro1 = makeAnimation("intro", endTimeMS: 100, events: [(0, "intro1-0")])
+        let intro2 = makeAnimation("intro", endTimeMS: 200, events: [(0, "intro2-0")])
+        let nested = makeAnimation("intro", endTimeMS: 0, events: [(0, "nested-0")])
+        var player = try UIScreenAnimationPlayer(content: makeContent([
+            makeComponent("bonusIntro", animations: []),
+            makeComponent("bonusIntro.intro1", animations: [intro1]),
+            makeComponent("bonusIntro.intro2", animations: [intro2]),
+            makeComponent("bonusIntro.intro2.nested", animations: [nested]),
+            makeComponent("unrelated", animations: [makeAnimation("intro", endTimeMS: 50)])
+        ]))
+
+        XCTAssertEqual(try player.playRecursively(component: "bonusIntro", animation: "intro"), [
+            .event(component: "bonusIntro.intro1", animation: "intro",
+                   command: "PlaySound", arguments: ["intro1-0"]),
+            .event(component: "bonusIntro.intro2", animation: "intro",
+                   command: "PlaySound", arguments: ["intro2-0"]),
+            .event(component: "bonusIntro.intro2.nested", animation: "intro",
+                   command: "PlaySound", arguments: ["nested-0"]),
+            .completed(component: "bonusIntro.intro2.nested", animation: "intro")
+        ])
+        XCTAssertTrue(try player.isPlayingRecursively(component: "bonusIntro", animation: "intro"))
+        XCTAssertFalse(try player.isPlayingRecursively(component: "bonusIntro.intro2.nested",
+                                                       animation: "intro"))
+        XCTAssertEqual(try player.advance(deltaSeconds: 0.1), [
+            .completed(component: "bonusIntro.intro1", animation: "intro")
+        ])
+        XCTAssertEqual(try player.advance(deltaSeconds: 0.1), [
+            .completed(component: "bonusIntro.intro2", animation: "intro")
+        ])
+        XCTAssertFalse(try player.isPlayingRecursively(component: "bonusIntro", animation: "intro"))
+        XCTAssertTrue(try player.advance(deltaSeconds: 0.1).isEmpty,
+                      "完成事件不得在后续 advance 重复")
+    }
+
+    func testRecursivePlaySkipsMissingTargetButRejectsUnknownRootAndPreservesClassicLookup() throws {
+        var player = try UIScreenAnimationPlayer(content: makeContent([
+            makeComponent("bonusIntro", animations: []),
+            makeComponent("bonusIntro.intro1",
+                          animations: [makeAnimation("intro", endTimeMS: 100)])
+        ]))
+        XCTAssertEqual(try player.playRecursively(component: "bonusIntro", animation: "missing"), [])
+        XCTAssertThrowsError(try player.playRecursively(component: "missing", animation: "intro")) { error in
+            XCTAssertEqual(error as? UIScreenAnimationError, .unknownComponent("missing"))
+        }
+        XCTAssertThrowsError(try player.play(component: "bonusIntro", animation: "missing")) { error in
+            XCTAssertEqual(error as? UIScreenAnimationError,
+                           .unknownAnimation(component: "bonusIntro", animation: "missing"))
+        }
+    }
+
+    private func makeComponent(_ name: String,
+                               animations: [UIScreenAnimationContent.Animation])
+        -> UIScreenAnimationContent.Component {
+        UIScreenAnimationContent.Component(name: name, animations: animations)
+    }
+
+    private func makeAnimation(_ name: String,
+                               endTimeMS: Int,
+                               events: [(Int, String)] = []) -> UIScreenAnimationContent.Animation {
+        var tracks: [UIScreenAnimationContent.Track] = []
+        if !events.isEmpty {
+            tracks.append(UIScreenAnimationContent.Track(
+                name: "_Events_",
+                keyframes: events.map { event in
+                    UIScreenAnimationContent.Keyframe(
+                        timeMS: event.0,
+                        interpolation: 0,
+                        values: [],
+                        events: [UIScreenAnimationContent.Event(command: "PlaySound",
+                                                               arguments: [event.1])])
+                }))
+        }
+        return UIScreenAnimationContent.Animation(name: name, endTimeMS: endTimeMS, tracks: tracks)
+    }
+
+    private func makeContent(_ components: [UIScreenAnimationContent.Component])
+        -> UIScreenAnimationContent {
+        UIScreenAnimationContent(
+            formatVersion: 1,
+            source: UIScreenAnimationContent.Source(file: "test.uiscreen",
+                                                    sha256: String(repeating: "0", count: 64)),
+            components: components)
+    }
 }

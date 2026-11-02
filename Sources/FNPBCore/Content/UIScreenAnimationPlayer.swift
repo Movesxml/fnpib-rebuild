@@ -94,6 +94,53 @@ public struct UIScreenAnimationPlayer: Sendable {
         return playback.isPlaying
     }
 
+    /// FUN_0039834c: a matching active animation on the located component or any
+    /// descendant makes the recursive query true. Missing animations are skipped.
+    public func isPlayingRecursively(component componentName: String,
+                                     animation animationName: String) throws -> Bool {
+        try recursiveComponents(for: componentName).contains {
+            isPlaying(component: $0.name, animation: animationName)
+        }
+    }
+
+    /// FUN_00398154: play on this component first, then recursively visit children
+    /// in resource order. A component without the requested animation is not an error.
+    @discardableResult
+    public mutating func playRecursively(component componentName: String,
+                                         animation animationName: String) throws -> [UIScreenAnimationOutput] {
+        var output: [UIScreenAnimationOutput] = []
+        for component in try recursiveComponents(for: componentName)
+        where component.animations.contains(where: { $0.name == animationName }) {
+            output.append(contentsOf: try play(component: component.name,
+                                               animation: animationName))
+        }
+        return output
+    }
+
+    /// Reconstructs the actual qualified component tree without inventing playback
+    /// errors for unrelated or unreachable content. The located component must exist.
+    private func recursiveComponents(for componentName: String)
+        throws -> [UIScreenAnimationContent.Component] {
+        let componentsByName = Dictionary(
+            uniqueKeysWithValues: content.components.map { ($0.name, $0) })
+        guard componentsByName[componentName] != nil else {
+            throw UIScreenAnimationError.unknownComponent(componentName)
+        }
+        var children: [String: [String]] = [:]
+        for component in content.components {
+            guard let dot = component.name.lastIndex(of: ".") else { continue }
+            children[String(component.name[..<dot]), default: []].append(component.name)
+        }
+        var ordered: [UIScreenAnimationContent.Component] = []
+        func visit(_ name: String) {
+            guard let component = componentsByName[name] else { return }
+            ordered.append(component)
+            for child in children[name] ?? [] { visit(child) }
+        }
+        visit(componentName)
+        return ordered
+    }
+
     /// Starts at exactly 0 ms, emits 0 ms resource events immediately, and replaces
     /// any previous animation on that component. No implicit dt is consumed.
     @discardableResult
