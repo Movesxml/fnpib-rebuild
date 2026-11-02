@@ -160,6 +160,10 @@ public struct InGameHUDScreen: View {
                 .padding(.horizontal, 24)
             }
 
+            if let bonus = challenge.bonus, bonus.resultVisible {
+                challengeBonusPanel(bonus)
+            }
+
             if let error = challenge.errorMessage {
                 Text(error)
                     .font(.system(size: 14, weight: .semibold))
@@ -171,6 +175,56 @@ public struct InGameHUDScreen: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
+    }
+
+    /// 仅投影独立 bonus 状态机的真实数值；原版图集与 UISF 坐标尚未闭合。
+    private func challengeBonusPanel(_ bonus: ChallengeBonusHUDState) -> some View {
+        VStack(spacing: 10) {
+            Text("BONUS")
+                .font(.system(size: 13, weight: .heavy, design: .rounded))
+                .tracking(2)
+                .foregroundStyle(UIPalette.parchment.opacity(0.85))
+            Text("\(bonus.scoreCounterValue)")
+                .font(.system(size: 40, weight: .black, design: .rounded).monospacedDigit())
+                .foregroundStyle(UIPalette.parchment)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            HStack(spacing: 22) {
+                VStack(spacing: 2) {
+                    Text("FINALE")
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
+                    Text("\(bonus.finaleScore)")
+                        .font(.system(size: 22, weight: .black, design: .rounded).monospacedDigit())
+                }
+                VStack(spacing: 2) {
+                    Text("LIVES")
+                        .font(.system(size: 11, weight: .heavy, design: .rounded))
+                    Text("\(bonus.displayedLives) / 3")
+                        .font(.system(size: 22, weight: .black, design: .rounded).monospacedDigit())
+                }
+            }
+            .foregroundStyle(UIPalette.parchment)
+            HStack(spacing: 8) {
+                ForEach(0..<3, id: \.self) { index in
+                    let visible = index < bonus.lifeScoreVisible.count
+                        && bonus.lifeScoreVisible[index]
+                    Circle()
+                        .fill(visible ? UIPalette.gold : Color.black.opacity(0.25))
+                        .frame(width: 18, height: 18)
+                        .overlay(Circle().stroke(
+                            UIPalette.parchment.opacity(visible ? 0.90 : 0.35), lineWidth: 1))
+                }
+            }
+            if bonus.isBonusFinished {
+                Text("BONUS COMPLETE")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(UIPalette.parchment.opacity(0.80))
+            }
+        }
+        .padding(20)
+        .background(RoundedRectangle(cornerRadius: 20).fill(UIPalette.panelFill))
+        .padding(.horizontal, 24)
+        .allowsHitTesting(false)
     }
 
     // MARK: 原图集生命图标

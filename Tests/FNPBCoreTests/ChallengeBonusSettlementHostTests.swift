@@ -104,6 +104,9 @@ final class ChallengeBonusSettlementHostTests: XCTestCase {
             backgroundPlayer: players.background)
 
         _ = try host.begin(totalScore: 1_575, finaleScore: 375, lives: 2)
+        XCTAssertEqual(host.totalScore, 1_575)
+        XCTAssertEqual(host.finaleScore, 375)
+        XCTAssertEqual(host.lives, 2)
         XCTAssertThrowsError(try host.begin(totalScore: 0, finaleScore: 0, lives: 0)) { error in
             XCTAssertEqual(error as? ChallengeBonusSettlementHostError,
                            ChallengeBonusSettlementHostError.alreadyBegun)

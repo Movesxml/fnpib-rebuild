@@ -406,6 +406,21 @@ final class GameHost: ObservableObject {
                         iconIndex: challengeIconTargets["\(spinner).adventureNode_\(index + 1)"])
                 })
         }
+        var bonusState: ChallengeBonusHUDState?
+        if let host = challengeBonusSettlement,
+           let totalScore = host.totalScore,
+           let finaleScore = host.finaleScore,
+           let lives = host.lives {
+            bonusState = ChallengeBonusHUDState(
+                totalScore: Int(totalScore),
+                finaleScore: Int(finaleScore),
+                lives: Int(lives),
+                scoreCounterValue: Int(host.scoreCounterValue),
+                resultVisible: host.resultVisible,
+                isBonusFinished: host.isBonusFinished,
+                isFinished: host.isFinished,
+                lifeScoreVisible: (1...3).map { host.isLifeScoreVisible(index: Int32($0)) })
+        }
         return ChallengeHUDState(
             challengeName: round.challenge.name,
             roundNumber: round.roundIndex + 1,
@@ -422,6 +437,7 @@ final class GameHost: ObservableObject {
                 $0 == nil
             }) ?? false,
             map: mapState,
+            bonus: bonusState,
             errorMessage: challengeConfigurationError)
     }
     var classicHearts: [ClassicHeartState] {
@@ -865,12 +881,12 @@ final class GameHost: ObservableObject {
         }
     }
 
-    /// FUN_00061090 / FUN_0005fc1c：越界保持原 tier；成功晋升只重建计划。
+    /// FUN_00061090 / FUN_0005fc1c：普通章节 +1，bonus 重建同一 tier；越界保持原 tier。
     private func advanceChallengeTier() throws {
         guard let current = challengeAssembler, let content = originalContent else {
             throw ChallengeHostError("章节晋升缺少真实装配器或原始内容")
         }
-        let nextTierIndex = current.tierIndex + 1
+        let nextTierIndex = current.tier.isBonusRound ? current.tierIndex : current.tierIndex + 1
         guard nextTierIndex >= 0,
               Int(nextTierIndex) < content.challengeCatalog.tiers.count else { return }
         let tier = content.challengeCatalog.tiers[Int(nextTierIndex)]

@@ -219,8 +219,9 @@ final class ChallengeMapControllerTests: XCTestCase {
             deltaSeconds: 10, input: oldInput, random: random, player: &player)
         XCTAssertFalse(state1.commands.contains(.playSound("act-change")))
 
+        // FUN_00061090：bonus 的 +0xb0 非零时重建同一 tier，而非进入下一 tier。
         let promoted = makeInput(
-            tierIndex: 4, isBonus: true, actChange: false, isInitialPresentation: false)
+            tierIndex: 3, isBonus: true, actChange: false, isInitialPresentation: false)
         _ = try controller.update(
             deltaSeconds: 10, input: promoted, random: random, player: &player)
         XCTAssertEqual(controller.state, 5)

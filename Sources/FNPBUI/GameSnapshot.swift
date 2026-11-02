@@ -175,6 +175,39 @@ public struct ChallengeMapHUDState: Sendable, Equatable {
     public var canSelect: Bool { controllerState == 7 }
 }
 
+/// 独立 bonus 结算 HUD 的只读值投影；UI 不推导结果或动画完成时间。
+public struct ChallengeBonusHUDState: Sendable, Equatable {
+    public var totalScore: Int
+    public var finaleScore: Int
+    public var lives: Int
+    public var scoreCounterValue: Int
+    public var resultVisible: Bool
+    public var isBonusFinished: Bool
+    public var isFinished: Bool
+    public var lifeScoreVisible: [Bool]
+
+    public init(totalScore: Int,
+                finaleScore: Int,
+                lives: Int,
+                scoreCounterValue: Int,
+                resultVisible: Bool,
+                isBonusFinished: Bool,
+                isFinished: Bool,
+                lifeScoreVisible: [Bool]) {
+        self.totalScore = totalScore
+        self.finaleScore = finaleScore
+        self.lives = lives
+        self.scoreCounterValue = scoreCounterValue
+        self.resultVisible = resultVisible
+        self.isBonusFinished = isBonusFinished
+        self.isFinished = isFinished
+        self.lifeScoreVisible = lifeScoreVisible
+    }
+
+    /// 仅钳制显示数量；原始 lives 仍保留供状态审查。
+    public var displayedLives: Int { min(max(lives, 0), 3) }
+}
+
 /// App 层对真实 ChallengeModeRuntime 与结算控制器的只读投影。
 /// UI 不自行推断回合结果、计划槽位或动画完成时间。
 public struct ChallengeHUDState: Sendable, Equatable {
@@ -190,6 +223,7 @@ public struct ChallengeHUDState: Sendable, Equatable {
     public var resultFinished: Bool
     public var canAdvance: Bool
     public var map: ChallengeMapHUDState?
+    public var bonus: ChallengeBonusHUDState?
     public var errorMessage: String?
 
     public init(
@@ -205,6 +239,7 @@ public struct ChallengeHUDState: Sendable, Equatable {
         resultFinished: Bool = false,
         canAdvance: Bool = false,
         map: ChallengeMapHUDState? = nil,
+        bonus: ChallengeBonusHUDState? = nil,
         errorMessage: String? = nil
     ) {
         self.challengeName = challengeName
@@ -219,6 +254,7 @@ public struct ChallengeHUDState: Sendable, Equatable {
         self.resultFinished = resultFinished
         self.canAdvance = canAdvance
         self.map = map
+        self.bonus = bonus
         self.errorMessage = errorMessage
     }
 }

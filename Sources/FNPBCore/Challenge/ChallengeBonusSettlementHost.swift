@@ -48,6 +48,9 @@ public struct ChallengeBonusSettlementHost: Sendable {
     public var hasBegun: Bool { controller != nil }
     public var resultVisible: Bool { controller?.resultVisible ?? false }
     public var scoreCounterValue: Int32 { controller?.scoreCounterValue ?? 0 }
+    public var totalScore: Int32? { controller?.totalScore }
+    public var finaleScore: Int32? { controller?.finaleScore }
+    public var lives: Int32? { controller?.lives }
     public var isBonusFinished: Bool { controller?.isFinished ?? false }
     public var isFinished: Bool { didFinishSent }
 
