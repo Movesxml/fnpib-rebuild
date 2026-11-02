@@ -184,9 +184,12 @@ final class GameHost: ObservableObject {
     private(set) var challengeConfigurationError: String?
     private var challengeSettlement: ChallengeSettlementController?
     private var challengeBonusSettlement: ChallengeBonusSettlementHost?
+    private var challengeMap: ChallengeMapController?
+    private var pendingChallengeMapRound: Int?
     private var challengeRoundStartScore: Int32 = 0
     private var challengeHUDAnimationPlayer: UIScreenAnimationPlayer?
     private var challengeResultAnimationPlayer: UIScreenAnimationPlayer?
+    private var challengeMapAnimationPlayer: UIScreenAnimationPlayer?
     private var challengeBackgroundAnimationPlayer: UIScreenAnimationPlayer?
     private var gameBackgroundAnimationPlayer: UIScreenAnimationPlayer?
     private var challengeVisibleTargets: [String: Bool] = [:]
@@ -399,9 +402,9 @@ final class GameHost: ObservableObject {
             resultRawValue: controller.map { Int($0.outcome.rawValue) },
             resultVisible: controller?.normalResultVisible ?? false,
             resultFinished: controller?.isNormalResultFinished ?? false,
-            canAdvance: challengeAssembler.map {
-                $0.currentRoundIndex + 1 < $0.plan.count
-            } ?? false,
+            canAdvance: challengeAssembler?.plan.outcomes.contains(where: {
+                $0 == nil
+            }) ?? false,
             errorMessage: challengeConfigurationError)
     }
     var classicHearts: [ClassicHeartState] {
@@ -575,9 +578,12 @@ final class GameHost: ObservableObject {
         challengeConfigurationError = nil
         challengeSettlement = nil
         challengeBonusSettlement = nil
+        challengeMap = nil
+        pendingChallengeMapRound = nil
         challengeRoundStartScore = 0
         challengeHUDAnimationPlayer?.reset()
         challengeResultAnimationPlayer?.reset()
+        challengeMapAnimationPlayer?.reset()
         challengeBackgroundAnimationPlayer?.reset()
         gameBackgroundAnimationPlayer?.reset()
         challengeVisibleTargets.removeAll(keepingCapacity: false)
@@ -653,6 +659,7 @@ final class GameHost: ObservableObject {
     private func ensureChallengeAnimations() -> Bool {
         if challengeHUDAnimationPlayer != nil,
            challengeResultAnimationPlayer != nil,
+           challengeMapAnimationPlayer != nil,
            challengeBackgroundAnimationPlayer != nil,
            gameBackgroundAnimationPlayer != nil {
             return true
@@ -662,6 +669,8 @@ final class GameHost: ObservableObject {
                 data: OriginalContentBundle.readResource(named: "challengeAnimations"))
             challengeResultAnimationPlayer = try UIScreenAnimationPlayer(
                 data: OriginalContentBundle.readResource(named: "challengeScoreAnimations"))
+            challengeMapAnimationPlayer = try UIScreenAnimationPlayer(
+                data: OriginalContentBundle.readResource(named: "challengeMapAnimations"))
             challengeBackgroundAnimationPlayer = try UIScreenAnimationPlayer(
                 data: OriginalContentBundle.readResource(named: "challengeBackgroundAnimations"))
             gameBackgroundAnimationPlayer = try UIScreenAnimationPlayer(
@@ -670,6 +679,7 @@ final class GameHost: ObservableObject {
         } catch {
             challengeHUDAnimationPlayer = nil
             challengeResultAnimationPlayer = nil
+            challengeMapAnimationPlayer = nil
             challengeBackgroundAnimationPlayer = nil
             gameBackgroundAnimationPlayer = nil
             challengeConfigurationError = "挑战动画加载失败：\(error.localizedDescription)"
@@ -712,6 +722,19 @@ final class GameHost: ObservableObject {
                 }
                 return
             }
+            if var map = challengeMap,
+               var mapPlayer = challengeMapAnimationPlayer,
+               let assembler = challengeAssembler {
+                let output = try map.update(
+                    deltaSeconds: deltaSeconds,
+                    input: assembler.makeMapInput(
+                        isBonus: gameWorld.challenge?.isBonusRound == true),
+                    player: &mapPlayer)
+                challengeMap = map
+                challengeMapAnimationPlayer = mapPlayer
+                try processChallengeMapOutput(output)
+                return
+            }
             guard var controller = challengeSettlement,
                   var resultPlayer = challengeResultAnimationPlayer,
                   var backgroundPlayer = challengeBackgroundAnimationPlayer else { return }
@@ -744,28 +767,11 @@ final class GameHost: ObservableObject {
         challengeBackgroundVisible = false
         switch controller.substate {
         case 2:
-            guard var assembler = challengeAssembler, let content = originalContent else {
-                throw ChallengeHostError("下一回合缺少真实装配器或原始内容")
-            }
-            let round = try assembler.advanceToNextRound()
-            waveDirector.setChallengeFruit(round.fruitID)
-            waveDirector.beginGame(waves: content.challengeWaves.waves,
-                                   fruits: content.fruits.fruits)
-            guard waveDirector.configureChallengeWave(
-                customWave: round.challenge.customWave,
-                forceWave: round.challenge.forceWave) else {
-                throw ChallengeHostError("挑战 \(round.challenge.name) 的下一回合 customWave 无法配置")
-            }
-            // 保留 GameWorld 内同一 runtime 的累计回合结果，只替换当前回合定义与条件。
-            gameWorld.updateChallengeSettlement(
-                controllerState: controller.state,
-                substate: controller.substate,
-                nextChallenge: round.challenge,
-                nextSelectedFruitName: round.fruitName)
-            challengeAssembler = assembler
-            currentChallengeRound = round
-            challengeRoundStartScore = scoreSystem.total
+            // 原版结果背景退出后回到地图；回合只能在地图 state 9 的
+            // startRound 分发后装配，禁止在这里擅自选择下一槽位。
+            gameWorld.updateChallengeSettlement(controllerState: 7, substate: 3)
             challengeSettlement = nil
+            try beginChallengeMap()
         case 5:
             gameWorld.updateChallengeSettlement(
                 controllerState: controller.state,
@@ -774,6 +780,81 @@ final class GameHost: ObservableObject {
         default:
             throw ChallengeHostError("未知挑战结算分发子状态：\(controller.substate)")
         }
+    }
+
+    private func beginChallengeMap() throws {
+        guard let assembler = challengeAssembler,
+              var player = challengeMapAnimationPlayer else {
+            throw ChallengeHostError("挑战地图缺少真实装配器或 UISF 资源")
+        }
+        var map = ChallengeMapController()
+        let output = try map.begin(
+            input: assembler.makeMapInput(
+                isBonus: gameWorld.challenge?.isBonusRound == true),
+            player: &player)
+        challengeMap = map
+        challengeMapAnimationPlayer = player
+        pendingChallengeMapRound = nil
+        challengeVisibleTargets["inGameChallengeHud"] = false
+        try processChallengeMapOutput(output)
+    }
+
+    private func processChallengeMapOutput(_ output: ChallengeMapOutput) throws {
+        processChallengeAnimationOutput(output.animations)
+        for command in output.commands {
+            switch command {
+            case let .setVisible(component, visible):
+                challengeVisibleTargets[component] = visible
+            case let .playSound(key):
+                audio.play(key)
+            case let .prepareRound(index):
+                pendingChallengeMapRound = Int(index)
+            case let .startRound(index):
+                guard pendingChallengeMapRound == Int(index) else {
+                    throw ChallengeHostError("地图开局与已选择的回合不一致")
+                }
+                try startChallengeMapRound(at: Int(index))
+            }
+        }
+    }
+
+    func requestChallengeMapRound(index: Int) {
+        guard var map = challengeMap,
+              var player = challengeMapAnimationPlayer else { return }
+        do {
+            let output = try map.selectRound(index: index, player: &player)
+            challengeMap = map
+            challengeMapAnimationPlayer = player
+            try processChallengeMapOutput(output)
+        } catch {
+            rejectChallenge("无法选择地图回合：\(error.localizedDescription)")
+        }
+    }
+
+    private func startChallengeMapRound(at index: Int) throws {
+        guard var assembler = challengeAssembler, let content = originalContent else {
+            throw ChallengeHostError("地图开局缺少真实装配器或原始内容")
+        }
+        let round = try assembler.selectRound(at: index)
+        waveDirector.setChallengeFruit(round.fruitID)
+        waveDirector.beginGame(waves: content.challengeWaves.waves,
+                               fruits: content.fruits.fruits)
+        guard waveDirector.configureChallengeWave(
+            customWave: round.challenge.customWave,
+            forceWave: round.challenge.forceWave) else {
+            throw ChallengeHostError("挑战 \(round.challenge.name) 的地图回合 customWave 无法配置")
+        }
+        gameWorld.updateChallengeSettlement(
+            controllerState: 7,
+            substate: round.runtime.isBonusRound ? 1 : 2,
+            nextChallenge: round.challenge,
+            nextSelectedFruitName: round.fruitName)
+        challengeAssembler = assembler
+        currentChallengeRound = round
+        challengeRoundStartScore = scoreSystem.total
+        challengeMap = nil
+        pendingChallengeMapRound = nil
+        challengeMapAnimationPlayer?.reset()
     }
 
     private func consumeChallengeEvents() {
@@ -954,7 +1035,7 @@ final class GameHost: ObservableObject {
               var background = challengeBackgroundAnimationPlayer,
               controller.isNormalResultFinished,
               let assembler = challengeAssembler,
-              assembler.currentRoundIndex + 1 < assembler.plan.count else { return }
+              assembler.plan.outcomes.contains(where: { $0 == nil }) else { return }
         do {
             let output = try controller.requestNextRound(backgroundPlayer: &background)
             challengeSettlement = controller

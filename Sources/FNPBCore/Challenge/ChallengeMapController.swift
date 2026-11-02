@@ -275,10 +275,13 @@ public struct ChallengeMapController: Sendable, Equatable {
     ) throws -> (exists: Bool, animations: [UIScreenAnimationOutput]) {
         guard let definition = player.content.components.first(where: {
             $0.name == component
-        }), definition.animations.contains(where: {
-            $0.name == "animate_trigger"
         }) else {
             return (false, [])
+        }
+        // 原版只要组件存在就写 visible，再请求 animate_trigger；
+        // 组件不存在才跳过两者。缺失动画不能反向撤销可见性写入。
+        guard definition.animations.contains(where: { $0.name == "animate_trigger" }) else {
+            return (true, [])
         }
         return (true, try player.play(component: component, animation: "animate_trigger"))
     }

@@ -257,6 +257,28 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         XCTAssertEqual(random.zeroBoundCalls, 1)
     }
 
+    func testMapCanSelectAnyPendingSlotWithoutConsumingRandomOnRead() throws {
+        let catalog = makeCatalog(challenges: [
+            makeChallenge(name: "normal-1", size: .normal),
+            makeChallenge(name: "small", size: .small),
+            makeChallenge(name: "normal-3", size: .normal),
+        ], numRounds: 3)
+        let random = AssemblerRandom(planValues: [0, 0, 0, 0, 0])
+        var assembler = try makeAssembler(
+            catalog: catalog, fruits: makeFruits(), random: random)
+        assembler.recordCurrentRoundOutcome(.pass)
+
+        let input = assembler.makeMapInput(isBonus: false)
+        XCTAssertEqual(input.rounds.map(\.outcome), [.pass, nil, nil])
+        let callsBeforeSelection = random.zeroBoundCalls
+        let selected = try assembler.selectRound(at: 2)
+
+        XCTAssertEqual(selected.roundIndex, 2)
+        XCTAssertEqual(selected.challenge.name, "normal-3")
+        XCTAssertEqual(selected.fruitID, assembler.defaultFruitID)
+        XCTAssertEqual(random.zeroBoundCalls, callsBeforeSelection)
+    }
+
     func testMissingFruitNameThrows() throws {
         let catalog = makeCatalog(
             challenges: [makeChallenge(name: "c1", size: .normal)], numRounds: 1)

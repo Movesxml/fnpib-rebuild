@@ -197,8 +197,21 @@ public struct ChallengeRoundAssembler {
             throw ChallengeRoundAssemblerError.planExhausted(
                 currentIndex: currentRoundIndex, count: plan.count)
         }
-        guard let nextChallenge = plan.challenge(at: nextIndex) else {
-            throw ChallengeRoundAssemblerError.missingChallengeAtSlot(index: nextIndex)
+        return try selectRound(at: nextIndex)
+    }
+
+    /// 地图允许选择任意尚未完成的槽位，不能把它折叠成“总是下一回合”。
+    /// 只有地图 state 9 真正开局时才调用，避免点击退场阶段重复消耗水果随机数。
+    public mutating func selectRound(at index: Int) throws -> ChallengeRound {
+        guard plan.slots.indices.contains(index) else {
+            throw ChallengeRoundAssemblerError.planExhausted(
+                currentIndex: index, count: plan.count)
+        }
+        guard plan.outcome(at: index) == nil else {
+            throw ChallengeRoundAssemblerError.missingChallengeAtSlot(index: index)
+        }
+        guard let nextChallenge = plan.challenge(at: index) else {
+            throw ChallengeRoundAssemblerError.missingChallengeAtSlot(index: index)
         }
 
         let nextFruitID: Int32
@@ -213,7 +226,6 @@ public struct ChallengeRoundAssembler {
                 predicateP: predicateP,
                 random: random)
         } else {
-            // ChallengeFruitSize 当前只有 normal 会返回 nil；保留显式失败而非猜测候选。
             throw ChallengeFruitSelectionError.emptyCandidates
         }
 
@@ -226,13 +238,26 @@ public struct ChallengeRoundAssembler {
 
         currentFruitID = nextFruitID
         runtime = nextRuntime
-        currentRoundIndex = nextIndex
+        currentRoundIndex = index
         return ChallengeRound(
-            roundIndex: nextIndex,
+            roundIndex: index,
             challenge: nextChallenge,
             fruitID: nextFruitID,
             fruitName: name,
             runtime: nextRuntime)
+    }
+
+    public func makeMapInput(isBonus: Bool, actChange: Bool = false) -> ChallengeMapInput {
+        let rounds = plan.slots.indices.map { index in
+            ChallengeMapRoundState(
+                challengeName: plan.challenge(at: index)?.name ?? "",
+                outcome: plan.outcome(at: index))
+        }
+        return ChallengeMapInput(tierIndex: tierIndex,
+                                 isBonus: isBonus,
+                                 currentRoundIndex: currentRoundIndex,
+                                 rounds: rounds,
+                                 actChange: actChange)
     }
 
     /// FUN_00060108：结果写回当前槽位，并只给当前挑战累计一次 plays。
