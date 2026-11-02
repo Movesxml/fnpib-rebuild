@@ -3,6 +3,8 @@ import Foundation
 public enum ChallengeBonusAchievement: String, Sendable, Equatable {
     case bandito2000OrUnder = "bandito_2000_or_under"
     case banditoCompleteLives = "bandito_complete_lives"
+    /// Parent FUN_00068560 reports NEW_MODE_complete; achievementList.xml total=1.
+    case newModeComplete = "NEW_MODE_complete"
 }
 
 public struct ChallengeBonusAchievementUpdate: Sendable, Equatable {
@@ -16,7 +18,7 @@ public struct ChallengeBonusAchievementUpdate: Sendable, Equatable {
 }
 
 public enum ChallengeBonusRoundCommand: Sendable, Equatable {
-    /// FUN_00020698(1, 1), issued with the life tally.
+    /// FUN_00020698(0, 1), issued with the life tally.
     case beginLifeTally
     /// FUN_0006059c(parent), issued before the result outro.
     case finishRound

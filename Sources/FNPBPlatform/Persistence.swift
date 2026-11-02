@@ -216,6 +216,8 @@ public struct SaveData: Codable, Equatable, Sendable {
     public var stats: [String: Int32]
     public var challengeDataPersistent: ChallengeDataPersistent
     public var challengeSession: ChallengeSessionPersistent
+    /// FUN_00003d6c/FUN_0002787c 的独立已解锁记录，不与普通统计混用。
+    public var unlockedAchievements: [String]
 
     public enum CodingKeys: String, CodingKey {
         case version
@@ -226,6 +228,7 @@ public struct SaveData: Codable, Equatable, Sendable {
         case stats
         case challengeDataPersistent
         case challengeSession
+        case unlockedAchievements
     }
 
     public init(version: Int = SaveData.currentVersion,
@@ -235,7 +238,8 @@ public struct SaveData: Codable, Equatable, Sendable {
                 challengeData: String? = nil,
                 stats: [String: Int32] = [:],
                 challengeDataPersistent: ChallengeDataPersistent = .empty,
-                challengeSession: ChallengeSessionPersistent = .empty) {
+                challengeSession: ChallengeSessionPersistent = .empty,
+                unlockedAchievements: [String] = []) {
         self.version = version
         self.highscores = highscores
         self.criticalChance = criticalChance
@@ -244,6 +248,7 @@ public struct SaveData: Codable, Equatable, Sendable {
         self.stats = stats
         self.challengeDataPersistent = challengeDataPersistent
         self.challengeSession = challengeSession
+        self.unlockedAchievements = unlockedAchievements
     }
 
     public init(from decoder: Decoder) throws {
@@ -256,6 +261,8 @@ public struct SaveData: Codable, Equatable, Sendable {
         stats = try container.decodeIfPresent([String: Int32].self, forKey: .stats) ?? [:]
         challengeSession = try container.decodeIfPresent(
             ChallengeSessionPersistent.self, forKey: .challengeSession) ?? .empty
+        unlockedAchievements = try container.decodeIfPresent(
+            [String].self, forKey: .unlockedAchievements) ?? []
 
         // 旧 JSON 的扁平 Data 在 JSON 中也是 base64 字符串；新格式则是对象。
         // 两种表示必须分别尝试：decodeIfPresent(String) 遇到对象会抛 typeMismatch，
@@ -271,6 +278,34 @@ public struct SaveData: Codable, Equatable, Sendable {
     public static let currentVersion = 1
     public static let `default` = SaveData()
     public static let defaultHighscoreKey = "default"
+
+    /// achievementList.xml：2000-or-under 的 total=1，complete-lives 的 total=3。
+    /// 只保存原始 specific_type；返回本次实际新增的记录，重复上报为空。
+    @discardableResult
+    public mutating func applyAchievementUpdates(
+        _ updates: [ChallengeBonusAchievementUpdate]
+    ) -> [ChallengeBonusAchievement] {
+        var unlocked = Set(unlockedAchievements)
+        var newlyUnlocked = Set<String>()
+        for update in updates {
+            guard update.value >= Self.unlockThreshold(for: update.achievement) else { continue }
+            let identifier = update.achievement.rawValue
+            if unlocked.insert(identifier).inserted {
+                newlyUnlocked.insert(identifier)
+            }
+        }
+        if !newlyUnlocked.isEmpty {
+            unlockedAchievements = unlocked.sorted()
+        }
+        return newlyUnlocked.sorted().compactMap(ChallengeBonusAchievement.init(rawValue:))
+    }
+
+    private static func unlockThreshold(for achievement: ChallengeBonusAchievement) -> Int32 {
+        switch achievement {
+        case .bandito2000OrUnder, .newModeComplete: return 1
+        case .banditoCompleteLives: return 3
+        }
+    }
 }
 
 // MARK: - 键名常量（与 macho 对齐）
@@ -284,6 +319,7 @@ public enum SaveKeys {
     public static let rated          = "rated"
     public static let challengeData  = "challengeData"
     public static let challengeDataPersistent = "challengeDataPersistent"
+    public static let unlockedAchievements = "unlockedAchievements"
 
     /// 复刻原版 sprintf("%shighscore", mode)：前缀直接拼接，无分隔符
     public static func highscoreKey(mode: String) -> String {
@@ -299,6 +335,10 @@ public enum SaveKeys {
 }
 
 // MARK: - 读写
+
+public enum SaveStoreError: Error, Sendable {
+    case writeFailed
+}
 
 public final class SaveStore {
 
@@ -355,12 +395,29 @@ public final class SaveStore {
         }
     }
 
-    /// GameHost 的旧快照负责高分等宿主字段，挑战选择器则直接写当前磁盘。
-    /// 保存宿主快照前合并最新挑战表，避免暂停或结算把权重、冷却和 plays 覆盖回旧值。
+    /// 应用最新磁盘快照；只有实际新增解锁才写盘，失败必须可由宿主检出。
+    @discardableResult
+    public func applyAchievementUpdates(
+        _ updates: [ChallengeBonusAchievementUpdate]
+    ) throws -> [ChallengeBonusAchievement] {
+        var data = load()
+        let newlyUnlocked = data.applyAchievementUpdates(updates)
+        guard !newlyUnlocked.isEmpty else { return [] }
+        guard save(data) else {
+            if let error = lastError { throw error }
+            throw SaveStoreError.writeFailed
+        }
+        return newlyUnlocked
+    }
+
+    /// GameHost 的旧快照负责高分等宿主字段，挑战选择器和成就接收端直接写当前磁盘。
+    /// 保存宿主快照前合并最新挑战表和成就，避免暂停或结算覆盖回旧值。
     @discardableResult
     public func saveMergingChallengeData(_ saveData: SaveData) -> Bool {
         var merged = saveData
-        merged.challengeDataPersistent = load().challengeDataPersistent
+        let latest = load()
+        merged.challengeDataPersistent = latest.challengeDataPersistent
+        merged.unlockedAchievements = latest.unlockedAchievements
         return save(merged)
     }
 
@@ -453,7 +510,8 @@ extension SaveStore {
     private static func isReservedKey(_ key: String) -> Bool {
         switch key {
         case SaveKeys.version, SaveKeys.highscore, SaveKeys.criticalChance,
-             SaveKeys.rated, SaveKeys.challengeData, SaveKeys.challengeDataPersistent:
+             SaveKeys.rated, SaveKeys.challengeData, SaveKeys.challengeDataPersistent,
+             SaveKeys.unlockedAchievements:
             return true
         default:
             return key.hasSuffix("highscore")

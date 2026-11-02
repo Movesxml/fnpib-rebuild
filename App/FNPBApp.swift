@@ -183,6 +183,8 @@ final class GameHost: ObservableObject {
     private(set) var currentChallengeRound: ChallengeRound?
     private(set) var challengeConfigurationError: String?
     private var challengeSettlement: ChallengeSettlementController?
+    private var challengeBonusSettlement: ChallengeBonusSettlementHost?
+    private var challengeRoundStartScore: Int32 = 0
     private var challengeHUDAnimationPlayer: UIScreenAnimationPlayer?
     private var challengeResultAnimationPlayer: UIScreenAnimationPlayer?
     private var challengeBackgroundAnimationPlayer: UIScreenAnimationPlayer?
@@ -572,6 +574,8 @@ final class GameHost: ObservableObject {
     private func configureMode(content: OriginalContent, mode: GameMode) -> Bool {
         challengeConfigurationError = nil
         challengeSettlement = nil
+        challengeBonusSettlement = nil
+        challengeRoundStartScore = 0
         challengeHUDAnimationPlayer?.reset()
         challengeResultAnimationPlayer?.reset()
         challengeBackgroundAnimationPlayer?.reset()
@@ -628,6 +632,7 @@ final class GameHost: ObservableObject {
                 }
                 challengeAssembler = assembler
                 currentChallengeRound = round
+                challengeRoundStartScore = scoreSystem.total
                 if round.runtime.isBonusRound {
                     // Start the queued resource animation now. Otherwise the first
                     // frame would mistake "not started yet" for a completed intro.
@@ -695,6 +700,18 @@ final class GameHost: ObservableObject {
                 // then let GameWorld consume the restored HUD events below.
                 gameWorld.completeChallengeBonusIntro()
             }
+            if var bonusHost = challengeBonusSettlement {
+                let output = try bonusHost.update(deltaSeconds: deltaSeconds)
+                let didFinish = try processChallengeBonusOutput(output)
+                challengeBonusSettlement = bonusHost
+                if didFinish {
+                    gameWorld.updateChallengeSettlement(controllerState: 7, substate: 3)
+                    challengeBonusSettlement = nil
+                    challengeBackgroundVisible = false
+                    challengeBackgroundAnimationPlayer = nil
+                }
+                return
+            }
             guard var controller = challengeSettlement,
                   var resultPlayer = challengeResultAnimationPlayer,
                   var backgroundPlayer = challengeBackgroundAnimationPlayer else { return }
@@ -747,6 +764,7 @@ final class GameHost: ObservableObject {
                 nextSelectedFruitName: round.fruitName)
             challengeAssembler = assembler
             currentChallengeRound = round
+            challengeRoundStartScore = scoreSystem.total
             challengeSettlement = nil
         case 5:
             gameWorld.updateChallengeSettlement(
@@ -790,13 +808,56 @@ final class GameHost: ObservableObject {
             tierIndex: assembler.tierIndex,
             roundIndex: round.roundIndex,
             outcome: outcome)
+        if round.runtime.isBonusRound {
+            // Parent FUN_00068560 reports this stat before starting the bonus result machine.
+            statsRecorder.report("NEW_MODE_complete", 1)
+            saveData.stats["NEW_MODE_complete", default: 0] &+= 1
+        }
         guard saveStore.saveMergingChallengeData(saveData) else {
             rejectChallenge("挑战回合存档失败：\(saveStore.lastError?.localizedDescription ?? "unknown")")
             return
         }
         // FUN_0006d80c 是独立 bonus 状态机，禁止误入普通结果控制器。
         if round.runtime.isBonusRound {
-            rejectChallenge("bonus 回合尚未接入其独立结算状态机")
+            do {
+                let completed = ChallengeBonusAchievementUpdate(
+                    achievement: .newModeComplete, value: 1)
+                if try !saveStore.applyAchievementUpdates([completed]).isEmpty {
+                    saveData = saveStore.load()
+                }
+                guard let runtime = gameWorld.challenge else {
+                    throw ChallengeHostError("bonus 回合缺少挑战运行时")
+                }
+                let totalScore = scoreSystem.total
+                let finaleScore = totalScore &- challengeRoundStartScore
+                let lives = Int32(3) &- (runtime.roundsPlayed &- runtime.roundsPassed)
+                guard var backgroundPlayer = challengeBackgroundAnimationPlayer else {
+                    throw ChallengeHostError("bonus 回合结算缺少背景动画资源")
+                }
+                let backgroundOutput = try backgroundPlayer.playRecursively(
+                    component: "", animation: "animate_in")
+                challengeBackgroundAnimationPlayer = backgroundPlayer
+                processChallengeAnimationOutput(backgroundOutput)
+                guard let transferredBackground = challengeBackgroundAnimationPlayer else {
+                    throw ChallengeHostError("bonus 回合背景动画所有权转移失败")
+                }
+                let scorePlayer = try UIScreenAnimationPlayer(
+                    data: OriginalContentBundle.readResource(
+                        named: "challengeScoreCompleteAnimations"))
+                var bonusHost = ChallengeBonusSettlementHost(
+                    scorePlayer: scorePlayer,
+                    backgroundPlayer: transferredBackground)
+                let animations = try bonusHost.begin(
+                    totalScore: totalScore,
+                    finaleScore: finaleScore,
+                    lives: lives)
+                challengeBonusSettlement = bonusHost
+                challengeBackgroundAnimationPlayer = nil
+                challengeBackgroundVisible = true
+                processChallengeAnimationOutput(animations)
+            } catch {
+                rejectChallenge("无法开始 bonus 回合结算：\(error.localizedDescription)")
+            }
             return
         }
         do {
@@ -817,6 +878,30 @@ final class GameHost: ObservableObject {
         } catch {
             rejectChallenge("无法开始普通回合结算：\(error.localizedDescription)")
         }
+    }
+
+    private func processChallengeBonusOutput(
+        _ output: ChallengeBonusSettlementHostOutput
+    ) throws -> Bool {
+        processChallengeAnimationOutput(output.animations)
+        if !output.achievements.isEmpty {
+            let newlyUnlocked = try saveStore.applyAchievementUpdates(output.achievements)
+            if !newlyUnlocked.isEmpty {
+                saveData = saveStore.load()
+            }
+        }
+        if let roundCommand = output.roundCommand {
+            switch roundCommand {
+            case .beginLifeTally:
+                store.clear()
+            case .finishRound:
+                store.clear()
+                audio.stop("Music-bonus")
+                audio.stop("Music-bonus-end")
+                challengeVisibleTargets["inGameChallengeHud"] = false
+            }
+        }
+        return output.didFinish
     }
 
     private func playChallengeAnimation(target: String, name: String) {

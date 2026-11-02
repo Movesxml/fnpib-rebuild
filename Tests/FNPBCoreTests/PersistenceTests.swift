@@ -219,4 +219,123 @@ final class PersistenceTests: XCTestCase {
         ])
         XCTAssertEqual(session.initialTierIndex(validTierCount: 3), 2)
     }
+
+    func testAchievementUnlockUsesOriginalThresholdsAndSpecificTypeStrings() {
+        var save = SaveData.default
+        XCTAssertEqual(save.applyAchievementUpdates([
+            .init(achievement: .bandito2000OrUnder, value: 0)
+        ]), [])
+        XCTAssertEqual(save.unlockedAchievements, [])
+        XCTAssertEqual(save.applyAchievementUpdates([
+            .init(achievement: .bandito2000OrUnder, value: 1)
+        ]), [.bandito2000OrUnder])
+        XCTAssertEqual(save.unlockedAchievements, ["bandito_2000_or_under"])
+        XCTAssertEqual(save.applyAchievementUpdates([
+            .init(achievement: .banditoCompleteLives, value: 2)
+        ]), [])
+        XCTAssertEqual(save.applyAchievementUpdates([
+            .init(achievement: .banditoCompleteLives, value: 3)
+        ]), [.banditoCompleteLives])
+        XCTAssertEqual(save.unlockedAchievements, [
+            "bandito_2000_or_under", "bandito_complete_lives"
+        ])
+    }
+
+    func testNewModeCompleteAchievementUsesParentStatThreshold() {
+        var save = SaveData.default
+        XCTAssertEqual(save.applyAchievementUpdates([
+            .init(achievement: .newModeComplete, value: 0)
+        ]), [])
+        XCTAssertEqual(save.applyAchievementUpdates([
+            .init(achievement: .newModeComplete, value: 1)
+        ]), [.newModeComplete])
+        XCTAssertEqual(save.unlockedAchievements, ["NEW_MODE_complete"])
+        XCTAssertEqual(save.applyAchievementUpdates([
+            .init(achievement: .newModeComplete, value: 1)
+        ]), [])
+    }
+
+    func testAchievementUpdatesAreIdempotentAndSorted() {
+        var save = SaveData.default
+        let updates: [ChallengeBonusAchievementUpdate] = [
+            .init(achievement: .banditoCompleteLives, value: 3),
+            .init(achievement: .bandito2000OrUnder, value: 1),
+            .init(achievement: .banditoCompleteLives, value: 3)
+        ]
+        XCTAssertEqual(save.applyAchievementUpdates(updates), [
+            .bandito2000OrUnder, .banditoCompleteLives
+        ])
+        XCTAssertEqual(save.applyAchievementUpdates(updates), [])
+        XCTAssertEqual(save.unlockedAchievements, [
+            "bandito_2000_or_under", "bandito_complete_lives"
+        ])
+    }
+
+    func testLegacyJSONWithoutUnlockedAchievementsDecodesAsEmptyAndRoundTrips() throws {
+        let legacy = Data(#"{"version":1,"highscore":{"default":123}}"#.utf8)
+        let decoded = try JSONDecoder().decode(SaveData.self, from: legacy)
+        XCTAssertEqual(decoded.highscores["default"], 123)
+        XCTAssertEqual(decoded.unlockedAchievements, [])
+        let roundTripped = try JSONDecoder().decode(
+            SaveData.self, from: try JSONEncoder().encode(decoded))
+        XCTAssertEqual(roundTripped, decoded)
+    }
+
+    func testSaveStoreAppliesAchievementsToLatestDiskDataAndReopens() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = SaveStore(directory: directory)
+        XCTAssertEqual(try store.applyAchievementUpdates([
+            .init(achievement: .bandito2000OrUnder, value: 1),
+            .init(achievement: .banditoCompleteLives, value: 2)
+        ]), [.bandito2000OrUnder])
+        let reopened = SaveStore(directory: directory)
+        XCTAssertEqual(reopened.load().unlockedAchievements, ["bandito_2000_or_under"])
+        XCTAssertEqual(try reopened.applyAchievementUpdates([
+            .init(achievement: .banditoCompleteLives, value: 3)
+        ]), [.banditoCompleteLives])
+        XCTAssertEqual(SaveStore(directory: directory).load().unlockedAchievements, [
+            "bandito_2000_or_under", "bandito_complete_lives"
+        ])
+    }
+
+    func testSaveStoreDoesNotCreateFileWhenNoAchievementUnlocks() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = SaveStore(directory: directory)
+        XCTAssertEqual(try store.applyAchievementUpdates([
+            .init(achievement: .banditoCompleteLives, value: 2)
+        ]), [])
+        XCTAssertFalse(FileManager.default.fileExists(atPath: store.fileURL.path))
+    }
+
+    func testSaveStoreReportsAchievementWriteFailure() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = SaveStore(directory: directory)
+        try FileManager.default.createDirectory(at: store.fileURL, withIntermediateDirectories: true)
+        XCTAssertThrowsError(try store.applyAchievementUpdates([
+            .init(achievement: .bandito2000OrUnder, value: 1)
+        ]))
+    }
+
+    func testSavingStaleHostSnapshotMergesLatestUnlockedAchievements() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = SaveStore(directory: directory)
+        XCTAssertEqual(try store.applyAchievementUpdates([
+            .init(achievement: .bandito2000OrUnder, value: 1)
+        ]), [.bandito2000OrUnder])
+        var stale = SaveData.default
+        stale.highscores["classic"] = 99
+        stale.unlockedAchievements = ["stale_snapshot_value"]
+        XCTAssertTrue(store.saveMergingChallengeData(stale))
+        let saved = SaveStore(directory: directory).load()
+        XCTAssertEqual(saved.highscores["classic"], 99)
+        XCTAssertEqual(saved.unlockedAchievements, ["bandito_2000_or_under"])
+    }
 }

@@ -1,0 +1,306 @@
+# 完整反编译导出（无截断）
+
+- 程序: FruitNinjaPuss
+
+## FUN_0006d80c — 0006d80c
+
+- 函数名: FUN_0006d80c
+- 函数体: 661 字节
+- 调用者数: 0 / 被调用者数: 9
+
+(反编译超时或失败)
+
+## FUN_0000342c — 0000342c
+
+- 函数名: FUN_0000342c
+- 函数体: 197 字节
+- 调用者数: 13 / 被调用者数: 3
+
+```c
+
+undefined * FUN_0000342c(void)
+
+{
+  undefined4 *puVar1;
+  int iVar2;
+  int iVar3;
+  
+  if (((DAT_005556b8 & 1) == 0) && (iVar2 = ___cxa_guard_acquire(&DAT_005556b8), iVar2 != 0)) {
+    DAT_0055575c = 0;
+    DAT_00555768 = 0;
+    DAT_00555758 = 0;
+    DAT_00555760 = &DAT_00555758;
+    DAT_00555764 = &DAT_00555758;
+    iVar2 = 0;
+    do {
+      iVar3 = iVar2 + 0x18;
+      *(undefined4 *)((int)&DAT_00555774 + iVar2) = 0;
+      *(undefined4 *)((int)&DAT_00555778 + iVar2) = 0;
+      *(undefined4 *)((int)&DAT_0055577c + iVar2) = 0;
+      *(undefined4 *)((int)&DAT_00555780 + iVar2) = 0;
+      puVar1 = (undefined4 *)((int)&DAT_00555770 + iVar2);
+      *puVar1 = 0;
+      *(undefined4 **)((int)&DAT_00555778 + iVar2) = puVar1;
+      *(undefined4 **)((int)&DAT_0055577c + iVar2) = puVar1;
+      iVar2 = iVar3;
+    } while (iVar3 != 0x120);
+    DAT_0055588c = 0;
+    DAT_00555890 = 0;
+    DAT_00555894 = 0;
+    DAT_0055589c = 0;
+    DAT_005558a0 = 0;
+    DAT_005558ac = 0;
+    DAT_005558a4 = &DAT_0055589c;
+    DAT_005558a8 = &DAT_0055589c;
+    ___cxa_atexit(&FUN_000034f4_1,&DAT_00555754,PTR___mh_execute_header_004d9040);
+    ___cxa_guard_release(&DAT_005556b8);
+  }
+  return &DAT_00555754;
+}
+
+
+```
+
+## FUN_00003f2c — 00003f2c
+
+- 函数名: FUN_00003f2c
+- 函数体: 133 字节
+- 调用者数: 3 / 被调用者数: 2
+
+```c
+
+undefined4 FUN_00003f2c(int param_1,int param_2,uint param_3)
+
+{
+  int iVar1;
+  uint uVar2;
+  int *piVar3;
+  int iVar4;
+  undefined4 uVar5;
+  int iVar6;
+  uint uVar7;
+  int local_1c;
+  
+  iVar1 = param_1 + 0x7c;
+  piVar3 = (int *)(param_1 + 0x80);
+  iVar4 = iVar1;
+  while (iVar6 = *piVar3, iVar6 != 0) {
+    piVar3 = (int *)(iVar6 + 0xc);
+    if (param_3 <= *(uint *)(iVar6 + 0x10)) {
+      piVar3 = (int *)(iVar6 + 8);
+      iVar4 = iVar6;
+    }
+  }
+  if (iVar4 == iVar1) {
+    uVar5 = 0;
+  }
+  else {
+    uVar5 = 0;
+    if (param_3 < *(uint *)(iVar4 + 0x10)) {
+      iVar4 = iVar1;
+    }
+    if (iVar4 != iVar1) {
+      uVar5 = 0;
+      if (*(int *)(*(int *)(iVar4 + 0x14) + 0x8c) <= param_2) {
+        uVar7 = *(uint *)(*(int *)(iVar4 + 0x14) + 0x9c);
+        local_1c = iVar4;
+        uVar2 = FUN_000254c0(*(undefined4 *)(PTR_DAT_004d9048 + 0x10));
+        uVar5 = 0;
+        if ((uVar2 & uVar7) != 0) {
+          uVar5 = *(undefined4 *)(iVar4 + 0x14);
+          FUN_00003d6c(param_1,uVar5,&local_1c);
+        }
+      }
+    }
+  }
+  return uVar5;
+}
+
+
+```
+
+## FUN_0001cda4 — 0001cda4
+
+- 函数名: FUN_0001cda4
+- 函数体: 13 字节
+- 调用者数: 6 / 被调用者数: 0
+
+```c
+
+void FUN_0001cda4(undefined4 param_1)
+
+{
+  DAT_005f8dd4 = param_1;
+  return;
+}
+
+
+```
+
+## FUN_0001da28 — 0001da28
+
+- 函数名: FUN_0001da28
+- 函数体: 61 字节
+- 调用者数: 131 / 被调用者数: 2
+
+```c
+
+void FUN_0001da28(int param_1,char *param_2)
+
+{
+  undefined4 *puVar1;
+  undefined4 *puVar2;
+  
+  for (; *(int *)(param_1 + 0x38) != 0; param_1 = *(int *)(*(int *)(param_1 + 0x38) + 4)) {
+  }
+  if (*(char *)(param_1 + 0x48) != *param_2) {
+    *(char *)(param_1 + 0x48) = *param_2;
+    FUN_0001da68(param_1);
+  }
+  puVar1 = *(undefined4 **)(param_1 + 0x3c);
+  if (*(undefined4 **)(param_1 + 0x3c) == *(undefined4 **)(param_1 + 0x40)) {
+    return;
+  }
+  do {
+    puVar2 = puVar1 + 1;
+    FUN_0001daa8(*puVar1);
+    puVar1 = puVar2;
+  } while (puVar2 != *(undefined4 **)(param_1 + 0x40));
+  return;
+}
+
+
+```
+
+## FUN_000300e0 — 000300e0
+
+- 函数名: FUN_000300e0
+- 函数体: 91 字节
+- 调用者数: 4 / 被调用者数: 1
+
+```c
+
+undefined4 FUN_000300e0(int param_1,uint param_2)
+
+{
+  int *piVar1;
+  undefined4 uVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  
+  iVar4 = param_1 + 0x1c;
+  piVar1 = (int *)(param_1 + 0x20);
+  iVar3 = iVar4;
+  while (iVar5 = *piVar1, iVar5 != 0) {
+    piVar1 = (int *)(iVar5 + 0xc);
+    if (param_2 <= *(uint *)(iVar5 + 0x10)) {
+      piVar1 = (int *)(iVar5 + 8);
+      iVar3 = iVar5;
+    }
+  }
+  uVar2 = 0;
+  if (iVar3 != iVar4) {
+    if (param_2 < *(uint *)(iVar3 + 0x10)) {
+      iVar3 = iVar4;
+    }
+    if (iVar3 == iVar4) {
+      return 0;
+    }
+    iVar4 = *(int *)(iVar3 + 0x14);
+    iVar3 = *(int *)(iVar4 + 0x10);
+    piVar1 = *(int **)(param_1 + iVar3 * 4);
+    if (piVar1 != (int *)0x0) {
+      (**(code **)(*piVar1 + 8))();
+      iVar3 = *(int *)(iVar4 + 0x10);
+    }
+    FUN_0002ff98(param_1,iVar3,iVar4);
+    uVar2 = 1;
+  }
+  return uVar2;
+}
+
+
+```
+
+## FUN_000209b8 — 000209b8
+
+- 函数名: FUN_000209b8
+- 函数体: 363 字节
+- 调用者数: 6 / 被调用者数: 17
+
+```c
+
+void FUN_000209b8(int param_1)
+
+{
+  undefined *puVar1;
+  undefined *puVar2;
+  int *piVar3;
+  undefined4 uVar4;
+  int iVar5;
+  size_t sVar6;
+  undefined4 uVar7;
+  int iVar8;
+  undefined1 auStack_88 [12];
+  int local_7c;
+  char acStack_60 [64];
+  int local_20;
+  
+  puVar2 = PTR_DAT_004d9048;
+  puVar1 = PTR____stack_chk_guard_004d9044;
+  local_20 = *(int *)PTR____stack_chk_guard_004d9044;
+  if (PTR_DAT_004d9048[0x17] != '\0') goto LAB_00020b0e;
+  PTR_DAT_004d9048[0x17] = 1;
+  FUN_00052f80();
+  FUN_00057ce0();
+  piVar3 = operator_new(0xd0);
+  FUN_0005ab38();
+  (**(code **)(*piVar3 + 8))(piVar3);
+  FUN_0003e9e8(*(undefined4 *)(puVar2 + 0x4c),piVar3,0);
+  uVar4 = FUN_0007505c();
+  FUN_00075184(uVar4,"Music-menu");
+  iVar5 = *(int *)(puVar2 + 0x5c);
+  *(undefined4 *)(iVar5 + 0x224) = 0xffffffff;
+  *(undefined4 *)(iVar5 + 0x228) = 0xffffffff;
+  *(undefined4 *)(iVar5 + 0x22c) = 0xffffffff;
+  *(undefined4 *)(iVar5 + 0x230) = 0xffffffff;
+  if (param_1 != -1) goto LAB_00020b0e;
+  FUN_0037e080(auStack_88,1);
+  if (local_7c - 2U < 3) {
+    uVar7 = *(undefined4 *)(puVar2 + 0x5c);
+    uVar4 = FUN_002f69c4("games_at_grave_yard_time",0x18);
+    FUN_00027588(uVar7,"games_at_grave_yard_time",uVar4,1,1,1);
+  }
+  iVar5 = FUN_0001ceb0();
+  uVar4 = FUN_000254b0(*(undefined4 *)(puVar2 + 0x10));
+  _sprintf(acStack_60,"%s_days",uVar4);
+  iVar8 = *(int *)(puVar2 + 0x5c);
+  if (*(int *)(iVar8 + *(int *)(puVar2 + 0x10) * 4 + 0x2dc) == iVar5 + -1) {
+LAB_00020ae0:
+    sVar6 = _strlen(acStack_60);
+    uVar4 = FUN_002f69c4(acStack_60,sVar6);
+    FUN_00027588(iVar8,acStack_60,uVar4,1,1,1);
+  }
+  else {
+    iVar8 = FUN_000276e8(iVar8,acStack_60);
+    if (iVar8 == 0) {
+      iVar8 = *(int *)(puVar2 + 0x5c);
+      goto LAB_00020ae0;
+    }
+    if (*(int *)(*(int *)(puVar2 + 0x5c) + *(int *)(puVar2 + 0x10) * 4 + 0x2dc) != iVar5) {
+      FUN_000274bc(*(int *)(puVar2 + 0x5c),acStack_60,1,1,1);
+    }
+  }
+  *(int *)(*(int *)(puVar2 + 0x5c) + *(int *)(puVar2 + 0x10) * 4 + 0x2dc) = iVar5;
+LAB_00020b0e:
+  if (*(int *)puVar1 != local_20) {
+                    /* WARNING: Subroutine does not return */
+    ___stack_chk_fail();
+  }
+  return;
+}
+
+
+```
+
