@@ -46,14 +46,34 @@ void FUN_000688c8(int param_1, int param_2) {
 `FUN_0001da28(*(*(param_1+0xa8)+0x260), ...)` → `FUN_0006c0e0(+0x28)` → `FUN_00069dbc` →
 `FUN_0006d51c(+0x40)` → `FUN_0007497c(+0x74)` → `FUN_0006e200(+0x88)`。
 
-## 4. 对现有 Swift 实现的影响（尚未改）
+## 4. +0xb0 的消费方：旧状态就是派发码（2026-11-08 更正）
 
-`Sources/FNPBCore/Challenge/ChallengeSettlementController.swift` 当前把派发码做成调用方参数：
-`requestNextRound(dispatchSubstate: 2)` / `requestCleanup(dispatchSubstate: 5)`。
-按 §2，这是**没有依据的**：+0xb0 恒等于旧状态（3/4/5，取决于从哪个分支退场），
-调用方真正能选的只有 `param_2`（是否执行 FUN_00069dbc）。
+§2 说 `FUN_000688c8` 把 `+0xb0` 写成**旧状态**，这没错；但**不能据此改 Swift 的派发码**，
+因为消费方就是按 0/2/5 解释它的：
 
-修改方案（待实施）：`beginBackgroundExit` 内改为 `substate = state` 再 `state = 6`，
-对外 API 改为 `requestExit(performReset: Bool)`；对应用例需重写期望值。
+```c
+// FUN_0005fd7c（挑战模式运行时）case 3 = settling，challenge_condition_concrete_macho.md:1515-1531
+if (controller[0xac] == 7) {            // 结算控制器走到 7
+  iVar2 = controller[0xb0];             // 退场时保存的旧状态
+  if (iVar2 == 0)      FUN_00060514();  // → bonus intro
+  else if (iVar2 == 5) FUN_0006059c();  // → cleanup
+  else if (iVar2 == 2) { FUN_0005ffa8(); break; }  // → 下一回合 HUD
+  else                 param_1[0x10] = 5;          // → 其他一律挂起
+}
+```
+
+也就是说：**原版从状态 2 退场 = 下一回合，从状态 5 退场 = 清理，从状态 0 退场 = bonus**，
+旧状态与派发码是同一组数值——这正是 `ChallengeSettlementSubstate` 的
+`.bonus = 0 / .nextRound = 2 / .finished = 5`。
+
+**结论：`requestNextRound(dispatchSubstate: 2)` / `requestCleanup(dispatchSubstate: 5)` 与官方一致，
+不需要改写。** 唯一仍缺的是：Swift 主状态编号（1 表示结算进行中）与官方 +0xac 的 3/4/5 不同，
+但这只影响 `substate` 若从 `state` 推导时的取值；当前由调用方显式给 2/5，行为正确。
+若将来把主状态改成官方编号，则必须同时改成 `substate = 旧状态` 并保证旧状态落在 {0,2,5}。
+
+## 5. `param_2`（FUN_00069dbc）
+
+`FUN_00069dbc(obj)` 只做一件事：`if (obj[1] != 0) FUN_0001da28(obj[1]+0x260, &false)`
+（build_logs/t083_settlement_reset.txt）。Swift 侧没有对应对象字段，未建模，标 [待验证]。
 
 证据文件：build_logs/t081_fun_000686e8_full.txt、build_logs/t082_settlement_helpers.txt
