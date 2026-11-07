@@ -228,8 +228,11 @@ public struct ChallengeModeRuntime: Sendable, Equatable {
         events.append(.playMusic("Music-bonus"))
     }
 
+    /// FUN_0005fd7c case 3 → 子状态 5 → FUN_0006059c：调用后原版把 phase 写成 5
+    /// （challenge_condition_concrete_macho.md:1515-1531 的 param_1[0x10] = 5）。
+    /// Swift 枚举里 5 就是 .suspended —— 与「未知子状态」共用同一个值，和原版一致。
     private mutating func cleanup() {
-        phase = .inactive
+        phase = .suspended
         events.append(.setVisible(target: "inGameChallengeHud", false))
         events.append(.cleanedUp)
     }

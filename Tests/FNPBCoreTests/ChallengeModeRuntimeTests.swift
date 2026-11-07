@@ -241,7 +241,8 @@ final class ChallengeModeRuntimeTests: XCTestCase {
         XCTAssertEqual(runtime.phase, .settling)
         XCTAssertEqual(runtime.roundsPlayed, 2)
         runtime.updateSettlement(controllerState: 7, substate: 5)
-        XCTAssertEqual(runtime.phase, .inactive)
+        // 原版清理后把相位写成 5（challenge_condition_concrete_macho.md:1515-1531）
+        XCTAssertEqual(runtime.phase, .suspended)
         XCTAssertTrue(runtime.drainEvents().contains(.cleanedUp))
     }
 
