@@ -102,23 +102,29 @@ public final class OrderedQuadCanvasView: MTKView, MTKViewDelegate {
 public struct OrderedQuadMetalView: UIViewRepresentable {
     public let metalContext: MetalContext
     public let quads: [OrderedTextureQuad]
+    /// 文字段：同一次 render pass 内排在贴图四边形之后。
+    public let textQuads: [TextQuad]
     public let onError: (String) -> Void
 
     public init(metalContext: MetalContext, quads: [OrderedTextureQuad] = [],
+                textQuads: [TextQuad] = [],
                 onError: @escaping (String) -> Void = { _ in }) {
         self.metalContext = metalContext
         self.quads = quads
+        self.textQuads = textQuads
         self.onError = onError
     }
 
     public func makeUIView(context: Context) -> OrderedQuadCanvasView {
         let view = OrderedQuadCanvasView(metalContext: metalContext, onError: onError)
         view.quads = quads
+        view.textQuads = textQuads
         return view
     }
 
     public func updateUIView(_ uiView: OrderedQuadCanvasView, context: Context) {
         uiView.quads = quads
+        uiView.textQuads = textQuads
         uiView.onError = onError
     }
 }
