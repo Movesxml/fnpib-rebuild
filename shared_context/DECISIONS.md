@@ -203,3 +203,15 @@ run 42404320557（commit 1efbb060）Build & Test + Package unsigned IPA 双绿�
 
 工作方式约定（用户要求）：改一点不推一点，攒够一批 → 自查 review → 一次推送验证；
 推送内容不通过 review 不上 CI。
+
+## [2026-11-08T06:00:00+08:00] 光栅化选型：挂起，不擅自替换
+
+文字链路只剩「字形从哪里来」。原版静态链入 FreeType（FT_New_Memory_Face / FT_Get_Char_Index /
+FT_Load_Glyph(flags=4) / FT_Get_Kerning，findings §3.1），读的是同一批 TTF。
+
+两条路的取舍已向用户提问（vendor FreeType = 最忠实但 ~200 个 C 文件 + XcodeGen 改造；
+先用 CoreText = 一两轮可见文字，但字形因 hinting/抗锯齿不同会有细微差异），**未获答复**。
+
+因此本轮决定：**不擅自替换**，先继续做有完整证据的部分（水平对齐、竖直对齐的公式订正），
+光栅化实现挂起为待决策项。若用户后续选择 CoreText，必须在代码与 STATUS 中显式标注为已知偏差，
+并在 FreeType 接入后移除。
