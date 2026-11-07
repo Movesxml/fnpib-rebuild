@@ -60,16 +60,20 @@ struct ChallengeMapTextureOverlay: View {
 
         // 文字：11 条本地化文案来自 T-077 产出的 challengeMapStrings.json。
         // 注意：这里每次组件更新都会重排一次，真机上应先做缓存 [待优化]。
-        if let renderer = textRenderer ?? ChallengeMapTextRenderer(device: metalContext.device) {
+        let renderer: ChallengeMapTextRenderer
+        if let existing = textRenderer {
+            renderer = existing
+        } else {
+            renderer = ChallengeMapTextRenderer(device: metalContext.device)
             textRenderer = renderer
-            do {
-                let strings = try renderer.loadStrings()
-                textQuads = try renderer.makeTextQuads(
-                    components: components, strings: strings, viewportSize: viewportSize)
-            } catch {
-                textQuads = []
-                logger.error("地图文字渲染失败：\(error.localizedDescription, privacy: .public)")
-            }
+        }
+        do {
+            let strings = try renderer.loadStrings()
+            textQuads = try renderer.makeTextQuads(
+                components: components, strings: strings, viewportSize: viewportSize)
+        } catch {
+            textQuads = []
+            logger.error("地图文字渲染失败：\(error.localizedDescription, privacy: .public)")
         }
         errorMessage = nil
     }
