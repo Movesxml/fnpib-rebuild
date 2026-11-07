@@ -268,8 +268,11 @@ final class GameHost: ObservableObject {
             })
         )
 
-        // 算法已按发售版 LCG 闭合；启动种子的原运行时来源仍未核实，保留旧数值且不冒充官方种子。
-        let rng = OriginalLCGRandom(seed: 0x5DEE_CE66_D)
+        // [macho] 发售版在启动方法 FUN_00026c64 里调 FUN_00023dac，用
+        // `STRD r0,r1,[app+0x1b4]` 写入种子，值来自 FUN_0037e070 → 导入符号 _time。
+        // 全局流与每个权重容器都从该字段的**低 32 位**取种子，进程内只写这一次；
+        // 见 findings/prng_seed_provenance_macho.md §1。旧实现用的是自造常量 0x5DEE_CE66_D。
+        let rng = OriginalLCGRandom(seed: UInt64(UInt32(truncatingIfNeeded: time(nil))))
         let stats = StatsRecorder()
         let score = ScoreSystem()
         let combo = ComboTracker(stats: stats)
