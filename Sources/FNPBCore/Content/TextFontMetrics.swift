@@ -20,14 +20,21 @@ public struct TextGlyphBitmap: Sendable, Equatable {
     public var pitch: Int
     /// width*height 个 8bit 灰度样本，按 pitch 组行时使用 `pitch` 而不是 `width`。
     public var pixels: [UInt8]
+    /// 光栅化层给的横向 bearing（FreeType bitmap_left）。
+    public var bearingX: Int
+    /// 光栅化层给的纵向 bearing（FreeType bitmap_top，向上为正）。
+    public var bearingY: Int
 
     /// 注意：UV 由 GlyphAtlas 在插入时分配（见 GlyphAtlasSlot），
-    /// 光栅化层只负责像素，不负责它在图集里的位置。
-    public init(width: Int, height: Int, pitch: Int, pixels: [UInt8]) {
+    /// 光栅化层只负责像素与 bearing，不负责它在图集里的位置。
+    public init(width: Int, height: Int, pitch: Int, pixels: [UInt8],
+                bearingX: Int = 0, bearingY: Int = 0) {
         self.width = width
         self.height = height
         self.pitch = pitch
         self.pixels = pixels
+        self.bearingX = bearingX
+        self.bearingY = bearingY
     }
 
     /// 第 row 行第 column 列的样本；越界返回 0。

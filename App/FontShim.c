@@ -71,6 +71,7 @@ double FNFontKerning(FNFont *font, uint32_t left, uint32_t right) {
 
 int FNFontRenderGlyph(FNFont *font, uint32_t codePoint,
                       int *width, int *rows, int *pitch,
+                      int *bitmapLeft, int *bitmapTop,
                       const uint8_t **buffer) {
     if (font == NULL || font->face == NULL) { return -1; }
     FT_UInt index = FT_Get_Char_Index(font->face, (FT_ULong)codePoint);
@@ -82,6 +83,8 @@ int FNFontRenderGlyph(FNFont *font, uint32_t codePoint,
     if (width != NULL) { *width = (int)slot->bitmap.width; }
     if (rows != NULL) { *rows = (int)slot->bitmap.rows; }
     if (pitch != NULL) { *pitch = slot->bitmap.pitch; }
+    if (bitmapLeft != NULL) { *bitmapLeft = (int)slot->bitmap_left; }
+    if (bitmapTop != NULL) { *bitmapTop = (int)slot->bitmap_top; }
     if (buffer != NULL) { *buffer = slot->bitmap.buffer; }
     return 0;
 }

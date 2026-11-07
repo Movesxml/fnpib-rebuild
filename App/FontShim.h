@@ -39,9 +39,11 @@ double FNFontAdvance(FNFont *font, uint32_t codePoint);
 double FNFontKerning(FNFont *font, uint32_t left, uint32_t right);
 
 /// 渲染字形灰度位图（FT_LOAD_RENDER，对应原版 load_flags = 4）。
-/// 输出 width/rows/pitch 与 8bit 灰度缓冲指针；返回 0 成功。
+/// 输出 width/rows/pitch、8bit 灰度缓冲指针，以及 FreeType 的 bitmap_left / bitmap_top
+/// （原版 §3.1 也从 glyph slot 读同类字段）。返回 0 成功。
 int FNFontRenderGlyph(FNFont *font, uint32_t codePoint,
                       int *width, int *rows, int *pitch,
+                      int *bitmapLeft, int *bitmapTop,
                       const uint8_t **buffer);
 
 #ifdef __cplusplus

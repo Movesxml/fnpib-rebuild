@@ -56,14 +56,17 @@ final class FreeTypeTextFontMetrics: TextFontMetrics {
         var width: Int32 = 0
         var rows: Int32 = 0
         var pitch: Int32 = 0
+        var left: Int32 = 0
+        var top: Int32 = 0
         var buffer: UnsafePointer<UInt8>?
         let status = FNFontRenderGlyph(font, UInt32(bitPattern: codePoint),
-                                       &width, &rows, &pitch, &buffer)
+                                       &width, &rows, &pitch, &left, &top, &buffer)
         guard status == 0, let buffer, width > 0, rows > 0, pitch > 0 else { return nil }
         let total = Int(rows) * Int(pitch)
         let pixels = Array(UnsafeBufferPointer(start: buffer, count: total))
         return TextGlyphBitmap(width: Int(width), height: Int(rows),
-                               pitch: Int(pitch), pixels: pixels)
+                               pitch: Int(pitch), pixels: pixels,
+                               bearingX: Int(left), bearingY: Int(top))
     }
 
     // MARK: - 内部
