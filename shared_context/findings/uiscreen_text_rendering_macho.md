@@ -137,7 +137,7 @@ ComponentText 的每个文字属性不是裸标量，而是**属性节点指针*
 **行高**：没有独立行高字段；行距 = 字号 + `verticalSpacing`，在 `FUN_00320ed8` 开头算一次（t089:144-155,189）。
 - `V = *(int*)(this+0x4c)` = `verticalSpacing`（`+0x7f8`，int，默认 1；ctor `font_raster_layout.txt:285`，实参 `component_text_font_path.txt:98-101,117-120`）；`S = *(f32*)(this+0x50)` = 请求字号（`+0x7e8`）；`s = *(f32*)(this+0xd8)` = 本次实际字号（`font_raster_layout.txt:399,419`；t089:447,476）。
 - `pitch = (int)( s + V + 0.5*(s - S) )`（t089:146-155 的运算顺序；`0xbf000000` = −0.5f）：`s == S`（未缩字）⇒ **pitch = 字号 + verticalSpacing**，V 缺省 1 ⇒ 行高 ≈ 字号 + 1px；缩字时 `0.5*(s-S)` 是半差补偿。
-- `FloatVectorSub` 实参方向反编译定不死（另一读法 `V+(S+s)/2`），需 `0x00320ed8–0x00320f60` 汇编定案 `[推断]`。
+- **方向已定案**（`build_logs/t090_pitch_asm.txt:12-21`）：`vsub d18,d2,d0` 得 `S−s`，乘 `−0.5f` 得 `0.5(s−S)`，加 `float(V)`、再加 `s0=s`，末尾 `vcvt.s32.f32`（:57）截断 ⇒ 公式确为 `(int)(s + V + 0.5*(s−S))`，原 `[推断]` 撤销。
 - 佐证：限高缩字 `FUN_00322624` 以 `总高 = 行数*字号 + (行数-1)*V` 与 `+0x28` 比（t089:510-518），与该式一致。
 - **ascent/descent/lineGap 不参与**：全链无字体度量读取；只有 face `+0x184/+0x180` 缩放与逐字推进 `(实参 + fontSystem+0x140) × face+0x184 + glyph[2] + 1.0`（t089:784-849），与行高/基线无关。
 

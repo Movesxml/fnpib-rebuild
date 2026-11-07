@@ -12,9 +12,12 @@ import Foundation
 //   缩字时 0.5*(s-S) 是半差补偿。
 //   ascent/descent/lineGap 全链不参与。
 //
-// ⚠️ [待验证] 半差项的方向：反编译里 FloatVectorSub 的实参方向定不死，
-//   另一读法是 V + (S+s)/2。定案需要 Disassemble 0x00320ed8..0x00320f60。
-//   本实现按文档主读法 s + V + 0.5*(s-S) 书写，定案后再改这一处即可。
+// 半差项方向已由汇编定案（build_logs/t090_pitch_asm.txt:12-21）：
+//   vsub d18, d2, d0   ; d2 = S(+0x50), d0 = s(+0xd8)  => d18 = S - s
+//   vmul d17, d18, -0.5f                              => d17 = 0.5*(s - S)
+//   vadd d16, float(V), d17                           => V + 0.5*(s - S)
+//   vadd d16, d0, d16                                 => s + V + 0.5*(s - S)
+// 末尾 vcvt.s32.f32（:57）把结果截断成 int。
 // ============================================================================
 
 public enum TextLineMetrics {
