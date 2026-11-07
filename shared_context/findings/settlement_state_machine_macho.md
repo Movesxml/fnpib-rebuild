@@ -77,3 +77,61 @@ if (controller[0xac] == 7) {            // 结算控制器走到 7
 （build_logs/t083_settlement_reset.txt）。Swift 侧没有对应对象字段，未建模，标 [待验证]。
 
 证据文件：build_logs/t081_fun_000686e8_full.txt、build_logs/t082_settlement_helpers.txt
+
+## 6. 结果回调的完整副作用（t083 导出，待实现）
+
+`FUN_0006cae0(obj, param_2)`（build_logs/t083_settlement_reset.txt:21-101）：
+
+1. `obj+0x14 = 0`；
+2. `param_2 == 0` 时调 `FUN_00020698(1,1)`；
+3. 取 `resultsContainer` 组件：若其 `+0x48` 标志非 0，递归播 `animate_trigger`（:52-60）；
+4. 若 `app+0x1a4 != 0` 且 `FUN_0005edbc()==1` 且 `param_2==0`，播 `"Combo"` 音效（:79-89）；
+5. 收尾 `obj+0x10 = (FUN_0005edbc()==1 ? 1 : 2)`（:90-95）。
+
+`FUN_0006cc28(obj)`（:106-148）是 intro/ins 完成回调：
+
+- `FUN_00062a28(obj[8]) == 0` → 对 `obj[4]`（结果面板）递归播 `animate_out`，`obj+0x10 = 3`；
+- 否则 `obj+0x10 = 4`。
+
+### 与 Swift 的对照
+
+| 原版 | Swift | 状态 |
+|---|---|---|
+| `FUN_0006cc28` 的 animate_out / phase 3、4 | `finishNormalResult(canAnimateResultExit:)` | 结构一致 |
+| `FUN_0006cae0` 第 3 步 resultsContainer `animate_trigger` | **缺** | 待补：`updateNormalResult` 里有 resultPlayer，可补一次 `playRecursively(component: "resultsContainer", animation: "animate_trigger")`，但必须先确认该组件在动画 JSON 中存在（原版用 +0x48 标志做前置判断） |
+| `FUN_0006cae0` 第 4 步 `"Combo"` 音效 | **缺** | 待补：需要 audio 服务与 `FUN_0005edbc` 的判定等价物（该判定尚未辨识） |
+| `FUN_0006cae0` 第 5 步 phase 1/2 | `applyOutcome()` 的 success/failure 分支 | 语义对应，判据 `FUN_0005edbc` 待辨识 |
+
+## 7. 两处「疑似缺失」的复核结论（2026-11-08）
+
+### 7.1 resultsContainer 的 `animate_trigger`：官方资源里不存在，不需要补
+
+`FUN_0006cae0` 第 3 步确实会尝试在 `resultsContainer` 上播 `animate_trigger`，但它有两层前置：
+先要求 `piVar3[0x98]` 走到的最后一个子节点满足 `*(char*)(node+0x48) != 0`（t083:52-55）。
+
+官方资源 `Content/challengeScoreAnimations.json` 中 `resultsContainer` 只有 `animate_in` / `animate_out`
+两段动画，**没有 `animate_trigger`**。即：该调用在这份资源上必然被前置条件挡住或不产生任何效果。
+
+⇒ Swift 不补这一步是正确的；盲目补上一个不存在的动画只会抛错。若要完全等价，
+应当先辨识 `+0x48` 标志的语义再实现前置判断，而不是直接调用。
+
+### 7.2 `FUN_00062a28`（结果退场抑制）的真实结构
+
+```c
+// t086_settlement_predicates.txt:30-41
+if (((obj[0x68] == 0) || (_ = 1, *(obj[0x68] + 0x98) == 0)) && (_ = 0, obj[0x4c] == 3)) _ = 1;
+return _;
+```
+
+即：**当且仅当 `obj+0x4c == 3` 且（`obj+0x68 == 0` 或其 `+0x98` 为 0）时返回 1**。
+`FUN_0006cc28` 用 `FUN_00062a28(...) == 0` 决定是否播结果退场 `animate_out`。
+
+Swift 侧 `canAnimateChallengeResultExit()`（App/FNPBApp.swift:916-922）只实现了「失败回合数 == 3」这一半，
+**没有 `+0x68` 那一半**，且注释里写的「失败回合数」是从 `roundsPlayed - roundsPassed` 反推的，
+与 `+0x4c` 的对应关系尚未证实。标 [待验证]：需要辨识 `+0x4c` 与 `+0x68` 的字段语义。
+
+### 7.3 `FUN_0005edbc` 不是谓词
+
+`FUN_0005edbc(obj)` 只有 3 字节：`return obj+0x2c`（t086:13-17）。
+`FUN_0006cae0` 里拿它和 1 比较来决定结果相位（1=pass / 2=fail）。
+⇒ `obj+0x2c` 是「本回合结果」字段，与 Swift 的 `outcome` 对应；该对应关系为 [推断]。

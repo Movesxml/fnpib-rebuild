@@ -306,6 +306,18 @@ final class ChallengeSelectionTests: XCTestCase {
         XCTAssertEqual(emptyRNG.floatCallCount, 0)
     }
 
+    func testDrawComparesUnsignedWhenTotalIsZero() {
+        // seed=0x12345678 推进一次后 high32 = 0xf287e306（bit31 = 1）。
+        // 原版 FUN_00039b24:102 是 uint 比较：0xf287e306 < 0 为假 ⇒ 不命中、返回字面 0，
+        // 且不得改动任何项。若误用 Int32 有符号比较，roll 变负数会命中首项并写默认 cooldown。
+        var table = ChallengeWeightTable(entries: [
+            ChallengeWeightEntry(base: 20, current: 0, regrowth: 0.2, value: 9, cooldown: 0)
+        ], seed: 0x1234_5678)
+        XCTAssertEqual(table.draw(rng: ScriptedRandom()), 0)
+        XCTAssertEqual(table.entries[0].current, 0)
+        XCTAssertEqual(table.entries[0].cooldown, 0, "未命中时不得写入默认 cooldown")
+    }
+
     func testContainersWithSameSeedProduceSameSequence() {
         let entries = [
             ChallengeWeightEntry(base: 20, current: 20, regrowth: 0.2, value: 7, cooldown: 0),
