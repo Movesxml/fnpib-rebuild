@@ -1,6 +1,7 @@
 import Foundation
-import simd
-
+#if canImport(simd)
+import simd  // 仅 Apple 平台提供；Windows 上用标准库 SIMD 类型即可
+#endif
 // T-035：普通水果生成、积分与出界的 Mach-O 证据实现。
 // 生成：FUN_00057000；积分：FUN_0000c1c0；普通出界：FUN_0000f6dc。
 // 不包含切片后的实体、爆炸后续或其他实体状态机。

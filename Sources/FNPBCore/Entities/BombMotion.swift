@@ -1,6 +1,7 @@
 import Foundation
-import simd
-
+#if canImport(simd)
+import simd  // 仅 Apple 平台提供；Windows 上用标准库 SIMD 类型即可
+#endif
 // 炸弹生成的 Mach-O 证据实现：FUN_000568f4。
 // 缺省 gravity 使用 FUN_00053cb8 的原版构造值；角速度不从未知状态臆造。
 

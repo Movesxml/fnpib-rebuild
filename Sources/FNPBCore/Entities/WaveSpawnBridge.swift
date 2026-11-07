@@ -1,6 +1,7 @@
 import Foundation
-import simd
-
+#if canImport(simd)
+import simd  // 仅 Apple 平台提供；Windows 上用标准库 SIMD 类型即可
+#endif
 // WaveDirector 的真实内容生成出口。
 // 普通水果与炸弹分别由 FUN_00057000、FUN_000568f4 驱动，不消费随机自旋。
 // 缺省 gravity 使用 FUN_00053cb8 的原版构造值 (0,-1,0)。

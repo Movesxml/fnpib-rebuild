@@ -1,6 +1,7 @@
 import Foundation
-import simd
-
+#if canImport(simd)
+import simd  // 仅 Apple 平台提供；Windows 上用标准库 SIMD 类型即可
+#endif
 // T-015：过渡占位类型节已删除，Entity / EntityID / EntityKind / EntityTransform /
 // EntityPrototype 与 EntityStore 的正式定义迁至 ECS/（Entity.swift / EntityStore.swift）。
 // FNPBCore 为单一 target，同 target 内互相引用无需 import；仅当未来把 ECS 拆成独立

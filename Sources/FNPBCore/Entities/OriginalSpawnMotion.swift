@@ -1,6 +1,7 @@
 import Foundation
-import simd
-
+#if canImport(simd)
+import simd  // 仅 Apple 平台提供；Windows 上用标准库 SIMD 类型即可
+#endif
 /// FUN_00057000 与 FUN_000568f4 共用的 Spawn 坐标、placement 和 RNG 顺序。
 /// 水果与炸弹仅保留方向角、z 和位置偏移差异；不再各自漂移一套实现。
 enum OriginalSpawnMotion {

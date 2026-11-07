@@ -42,8 +42,9 @@
 //
 
 import Foundation
-import simd
-
+#if canImport(simd)
+import simd  // 仅 Apple 平台提供；Windows 上用标准库 SIMD 类型即可
+#endif
 // MARK: - SliceEvaluation
 
 /// 单次切割判定的完整中间结果。
