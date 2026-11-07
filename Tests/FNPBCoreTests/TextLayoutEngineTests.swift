@@ -77,8 +77,8 @@ final class TextLayoutEngineTests: XCTestCase {
     func testHeightLimitShrinksToHeightMinimum() {
         // noWrap 让第一段（行数/截断）必然通过，从而单独验证高度那一级：
         // 单行高度 = 字号 > 5，于是逐级缩到 6.0 的下限停下。
-        let constraints = TextLayoutConstraints(maxWidth: 22, maxLines: 999,
-                                                maxHeight: 5, verticalSpacing: 0,
+        let constraints = TextLayoutConstraints(maxWidth: 22, maxHeight: 5, maxLines: 999,
+                                                verticalSpacing: 0,
                                                 heightMinimumFontSize: 6.0, noWrap: true)
         let result = TextLayoutEngine.layout(codePoints: text(30), initialFontSize: 10,
                                              constraints: constraints, faceScale: 0,
