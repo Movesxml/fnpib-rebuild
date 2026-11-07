@@ -27,7 +27,7 @@ public struct TextAtlasTexture {
             height: atlas.height,
             mipmapped: false)
         descriptor.usage = .shaderRead
-        descriptor.storageMode = .managed
+        // iOS 上纹理默认就是 shared，显式写 .managed 反而不被支持（CI 42422933216）。
         guard let texture = device.makeTexture(descriptor: descriptor) else {
             throw TextAtlasTextureError.allocationFailed
         }
