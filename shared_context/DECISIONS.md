@@ -186,3 +186,20 @@ Info.plist 单一来源修复：删除 project.yml 中 FNPIB target 的 info: �
 - 已撤回的提议：挑战地图文字用 SwiftUI `Text` 叠层渲染。原版走 ComponentText + 自有字体引擎，
   SwiftUI 叠层属于自创路径，即便更快出画面也不采用。
 - 工程性改动（CI、推送、文档）不受此限，但**不得改变运行期行为**；一旦会改变行为，必须有证据支撑。
+
+## [2026-11-08T03:15:00+08:00] 四处行为修正经 CI 验证通过
+
+run 42404320557（commit 1efbb060）Build & Test + Package unsigned IPA 双绿，445 测试全过，
+覆盖以下按官方证据修正的行为：
+
+1. 挑战权重项 `current` 初值改取 `partyChallenges/defaults@chanceSelect`（官方 20，__DATA 0x52cb54），
+   `chanceSelect` 只作 `base` —— findings/challenge_round_setup_macho.md:770-792。
+2. `ChallengeWeightTable.draw` 在总权重为 0 / 0xffffffff 时也**无条件推进一次**随机流，
+   只有取样时跳过缩放 —— findings/challenge_weighted_container_macho.md:84-94。
+3. 每回合都重新执行默认水果初选（`FUN_00061128 param_2==0`），不再沿用上回合的 defaultFruitID ——
+   findings/challenge_fruit_selection_and_binding_macho.md:60。
+4. App 的 LCG 种子由自造常量 `0x5DEE_CE66_D` 改为 `UInt32(time(NULL))` ——
+   findings/prng_seed_provenance_macho.md §1。
+
+工作方式约定（用户要求）：改一点不推一点，攒够一批 → 自查 review → 一次推送验证；
+推送内容不通过 review 不上 CI。

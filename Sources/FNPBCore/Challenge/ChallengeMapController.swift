@@ -274,7 +274,8 @@ public struct ChallengeMapController: Sendable, Equatable {
                     spinSoundActive = false
                     commands.append(.fadeOutSound("slot_spin_lp", duration: 0.1))
                 }
-                let finalized = try writeActualIcons(input: input, spinner: spinner, player: &player)
+                let finalized = try writeActualIcons(
+                    input: input, spinner: spinner, forceVisible: true, player: &player)
                 animations.append(contentsOf: finalized.animations)
                 commands.append(contentsOf: finalized.commands)
                 totalElapsed = 0
@@ -290,7 +291,8 @@ public struct ChallengeMapController: Sendable, Equatable {
                     commands.append(.fadeOutSound("slot_spin_lp", duration: 0.1))
                 }
                 let finalized = try writeActualIcons(
-                    input: input, spinner: "bossChallengeContainer.spinner", player: &player)
+                    input: input, spinner: "bossChallengeContainer.spinner",
+                    forceVisible: false, player: &player)
                 animations.append(contentsOf: finalized.animations)
                 commands.append(contentsOf: finalized.commands)
                 totalElapsed = 0
@@ -428,9 +430,13 @@ public struct ChallengeMapController: Sendable, Equatable {
         return ChallengeMapOutput(animations: animations, commands: commands)
     }
 
+    /// - Parameter forceVisible: [macho] 只有 case 4 在写完图标后调
+    ///   `FUN_0001da28(node + 0x264, true)` 强制可见（challenge_map_controller_decompile_macho.md:975-976）；
+    ///   case 5（bonus）只写图标与 animate_appear，没有该可见性写入（同文件:1015-1035）。
     private func writeActualIcons(
         input: ChallengeMapInput,
         spinner: String,
+        forceVisible: Bool,
         player: inout UIScreenAnimationPlayer
     ) throws -> ChallengeMapOutput {
         var output = ChallengeMapOutput.empty
@@ -440,7 +446,9 @@ public struct ChallengeMapController: Sendable, Equatable {
             let icon = Self.actualIconIndex(typeName: round.challengeTypeName,
                                             types: input.challengeTypes)
             output.commands.append(.setIcon(component: node, iconIndex: icon))
-            output.commands.append(.setVisible(component: node, visible: true))
+            if forceVisible {
+                output.commands.append(.setVisible(component: node, visible: true))
+            }
 
             let progress = "progressUIContainer.map.challenge_\(input.tierIndex + 1)_\(index + 1).challenge"
             if componentExists(progress, player: player) {
