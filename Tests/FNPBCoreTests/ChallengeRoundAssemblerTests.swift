@@ -280,7 +280,10 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         XCTAssertEqual(selected.roundIndex, 2)
         XCTAssertEqual(selected.challenge.name, "normal-3")
         XCTAssertEqual(selected.fruitID, assembler.defaultFruitID)
-        XCTAssertEqual(random.zeroBoundCalls, callsBeforeSelection)
+        // 读取 makeMapInput 不消耗随机；但 selectRound 真正开局会执行一次默认初选
+        // （FUN_00061128 param_2==0，findings/challenge_fruit_selection_and_binding_macho.md:60）。
+        XCTAssertEqual(random.zeroBoundCalls, callsBeforeSelection + 1,
+                       "选中槽位执行一次默认初选；normal 不再追加模式覆盖")
     }
 
     func testDeferredTierAssemblyDoesNotConsumeFruitRandomUntilState9() throws {
