@@ -100,6 +100,34 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         SKIP_INSTALL: YES
 
+  # ---------------------------------------------------------------- FreeType（vendor）
+  # 发售版静态链入 FreeType 做字形光栅化（findings §3.1）。这里 vendor 裁剪版源码，
+  # 只保留 TrueType 字形加载与灰度抗锯齿渲染所需模块（见 vendor/freetype/include/freetype/config/ftmodule.h）。
+  # 关闭 zlib（ftoption.h 已改）以免额外链接依赖；TTF 本身不压缩。
+  CFreeType:
+    type: library.static
+    platform: iOS
+    sources:
+      - path: vendor/freetype/src
+    settings:
+      base:
+        PRODUCT_NAME: CFreeType
+        SKIP_INSTALL: YES
+        CLANG_ENABLE_MODULES: NO
+        HEADER_SEARCH_PATHS:
+          - $(SRCROOT)/vendor/freetype/include
+          - $(SRCROOT)/vendor/freetype/include/freetype
+          - $(SRCROOT)/vendor/freetype/src/base
+          - $(SRCROOT)/vendor/freetype/src/autofit
+          - $(SRCROOT)/vendor/freetype/src/truetype
+          - $(SRCROOT)/vendor/freetype/src/sfnt
+          - $(SRCROOT)/vendor/freetype/src/psnames
+          - $(SRCROOT)/vendor/freetype/src/raster
+          - $(SRCROOT)/vendor/freetype/src/smooth
+        GCC_PREPROCESSOR_DEFINITIONS:
+          - $(inherited)
+          - FT2_BUILD_LIBRARY
+
   # ---------------------------------------------------------------- App
   FNPIB:
     type: application
@@ -113,6 +141,7 @@ targets:
       - target: FNPBRender
       - target: FNPBPlatform
       - target: FNPBUI
+      - target: CFreeType
     # Info.plist 单一来源 = App/Info.plist（T-020 修复：此处曾同时存在 info: 块与
     # INFOPLIST_FILE，XcodeGen 会覆盖 plist 造成静默数据丢失 + Portrait/Landscape 双写矛盾）
     settings:

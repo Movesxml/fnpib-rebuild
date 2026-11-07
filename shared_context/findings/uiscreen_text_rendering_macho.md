@@ -122,7 +122,9 @@ ComponentText 的每个文字属性不是裸标量，而是**属性节点指针*
   - y 分支见 §2.6 的表。
 - 坐标收尾：先加外部偏移（`+0xc += this+0x10`、`+0x10 += this+0x14`，t089:354-361），再 `FPToFixed(...,3)`+`FixedToFP` 量化（t089:368-376）。
 - 全局反向：`FUN_0031fa44()+0x21 != 0` 时把**全部行记录**的 `+0x10`（=y）取值倒序写回（t089:380-418）——**不是 x 倒序**；该字节在字体系统 ctor 里置 0（`t087_module_dump.txt:9417`），无其它写点，语义**未导出**。
-- 对齐名字符串表（`0x470c80`）：`Bounce/Top/Left/Right/Bottom/TopLeft/TopRight/BottomLeft/BottomRight/Fill`（`alignment_enum_data.txt:5`，`TopLeft`=`0x470c9d`，`text_alignment_strings.txt:3-4`）。**字符串→掩码的转换函数未导出**（§4.9）。
+- 对齐名字符串表（`0x470c80`）：`Bounce/Top/Left/Right/Bottom/TopLeft/TopRight/BottomLeft/BottomRight/Fill`（`alignment_enum_data.txt:5`，`TopLeft`=`0x470c9d`，`text_alignment_strings.txt:3-4`）。
+  **全二进制只有一条引用**：`TopLeft` 串地址 `0x470c9d` 在 `0x003ea15c` 被 `FUN_003e9fc0` 用作 `add r1,pc` 的实参——即只被**枚举注册**（`FUN_003ea210`）用到，没有任何函数把它转成掩码（`build_logs/t092_align_refs.txt`，引用数 0/1/0）。
+  ⇒ 「字符串 → `+0x73c` 掩码」的转换在本二进制里**不存在直接实现**；掩码要么由序列化层按数值写入，要么由枚举值经未导出的表格映射，二者都还缺证据。
 - 行高 / 基线：原「**未导出**」结论**作废**，见 §2.6。
 
 ### 2.5 描边 / 阴影是否参与布局
