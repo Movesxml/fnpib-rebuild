@@ -9,8 +9,7 @@ final class GlyphAtlasTests: XCTestCase {
         for row in 0..<height {
             for column in 0..<width { pixels[row * pitch + column] = value }
         }
-        return TextGlyphBitmap(width: width, height: height, pitch: pitch, pixels: pixels,
-                               uvMinimum: SIMD2<Float>(0, 0), uvMaximum: SIMD2<Float>(0, 0))
+        return TextGlyphBitmap(width: width, height: height, pitch: pitch, pixels: pixels)
     }
 
     // MARK: 1. 位置与 UV
@@ -38,8 +37,7 @@ final class GlyphAtlasTests: XCTestCase {
         var atlas = GlyphAtlas(width: 8, height: 8, padding: 0)
         var source = [UInt8](repeating: 0, count: 2 * 3)
         source[0] = 1; source[1] = 2; source[3] = 3; source[4] = 4
-        let bitmap = TextGlyphBitmap(width: 2, height: 2, pitch: 3, pixels: source,
-                                     uvMinimum: SIMD2<Float>(0, 0), uvMaximum: SIMD2<Float>(0, 0))
+        let bitmap = TextGlyphBitmap(width: 2, height: 2, pitch: 3, pixels: source)
         _ = try atlas.insert(bitmap)
         XCTAssertEqual(atlas.sample(x: 0, y: 0), 1)
         XCTAssertEqual(atlas.sample(x: 1, y: 0), 2)
@@ -74,8 +72,7 @@ final class GlyphAtlasTests: XCTestCase {
 
     func testRejectsInconsistentPixelCount() {
         var atlas = GlyphAtlas(width: 8, height: 8)
-        let short = TextGlyphBitmap(width: 2, height: 2, pitch: 4, pixels: [1, 2],
-                                    uvMinimum: SIMD2<Float>(0, 0), uvMaximum: SIMD2<Float>(0, 0))
+        let short = TextGlyphBitmap(width: 2, height: 2, pitch: 4, pixels: [1, 2])
         XCTAssertThrowsError(try atlas.insert(short)) { error in
             XCTAssertEqual(error as? GlyphAtlasError,
                            .pixelCountMismatch(expected: 8, actual: 2))

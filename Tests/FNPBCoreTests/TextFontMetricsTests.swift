@@ -54,9 +54,7 @@ final class TextFontMetricsTests: XCTestCase {
     func testGlyphBitmapSamplingHonoursPitch() {
         // 2x2 位图，pitch=3（每行多 1 字节填充）
         let bitmap = TextGlyphBitmap(width: 2, height: 2, pitch: 3,
-                                     pixels: [10, 11, 0, 20, 21, 0],
-                                     uvMinimum: SIMD2<Float>(0, 0),
-                                     uvMaximum: SIMD2<Float>(0.5, 0.5))
+                                     pixels: [10, 11, 0, 20, 21, 0])
         XCTAssertEqual(bitmap.sample(row: 0, column: 0), 10)
         XCTAssertEqual(bitmap.sample(row: 0, column: 1), 11)
         XCTAssertEqual(bitmap.sample(row: 1, column: 0), 20, "第二行按 pitch=3 偏移")

@@ -20,18 +20,14 @@ public struct TextGlyphBitmap: Sendable, Equatable {
     public var pitch: Int
     /// width*height 个 8bit 灰度样本，按 pitch 组行时使用 `pitch` 而不是 `width`。
     public var pixels: [UInt8]
-    /// 该字形在纹理图集中的 UV 矩形（左下、右上）。
-    public var uvMinimum: SIMD2<Float>
-    public var uvMaximum: SIMD2<Float>
 
-    public init(width: Int, height: Int, pitch: Int, pixels: [UInt8],
-                uvMinimum: SIMD2<Float>, uvMaximum: SIMD2<Float>) {
+    /// 注意：UV 由 GlyphAtlas 在插入时分配（见 GlyphAtlasSlot），
+    /// 光栅化层只负责像素，不负责它在图集里的位置。
+    public init(width: Int, height: Int, pitch: Int, pixels: [UInt8]) {
         self.width = width
         self.height = height
         self.pitch = pitch
         self.pixels = pixels
-        self.uvMinimum = uvMinimum
-        self.uvMaximum = uvMaximum
     }
 
     /// 第 row 行第 column 列的样本；越界返回 0。

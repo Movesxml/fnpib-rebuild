@@ -152,6 +152,10 @@ targets:
         INFOPLIST_FILE: App/Info.plist
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_MACCATALYST: NO
+        # App/FontShim.c 把 vendored FreeType 暴露给 Swift（FreeTypeTextFontMetrics.swift）
+        SWIFT_OBJC_BRIDGING_HEADER: App/FontShim-Bridging-Header.h
+        HEADER_SEARCH_PATHS:
+          - $(SRCROOT)/vendor/freetype/include
 
   # ---------------------------------------------------------------- 测试
   FNPBCoreTests:
