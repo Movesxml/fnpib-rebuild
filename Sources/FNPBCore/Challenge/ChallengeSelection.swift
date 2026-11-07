@@ -121,7 +121,7 @@ public struct ChallengeWeightTable: Sendable, Equatable {
 
     /// FUN_00039b24：加权抽取。
     ///
-    /// 原版流程：total<=0 → 返回索引 0；否则生成 `roll ∈ [0, total)`，
+    /// 原版流程：先推进一次随机流；total 为 0 或 0xffffffff 时不缩放，否则 `roll ∈ [0, total)`。
     /// 顺序累加 **所有项** 的 current，首个 `roll < 累计` 的项被选中：
     /// total -= current、current = 0、cooldown = 默认，返回该项的 value。
     /// 未命中区间时同样返回索引 0，不能改成空结果或重新抽取。
@@ -132,8 +132,16 @@ public struct ChallengeWeightTable: Sendable, Equatable {
     ///
     /// 随机数来源：注入 RandomSource；生产装配使用已验证的 OriginalLCGRandom。
     public mutating func draw(rng: any RandomSource) -> Int? {
-        guard totalWeight > 0 else { return 0 }
-        let roll = rng.nextInt(totalWeight)
+        // [macho] FUN_00039b24 的顺序是「先无条件推进一次随机流，再取总权重」，
+        // 只有 total 为 0 或 0xffffffff 时不缩放（直接用高位）。
+        // 旧实现在 total<=0 时提前返回，少推进一次 LCG，会让后续所有抽取整体错位。
+        // nextInt(0) 在 OriginalLCGRandom 里的契约正是「推进但不缩放」。
+        let roll: Int32
+        if totalWeight > 0 && totalWeight != -1 {
+            roll = rng.nextInt(totalWeight)
+        } else {
+            roll = rng.nextInt(0)
+        }
         var cumulative: Int32 = 0
         for i in entries.indices {
             cumulative += entries[i].current
@@ -220,17 +228,21 @@ public struct ChallengeGroupSelector: Sendable {
     /// 原版组对象 +0xC（`FUN_0006ebdc` 维护）。
     public private(set) var hasSelectablePriority: Bool
 
+    /// - Parameter initialCurrent: 挑战项 current 的初始值。
+    ///   [macho] 原版写的是**全局默认**（partyChallenges/defaults@chanceSelect，官方数据为 20），
+    ///   而不是该挑战自己的 chanceSelect——后者只作为 base（regrow 的上限）
+    ///   （findings/challenge_round_setup_macho.md:770-792；Mach-O __DATA 0x52cb54 = 0x14）。
     public init(group: ChallengeGroupDefinition,
                 persistence: any ChallengeSelectionPersisting,
-                defaultCooldown: Int32 = 4) {
+                defaultCooldown: Int32 = 4,
+                initialCurrent: Int32 = 20) {
         self.group = group
         let entries = group.challenges.enumerated().map { index, challenge -> ChallengeWeightEntry in
             let key = Self.challengeKey(challenge)
             let snapshot = persistence.snapshot(forKey: key)
             return ChallengeWeightEntry(
                 base: challenge.selection.chanceSelect,
-                // ⚠️ 初始 current 取 chanceSelect（[待验证]，见风险点）。
-                current: snapshot?.current ?? challenge.selection.chanceSelect,
+                current: snapshot?.current ?? initialCurrent,
                 regrowth: challenge.selection.chanceRegrowth,
                 value: Int32(index),
                 cooldown: snapshot?.cooldown ?? 0)
@@ -306,17 +318,20 @@ public struct ChallengeTierSelector: Sendable {
     public private(set) var selectors: [ChallengeGroupSelector]
     public private(set) var specialSelector: ChallengeSpecialGroupSelector?
 
+    /// - Parameter initialCurrent: 组项 / 挑战项 current 的初始值，见
+    ///   ChallengeGroupSelector.init 的说明（原版取全局默认，官方数据 20）。
     public init(tier: ChallengeTierDefinition,
                 persistence: any ChallengeSelectionPersisting,
                 defaultCooldown: Int32 = 4,
-                specialChallenges: ChallengeSpecialGroupDefinition? = nil) {
+                specialChallenges: ChallengeSpecialGroupDefinition? = nil,
+                initialCurrent: Int32 = 20) {
         self.tier = tier
         let entries = tier.groups.enumerated().map { index, group -> ChallengeWeightEntry in
             let key = Self.groupKey(group: group)
             let snapshot = persistence.snapshot(forKey: key)
             return ChallengeWeightEntry(
                 base: group.selection.chanceSelect,
-                current: snapshot?.current ?? group.selection.chanceSelect,
+                current: snapshot?.current ?? initialCurrent,
                 regrowth: group.selection.chanceRegrowth,
                 value: Int32(index),
                 cooldown: snapshot?.cooldown ?? 0)
@@ -324,11 +339,13 @@ public struct ChallengeTierSelector: Sendable {
         self.groupTable = ChallengeWeightTable(entries: entries, defaultCooldown: defaultCooldown)
         self.selectors = tier.groups.map {
             ChallengeGroupSelector(group: $0, persistence: persistence,
-                                   defaultCooldown: defaultCooldown)
+                                   defaultCooldown: defaultCooldown,
+                                   initialCurrent: initialCurrent)
         }
         self.specialSelector = specialChallenges.map {
             ChallengeSpecialGroupSelector(definition: $0, persistence: persistence,
-                                          defaultCooldown: defaultCooldown)
+                                          defaultCooldown: defaultCooldown,
+                                          initialCurrent: initialCurrent)
         }
     }
 
@@ -477,11 +494,13 @@ public struct ChallengeSpecialGroupSelector: Sendable {
 
     public init(definition: ChallengeSpecialGroupDefinition,
                 persistence: any ChallengeSelectionPersisting,
-                defaultCooldown: Int32 = 4) {
+                defaultCooldown: Int32 = 4,
+                initialCurrent: Int32 = 20) {
         self.definition = definition
         self.selector = ChallengeGroupSelector(group: definition.group,
                                                persistence: persistence,
-                                               defaultCooldown: defaultCooldown)
+                                               defaultCooldown: defaultCooldown,
+                                               initialCurrent: initialCurrent)
     }
 
     /// 返回 nil 既可能是未触发，也可能是命中后空组无挑战；两种情况都不重掷门控。

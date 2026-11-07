@@ -434,56 +434,312 @@ d) 切割 radius：state.sliceRadiusSquared 初值 0 → HitTest 门控永不通
 
 依据完整FUN_00016214步骤9和水果vtable+0x24真实实现，成批闭合combo>=3结算计分、动态/草莓/最高连击统计，以及水果命中OnSliced基础分、jiblet和特殊奖励。先定位并导出发售版OnSliced函数，禁止用fruit.score猜测官方基础分；同时补回主循环entity[0x6e]非炸弹门控。保留未闭合模式分支，完整CI后才登记。
 
-### [T-035] doing :: 爆炸门控与原版水果运动
-- 创建: 2026-11-01T19:31:29+08:00　更新: 2026-11-01T19:42:03+08:00
+### [T-035] done :: 爆炸门控与原版水果运动
+- 创建: 2026-11-01T19:31:29+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 爆炸命中/封锁/归零回归通过；运动字段、生成参数和积分顺序均有Mach-O证据；生产代码、测试替身与期望整体复核；完整GitHub Actions通过；未闭合模式与真机项单列
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Entities/BombMotion.swift；Sources/FNPBCore/Loop/FruitOnSliced.swift 的 explosionTimeRemaining/isFaulted 分支。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 闭合炸弹3.2秒计时、遍历门控及主循环顺序；继续反编译Spawn完整参数与水果运动，禁止保留无依据常量冒充官方行为。
 
-### [T-036] doing :: 挑战权重选择器与回合计划
-- 创建: 2026-11-02T02:25:04+08:00　更新: 2026-11-02T02:25:11+08:00
+### [T-036] done :: 挑战权重选择器与回合计划
+- 创建: 2026-11-02T02:25:04+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 仅新增选择器及测试；逐项对应Mach-O；不伪造PRNG；DeepSeek只输出代码，Kimi审查后才落盘
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Challenge/ChallengeSelection.swift（含 specialChallenges 与回合计划洗牌）。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 只写代码草案，由Kimi独立审查。依据完整Mach-O实现 ChallengeSelection.swift 与对应XCTest，不修改现有控制器。范围：1) 每项20字节语义对应 base/current/value/regrowth/cooldown；regrow时cooldown<1则 current=min(base,Int32((Float(current)*regrowth+Float(base)).rounded()))，否则cooldown-=1；2) 加权随机选择使用注入RandomSource，不宣称复刻原版PRNG，选中后current=0、cooldown=4并更新总权重；3) group选择先找prioritySelection且持久化游玩次数为0的首项，冷却或零权重时先regrow再按原索引清除；否则regrow后加权选择；随后写回所有current/cooldown快照并更新priority标志；4) tier组选择采用同一规则，但持久化状态独立；5) 回合计划为mustSelect>0的每组重复加入其选择结果，再创建0..<numRounds槽位并用注入RNG执行原版成对交换洗牌，依次优先消耗必选列表，其余槽位走普通组选择；6) 提供回合结果写回与按当前索引取challenge的纯值接口。特殊单例随机组FUN_00062be4、原版64位PRNG、UI和GameWorld接线不在本卡，不得猜。测试覆盖恢复上限、冷却递减、优先未玩、持久化游玩次数、必选队列、洗牌确定性和无可用项。
 
-### [T-037] doing :: 复刻原版 64 位 LCG 随机源
-- 创建: 2026-11-02T03:21:12+08:00　更新: 2026-11-02T03:23:35+08:00
+### [T-037] done :: 复刻原版 64 位 LCG 随机源
+- 创建: 2026-11-02T03:21:12+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 草案含完整 Swift 6 实现与 XCTest；算法严格按上述 Mach-O 证据，无猜测、无生产落盘。
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Random/OriginalRandom.swift；App/FNPBApp.swift:184/272 使用 OriginalLCGRandom。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 只创建 DeepSeek 草案，禁止修改生产文件。输出 build/staging/OriginalRandom.swift 与 build/staging/OriginalRandomTests.swift。实现 FNPBCore 的 final class OriginalLCGRandom: RandomSource：state 按 UInt64 回绕执行 state=state*0x5d588b656c078965+0x0000000000269ec3；先推进再取 high32=UInt32(state>>32)。nextInt(bound)：bound==0 或 -1 时返回 high32 的 Int32 位模式；正数 bound 返回 UInt32((UInt64(high32)*UInt64(UInt32(bound)))>>32) 的 Int32 位模式，不使用取模，不把 0 种子替换为其他值。nextFloat：q=UInt32((UInt64(high32)*0x7ffff)>>32)，返回 Float(q)/Float(524287)，保持 binary32 语义。snapshot/restore 必须准确保存 UInt64 state，包括 0。提供 public init(seed: UInt64=0)。测试至少逐状态覆盖种子0、1、0xdeadbeef 的前三步，以及 nextInt(4)、nextInt(10)、nextFloat 参考向量：seed0 states 0000000000269ec3,7188d00c55ae9cb2,0af528d3a0c3b2fd；seed1 states 5d588b656c2e2828,e3b543e45af1de8b,3d7fca1a0b78ce9a；deadbeef states 0457f41ae269da0e,a48f2c2ed7fd2449,2b33271979700090。每个新状态对应 nextInt4/nextInt10：seed0 (0,0),(1,4),(0,0)；seed1 (1,3),(3,8),(0,2)；deadbeef (0,0),(2,6),(0,1)。Float bits：seed0 00000000,3ee3119c,3d2f5216；seed1 3ebab0d7,3f63b53c,3e75ff1f；deadbeef 3c8afc11,3f248f15,3e2ccc96。测试还需验证 bound0/-1 和 snapshot/restore。不得替换 App 的 SplitMix64Random，不得改 ChallengeSelection，不得实现特殊组或挑战统计。Mach-O 证据：FUN_00039b24、FUN_00039a64、FUN_00062be4、FUN_00301080。
 
-### [T-038] doing :: 接入原版连续切果挑战事件
-- 创建: 2026-11-02T04:14:56+08:00　更新: 2026-11-02T04:15:14+08:00
+### [T-038] done :: 接入原版连续切果挑战事件
+- 创建: 2026-11-02T04:14:56+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 草案精确对齐Mach-O逐果CONSECUTIVE事件与计数；不复用combo；Kimi审查后才可落盘；完整回归测试包含顺序和边界。
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Loop/GameWorld.swift:215 + FruitOnSliced.swift:55 注入 ChallengeConsecutiveTracker。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 只输出 DeepSeek 草案到 build/staging/T-038/，禁止直接修改生产文件。范围仅闭合 FUN_00010bec 中 CONSECUTIVE 分发，不实现挑战水果随机选择、特殊组或 App 回合接线。真实 Mach-O 证据：计分水果路径先按玩家及水果定义+0x330(noScore)更新 DAT_005d4ce0；同一玩家且noScore==false时count+=1，否则count=1并记录玩家。随后 FUN_00003fb4(manager,count,fruitDefinition+0x250) 到 FUN_0005ee50，再对激活条件虚表+0x24调0x5f21c。r2是水果类型哈希；本项目值语义使用FruitInfo.name并沿用现有ChallengeCondition.recordConsecutive的大小写无关匹配。noScore早退路径不进入该计分事件，不得凭空上报。现有协议：RandomSource不相关；FruitOnSliced.apply(entity:inout Entity,state:inout GameState,services:GameServices,explosionTimeRemaining:Float=0)，内部resolveCritical后才计分；ChallengeModeRuntime.recordConsecutive(count:Int32,specificType:String?)；GameWorld.step6在onSliced.apply后调用evaluateChallengeImmediate。请设计最小改动：新增可重置的单玩家/玩家索引连续计数器，计数与事件必须位于FruitOnSliced原版对应顺序，GameWorld重开局清零；不要用comboCount、combo结算或触摸事件代替。输出完整 ChallengeConsecutiveTracker.swift、建议修改的FruitOnSliced.swift/GameWorld.swift及XCTest到build/staging/T-038镜像目录，并明确实际生产目标路径。测试覆盖普通水果1,2,3逐次、noScore不触发、换玩家重置为1、新局复位、特定水果过滤、非consecutive不受影响，且不改变既有计分/统计顺序。
 
-### [T-039] doing :: 复刻挑战水果候选与加权选择
-- 创建: 2026-11-02T04:57:26+08:00　更新: 2026-11-02T05:10:51+08:00
+### [T-039] done :: 复刻挑战水果候选与加权选择
+- 创建: 2026-11-02T04:57:26+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 草案完整、逐条对应Mach-O；无猜测默认值；测试覆盖四路径、权重边界、PRNG次数、回退和候选集合；Kimi审查后才落盘。
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Challenge/ChallengeFruitSelection.swift（由 ChallengeRoundAssembler 调用）。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 只输出 DeepSeek 草案到 build/staging/T-039/，禁止直接修改生产文件。依据 shared_context/findings/challenge_fruit_selection_and_binding_macho.md 与 fruit_weighted_selection_ac24_complete_macho.md 完整实现 FUN_0000ac24 及 FUN_0000af50/afc4/b06c/b1a4 的值语义等价算法。完整注入上述证据和现有 OriginalRandom.swift、ContentTypes.swift。选择器需显式表示四个全局权重和缓存、四项重建顺序、P 与 param_1 四分支、32位回绕、mulHi32、Int32严格小于、一次/两次PRNG以及count-1回退；RandomSource 使用真实 OriginalLCGRandom 接口。空候选及进入回退的单候选在原版会越界，Swift 必须返回明确安全错误/nil并注明新增安全策略，不得伪造原版合法返回。候选按名称动态查 FruitInfo.typeID，默认除banana，small=strawberry/kiwifruit/lime，medium=orange/mango/apple_red/tomato/apple/plum/passionfruit/lemon/peach/pear，big=banana/watermelon/pineapple；不得硬编码水果ID。输入条目显式携带 chance/noCritical/coinsMax，不猜 FruitInfo 缺省值，不接 App。输出完整 ChallengeFruitSelection.swift 与 XCTest，覆盖证据第10节向量、缓存复用、候选顺序、缺失名称、空候选安全策略。
 
-### [T-040] doing :: 绑定挑战水果到统计与连续条件
-- 创建: 2026-11-02T05:10:01+08:00　更新: 2026-11-02T05:14:26+08:00
+### [T-040] done :: 绑定挑战水果到统计与连续条件
+- 创建: 2026-11-02T05:10:01+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 草案只含绑定与测试；不伪造统计计数；原始条件定义可重复激活；真实GameWorld回归；Kimi审查后才落盘。
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Loop/ChallengeConditions.swift（challengeFruit 占位符，22 处引用）。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 只输出 DeepSeek 草案到 build/staging/T-040/，禁止直接修改生产文件。依据 challenge_fruit_selection_and_binding_macho.md 和现有 ChallengeConditions.swift、ChallengeModeRuntime.swift、GameWorld.swift，实现当前 selected FruitInfo.name 对 challengeFruit 占位符的值语义绑定。STATS/STATS_COMPARE 求值时 challengeFruit 应读取所选真实水果名在 StatsRecorder 的键，不创建虚构计数器；CONSECUTIVE 仅在该占位符上换成选中水果名，nil/zero 仍表示通配，不过滤。选择或恢复水果后再 select/reset 激活条件，不能永久改写共享原始定义导致下一回合无法重绑定。ChallengeModeRuntime 初始化和下一回合显式接收 selectedFruitName；GameWorld 从真实 runtime 构造 evaluation context，不接 App、不实现水果选择。保留现有API兼容默认参数。完整注入上述三个生产文件和对应测试，输出最小完整改动及 XCTest，覆盖 STATS、STATS_COMPARE、CONSECUTIVE、非占位条件、换回合换水果、未选择水果安全行为。
 
-### [T-041] doing :: 加载真实挑战目录与条件资源
-- 创建: 2026-11-02T05:28:04+08:00　更新: 2026-11-02T05:28:16+08:00
+### [T-041] done :: 加载真实挑战目录与条件资源
+- 创建: 2026-11-02T05:28:04+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 真实两份挑战资源通过现有 Loader 进入 OriginalContent；App Bundle 缺失资源有明确错误；有效权重映射无猜测；仅草案和测试，完整 CI 后登记
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Content/OriginalContentLoader.swift:203/213 加载 ch1challengeList/challengeConditions。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 只输出 DeepSeek 草案，禁止直接修改生产文件。目标是把已经存在于 Content/ch1challengeList.json 和 Content/challengeConditions.json 的官方资源接入 OriginalContent 与 App/OriginalContentBundle，使用现有 ChallengeCatalogLoader 和 ChallengeConditionLoader，不发明挑战选择或 UI 行为。另提供从真实 FruitInfo 有效运行时字段构造 [Int32:ChallengeFruitWeightEntry] 的纯函数，chance/noCritical 读现有字段，coinsMax 按已核实 FruitInfo 有效默认值 0 显式提供并注明证据，不把原始 XML 缺省 chance 擅自改成非零。输出最小完整改动与 XCTest，覆盖加载真实文档、条件数量与名称、challengeFruit 占位符、tier/group/challenge 保序、资源缺失错误以及权重映射；不接 GameWorld，不自动选择 tier 或 challenge，不替换 App 随机源。草案放 build/staging/T-041/，由 Kimi 审查后才落盘。
 
-### [T-042] doing :: 替换 App 随机源并审计全局序列
-- 创建: 2026-11-02T05:39:16+08:00　更新: 2026-11-02T05:39:31+08:00
+### [T-042] done :: 替换 App 随机源并审计全局序列
+- 创建: 2026-11-02T05:39:16+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 生产App唯一共享随机源使用已验证OriginalLCGRandom；无猜测官方种子；代码草案经Kimi整组审查；完整CI通过后才登记完成
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：App/FNPBApp.swift:184；App 内已无 SplitMix64Random。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 DeepSeek只输出代码草案，Kimi独立审查和落盘。现有OriginalLCGRandom已依据FUN_00039a64/FUN_00039b24/FUN_00062be4/FUN_00301080实现并通过完整CI。审查App/FNPBApp.swift中SplitMix64Random全部调用链与共享rng注入，提出最小完整改动将生产App统一切换为OriginalLCGRandom，保留一个共享随机源，不新增第二随机序列，不改挑战选择/资源加载/UI。种子初值如无Mach-O证据必须显式保留为待验证，不得捏造官方种子；删除失效的SplitMix占位实现及误导注释。补充可在FNPBCore测试目标执行的随机源共享/快照回归，不依赖UIKit；若App装配无法在该target测试，明确验证边界。输出到build/staging/T-042/，禁止直接修改生产文件。
 
-### [T-043] doing :: 闭合特殊挑战组与回合计划
-- 创建: 2026-11-02T05:46:50+08:00　更新: 2026-11-02T05:47:00+08:00
+### [T-043] done :: 闭合特殊挑战组与回合计划
+- 创建: 2026-11-02T05:46:50+08:00　更新: 2026-11-07T18:19:17+08:00
 - 验收: 特殊组概率/门控/顺序/RNG次数逐项对应Mach-O；无特殊组零额外RNG；Kimi整组审查；完整CI通过
+- 备注: 
+[2026-11-07 接手审计] 能力已在生产代码落地，故关闭：Sources/FNPBCore/Content/ChallengeCatalog.swift:187 + ChallengeSelection.swift:312。原卡自 T-043 后未回填状态，验收标准未重新执行。
 
 DeepSeek只输出代码草案，Kimi独立审查、修改和落盘。完整Mach-O证据已导出到shared_context/findings/special_challenge_group_macho.md、special_challenge_reset_macho.md、challenge_tier_layout_macho.md、challenge_selection_weights_macho.md。现有Sources/FNPBCore/Challenge/ChallengeSelection.swift和Content/ChallengeCatalog.swift未实现FUN_00060d04/FUN_00062be4/FUN_00062ca4及FUN_0006ee88特殊组分支。请基于真实源码API提出最小完整改动：ChallengeCatalog可选加载specialChallenges(numPerGame及challengeGroup)，特殊组持有独立ChallengeGroupSelector和每局已选计数；仅numPerGame!=0、count==0、tierIndex!=0且!=2时消费一次OriginalLCGRandom.nextFloat并按难度0/1/2/其他阈值0.2/0.5/0.8/0.8判断，命中后count+=1、调用组内选择并把结果追加到必选队列；新局计数清零。保留现有mustSelect、成对洗牌、队列填充顺序。真实ch1challengeList.json没有specialChallenges，因此缺省必须是nil且不消耗RNG，不得虚构特殊挑战或难度值，难度和tierIndex显式注入。修正选择器中已过时的‘随机源非原版’注释，但不改变其他已验证行为。输出完整改动和XCTest到build/staging/T-043/，禁止直接修改生产文件。
+
+### [T-044] done :: 纯 Core 挑战回合装配器
+- 创建: 2026-11-02T06:06:45+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t044.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t044.py。落地产物：Sources/FNPBCore/Challenge/ChallengeRoundAssembler.swift、Tests/FNPBCoreTests/ChallengeRoundAssemblerTests.swift。
+
+### [T-045] done :: customWave/forceWave 选波核心
+- 创建: 2026-11-02T06:29:25+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t045.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t045.py。落地产物：Sources/FNPBCore/Content/ContentTypes.swift、Sources/FNPBCore/Content/OriginalContentLoader.swift、Sources/FNPBCore/Wave/WaveDirector.swift。
+
+### [T-046] done :: ch1challengeWaveList 名称/类型/水果绑定
+- 创建: 2026-11-02T06:43:43+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t046.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t046.py。落地产物：Content/ch1challengeWaveList.json、Sources/FNPBCore/Content/ContentTypes.swift、Sources/FNPBCore/Content/OriginalContentLoader.swift。
+
+### [T-047] done :: 波 defaults 与 Spawn 字段解析
+- 创建: 2026-11-02T06:49:48+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t047.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t047.py。落地产物：Sources/FNPBCore/Content/ContentTypes.swift、Sources/FNPBCore/Content/OriginalContentLoader.swift、blueprint/Constants.swift、Tests/FNPBCoreTests/ChallengeWaveDefaultsSpawnFieldsTests.swift。
+
+### [T-048] done :: 挑战波列表独立加载
+- 创建: 2026-11-02T07:40:20+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t048.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t048.py。落地产物：Sources/FNPBCore/Content/OriginalContentLoader.swift、App/OriginalContentBundle.swift、Content/ch1challengeWaveList.json。
+
+### [T-049] done :: 原版字符串哈希 FUN_002f69c4
+- 创建: 2026-11-02T08:04:12+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t049.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t049.py。落地产物：Sources/FNPBCore/Challenge/OriginalStringHash.swift、Tests/FNPBCoreTests/OriginalStringHashTests.swift。
+
+### [T-050] done :: 挑战选择独立持久化
+- 创建: 2026-11-02T08:11:53+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t050.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t050.py。落地产物：Sources/FNPBCore/Challenge/ChallengeSelection.swift、Sources/FNPBPlatform/Persistence.swift、Tests/FNPBCoreTests/ChallengeSelectionTests.swift。
+
+### [T-051] done :: 持久化解码容错 + 拒绝重复结算
+- 创建: 2026-11-02T09:05:32+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t051.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t051.py。落地产物：Sources/FNPBCore/Challenge/ChallengeRoundAssembler.swift、Sources/FNPBPlatform/Persistence.swift、Tests/FNPBCoreTests/PersistenceTests.swift。
+
+### [T-052] done :: UISF 递归动画查询/播放
+- 创建: 2026-11-02T09:14:59+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t052.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t052.py。落地产物：Sources/FNPBCore/Content/UIScreenAnimationPlayer.swift、Tests/FNPBCoreTests/UIScreenAnimationPlayerTests.swift。
+
+### [T-053] done :: UISF 插值采样 + 挑战动画 JSON 工具
+- 创建: 2026-11-02T09:43:04+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t053.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t053.py。落地产物：Sources/FNPBCore/Content/UIScreenAnimationPlayer.swift、reverse/generate_challenge_animations.py、Content/challengeAnimations.json。
+
+### [T-054] done :: 首回合即 bonus 的 intro + 结算子状态
+- 创建: 2026-11-02T11:35:20+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t054.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t054.py。落地产物：Sources/FNPBCore/Loop/ChallengeModeRuntime.swift、Sources/FNPBCore/Loop/GameWorld.swift、Tests/FNPBCoreTests/ChallengeModeRuntimeTests.swift。
+
+### [T-055] done :: bonus 结算宿主协调器
+- 创建: 2026-11-02T12:06:45+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t055.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t055.py。落地产物：Sources/FNPBCore/Challenge/ChallengeBonusSettlementHost.swift、Tests/FNPBCoreTests/ChallengeBonusSettlementHostTests.swift、Content/challengeScoreCompleteAnimations.json。
+
+### [T-056] done :: 成就解锁幂等本地接收端
+- 创建: 2026-11-02T12:17:29+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t056.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t056.py。落地产物：Sources/FNPBPlatform/Persistence.swift、Tests/FNPBCoreTests/PersistenceTests.swift。
+
+### [T-057] done :: App 接 bonus 结算 host
+- 创建: 2026-11-02T12:23:28+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t057.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t057.py。落地产物：App/FNPBApp.swift。
+
+### [T-058] done :: 挑战地图状态机首条闭合路径
+- 创建: 2026-11-02T12:39:22+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build/request_t058.py 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build/request_t058.py。落地产物：Sources/FNPBCore/Challenge/ChallengeMapController.swift、Tests/FNPBCoreTests/ChallengeMapControllerTests.swift。
+
+### [T-059] done :: HUD 直接投影 host 真实数值
+- 创建: 2026-11-02T14:49:41+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-059.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-059.response.md。落地产物：Sources/FNPBCore/Challenge/ChallengeBonusSettlementHost.swift、Sources/FNPBUI/GameSnapshot.swift、Sources/FNPBUI/Screens/InGameHUDScreen.swift。
+
+### [T-060] done :: .uiscreen 静态属性记录严格解析
+- 创建: 2026-11-02T15:04:03+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-060.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 审计：草案里的符号（_STATIC_PROPERTY_NAMES/_read_static_string 等）未进入 reverse/extract_uiscreen.py；同一能力由 T-064 的 parse_static_properties 以不同实现落地，故按「能力已覆盖」记 done，草案本身未采用。
+
+推进方式见 shared_context/progress/T-060.response.md。无落地产物（见备注）。
+
+### [T-061] done :: 挑战地图 PVRTC4→PNG
+- 创建: 2026-11-02T15:05:24+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-061.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-061.response.md。落地产物：Content/challengeAtlas.png、Content/challengeCross.png、reverse/generate_challenge_atlas_asset.py。
+
+### [T-062] done :: uiscreen 属性组/记录头解析
+- 创建: 2026-11-02T15:12:16+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-062.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-062.response.md。落地产物：reverse/extract_uiscreen.py。
+
+### [T-063] done :: 挑战素材再生脚本重写
+- 创建: 2026-11-02T15:15:39+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-063.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-063.response.md。落地产物：reverse/generate_challenge_atlas_asset.py。
+
+### [T-064] done :: 属性类别表与静态属性解析
+- 创建: 2026-11-02T15:19:43+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-064.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-064.response.md。落地产物：reverse/extract_uiscreen.py。
+
+### [T-065] done :: 挑战动画生成器校验补强
+- 创建: 2026-11-02T15:31:41+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-065.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-065.response.md。落地产物：reverse/generate_challenge_animations.py、Content/challengeAnimationManifest.json。
+
+### [T-066] done :: UIScreen 布局投影
+- 创建: 2026-11-02T16:11:50+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-066.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-066.response.md。落地产物：Sources/FNPBCore/Content/UIScreenLayoutProjection.swift、Tests/FNPBCoreTests/UIScreenLayoutProjectionTests.swift。
+
+### [T-067] done :: 根视口缩放模式 + 设备像素
+- 创建: 2026-11-02T16:46:38+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-067.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-067.response.md。落地产物：Sources/FNPBCore/Content/UIScreenRootViewport.swift、Sources/FNPBCore/Content/UIScreenLayoutProjection+DevicePixels.swift。
+
+### [T-068] done :: 布局投影完整实现
+- 创建: 2026-11-02T17:37:21+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-068.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-068.response.md。落地产物：Sources/FNPBCore/Content/UIScreenLayoutProjection.swift。
+
+### [T-069] done :: 地图布局快照 + HUD 状态投影
+- 创建: 2026-11-02T17:48:07+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-069.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-069.response.md。落地产物：Sources/FNPBUI/ChallengeMapLayoutSnapshot.swift、Sources/FNPBUI/GameSnapshot.swift、App/FNPBApp.swift。
+
+### [T-070] done :: texturePath→资源 key 精确映射
+- 创建: 2026-11-02T18:07:20+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-070.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-070.response.md。落地产物：Sources/FNPBUI/ChallengeMapTextureResolver.swift。
+
+### [T-071] done :: 地图几何/纹理纯值测试
+- 创建: 2026-11-02T18:17:49+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-071.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-071.response.md。落地产物：Tests/FNPBUITests/ChallengeMapTexturePrimitiveTests.swift。
+
+### [T-072] done :: 递归播放/插值接口对齐
+- 创建: 2026-11-02T18:41:50+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-072.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-072.response.md。落地产物：Sources/FNPBCore/Content/UIScreenAnimationPlayer.swift、Sources/FNPBCore/Content/UIScreenLayoutProjection.swift、Tests/FNPBCoreTests/UIScreenLayoutProjectionTests.swift。
+
+### [T-073] done :: 显示树排序与可见性分层
+- 创建: 2026-11-02T18:51:39+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-073.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-073.response.md。落地产物：Sources/FNPBCore/Content/UIScreenDrawList.swift、Tests/FNPBCoreTests/UIScreenDrawListTests.swift。
+
+### [T-074] done :: 有序四边形 值/测试/Pass（三子卡）
+- 创建: 2026-11-02T19:16:08+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build_logs/T-074-pass.done 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build_logs/T-074-pass.done。落地产物：Sources/FNPBRender/OrderedTextureQuad.swift、Sources/FNPBRender/OrderedQuadPass.swift、Tests/FNPBRenderTests/OrderedTextureQuadTests.swift。
+
+### [T-075] done :: 有序四边形 MTKView + 地图适配器
+- 创建: 2026-11-02T19:35:04+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-075.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-075.response.md。落地产物：Sources/FNPBRender/OrderedQuadView.swift、App/ChallengeMapQuadAdapter.swift。
+
+### [T-076] done :: 地图点击命中 + Metal 贴图叠层
+- 创建: 2026-11-02T19:43:08+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 shared_context/progress/T-076.response.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 shared_context/progress/T-076.response.md。落地产物：Sources/FNPBUI/ChallengeMapInteraction.swift、App/ChallengeMapTextureOverlay.swift。
+
+### [T-077] done :: StringTables 导出地图本地化文本
+- 创建: 2026-11-02T00:00:00+08:00　更新: 2026-11-07T18:18:53+08:00
+- 验收: 见 build_logs/T-077.prompt.md 与对应落地产物；本卡由 2026-11-07 审计补录，未重新编排验收。
+- 备注: 2026-11-07 由审计补录：任务卡系统在 T-043 后停用，实际工作经 build/request_t0XX.py + progress 推进。
+
+推进方式见 build_logs/T-077.prompt.md。落地产物：reverse/extract_string_table.py、Content/challengeMapStrings.json。

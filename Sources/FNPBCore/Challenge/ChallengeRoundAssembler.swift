@@ -114,7 +114,8 @@ public struct ChallengeRoundAssembler {
         self.tierSelector = ChallengeTierSelector(
             tier: tier,
             persistence: persistence,
-            specialChallenges: catalog.specialChallenges)
+            specialChallenges: catalog.specialChallenges,
+            initialCurrent: catalog.defaults.chanceSelect)
         self.fruitSelector = ChallengeFruitSelector()
         self.plan = ChallengeRoundPlan()
         self.currentRoundIndex = 0

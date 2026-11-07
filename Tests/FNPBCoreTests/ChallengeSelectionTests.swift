@@ -271,6 +271,32 @@ final class ChallengeSelectionTests: XCTestCase {
                        "FUN_00039b24 的零权重回退是字面索引 0，不是首项 value")
     }
 
+    func testDrawAdvancesRandomStreamEvenWhenTotalIsZero() {
+        var table = ChallengeWeightTable(entries: [
+            ChallengeWeightEntry(base: 20, current: 0, regrowth: 0.2, value: 7, cooldown: 0)
+        ])
+        let rng = ScriptedRandom()
+        XCTAssertEqual(table.draw(rng: rng), 0)
+        XCTAssertEqual(rng.intCallCount, 1,
+                       "FUN_00039b24 先无条件推进一次随机流再取总权重；total<=0 也不能跳过")
+    }
+
+    // MARK: 9. current 初值取全局默认（partyChallenges/defaults@chanceSelect），不是挑战自身的 chanceSelect
+
+    func testInitialCurrentUsesGlobalDefaultNotChanceSelect() {
+        let challenge = ChallengeDefinition(name: "tier1basic", selection: weight(40, 0.2))
+        let group = ChallengeGroupDefinition(name: "g", mustSelect: 0,
+                                             selection: weight(40, 0.2),
+                                             challenges: [challenge])
+        let store = ChallengeSelectionMemoryStore()
+        let selector = ChallengeGroupSelector(group: group, persistence: store, initialCurrent: 20)
+        XCTAssertEqual(selector.table.entries[0].base, 40,
+                       "base 取挑战自己的 chanceSelect（regrow 上限）")
+        XCTAssertEqual(selector.table.entries[0].current, 20,
+                       "current 取全局默认 20（Mach-O __DATA 0x52cb54 = 0x14）")
+        XCTAssertEqual(selector.table.totalWeight, 20)
+    }
+
     func testGroupReturnsFirstChallengeWhenEverythingCoolingDown() {
         let challenge = ChallengeDefinition(name: "only", selection: weight(20, 0.2))
         let group = ChallengeGroupDefinition(name: "g", mustSelect: 0,
