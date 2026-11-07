@@ -7,9 +7,12 @@ import simd
 public final class OrderedQuadCanvasView: MTKView, MTKViewDelegate {
     private let metalContext: MetalContext
     private var orderedQuadPass: OrderedQuadPass?
+    private var textQuadPass: TextQuadPass?
     private var lastReportedError: String?
 
     public var quads: [OrderedTextureQuad] = []
+    /// 文字段：与贴图四边形同一次渲染，按提交顺序排在它们之后（覆盖在上层）。
+    public var textQuads: [TextQuad] = []
     public var onError: (String) -> Void
 
     public init(metalContext: MetalContext, onError: @escaping (String) -> Void) {
@@ -33,8 +36,13 @@ public final class OrderedQuadCanvasView: MTKView, MTKViewDelegate {
                 device: metalContext.device,
                 shaderLibrary: metalContext.shaderLibrary,
                 colorPixelFormat: colorPixelFormat)
+            textQuadPass = try TextQuadPass(
+                device: metalContext.device,
+                shaderLibrary: metalContext.shaderLibrary,
+                colorPixelFormat: colorPixelFormat)
         } catch {
             orderedQuadPass = nil
+            textQuadPass = nil
             report(error: error)
         }
     }
@@ -63,6 +71,11 @@ public final class OrderedQuadCanvasView: MTKView, MTKViewDelegate {
             try orderedQuadPass.encode(
                 encoder: encoder, quads: quads,
                 viewportSize: SIMD2<Float>(Float(width), Float(height)))
+            if let textQuadPass, !textQuads.isEmpty {
+                try textQuadPass.encode(
+                    encoder: encoder, quads: textQuads,
+                    viewportSize: SIMD2<Float>(Float(width), Float(height)))
+            }
             encoder.endEncoding()
             commandBuffer.present(drawable)
             commandBuffer.commit()
