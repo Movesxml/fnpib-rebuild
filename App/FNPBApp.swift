@@ -182,6 +182,9 @@ final class GameHost: ObservableObject {
     private let comboTracker: ComboTracker
     private let waveDirector: WaveDirector
     private let rng: OriginalLCGRandom
+    /// app+0x1b4 的低 32 位：全局流与所有挑战权重容器共用这一种子，
+    /// 但各容器持有自己的 LCG 状态（findings/prng_seed_provenance_macho.md §1/§4）。
+    private let randomSeed: UInt64
 
     /// 唯一保留的占位：特效模块（原 FUN_00033ca0 / FUN_00035a08）待特效任务卡。
     private let effects: PlaceholderEffectEmitter
@@ -272,7 +275,8 @@ final class GameHost: ObservableObject {
         // `STRD r0,r1,[app+0x1b4]` 写入种子，值来自 FUN_0037e070 → 导入符号 _time。
         // 全局流与每个权重容器都从该字段的**低 32 位**取种子，进程内只写这一次；
         // 见 findings/prng_seed_provenance_macho.md §1。旧实现用的是自造常量 0x5DEE_CE66_D。
-        let rng = OriginalLCGRandom(seed: UInt64(UInt32(truncatingIfNeeded: time(nil))))
+        let randomSeed = UInt64(UInt32(truncatingIfNeeded: time(nil)))
+        let rng = OriginalLCGRandom(seed: randomSeed)
         let stats = StatsRecorder()
         let score = ScoreSystem()
         let combo = ComboTracker(stats: stats)
@@ -300,6 +304,7 @@ final class GameHost: ObservableObject {
         self.displayLink = displayLink
         self.touchRouter = touchRouter
 
+        self.randomSeed = randomSeed
         self.rng = rng
         self.statsRecorder = stats
         self.scoreSystem = score
@@ -759,7 +764,8 @@ final class GameHost: ObservableObject {
                     random: rng,
                     tierIndex: tierIndex,
                     difficulty: difficulty,
-                    roundCount: roundCount)
+                    roundCount: roundCount,
+                    seed: randomSeed)
                 let round = try assembler.startFirstRound()
 
                 waveDirector.setChallengeFruit(round.fruitID)
@@ -1008,7 +1014,8 @@ final class GameHost: ObservableObject {
             difficulty: current.difficulty,
             predicateP: current.predicateP,
             roundCount: roundCount,
-            deferInitialRoundAssembly: true)
+            deferInitialRoundAssembly: true,
+            seed: randomSeed)
         if nextTierIndex == 0 {
             audio.play("act-change")
             actChangeSoundPending = false

@@ -69,7 +69,8 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
                                fruits: [FruitInfo],
                                random: AssemblerRandom,
                                conditions: [ChallengeConditionDefinition] = [],
-                               tierIndex: Int32 = 0) throws -> ChallengeRoundAssembler {
+                               tierIndex: Int32 = 0,
+                               seed: UInt64 = 0) throws -> ChallengeRoundAssembler {
         try ChallengeRoundAssembler(
             catalog: catalog,
             fruits: fruits,
@@ -78,7 +79,8 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
             random: random,
             tierIndex: tierIndex,
             difficulty: 0,
-            predicateP: 0)
+            predicateP: 0,
+            seed: seed)
     }
 
     private func assertAssemblerError<T>(
@@ -128,53 +130,70 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
     }
 
     func testSubsequentNormalRedrawsDefaultFruitWithoutModeOverride() throws {
-        // 计划：第一次选 small（19/40），洗牌保持顺序，第二次选 normal（23/24）。
+        // 计划：两次 tier 抽签由 seed=0 的容器 LCG 决定（small → normal）；
+        // 洗牌用脚本 [0, 0] 保持槽位顺序。
         let catalog = makeCatalog(challenges: [
             makeChallenge(name: "small", size: .small),
             makeChallenge(name: "normal", size: .normal),
         ], numRounds: 2)
-        let random = AssemblerRandom(planValues: [0, 0, 0, 19, 23])
+        let random = AssemblerRandom(planValues: [0, 0])
         var assembler = try makeAssembler(
             catalog: catalog, fruits: makeFruits(), random: random)
 
         let first = try assembler.startFirstRound()
         XCTAssertEqual(first.challenge.name, "small")
         XCTAssertEqual(first.fruitID, 2)
-        // 3 = 默认初选 + 模式覆盖 + draw 在总权重归零时也必须推进一次（FUN_00039b24）
-        XCTAssertEqual(random.zeroBoundCalls, 3)
+        // 2 = 默认初选 + small 模式覆盖；draw 只推进容器自己的 LCG，不再从 RandomSource 取数。
+        XCTAssertEqual(random.zeroBoundCalls, 2)
 
         let second = try assembler.advanceToNextRound()
         XCTAssertEqual(second.challenge.name, "normal")
         XCTAssertEqual(second.fruitID, assembler.defaultFruitID)
         XCTAssertEqual(second.fruitID, 1)
         XCTAssertEqual(second.runtime.selectedFruitName, "apple")
-        XCTAssertEqual(random.zeroBoundCalls, 4,
+        XCTAssertEqual(random.zeroBoundCalls, 3,
                        "每回合都重新执行默认初选（FUN_00061128 param_2==0），normal 只是不再覆盖")
     }
 
     func testSubsequentSmallRedrawsDefaultThenOverrides() throws {
-        // 计划：第一次选 normal（0/40），洗牌保持顺序，第二次选 small（0/24）。
+        // 计划：两次 tier 抽签由 seed=0 的容器 LCG 决定（normal → small）；
+        // 洗牌用脚本 [0, 0] 保持槽位顺序。
         let catalog = makeCatalog(challenges: [
             makeChallenge(name: "normal", size: .normal),
             makeChallenge(name: "small", size: .small),
         ], numRounds: 2)
-        let random = AssemblerRandom(planValues: [0, 0, 0, 0, 0])
+        let random = AssemblerRandom(planValues: [0, 0])
         var assembler = try makeAssembler(
             catalog: catalog, fruits: makeFruits(), random: random)
 
         let first = try assembler.startFirstRound()
         XCTAssertEqual(first.challenge.name, "normal")
         XCTAssertEqual(first.fruitID, 1)
-        // 2 = 默认初选 + draw 的强制推进（normal 没有模式覆盖）
-        XCTAssertEqual(random.zeroBoundCalls, 2)
+        // 1 = 默认初选（normal 没有模式覆盖）；draw 不消耗 RandomSource。
+        XCTAssertEqual(random.zeroBoundCalls, 1)
 
         let second = try assembler.advanceToNextRound()
         XCTAssertEqual(second.challenge.name, "small")
         XCTAssertEqual(second.fruitID, 2)
         XCTAssertEqual(second.runtime.selectedFruitName, "strawberry")
         XCTAssertEqual(assembler.defaultFruitID, 1)
-        XCTAssertEqual(random.zeroBoundCalls, 4,
+        XCTAssertEqual(random.zeroBoundCalls, 3,
                        "每回合都重新执行默认初选，small 再加一次覆盖选择")
+    }
+
+    func testAssemblerPropagatesSeedToTierSelector() throws {
+        let catalog = makeCatalog(challenges: [
+            makeChallenge(name: "first", size: .normal),
+            makeChallenge(name: "second", size: .normal),
+        ], numRounds: 1)
+        let assembler = try makeAssembler(
+            catalog: catalog, fruits: makeFruits(), random: AssemblerRandom(),
+            seed: 0x1234_5678)
+
+        // 唯一组 total=20：seed 首步 high32=0xf287e306 ⇒ roll=18，选中组 0；
+        // 挑战表 total=40：同一 seed 首步 roll=37 ⇒ 第二项 second。
+        let round = try assembler.startFirstRound()
+        XCTAssertEqual(round.challenge.name, "second")
     }
 
     func testSelectedFruitIsBoundBeforeConditionEvaluation() throws {
@@ -267,7 +286,7 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
             makeChallenge(name: "small", size: .small),
             makeChallenge(name: "normal-3", size: .normal),
         ], numRounds: 3)
-        let random = AssemblerRandom(planValues: [0, 0, 0, 0, 0])
+        let random = AssemblerRandom(planValues: [0, 0])
         var assembler = try makeAssembler(
             catalog: catalog, fruits: makeFruits(), random: random)
         assembler.recordCurrentRoundOutcome(.pass)

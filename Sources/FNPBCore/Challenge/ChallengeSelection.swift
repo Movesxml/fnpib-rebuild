@@ -15,8 +15,8 @@ import Foundation
 //   FUN_0006ee88  回合计划：每组 mustSelect 次构建必选队列 → 特殊组门控与选择 →
 //                 成对交换洗牌 → 按洗牌序先消耗队列、其余走 tier 选择
 //   FUN_00060d04 / FUN_00062be4 / FUN_00062ca4  特殊单例随机组
-//   FUN_00039a64 / FUN_0003994c 内部 64 位 PRNG —— 注入 RandomSource；
-//                                                  生产装配使用 OriginalLCGRandom
+//   FUN_0003994c / FUN_00039b24  权重容器自带 64 位 LCG（种子 = app+0x1b4 低 32 位）；
+//                                抽签推进自身状态，洗牌/门控仍用注入 RandomSource
 //   FUN_00061090 / FUN_000610cc  UI 与控制器接线（尚未接入）
 //   FUN_002f69c4  持久化 key 的字符串哈希（改用名称，见风险点）
 //
@@ -66,8 +66,11 @@ public struct ChallengeWeightEntry: Sendable, Equatable {
 
 // MARK: - 权重容器
 
-/// 原版 `FUN_0003994c` 构造的容器：项数组 + 总权重 + rng 状态 + 默认 cooldown。
-/// 本实现剥离 rng 状态（改为注入 RandomSource），保留 totalWeight 与默认 cooldown。
+/// 原版 `FUN_0003994c` 构造的容器：项数组 + 总权重 + 自带 64 位 LCG + 默认 cooldown。
+///
+/// 原版每个容器在构造时拷贝 `app+0x1b4` 的低 32 位作为种子、高 32 位清零
+/// （findings/challenge_weighted_container_macho.md:145-160），抽签时只推进自己的
+/// 状态（同文件 FUN_00039b24:84-94）；进程内多个容器同源但各自独立推进。
 public struct ChallengeWeightTable: Sendable, Equatable {
     public private(set) var entries: [ChallengeWeightEntry]
     /// 原版容器 +0x10（构造函数传入，任务卡记为 4）。
@@ -75,9 +78,17 @@ public struct ChallengeWeightTable: Sendable, Equatable {
     /// 原版容器 +0x0C（`param_1[3]`）：只累计非冷却项的 current。
     public private(set) var totalWeight: Int32
 
-    public init(entries: [ChallengeWeightEntry] = [], defaultCooldown: Int32 = 4) {
+    /// 原版容器 +0x14/+0x18（`param_1[5..6]`）的 64 位 LCG 状态。
+    /// 原版构造时高 32 位写 0；生产调用方必须传入零扩展的 32 位种子。
+    private var lcgState: UInt64
+
+    /// - Parameter seed: 原版 `app+0x1b4` 的低 32 位；默认 0 保持旧调用可编译。
+    public init(entries: [ChallengeWeightEntry] = [],
+                defaultCooldown: Int32 = 4,
+                seed: UInt64 = 0) {
         self.entries = entries
         self.defaultCooldown = defaultCooldown
+        self.lcgState = seed
         self.totalWeight = entries.reduce(Int32(0)) { sum, entry in
             entry.cooldown < 1 ? sum + entry.current : sum
         }
@@ -121,30 +132,38 @@ public struct ChallengeWeightTable: Sendable, Equatable {
 
     /// FUN_00039b24：加权抽取。
     ///
-    /// 原版流程：先推进一次随机流；total 为 0 或 0xffffffff 时不缩放，否则 `roll ∈ [0, total)`。
+    /// 原版流程：先推进一次容器自己的 64 位 LCG；
+    /// total 为 0 或 0xffffffff 时不缩放，否则 `roll ∈ [0, total)`。
     /// 顺序累加 **所有项** 的 current，首个 `roll < 累计` 的项被选中：
     /// total -= current、current = 0、cooldown = 默认，返回该项的 value。
-    /// 未命中区间时同样返回索引 0，不能改成空结果或重新抽取。
+    /// 未命中区间时同样返回字面 0（不是首项 value），不能改成空结果或重新抽取。
     ///
     /// ⚠️ 原版累加所有项（含冷却项），但 totalWeight 只含非冷却项；正常不变量下
     ///   冷却项 current 恒为 0，累加无影响。若持久化恢复了「cooldown>0 且 current>0」
     ///   的状态，行为可能与直觉不同——[待验证]，见风险点。
     ///
-    /// 随机数来源：注入 RandomSource；生产装配使用已验证的 OriginalLCGRandom。
-    public mutating func draw(rng: any RandomSource) -> Int? {
-        // [macho] FUN_00039b24 的顺序是「先无条件推进一次随机流，再取总权重」，
-        // 只有 total 为 0 或 0xffffffff 时不缩放（直接用高位）。
-        // 旧实现在 total<=0 时提前返回，少推进一次 LCG，会让后续所有抽取整体错位。
-        // nextInt(0) 在 OriginalLCGRandom 里的契约正是「推进但不缩放」。
-        let roll: Int32
-        if totalWeight > 0 && totalWeight != -1 {
-            roll = rng.nextInt(totalWeight)
+    /// 随机数来源：容器自带的 64 位 LCG；传入的 RandomSource 不读取、不推进。
+    /// 洗牌、特殊组门控和水果选择仍由调用方使用注入的 RandomSource。
+    public mutating func draw(rng _: any RandomSource) -> Int? {
+        // [macho] FUN_00039b24:85-91 无条件推进容器自己的 64 位状态：
+        //   state = state * 0x5d588b656c078965 + 0x269ec3
+        // 再把新状态的高 32 位按总权重缩放（同函数 :92-93）；total 为 0 / 0xffffffff
+        // 时不缩放，直接使用完整高 32 位。
+        lcgState = lcgState &* 0x5d58_8b65_6c07_8965 &+ 0x0000_0000_0026_9ec3
+        let high = UInt32(truncatingIfNeeded: lcgState >> 32)
+        // [macho] FUN_00039b24:92-93 与 :102 全部按 **32 位无符号**处理：
+        // 总权重是 uint，roll 是 umull 取高 32 位，区间比较也是 uint。
+        // 用 Int32 有符号比较会在 total==0/-1（roll=完整 high32，bit31 可能为 1）时判反。
+        let total = UInt32(bitPattern: totalWeight)
+        let roll: UInt32
+        if total != 0 && total != UInt32.max {
+            roll = UInt32((UInt64(high) * UInt64(total)) >> 32)
         } else {
-            roll = rng.nextInt(0)
+            roll = high
         }
-        var cumulative: Int32 = 0
+        var cumulative: UInt32 = 0
         for i in entries.indices {
-            cumulative += entries[i].current
+            cumulative = cumulative &+ UInt32(bitPattern: entries[i].current)
             if roll < cumulative {
                 totalWeight -= entries[i].current
                 entries[i].current = 0
@@ -232,10 +251,12 @@ public struct ChallengeGroupSelector: Sendable {
     ///   [macho] 原版写的是**全局默认**（partyChallenges/defaults@chanceSelect，官方数据为 20），
     ///   而不是该挑战自己的 chanceSelect——后者只作为 base（regrow 的上限）
     ///   （findings/challenge_round_setup_macho.md:770-792；Mach-O __DATA 0x52cb54 = 0x14）。
+    /// - Parameter seed: 原版 `app+0x1b4` 的低 32 位；该组的权重容器持有自己的 LCG 状态。
     public init(group: ChallengeGroupDefinition,
                 persistence: any ChallengeSelectionPersisting,
                 defaultCooldown: Int32 = 4,
-                initialCurrent: Int32 = 20) {
+                initialCurrent: Int32 = 20,
+                seed: UInt64 = 0) {
         self.group = group
         let entries = group.challenges.enumerated().map { index, challenge -> ChallengeWeightEntry in
             let key = Self.challengeKey(challenge)
@@ -247,7 +268,9 @@ public struct ChallengeGroupSelector: Sendable {
                 value: Int32(index),
                 cooldown: snapshot?.cooldown ?? 0)
         }
-        self.table = ChallengeWeightTable(entries: entries, defaultCooldown: defaultCooldown)
+        self.table = ChallengeWeightTable(entries: entries,
+                                          defaultCooldown: defaultCooldown,
+                                          seed: seed)
         self.hasSelectablePriority = Self.computePriority(group: group, persistence: persistence)
     }
 
@@ -320,11 +343,14 @@ public struct ChallengeTierSelector: Sendable {
 
     /// - Parameter initialCurrent: 组项 / 挑战项 current 的初始值，见
     ///   ChallengeGroupSelector.init 的说明（原版取全局默认，官方数据 20）。
+    /// - Parameter seed: 原版 `app+0x1b4` 的低 32 位；组级容器与每个组/特殊组容器
+    ///   都拷贝同一个种子，之后各自独立推进（findings/prng_seed_provenance_macho.md §4）。
     public init(tier: ChallengeTierDefinition,
                 persistence: any ChallengeSelectionPersisting,
                 defaultCooldown: Int32 = 4,
                 specialChallenges: ChallengeSpecialGroupDefinition? = nil,
-                initialCurrent: Int32 = 20) {
+                initialCurrent: Int32 = 20,
+                seed: UInt64 = 0) {
         self.tier = tier
         let entries = tier.groups.enumerated().map { index, group -> ChallengeWeightEntry in
             let key = Self.groupKey(group: group)
@@ -336,16 +362,20 @@ public struct ChallengeTierSelector: Sendable {
                 value: Int32(index),
                 cooldown: snapshot?.cooldown ?? 0)
         }
-        self.groupTable = ChallengeWeightTable(entries: entries, defaultCooldown: defaultCooldown)
+        self.groupTable = ChallengeWeightTable(entries: entries,
+                                               defaultCooldown: defaultCooldown,
+                                               seed: seed)
         self.selectors = tier.groups.map {
             ChallengeGroupSelector(group: $0, persistence: persistence,
                                    defaultCooldown: defaultCooldown,
-                                   initialCurrent: initialCurrent)
+                                   initialCurrent: initialCurrent,
+                                   seed: seed)
         }
         self.specialSelector = specialChallenges.map {
             ChallengeSpecialGroupSelector(definition: $0, persistence: persistence,
                                           defaultCooldown: defaultCooldown,
-                                          initialCurrent: initialCurrent)
+                                          initialCurrent: initialCurrent,
+                                          seed: seed)
         }
     }
 
@@ -492,15 +522,18 @@ public struct ChallengeSpecialGroupSelector: Sendable {
     public private(set) var selector: ChallengeGroupSelector
     public private(set) var selectionCount: Int32 = 0
 
+    /// - Parameter seed: 原版 `app+0x1b4` 的低 32 位；特殊组挑战容器也从同一种子起步。
     public init(definition: ChallengeSpecialGroupDefinition,
                 persistence: any ChallengeSelectionPersisting,
                 defaultCooldown: Int32 = 4,
-                initialCurrent: Int32 = 20) {
+                initialCurrent: Int32 = 20,
+                seed: UInt64 = 0) {
         self.definition = definition
         self.selector = ChallengeGroupSelector(group: definition.group,
                                                persistence: persistence,
                                                defaultCooldown: defaultCooldown,
-                                               initialCurrent: initialCurrent)
+                                               initialCurrent: initialCurrent,
+                                               seed: seed)
     }
 
     /// 返回 nil 既可能是未触发，也可能是命中后空组无挑战；两种情况都不重掷门控。
@@ -568,7 +601,8 @@ public struct ChallengeRoundPlan: Sendable, Equatable {
 // 已核实的实现边界
 //
 // 1) 持久化 key 使用原版名称哈希，并按组／挑战分表；SaveStore 已提供磁盘适配。
-// 2) 生产随机源为已验证 OriginalLCGRandom；测试使用脚本化 RandomSource。
+// 2) 权重抽签使用容器自带 LCG（种子为 app+0x1b4 低 32 位）；洗牌/特殊组门控/
+//    水果选择仍使用注入的 RandomSource（生产为 OriginalLCGRandom）。
 // 3) 特殊组核心已闭合；App 的 tier/difficulty 与回合 UI 尚未接线。
 // 4) [待验证] 持久化恢复状态的 FPToFixed 舍入与真机全序列尚未闭合。
 // ============================================================================

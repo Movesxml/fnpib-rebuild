@@ -96,7 +96,8 @@ public struct ChallengeRoundAssembler {
                 difficulty: Int32 = 0,
                 predicateP: Int32 = 0,
                 roundCount: Int32? = nil,
-                deferInitialRoundAssembly: Bool = false) throws {
+                deferInitialRoundAssembly: Bool = false,
+                seed: UInt64 = 0) throws {
         guard tierIndex >= 0, Int(tierIndex) < catalog.tiers.count else {
             throw ChallengeRoundAssemblerError.tierIndexOutOfBounds(
                 index: tierIndex, count: catalog.tiers.count)
@@ -111,11 +112,14 @@ public struct ChallengeRoundAssembler {
         self.conditionDefinitions = conditionDefinitions
         self.persistence = persistence
         self.random = random
+        // 原版每个权重容器构造时都拷贝同一个 app+0x1b4 种子，之后各自独立推进；
+        // 由调用方把与全局流相同的零扩展 32 位种子传进来。
         self.tierSelector = ChallengeTierSelector(
             tier: tier,
             persistence: persistence,
             specialChallenges: catalog.specialChallenges,
-            initialCurrent: catalog.defaults.chanceSelect)
+            initialCurrent: catalog.defaults.chanceSelect,
+            seed: seed)
         self.fruitSelector = ChallengeFruitSelector()
         self.plan = ChallengeRoundPlan()
         self.currentRoundIndex = 0
