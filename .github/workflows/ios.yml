@@ -6,7 +6,7 @@
 #   本仓库注入上下文中未包含 Sources/FNPBCore/Content/*，是否存在编译期资产依赖标 [待验证]
 #   → 因此这里只做目录兜底，**不**臆造资源生成步骤。详见 docs/CI_FIRST_BUILD.md §2。
 # - 全部 xcodebuild 调用带 -derivedDataPath，产物与日志路径可预测，便于失败收集。
-# - 单矩阵（不 matrix），job 级 timeout-minutes: 40。
+# - 单矩阵（不 matrix），job 级 timeout-minutes: 25。
 name: iOS CI
 
 on:
@@ -37,7 +37,7 @@ jobs:
     name: Build & Test (FNPBCoreTests)
     # Xcode 26 所在镜像；若该镜像不含 Xcode 26，改 macos-26（docs §3.1）
     runs-on: macos-15
-    timeout-minutes: 40
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
@@ -242,7 +242,7 @@ jobs:
     needs: build-and-test
     if: github.event_name != 'pull_request'
     runs-on: macos-15
-    timeout-minutes: 40
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
