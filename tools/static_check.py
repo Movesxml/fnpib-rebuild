@@ -11,10 +11,29 @@ import re
 import subprocess
 import sys
 import collections
+import os
 
-files = [f for f in subprocess.run(
-    ["git", "ls-files"], capture_output=True, text=True).stdout.splitlines()
-    if f.endswith(".swift")]
+GIT_CANDIDATES = [r"D:\tools\git\cmd\git.exe", "git"]
+
+
+def _tracked_files() -> list:
+    """优先用 git ls-files；没有 git 时退化为遍历源码目录（保持本机可用）。"""
+    for candidate in GIT_CANDIDATES:
+        try:
+            out = subprocess.run([candidate, "ls-files"], capture_output=True,
+                                 text=True, check=True).stdout
+            return out.splitlines()
+        except (OSError, subprocess.CalledProcessError):
+            continue
+    found = []
+    for top in ("Sources", "App", "Tests", "blueprint"):
+        for dirpath, _dirnames, filenames in os.walk(top):
+            for name in filenames:
+                found.append(os.path.join(dirpath, name).replace(os.sep, "/"))
+    return found
+
+
+files = [f for f in _tracked_files() if f.endswith(".swift")]
 src = {f: open(f, encoding="utf-8").read() for f in files}
 
 def strip_comments(t: str) -> str:
@@ -26,6 +45,23 @@ clean = {f: strip_comments(t) for f, t in src.items()}
 allc = "\n".join(clean.values())
 
 # ---------- 1. 协议完整性（花括号匹配） ----------
+def external_labels(params: str) -> tuple:
+    """只取外部参数标签：`_ name:` -> `_`，`name value:`/`name:` -> `name:`。
+
+    Swift 的协议见证只要求外部标签一致，内部参数名可不同
+    （例如协议 `nextInt(_ upperBound: Int32)` 由 `nextInt(_ bound: Int32)` 满足），
+    旧实现按字面比较会把这类正确实现误报为缺失。
+    """
+    out = []
+    for raw in re.findall(r"(?:\w+|_\s+\w+)\s*:", params):
+        token = raw.strip().rstrip(":").strip()
+        if token.startswith("_"):
+            out.append("_")
+        else:
+            out.append(token.split()[0] + ":")
+    return tuple(out)
+
+
 def find_body(text: str, start: int) -> str:
     """从 '{' 位置返回匹配的花括号内容。"""
     depth = 0
@@ -45,8 +81,8 @@ for f, t in clean.items():
         body = find_body(t, m.end() - 1)
         reqs = set()
         for fm in re.finditer(r"(?:mutating |static |class )?func (\w+)\(([^)]*)\)", body):
-            labels = tuple(re.findall(r"(?:\w+|_\s+\w+)\s*:", fm.group(2)))
-            reqs.add(f"{fm.group(1)}|{','.join(l.strip() for l in labels)}")
+            labels = external_labels(fm.group(2))
+            reqs.add(f"{fm.group(1)}|{','.join(labels)}")
         for vm in re.finditer(r"(?:var|let) (\w+)(?![^(]*\()\s*[:{=]", body):
             reqs.add(f"var|{vm.group(1)}")
         protos[name] = (reqs, f)
@@ -58,8 +94,8 @@ for f, t2 in clean.items():
         if ename in protos:
             ebody = find_body(t2, em.end() - 1)
             for fm in re.finditer(r"(?:public )?(?:mutating )?func (\w+)\(([^)]*)\)", ebody):
-                labels = tuple(re.findall(r"(?:\w+|_\s+\w+)\s*:", fm.group(2)))
-                proto_defaults[ename].add(f"{fm.group(1)}|{','.join(l.strip() for l in labels)}")
+                labels = external_labels(fm.group(2))
+                proto_defaults[ename].add(f"{fm.group(1)}|{','.join(labels)}")
             proto_defaults[ename] |= {f"var|{vm.group(1)}" for vm in re.finditer(r"(?:public )?(?:var|let) (\w+)\s*[:{=]", ebody)}
 
 print("== 1. 协议完整性 ==")
@@ -70,8 +106,8 @@ for f, t in clean.items():
         body = find_body(t, m.end() - 1)
         have = set()
         for fm in re.finditer(r"(?:public |private |@discardableResult\s+|override )*func (\w+)\(([^)]*)\)", body):
-            labels = tuple(re.findall(r"(?:\w+|_\s+\w+)\s*:", fm.group(2)))
-            have.add(f"{fm.group(1)}|{','.join(l.strip() for l in labels)}")
+            labels = external_labels(fm.group(2))
+            have.add(f"{fm.group(1)}|{','.join(labels)}")
         have |= {f"var|{vm.group(1)}" for vm in re.finditer(r"(?:public |private )*(?:var|let) (\w+)\s*[:{=]", body)}
         for p in re.findall(r"\b\w+\b", confs):
             if p in protos:

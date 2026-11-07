@@ -75,8 +75,11 @@ xcodebuild test -project FNPIB.xcodeproj -scheme FNPIB -configuration Debug \
 
 依据：
 
-1. `project.yml` 里**没有任何 `resources:` 条目**，5 个 target 全部只列 `sources:`。
-   即 `.tex` / `assets.zip` / `fruitlist.xml` 的产物不会被 copy 进 bundle，因此编译器看不到它们。
+1. **[2026-11-07 更正]** 本文 T-020 时写的「`project.yml` 里没有任何 `resources:` 条目」已过时：
+   现在 App target 把 `Content/` 以 `buildPhase: resources` 列入（`project.yml:107-110`），
+   44 个文件平铺进 `.app` 根（CI 日志 `8_Build (Debug, simulator)` 可见）。
+   但这仍然只是**运行期**资源：编译器看不到 `Content/` 里的内容，
+   `.tex` / `assets.zip` / `fruitlist.xml` 的产物不参与编译，所以下面 §2 的结论本身不变。
 2. `FNPBCore` 是纯逻辑 framework（`project.yml` 注释明确「不得依赖 UIKit/Metal」），
    T-019 约定 `ContentBundle` 加载失败**降级为占位**——这是运行期行为，不影响编译。
 3. 但本轮注入的共享上下文中**不含** `Sources/FNPBCore/Content/*.swift`，无法核实其中是否有：
@@ -303,14 +306,14 @@ xcodebuild test -project FNPIB.xcodeproj -scheme FNPIB -configuration Debug \
 
 ### 3.13 XcodeGen 版本漂移
 
-- **症状**：workflow `Install XcodeGen` 步报 `::error::XcodeGen 版本漂移：期望 2.44.1，实得 2.45.0`；
+- **症状**：workflow `Install XcodeGen` 步报 `::error::XcodeGen 版本漂移：期望 2.46.0，实得 2.47.0`；
   或新版 spec 解析行为变化导致 `project.pbxproj` 大量无意义 diff。
 - **根因**：Homebrew `xcodegen` formula 无版本固定能力，`brew install` 永远拿最新。
 - **修法**
   1. 常规：把 `env.XCODEGEN_VERSION` 更新到实际版本并 commit；
   2. 严格重现：改用官方 release 固定二进制（不依赖 brew）：
      ```bash
-     V=2.44.1
+     V=2.46.0
      curl -fsSL -o /tmp/xcodegen.zip \
        "https://github.com/yonaskolb/XcodeGen/releases/download/${V}/xcodegen.zip"
      unzip -q /tmp/xcodegen.zip -d /tmp/xcodegen

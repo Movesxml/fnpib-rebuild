@@ -233,3 +233,149 @@ jobs:
             echo "| scheme | \`$SCHEME\` |"
             echo "| destination | \`platform=iOS Simulator,id=${SIM_ID:-unavailable}\` |"
           } >> "$GITHUB_STEP_SUMMARY"
+  # ------------------------------------------------------------------ 未签名 IPA
+  # 只在 Build & Test 通过后跑，PR 上跳过（PR 只需要编译 + 单测）。
+  # 目标：把「能编译」推进到「有一个能侧载的包」，并在打包前校验包内容与架构。
+  # 注意：不要用 xcodebuild -exportArchive——它强制签名，与未签名包的目标冲突。
+  package-ipa:
+    name: Package unsigned IPA
+    needs: build-and-test
+    if: github.event_name != 'pull_request'
+    runs-on: macos-15
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Select Xcode 26
+        run: |
+          set -euo pipefail
+          pick=""
+          for app in /Applications/Xcode*.app; do
+            [ -d "$app" ] || continue
+            ver="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' \
+                    "$app/Contents/Info.plist" 2>/dev/null || echo 0)"
+            echo "  $app -> $ver"
+            case "$ver" in
+              26.*) pick="$app" ;;
+            esac
+          done
+          [ -n "$pick" ] || { echo "::error::未找到 Xcode 26.x"; exit 1; }
+          sudo xcode-select -s "$pick"
+          xcodebuild -version
+
+      - name: Install XcodeGen (pinned)
+        run: |
+          set -euo pipefail
+          brew install xcodegen || brew upgrade xcodegen || true
+          got="$(xcodegen --version 2>/dev/null | awk '{print $NF}')"
+          if [ "$got" != "$XCODEGEN_VERSION" ]; then
+            echo "::error::XcodeGen 版本漂移：期望 $XCODEGEN_VERSION，实得 ${got:-<none>}"
+            exit 1
+          fi
+
+      - name: Generate Xcode project
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          xcodegen generate --spec project.yml
+
+      # Release 是硬要求：Debug 产物带 FNPIB.debug.dylib / __preview.dylib，重签后无法启动
+      - name: Archive (Release, unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/FNPIB.xcarchive \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            2>&1 | tee archive.log | (xcpretty --color || cat)
+
+      - name: Validate bundle
+        run: |
+          set -euo pipefail
+          APP="build/FNPIB.xcarchive/Products/Applications/FNPIB.app"
+          [ -d "$APP" ] || { echo "::error::archive 没有产出 FNPIB.app"; exit 1; }
+
+          plist="$APP/Info.plist"
+          exe="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$plist")"
+          bid="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$plist")"
+          minos="$(/usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$plist" 2>/dev/null || echo '?')"
+          echo "exe=$exe  bundle=$bid  minOS=$minos"
+
+          [ "$exe" = "FNPIB" ] || { echo "::error::CFBundleExecutable=$exe"; exit 1; }
+          [ "$bid" = "com.example.fnpib" ] || { echo "::error::CFBundleIdentifier=$bid"; exit 1; }
+          case "$minos" in
+            26.*) ;;
+            *) echo "::error::MinimumOSVersion=$minos，期望 26.x（project.yml 的 IPHONEOS_DEPLOYMENT_TARGET）"; exit 1 ;;
+          esac
+
+          archs="$(lipo -archs "$APP/$exe")"
+          echo "app archs: $archs"
+          case "$archs" in
+            *arm64*) ;;
+            *) echo "::error::主二进制不含 arm64: $archs"; exit 1 ;;
+          esac
+
+          if [ -d "$APP/Frameworks" ]; then
+            for fw in "$APP"/Frameworks/*.framework; do
+              [ -d "$fw" ] || continue
+              name="$(basename "$fw" .framework)"
+              a="$(lipo -archs "$fw/$name" 2>/dev/null || echo '?')"
+              echo "framework $name: $a"
+              case "$a" in
+                *arm64*) ;;
+                *) echo "::error::$name 缺 arm64 切片"; exit 1 ;;
+              esac
+            done
+          fi
+
+          # 这 9 个是运行期真正会被读取的资源，缺一个就等于「装上去是空的」
+          missing=0
+          for f in fruitList.json originalWaveList.json ch1challengeWaveList.json \
+                   bonusAwards.json originalModeInfo.json ch1challengeList.json \
+                   challengeConditions.json challengeTypes.json challengeMapStrings.json; do
+            if [ ! -f "$APP/$f" ]; then
+              echo "::error::包内缺资源 $f"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          echo "包内容与架构校验通过"
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          APP="build/FNPIB.xcarchive/Products/Applications/FNPIB.app"
+          rm -rf build/Payload
+          mkdir -p build/Payload
+          cp -R "$APP" build/Payload/
+          (cd build && zip -qry FNPIB-unsigned.ipa Payload)
+          ls -lh build/FNPIB-unsigned.ipa
+          echo "== codesign（未签名包的正常输出）=="
+          codesign -dv "$APP" 2>&1 | head -5 || true
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: FNPIB-unsigned-ipa
+          path: build/FNPIB-unsigned.ipa
+          retention-days: 30
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## FNPIB 未签名 IPA"
+            echo ""
+            echo "| 项 | 值 |"
+            echo "|---|---|"
+            echo "| Xcode | `$(xcodebuild -version 2>/dev/null | tr '\n' ' ')` |"
+            echo "| 产物大小 | `$(ls -l build/FNPIB-unsigned.ipa 2>/dev/null | awk '{print $5}' || echo n/a)` |"
+          } >> "$GITHUB_STEP_SUMMARY"

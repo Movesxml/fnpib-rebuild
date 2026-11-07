@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "language": "English_US",
+  "entries": [
+    {
+      "componentIndex": 8,
+      "name": "actLabel",
+      "key": "FN_PUSS_CHALLENGE_MAP_TITLE",
+      "text": "ACT %d",
+      "fontName": "FontsTrueType/miserable.TTF",
+      "fontSize": 40.0
+    },
+    {
+      "componentIndex": 20,
+      "name": "clickNowText",
+      "key": "FN_PUSS_CLICK_TO_CHOOSE",
+      "text": "Touch to Choose",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 14.0
+    },
+    {
+      "componentIndex": 34,
+      "name": "finaleHeading",
+      "key": "FN_PUSS_BONUS_INTRO_1",
+      "text": "finale!",
+      "fontName": "FontsTrueType/miserable.TTF",
+      "fontSize": 34.0
+    },
+    {
+      "componentIndex": 37,
+      "name": "clickNowText",
+      "key": "FN_PUSS_CLICK_TO_BEGIN",
+      "text": "Touch to Begin!",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 18.0
+    },
+    {
+      "componentIndex": 41,
+      "name": "title",
+      "key": "FN_PUSS_ACT_1",
+      "text": "Act 1",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 20.0
+    },
+    {
+      "componentIndex": 42,
+      "name": "area",
+      "key": "FN_PUSS_SAN_RICARDO",
+      "text": "San Ricardo",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 14.0
+    },
+    {
+      "componentIndex": 55,
+      "name": "title",
+      "key": "FN_PUSS_ACT_2",
+      "text": "Act 2",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 20.0
+    },
+    {
+      "componentIndex": 56,
+      "name": "area",
+      "key": "FN_PUSS_CAT_CANTINA",
+      "text": "Cat Cantina",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 14.0
+    },
+    {
+      "componentIndex": 69,
+      "name": "title",
+      "key": "FN_PUSS_ACT_3",
+      "text": "Act 3",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 20.0
+    },
+    {
+      "componentIndex": 70,
+      "name": "area",
+      "key": "FN_PUSS_SKY_CASTLE",
+      "text": "Sky Castle",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 14.0
+    },
+    {
+      "componentIndex": 83,
+      "name": "title",
+      "key": "FN_PUSS_FINALE",
+      "text": "FINALE",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 20.0
+    }
+  ]
+}

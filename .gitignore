@@ -32,3 +32,11 @@ reverse/fnpiB/
 # 原版游戏资产（版权 + 74MB，由 ipa/ 经 tools/AssetPipeline 重建）
 assets_raw/
 build/
+
+# CI 日志（每轮 Actions 全量下载，721 个文件，可随时重取）
+build_logs/
+
+# 反编译中间产物（可由 Mach-O 重新导出；原始 IPA 本身不入库）
+reverse/uiscreen_reports/
+reverse/.agent_readonly_*.txt
+reverse/preview_*.png

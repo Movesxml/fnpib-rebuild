@@ -1,4 +1,4 @@
-# 决策日志
+﻿# 决策日志
 
 每个重要取舍一条，格式：`## [时间] 标题` + 正文。Kimi 与 DeepSeek 都会读这里。
 
@@ -143,3 +143,33 @@ FNPBRender 五件落盘。工程模块清单齐了：FNPBCore(ECS/Slice/Combo/Sc
 ## [2026-10-31T00:05:06+08:00] D-T020-plist-single-source
 
 Info.plist 单一来源修复：删除 project.yml 中 FNPIB target 的 info: 块（XcodeGen 会生成并覆盖 App/Info.plist，造成静默数据丢失），同时把 App/Info.plist 的方向从 Portrait 改为 Landscape 双方向（原版为横屏游戏；此前 project.yml info 块写 Landscape、plist 写 Portrait 互相矛盾）。所有 Info 键由 App/Info.plist 手工维护。
+
+
+## [2026-11-07T18:20:00+08:00] 接手：编排改为单 agent，工程链重建
+
+用户决定 T-077 之后不再维持「Kimi 规划 + DeepSeek 编码」双模型分工，改由单一 agent 全权处理
+（规划/编码/验收/找 bug 由同一 agent 通过多路子 agent 并行完成）。据此确立下列工程事实：
+
+- **凭据**：旧 fine-grained PAT 已失效（API 返回 401），且本机直连 `github.com` 超时、只有
+  `api.github.com` 可用 → 推送继续走 GitHub REST API（`tools/github_api_push.py`）。
+  凭据放 `D:\temp\gh_token.txt`，不入库。
+- **git**：本机原先**没有任何 git**，`tools/static_check.py` 与推送脚本因此都是坏的。
+  已安装 MinGit 2.56.0 到 `D:\tools\git`（npmmirror 镜像），不写系统 PATH，脚本内用绝对路径。
+- **行尾**：系统级 `core.autocrlf=true`，会对 LF 文件做 CRLF 转换。本仓库设为 `false`，
+  因为 API 推送按**工作树字节**计算 blob sha，一旦被转换就与远端不一致。
+- **历史**：远端每次推送都是一个内容相同的匿名 commit（旧脚本硬编码提交信息），本地历史停在
+  `96f7715`。今后以「工作树内容」为准，本地 commit 只作可回滚检查点，提交信息按真实任务写。
+- **忽略清单**：`build_logs/`（721 个 Actions 日志）、`reverse/uiscreen_reports/`（20 份 UISF 报告）、
+  `reverse/.agent_readonly_*`、`reverse/preview_*.png` 补进 `.gitignore`。
+  这些此前只是「未跟踪」，一次 `git add -A` 就会把 20MB 中间产物推上去。
+
+## [2026-11-07T18:35:00+08:00] T-077 收尾与 CI 补充「未签名 IPA」job
+
+- T-077 的生成器 `reverse/extract_string_table.py` 之前已落盘但**没有跑过**，产物
+  `Content/challengeMapStrings.json` 缺失。已执行并校验：11 条文本、3 个样例全对
+  （`FN_PUSS_ACT_1=Act 1` / `FN_PUSS_CHALLENGE_MAP_TITLE=ACT %d` / `FN_PUSS_SAN_RICARDO=San Ricardo`）。
+- CI 新增独立 job `package-ipa`（`needs: build-and-test`，PR 跳过）：Release 归档 + 关签名 →
+  校验 Info.plist/arm64/9 个运行期资源 → zip 成 `FNPIB-unsigned.ipa` 上传 artifact。
+  **不用 `-exportArchive`**：它强制签名，与「未签名 IPA」目标冲突（原 `pipeline/README.md` 的示例是错的，已重写）。
+- `docs/CI_FIRST_BUILD.md` §2 那条「project.yml 里没有任何 resources 条目」是 T-020 时代的断言，
+  已被 `project.yml:107-110`（Content 以 buildPhase: resources 进包）推翻，就地更正并注明日期。
