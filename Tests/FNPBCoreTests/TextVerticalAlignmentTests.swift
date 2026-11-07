@@ -29,17 +29,29 @@ final class TextVerticalAlignmentTests: XCTestCase {
     // MARK: 2. 居中单行
 
     func testCenteredSingleLine() {
+        // 居中支路要求 0x40 位为清（0x4c 含 0x40，会走 §1 那条），所以这里用 0x0c。
         // m3/2 - m1 - (H-h)/2 = 10 - 4 - 12 = -6
         let offsets = TextVerticalAlignment.lineOffsets(
-            make(flags: 0x4c, top: [4], bottom: [20]))
+            make(flags: 0x0c, top: [4], bottom: [20]))
         XCTAssertEqual(offsets, [-6])
     }
 
     func testCenteredSingleLineMirrored() {
         // -(H/2) - (s+4)/2 = -20 - 7 = -27
         let offsets = TextVerticalAlignment.lineOffsets(
-            make(flags: 0x4c, top: [4], bottom: [20], mirrored: true))
+            make(flags: 0x0c, top: [4], bottom: [20], mirrored: true))
         XCTAssertEqual(offsets, [-27])
+    }
+
+    // MARK: 2b. 默认归一化掩码 0x43 含 0x40 ⇒ 走网格包围盒堆叠支路
+
+    func testDefaultNormalisedFlagsTakeMeshBoundsBranch() {
+        // 归一化默认值 0x0f → 0x43，其中 0x40 置位
+        let flags = TextAlignment.normalizedFlags(0x0f, alignToFontMeshBounds: false)
+        XCTAssertEqual(flags, 0x43)
+        let offsets = TextVerticalAlignment.lineOffsets(
+            make(flags: flags, top: [4], bottom: [20]))
+        XCTAssertEqual(offsets, [-10], "0x40 置位时 y = -字号，与 mesh 无关")
     }
 
     // MARK: 3. 居中多行（含 -min|m3| 与整数截断）
@@ -47,7 +59,7 @@ final class TextVerticalAlignmentTests: XCTestCase {
     func testCenteredMultiLine() {
         // maxH=16, minAbs=20: y0 = -8 + 12 - 20 - 6 - 20 = -42, y1 = -54
         let offsets = TextVerticalAlignment.lineOffsets(
-            make(flags: 0x4c, top: [4, 4], bottom: [20, 20]))
+            make(flags: 0x0c, top: [4, 4], bottom: [20, 20]))
         XCTAssertEqual(offsets, [-42, -54])
     }
 
