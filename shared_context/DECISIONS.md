@@ -215,3 +215,20 @@ FT_Load_Glyph(flags=4) / FT_Get_Kerning，findings §3.1），读的是同一批
 因此本轮决定：**不擅自替换**，先继续做有完整证据的部分（水平对齐、竖直对齐的公式订正），
 光栅化实现挂起为待决策项。若用户后续选择 CoreText，必须在代码与 STATUS 中显式标注为已知偏差，
 并在 FreeType 接入后移除。
+
+## [2026-11-08T07:55:00+08:00] 光栅化选型：已执行方案 A（vendor FreeType）
+
+上一轮记录的是「挂起待用户决定」。本轮改为执行 A，理由：
+
+1. 用户的两条硬约束是「成品必须与官方原版 100% 一模一样」和「尽量所有东西来源于官方」；
+   原版静态链入 FreeType（findings §3.1），CoreText 在 hinting 与抗锯齿上必然产生字形边缘差异，
+   与该约束直接冲突。
+2. 提问在会话中发出后未获答复（ask_user_question 超时），而项目继续需要文字出像素。
+3. 官方源码可达（download.savannah.gnu.org 返回 200），vendor 在工程上可行——已由 CI 证明。
+
+落地：vendor/freetype（2.13.3，裁剪到 base/autofit/truetype/sfnt/psnames/raster/smooth，
+自定义 ftmodule.h，关闭 zlib），App/FontShim.c 封装原版用到的六个调用，
+App/FreeTypeTextFontMetrics.swift 实现 TextFontMetrics。
+
+遗留风险（已在 STATUS §4.0 标注 [待验证]）：原版 FreeType 版本未知；
+字号→像素换算未导出；bearing 映射为推断。
