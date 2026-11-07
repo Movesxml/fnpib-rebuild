@@ -43,7 +43,7 @@ public enum GlyphAtlasError: Error, Equatable, Sendable {
 ///
 /// 不做旋转、不做空洞回收——字形位图尺寸小且数量有限，货架式足够，
 /// 且行为完全可预测、便于测试。
-public struct GlyphAtlas {
+public struct GlyphAtlas: Sendable {
     public let width: Int
     public let height: Int
     /// 每块之间留 1px，避免线性采样时相邻字形渗色。
