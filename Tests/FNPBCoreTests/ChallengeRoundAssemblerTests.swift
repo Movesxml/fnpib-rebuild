@@ -127,7 +127,7 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         XCTAssertEqual(round.runtime.selectedFruitName, "strawberry")
     }
 
-    func testSubsequentNormalKeepsOriginalDefaultFruit() throws {
+    func testSubsequentNormalRedrawsDefaultFruitWithoutModeOverride() throws {
         // 计划：第一次选 small（19/40），洗牌保持顺序，第二次选 normal（23/24）。
         let catalog = makeCatalog(challenges: [
             makeChallenge(name: "small", size: .small),
@@ -140,17 +140,19 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         let first = try assembler.startFirstRound()
         XCTAssertEqual(first.challenge.name, "small")
         XCTAssertEqual(first.fruitID, 2)
-        XCTAssertEqual(random.zeroBoundCalls, 2)
+        // 3 = 默认初选 + 模式覆盖 + draw 在总权重归零时也必须推进一次（FUN_00039b24）
+        XCTAssertEqual(random.zeroBoundCalls, 3)
 
         let second = try assembler.advanceToNextRound()
         XCTAssertEqual(second.challenge.name, "normal")
         XCTAssertEqual(second.fruitID, assembler.defaultFruitID)
         XCTAssertEqual(second.fruitID, 1)
         XCTAssertEqual(second.runtime.selectedFruitName, "apple")
-        XCTAssertEqual(random.zeroBoundCalls, 2, "后续 normal 不得重新执行默认或覆盖选择")
+        XCTAssertEqual(random.zeroBoundCalls, 4,
+                       "每回合都重新执行默认初选（FUN_00061128 param_2==0），normal 只是不再覆盖")
     }
 
-    func testSubsequentSmallOverridesFruitWithoutNewDefaultSelection() throws {
+    func testSubsequentSmallRedrawsDefaultThenOverrides() throws {
         // 计划：第一次选 normal（0/40），洗牌保持顺序，第二次选 small（0/24）。
         let catalog = makeCatalog(challenges: [
             makeChallenge(name: "normal", size: .normal),
@@ -163,14 +165,16 @@ final class ChallengeRoundAssemblerTests: XCTestCase {
         let first = try assembler.startFirstRound()
         XCTAssertEqual(first.challenge.name, "normal")
         XCTAssertEqual(first.fruitID, 1)
-        XCTAssertEqual(random.zeroBoundCalls, 1)
+        // 2 = 默认初选 + draw 的强制推进（normal 没有模式覆盖）
+        XCTAssertEqual(random.zeroBoundCalls, 2)
 
         let second = try assembler.advanceToNextRound()
         XCTAssertEqual(second.challenge.name, "small")
         XCTAssertEqual(second.fruitID, 2)
         XCTAssertEqual(second.runtime.selectedFruitName, "strawberry")
         XCTAssertEqual(assembler.defaultFruitID, 1)
-        XCTAssertEqual(random.zeroBoundCalls, 2, "后续 small 只能新增一次覆盖选择")
+        XCTAssertEqual(random.zeroBoundCalls, 4,
+                       "每回合都重新执行默认初选，small 再加一次覆盖选择")
     }
 
     func testSelectedFruitIsBoundBeforeConditionEvaluation() throws {

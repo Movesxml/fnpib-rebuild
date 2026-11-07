@@ -95,7 +95,7 @@ def main() -> None:
 
     head = api(f"/repos/{a.repo}/git/ref/heads/{a.branch}", token)
     commit = api(f"/repos/{a.repo}/git/commits/{head['object']['sha']}", token)
-    remote = flatten_tree(a["repo"], commit["tree"]["sha"], token)
+    remote = flatten_tree(a.repo, commit["tree"]["sha"], token)
 
     missing = sorted(set(remote) - set(local))
     added = sorted(set(local) - set(remote))

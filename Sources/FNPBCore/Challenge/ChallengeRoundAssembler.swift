@@ -244,18 +244,21 @@ public struct ChallengeRoundAssembler {
                 fruitID: currentFruitID,
                 fruitName: try fruitName(for: currentFruitID),
                 runtime: runtime)
-        } else if nextChallenge.challengeFruitSize == .normal {
-            nextFruitID = defaultFruitID
-        } else if let candidates = ChallengeFruitCandidates.candidates(
-            for: nextChallenge.challengeFruitSize, from: fruits) {
-            nextFruitID = try fruitSelector.select(
-                candidates: candidates,
+        } else {
+            // [macho] FUN_00061128(param_2==0) 每回合都先做一次默认初选（FUN_0000af50），
+            // 再按 challengeFruitSize 覆盖（1/2/3 → FUN_0000afc4/b06c/b1a4）。
+            // 旧实现让 normal 回合沿用上一回合的 defaultFruitID，且非 normal 回合少抽一次，
+            // 结果是每回合少调用一次默认初选、后续抽取序列整体偏移。
+            // 证据：findings/challenge_fruit_selection_and_binding_macho.md:60（0x00061170 先调 FUN_0000af50、
+            // 0x00061174 写 +0x88，模式 1/2/3 再到 0x0006119e 覆盖）、challenge_round_setup_macho.md:29-51。
+            let selection = try fruitSelector.selectNewGameChallengeFruit(
+                size: nextChallenge.challengeFruitSize,
+                catalog: fruits,
                 weights: weights,
-                param1: 0,
                 predicateP: predicateP,
                 random: random)
-        } else {
-            throw ChallengeFruitSelectionError.emptyCandidates
+            defaultFruitID = selection.defaultSelection
+            nextFruitID = selection.finalSelection
         }
 
         let name = try fruitName(for: nextFruitID)
