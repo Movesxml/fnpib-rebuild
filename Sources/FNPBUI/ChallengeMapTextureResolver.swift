@@ -96,7 +96,7 @@ public enum ChallengeMapTextureResolver {
             resolvedUV = nil
         }
 
-        guard let image = UIArtwork.image(textureKey.rawValue, bundle: bundle) else {
+        guard let image = UIArtwork.textureImage(for: texturePath, bundle: bundle) else {
             return .failure(.imageUnavailable(textureKey: textureKey))
         }
         return .success(ChallengeMapResolvedTexture(

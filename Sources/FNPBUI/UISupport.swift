@@ -58,15 +58,56 @@ public enum UIArtwork {
     }
 
     /// 按语义 key 装载图像。
-    /// 先试 asset catalog（若资产管线最终产出 xcassets，`UIImage(named:)` 自带缓存），
-    /// 再回落到 bundle 内的 assets_png 产物。
-    /// [待验证] 文件回落路径无缓存，逐帧调用会重复解码；真机联调前应改为 xcassets 或加缓存。
+    /// 先试 asset catalog（若资产管线最终产出 xcassets，UIImage(named:) 自带缓存），
+    /// 再回落到 bundle 内的 png 产物。
     public static func image(_ key: String, bundle: Bundle = .main) -> UIImage? {
         if let named = UIImage(named: key, in: bundle, compatibleWith: nil) {
             return named
         }
         guard let url = url(for: key, bundle: bundle) else { return nil }
         return UIImage(contentsOfFile: url.path)
+    }
+
+    // MARK: - 按 UISF 引用装载（Content/artworkManifest.json 驱动）
+
+    /// 清单：UISF 里的贴图引用 → assets_png/textures 下的相对 png 路径。
+    /// 由 reverse/build_artwork_manifest.py 生成，未命中项不会进这张表。
+    static let textureManifest: [String: String] = {
+        guard let url = Bundle.main.url(forResource: "artworkManifest", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let document = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let resolved = document["resolved"] as? [[String: Any]] else {
+            return [:]
+        }
+        var table: [String: String] = [:]
+        for entry in resolved {
+            guard let reference = entry["reference"] as? String,
+                  let png = entry["png"] as? String else { continue }
+            table[reference] = png
+        }
+        return table
+    }()
+
+    /// 贴图包在 bundle 里的子目录名；XcodeGen 的 folder 引用可能保留原名，两处都试。
+    private static let artworkDirectories = ["Artwork", "textures"]
+
+    private static let textureCache = NSCache<NSString, UIImage>()
+
+    /// 按 UISF 引用（如 textures/menus/basicPoster.tex）装载纹理；未命中返回 nil。
+    public static func textureImage(for reference: String, bundle: Bundle = .main) -> UIImage? {
+        let cacheKey = reference as NSString
+        if let cached = textureCache.object(forKey: cacheKey) { return cached }
+        guard let png = textureManifest[reference] else { return nil }
+        for directory in artworkDirectories {
+            if let url = bundle.url(forResource: png, withExtension: nil, subdirectory: directory)
+                ?? bundle.url(forResource: (png as NSString).lastPathComponent,
+                              withExtension: nil, subdirectory: directory),
+               let image = UIImage(contentsOfFile: url.path) {
+                textureCache.setObject(image, forKey: cacheKey)
+                return image
+            }
+        }
+        return nil
     }
 
     /// challengeAtlas.tex 是 1024×1024 的 8×8 图集。原控制器以

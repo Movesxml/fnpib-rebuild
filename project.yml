@@ -136,6 +136,11 @@ targets:
       - path: App                        # FNPBApp.swift / Assets.xcassets / PrivacyInfo.xcprivacy
       - path: Content                    # 原版水果与波次 JSON，只读运行时资源
         buildPhase: resources
+      # 贴图：assets_png/textures 由 .tex 转换而来，按目录整体进包（保留层级）。
+      # 运行时由 Content/artworkManifest.json 把 UISF 的 .tex 引用映射到这里的 png。
+      - path: assets_png/textures
+        type: folder
+        buildPhase: resources
     dependencies:
       - target: FNPBCore
       - target: FNPBRender

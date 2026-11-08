@@ -1,0 +1,242 @@
+{
+  "version": 1,
+  "note": "reference 为 UISF 里的原始路径；png 为 assets_png/textures 下的相对路径",
+  "resolved": [
+    {
+      "reference": "textures/adventureProgress/divider.tex",
+      "png": "adventureprogress/divider.png"
+    },
+    {
+      "reference": "textures/adventureProgress/iconSlot.tex",
+      "png": "adventureprogress/iconslot.png"
+    },
+    {
+      "reference": "textures/adventureProgress/locations.tex",
+      "png": "adventureprogress/locations.png"
+    },
+    {
+      "reference": "textures/adventureProgress/pauseTweak.tex",
+      "png": "adventureprogress/pausetweak.png"
+    },
+    {
+      "reference": "textures/adventureProgress/resultsLife.tex",
+      "png": "adventureprogress/resultslife.png"
+    },
+    {
+      "reference": "textures/adventureprogress/bounceCircle.tex",
+      "png": "adventureprogress/bouncecircle.png"
+    },
+    {
+      "reference": "textures/adventureprogress/bounceFlat.tex",
+      "png": "adventureprogress/bounceflat.png"
+    },
+    {
+      "reference": "textures/adventureprogress/challengeAtlas.tex",
+      "png": "adventureprogress/challengeatlas.png"
+    },
+    {
+      "reference": "textures/adventureprogress/cross.tex",
+      "png": "adventureprogress/cross.png"
+    },
+    {
+      "reference": "textures/adventureprogress/doorLeft.tex",
+      "png": "adventureprogress/doorleft.png"
+    },
+    {
+      "reference": "textures/adventureprogress/doorRight.tex",
+      "png": "adventureprogress/doorright.png"
+    },
+    {
+      "reference": "textures/adventureprogress/flipper.tex",
+      "png": "adventureprogress/flipper.png"
+    },
+    {
+      "reference": "textures/adventureprogress/halfpipe.tex",
+      "png": "adventureprogress/halfpipe.png"
+    },
+    {
+      "reference": "textures/adventureprogress/iconShadow.tex",
+      "png": "adventureprogress/iconshadow.png"
+    },
+    {
+      "reference": "textures/adventureprogress/iconSlot.tex",
+      "png": "adventureprogress/iconslot.png"
+    },
+    {
+      "reference": "textures/adventureprogress/pachinkoCircle.tex",
+      "png": "adventureprogress/pachinkocircle.png"
+    },
+    {
+      "reference": "textures/adventureprogress/pachinkocircle.tex",
+      "png": "adventureprogress/pachinkocircle.png"
+    },
+    {
+      "reference": "textures/adventureprogress/tick.tex",
+      "png": "adventureprogress/tick.png"
+    },
+    {
+      "reference": "textures/hud/hudFruitDropped.tex",
+      "png": "hud/hudfruitdropped.png"
+    },
+    {
+      "reference": "textures/hud/hud_cross.tex",
+      "png": "hud/hud_cross.png"
+    },
+    {
+      "reference": "textures/hud/hud_fruit.tex",
+      "png": "hud/hud_fruit.png"
+    },
+    {
+      "reference": "textures/menu_background/sanRicardo.tex",
+      "png": "menu_background/sanricardo.png"
+    },
+    {
+      "reference": "textures/menu_background/sanRicardo1.tex",
+      "png": "menu_background/sanricardo1.png"
+    },
+    {
+      "reference": "textures/menus/aboutHints1.tex",
+      "png": "menus/abouthints1.png"
+    },
+    {
+      "reference": "textures/menus/basicPoster.tex",
+      "png": "menus/basicposter.png"
+    },
+    {
+      "reference": "textures/menus/blackOverlay.tex",
+      "png": "menus/blackoverlay.png"
+    },
+    {
+      "reference": "textures/menus/gameLogo.tex",
+      "png": "menus/gamelogo.png"
+    },
+    {
+      "reference": "textures/menus/leaderBoardDivide.tex",
+      "png": "menus/leaderboarddivide.png"
+    },
+    {
+      "reference": "textures/menus/leftArrow.tex",
+      "png": "menus/leftarrow.png"
+    },
+    {
+      "reference": "textures/menus/paintstroke.tex",
+      "png": "menus/paintstroke.png"
+    },
+    {
+      "reference": "textures/menus/posterDeco01.tex",
+      "png": "menus/posterdeco01.png"
+    },
+    {
+      "reference": "textures/menus/posterDeco02.tex",
+      "png": "menus/posterdeco02.png"
+    },
+    {
+      "reference": "textures/menus/posterDeco03.tex",
+      "png": "menus/posterdeco03.png"
+    },
+    {
+      "reference": "textures/menus/posterOval.tex",
+      "png": "menus/posteroval.png"
+    },
+    {
+      "reference": "textures/menus/posteroval.tex",
+      "png": "menus/posteroval.png"
+    },
+    {
+      "reference": "textures/menus/rightArrow.tex",
+      "png": "menus/rightarrow.png"
+    },
+    {
+      "reference": "textures/menus/titleBoard.tex",
+      "png": "menus/titleboard.png"
+    },
+    {
+      "reference": "textures/pause_menu/pause_button.tex",
+      "png": "pause_menu/pause_button.png"
+    },
+    {
+      "reference": "textures/pause_menu/play_button.tex",
+      "png": "pause_menu/play_button.png"
+    },
+    {
+      "reference": "textures/pause_menu/quit_title.tex",
+      "png": "pause_menu/quit_title.png"
+    },
+    {
+      "reference": "textures/pause_menu/retry_button.tex",
+      "png": "pause_menu/retry_button.png"
+    },
+    {
+      "reference": "textures/pussPose/pussPoses2.tex",
+      "png": "pusspose/pussposes2.png"
+    },
+    {
+      "reference": "textures/pussPose/pussposes1.tex",
+      "png": "pusspose/pussposes1.png"
+    },
+    {
+      "reference": "textures/pusspose/pussposes1.tex",
+      "png": "pusspose/pussposes1.png"
+    },
+    {
+      "reference": "textures/pusspose/pussposes2.tex",
+      "png": "pusspose/pussposes2.png"
+    },
+    {
+      "reference": "textures/results_screen/connectButton.tex",
+      "png": "results_screen/connectbutton.png"
+    },
+    {
+      "reference": "textures/results_screen/facebook.tex",
+      "png": "results_screen/facebook.png"
+    },
+    {
+      "reference": "textures/results_screen/twitter.tex",
+      "png": "results_screen/twitter.png"
+    },
+    {
+      "reference": "textures/title_screen/news_backing.tex",
+      "png": "title_screen/news_backing.png"
+    },
+    {
+      "reference": "textures\\adventureprogress\\shutterwindow.tex",
+      "png": "adventureprogress/shutterwindow.png"
+    },
+    {
+      "reference": "textures\\effects\\challengeComplete.tex",
+      "png": "effects/challengecomplete.png"
+    },
+    {
+      "reference": "textures\\menus\\blackOverlay.tex",
+      "png": "menus/blackoverlay.png"
+    },
+    {
+      "reference": "textures\\results_screen\\facebook.tex",
+      "png": "results_screen/facebook.png"
+    },
+    {
+      "reference": "textures\\results_screen\\twitter.tex",
+      "png": "results_screen/twitter.png"
+    },
+    {
+      "reference": "textures\\shop_n_dojo\\selectedPointer.tex",
+      "png": "shop_n_dojo/selectedpointer.png"
+    },
+    {
+      "reference": "textures\\shop_n_dojo\\selecteddivider.tex",
+      "png": "shop_n_dojo/selecteddivider.png"
+    },
+    {
+      "reference": "textures\\title_screen\\notification.tex",
+      "png": "title_screen/notification.png"
+    }
+  ],
+  "unresolved": [
+    "textures/adventureprogress/adventurescoreboard.tex",
+    "textures/adventureprogress/map.tex",
+    "textures/adventureprogress/mapNodeBonus.tex",
+    "textures/adventureprogress/pussMapIcon.tex",
+    "textures/menus/fnjj.tex",
+    "textures/menus/jetpackUpsellBackground.tex"
+  ]
+}
