@@ -342,7 +342,7 @@ jobs:
                    bonusAwards.json originalModeInfo.json ch1challengeList.json \
                    challengeConditions.json challengeTypes.json challengeMapStrings.json \
                    challengeBackgroundStrings.json artworkManifest.json \
-                   bronic.ttf miserable.TTF; do
+                   localizedStrings.json bronic.ttf miserable.TTF; do
             if [ ! -f "$APP/$f" ]; then
               echo "::error::包内缺资源 $f"
               missing=1

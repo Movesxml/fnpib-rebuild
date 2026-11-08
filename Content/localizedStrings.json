@@ -1,0 +1,3522 @@
+{
+  "version": 1,
+  "language": "English_US",
+  "entries": [
+    {
+      "key": "ACHIEVEMENT_00",
+      "text": "Tooth and Claw"
+    },
+    {
+      "key": "ACHIEVEMENT_01",
+      "text": "Challenging!"
+    },
+    {
+      "key": "ACHIEVEMENT_02",
+      "text": "Viva Gato!"
+    },
+    {
+      "key": "ACHIEVEMENT_03",
+      "text": "Legendary"
+    },
+    {
+      "key": "ACHIEVEMENT_04",
+      "text": "Holy Frejoles"
+    },
+    {
+      "key": "ACHIEVEMENT_05",
+      "text": "Cat Like Reflexes"
+    },
+    {
+      "key": "ACHIEVEMENT_06",
+      "text": "Bean There, Done That"
+    },
+    {
+      "key": "ACHIEVEMENT_07",
+      "text": "All Fours"
+    },
+    {
+      "key": "ACHIEVEMENT_08",
+      "text": "Feline Finesse"
+    },
+    {
+      "key": "ACHIEVEMENT_09",
+      "text": "You Only Live Nine Times"
+    },
+    {
+      "key": "ACHIEVEMENT_10",
+      "text": "Hardened"
+    },
+    {
+      "key": "ACHIEVEMENT_11",
+      "text": "La Tomatina Valencia"
+    },
+    {
+      "key": "ACHIEVEMENT_12",
+      "text": "All I Need is the Boots!"
+    },
+    {
+      "key": "ACHIEVEMENT_13",
+      "text": "Not That Desperate"
+    },
+    {
+      "key": "ACHIEVEMENT_14",
+      "text": "Wanted"
+    },
+    {
+      "key": "ACHIEVEMENT_15",
+      "text": "Combo Conquistador"
+    },
+    {
+      "key": "ACHIEVEMENT_16",
+      "text": "Super Sliced"
+    },
+    {
+      "key": "ACHIEVEMENT_17",
+      "text": "Cat Scratch Fever"
+    },
+    {
+      "key": "ACHIEVEMENT_18",
+      "text": "King Kitty"
+    },
+    {
+      "key": "ACHIEVEMENT_19",
+      "text": "Sneak Preview"
+    },
+    {
+      "key": "ACHIEVEMENT_20",
+      "text": "Paw Performance"
+    },
+    {
+      "key": "ACHIEVEMENT_21",
+      "text": "Dominated"
+    },
+    {
+      "key": "ACHIEVEMENT_22",
+      "text": "Purrfecto"
+    },
+    {
+      "key": "ACHIEVEMENT_23",
+      "text": "Bean Me Up"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_00",
+      "text": "Get a score of 300 in Desperado "
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_01",
+      "text": "Get a score of 4000 in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_02",
+      "text": "Slice 500 Fruit Total"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_03",
+      "text": "Slice 10000 Fruit Total"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_04",
+      "text": "Slice 6 Fruit in one Combo in Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_05",
+      "text": "Get a Reflex bonus of 0.25 seconds or less"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_06",
+      "text": "Slice 3 Magic Beans in one game of Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_07",
+      "text": "Slice 150 Combos in Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_08",
+      "text": "Get a score of 400 on one Challenge"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_09",
+      "text": "Unlock 9 items in the Stash"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_10",
+      "text": "Complete every hard Challenge in a full game of Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_11",
+      "text": "Slice 20 Tomatoes in one round of Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_12",
+      "text": "Get a Critical hit with a Tomato"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_13",
+      "text": "Get a score of 200 in Desperado without losing a life"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_14",
+      "text": "Complete 150 Challenges in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_15",
+      "text": "Slice 20 Combos in one game of Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_16",
+      "text": "Score 150% or more for Slice in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_17",
+      "text": "Slice a Piñata 30 times"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_18",
+      "text": "Reach the Finale in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_19",
+      "text": "Visit the Puss in Boots movie site"
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_20",
+      "text": "Score 2000 points or under in Bandito mode."
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_21",
+      "text": "Score 450 points or more on a single challenge."
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_22",
+      "text": "Complete Bandito without losing a life."
+    },
+    {
+      "key": "ACHIEVEMENT_DESC_23",
+      "text": "Earn 100 bonus points from Magic Beans in one round of desperado."
+    },
+    {
+      "key": "ACHIEVEMENT_NEWBACKGROUND",
+      "text": "Background Unlocked"
+    },
+    {
+      "key": "ACHIEVEMENT_NEWBLADE",
+      "text": "Blade Unlocked"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_00",
+      "text": "Got a score of 300 in Desperado "
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_01",
+      "text": "Got a score of 4000 in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_02",
+      "text": "Sliced 500 Fruit Total"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_03",
+      "text": "Sliced 10000 Fruit Total"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_04",
+      "text": "Sliced 6 Fruit in one Combo"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_05",
+      "text": "Got a Reflex bonus of 0.25 seconds or less"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_06",
+      "text": "Sliced 3 Magic Beans in one game of Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_07",
+      "text": "Sliced 150 Combos in Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_08",
+      "text": "Got a score of 400 on one Challenge"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_09",
+      "text": "Unlocked 9 items in the Stash"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_10",
+      "text": "Completed every hard Challenge in a full game of Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_11",
+      "text": "Sliced 20 Tomatoes in one round of Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_12",
+      "text": "Got a Critical hit with a Tomato"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_13",
+      "text": "Got a score of 200 in Desperado without losing a life"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_14",
+      "text": "Completed 150 Challenges in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_15",
+      "text": "Sliced 20 Combos in one game of Desperado"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_16",
+      "text": "Got a Super Slice in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_17",
+      "text": "Sliced a Piñata 30 times"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_18",
+      "text": "Reached the Finale in Bandito"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_19",
+      "text": "Visited the Puss in Boots movie site"
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_20",
+      "text": "Scored 2000 points or under in Bandito mode."
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_21",
+      "text": "Scored 450 points or more on a single challenge."
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_22",
+      "text": "Completed Bandito without losing a life."
+    },
+    {
+      "key": "ACHIEVEMENT_Post_DESC_23",
+      "text": "Earned 100 bonus points from Magic Beans in one round of desperado."
+    },
+    {
+      "key": "ACHIEVEMENT_UNLOCKED",
+      "text": "Achievement!"
+    },
+    {
+      "key": "ANDROID_AMAZON",
+      "text": "GameCircle"
+    },
+    {
+      "key": "ANDROID_DRIVER_FIX",
+      "text": "Enable graphics fix (May decrease visual performance)"
+    },
+    {
+      "key": "ANDROID_DRIVER_FIX_EX",
+      "text": "Only enable this fix if your device suffers a glitch causing a black screen or other issues."
+    },
+    {
+      "key": "ANDROID_GHOST_TRAIL",
+      "text": "Enable a ghosting trail behind fruit (for faster devices)."
+    },
+    {
+      "key": "ANDROID_PLAY_BUTTON",
+      "text": "Keep Playing"
+    },
+    {
+      "key": "ANDROID_QUIT_GAME_BODY",
+      "text": "Are you sure you want to quit the game?"
+    },
+    {
+      "key": "ANDROID_QUIT_GAME_TITLE",
+      "text": "Exit"
+    },
+    {
+      "key": "ANDROID_TEXTURE_QUALITY",
+      "text": "Adjust the texture quality to suit your device."
+    },
+    {
+      "key": "ANDROID_UNLICENSED_DIALOG_TITLE",
+      "text": "Application not licensed"
+    },
+    {
+      "key": "ArcadeMode_00",
+      "text": "CONNECT"
+    },
+    {
+      "key": "ArcadeMode_01",
+      "text": "Marketplace"
+    },
+    {
+      "key": "ArcadeMode_02",
+      "text": "Gamer Profile"
+    },
+    {
+      "key": "ArcadeMode_10",
+      "text": "Friend's Weekly Scores"
+    },
+    {
+      "key": "ArcadeMode_11",
+      "text": "No score this week"
+    },
+    {
+      "key": "ArcadeMode_12",
+      "text": "WAITING FOR PLAYER... %i"
+    },
+    {
+      "key": "ArcadeMode_13",
+      "text": "WAITING FOR %s...\n%i"
+    },
+    {
+      "key": "ArcadeMode_14",
+      "text": "OPPONENT\nDISCONNECTED"
+    },
+    {
+      "key": "ArcadeMode_15",
+      "text": "REMATCH REQUESTED... %i"
+    },
+    {
+      "key": "ArcadeMode_16",
+      "text": "DOWNLOADING"
+    },
+    {
+      "key": "ArcadeMode_17",
+      "text": "CONNECT TO COMPARE SCORES WITH FRIENDS"
+    },
+    {
+      "key": "ArcadeMode_18",
+      "text": "UNABLE TO CONNECT TO COMPARE SCORES WITH FRIENDS"
+    },
+    {
+      "key": "ArcadeMode_19",
+      "text": "PREPARING GAME..."
+    },
+    {
+      "key": "ArcadeMode_20",
+      "text": "FRIENDS"
+    },
+    {
+      "key": "ArcadeMode_21",
+      "text": "LOCAL"
+    },
+    {
+      "key": "ArcadeMode_22",
+      "text": "GLOBAL"
+    },
+    {
+      "key": "ArcadeMode_23",
+      "text": "WEEKLY"
+    },
+    {
+      "key": "ArcadeMode_24",
+      "text": "UP"
+    },
+    {
+      "key": "ArcadeMode_25",
+      "text": "DOWN"
+    },
+    {
+      "key": "ArcadeMode_26",
+      "text": "Network Error"
+    },
+    {
+      "key": "ArcadeMode_27",
+      "text": "Unable to communicate with matchmaking servers."
+    },
+    {
+      "key": "ArcadeMode_28",
+      "text": "Please choose"
+    },
+    {
+      "key": "ArcadeMode_29",
+      "text": "Which game network provider would you prefer to use?"
+    },
+    {
+      "key": "ArcadeMode_30",
+      "text": "Still Connecting..."
+    },
+    {
+      "key": "ArcadeMode_31",
+      "text": "A Game Center connection has not yet been established"
+    },
+    {
+      "key": "ArcadeMode_32",
+      "text": "Connection Failed"
+    },
+    {
+      "key": "ArcadeMode_33",
+      "text": "You must have a wifi or cellular connection to use Game Center"
+    },
+    {
+      "key": "ArcadeMode_34",
+      "text": "Opponent has disconnected from the game"
+    },
+    {
+      "key": "ArcadeMode_35",
+      "text": "You have been disconnected from the other player"
+    },
+    {
+      "key": "ArcadeMode_36",
+      "text": "Timed out while waiting for opponent"
+    },
+    {
+      "key": "ArcadeMode_37",
+      "text": "General network failure."
+    },
+    {
+      "key": "ArcadeMode_38",
+      "text": "OpenFeint Selected"
+    },
+    {
+      "key": "ArcadeMode_39",
+      "text": "Game Center Selected"
+    },
+    {
+      "key": "ArcadeMode_40",
+      "text": "You can change your default view at any time in the Extras screen."
+    },
+    {
+      "key": "ArcadeMode_41",
+      "text": "Select Default View"
+    },
+    {
+      "key": "ArcadeMode_42",
+      "text": "Please select your preferred service for viewing Achievements and Leaderboards. Data is still uploaded to both services."
+    },
+    {
+      "key": "ArcadeMode_43",
+      "text": "Game Center"
+    },
+    {
+      "key": "ArcadeMode_44",
+      "text": "OpenFeint"
+    },
+    {
+      "key": "ArcadeMode_45",
+      "text": "CONNECT TO GAME CENTER TO COMPARE SCORES WITH FRIENDS"
+    },
+    {
+      "key": "ArcadeMode_46",
+      "text": "CONNECT TO OPENFEINT TO COMPARE SCORES WITH FRIENDS"
+    },
+    {
+      "key": "ArcadeMode_47",
+      "text": "UNABLE TO CONNECT TO GAME CENTER TO COMPARE SCORES WITH FRIENDS"
+    },
+    {
+      "key": "ArcadeMode_48",
+      "text": "INVITE FRIENDS TO GAME CENTER TO COMPARE SCORES."
+    },
+    {
+      "key": "ArcadeMode_49",
+      "text": "INVITE FRIENDS TO OPENFEINT TO COMPARE SCORES."
+    },
+    {
+      "key": "ArcadeMode_50",
+      "text": "UNABLE TO CONNECT TO OPENFEINT TO COMPARE SCORES WITH FRIENDS"
+    },
+    {
+      "key": "ArcadeMode_51",
+      "text": "SkyNet"
+    },
+    {
+      "key": "CODE_ABOUT_DEMO",
+      "text": "DEMO:"
+    },
+    {
+      "key": "CODE_ABOUT_VERSION",
+      "text": "VERSION:"
+    },
+    {
+      "key": "CODE_CONNECT_FOR_LEADERBOARD",
+      "text": "CONNECT TO OPENFEINT TO COMPARE SCORES WITH FRIENDS"
+    },
+    {
+      "key": "CODE_DEMO_VERSION_TEXT",
+      "text": "THIS VERSION OF FRUIT NINJA HAS BEEN CREATED SPECIFICALLY FOR DEMONSTRATION PURPOSES."
+    },
+    {
+      "key": "CODE_FRUIT_FACT_TITLE",
+      "text": "SENSEI'S FRUIT FACT"
+    },
+    {
+      "key": "CODE_GOS_ENABLE_FACEBOOK",
+      "text": "You must scroll down and enable facebook or twitter integration"
+    },
+    {
+      "key": "CODE_GOS_ENABLE_NOTIFY",
+      "text": "You must enable notifications to post to facebook or twitter"
+    },
+    {
+      "key": "CODE_GOS_LOVE_FRUIT_NINJA",
+      "text": "Love Fruit Ninja: Puss in Boots?"
+    },
+    {
+      "key": "CODE_GOS_NOTIFY_DISABLED",
+      "text": "Notifications disabled"
+    },
+    {
+      "key": "CODE_GOS_NO_FACEBOOK",
+      "text": "No facebook or twitter credentials"
+    },
+    {
+      "key": "CODE_GOS_NO_THANKS",
+      "text": "No, thanks"
+    },
+    {
+      "key": "CODE_GOS_PLEASE_RATE",
+      "text": "Please rate it in the App Store!"
+    },
+    {
+      "key": "CODE_GOS_RATE_NOW",
+      "text": "Rate Now!"
+    },
+    {
+      "key": "CODE_OK",
+      "text": "OK"
+    },
+    {
+      "key": "CODE_SCORE_BEST",
+      "text": "best: %d"
+    },
+    {
+      "key": "CODE_SHOP_BACKGROUND",
+      "text": "BACKGROUND"
+    },
+    {
+      "key": "CODE_SHOP_BLADE",
+      "text": "BLADE"
+    },
+    {
+      "key": "CODE_SHOP_FULL_VERSION",
+      "text": "FULL VERSION"
+    },
+    {
+      "key": "CREDITS_NUM",
+      "text": "56"
+    },
+    {
+      "key": "CREDIT_000",
+      "text": "<1>Halfbrick"
+    },
+    {
+      "key": "CREDIT_001",
+      "text": "Ben Vale"
+    },
+    {
+      "key": "CREDIT_002",
+      "text": "Sean Druitt"
+    },
+    {
+      "key": "CREDIT_003",
+      "text": "Daniel Fisher"
+    },
+    {
+      "key": "CREDIT_004",
+      "text": "Ryan Langley"
+    },
+    {
+      "key": "CREDIT_005",
+      "text": "Scott West"
+    },
+    {
+      "key": "CREDIT_006",
+      "text": "Matthew Knights"
+    },
+    {
+      "key": "CREDIT_007",
+      "text": "Motze Asher"
+    },
+    {
+      "key": "CREDIT_008",
+      "text": "Murry Lancashire"
+    },
+    {
+      "key": "CREDIT_009",
+      "text": "Shath"
+    },
+    {
+      "key": "CREDIT_010",
+      "text": "Cedar Jones"
+    },
+    {
+      "key": "CREDIT_011",
+      "text": "Dean Loades"
+    },
+    {
+      "key": "CREDIT_012",
+      "text": "Aidan Millott"
+    },
+    {
+      "key": "CREDIT_013",
+      "text": "Josh Sanderson"
+    },
+    {
+      "key": "CREDIT_014",
+      "text": "Matt Ross"
+    },
+    {
+      "key": "CREDIT_015",
+      "text": "Michael Szewczyk"
+    },
+    {
+      "key": "CREDIT_016",
+      "text": "Peter McNeill"
+    },
+    {
+      "key": "CREDIT_017",
+      "text": "Jason Maundrell"
+    },
+    {
+      "key": "CREDIT_018",
+      "text": "Zac Congo"
+    },
+    {
+      "key": "CREDIT_019",
+      "text": "Brent Hobson"
+    },
+    {
+      "key": "CREDIT_020",
+      "text": "Phil Larsen"
+    },
+    {
+      "key": "CREDIT_021",
+      "text": "Justin Bowen"
+    },
+    {
+      "key": "CREDIT_022",
+      "text": "Shainiel Deo"
+    },
+    {
+      "key": "CREDIT_023",
+      "text": ""
+    },
+    {
+      "key": "CREDIT_024",
+      "text": "<1>ORIGINAL FRUIT NINJA TEAM"
+    },
+    {
+      "key": "CREDIT_025",
+      "text": "Luke Muscat"
+    },
+    {
+      "key": "CREDIT_026",
+      "text": "Shath"
+    },
+    {
+      "key": "CREDIT_027",
+      "text": "Stephen Last"
+    },
+    {
+      "key": "CREDIT_028",
+      "text": "Jason Harwood"
+    },
+    {
+      "key": "CREDIT_029",
+      "text": "Adam Wood"
+    },
+    {
+      "key": "CREDIT_030",
+      "text": "Jesse Higginson"
+    },
+    {
+      "key": "CREDIT_031",
+      "text": "Brent Hobson"
+    },
+    {
+      "key": "CREDIT_032",
+      "text": "Matt Ross"
+    },
+    {
+      "key": "CREDIT_033",
+      "text": "Jason Maundrell"
+    },
+    {
+      "key": "CREDIT_034",
+      "text": "Grant Peters"
+    },
+    {
+      "key": "CREDIT_035",
+      "text": "Joe Gatling"
+    },
+    {
+      "key": "CREDIT_036",
+      "text": ""
+    },
+    {
+      "key": "CREDIT_037",
+      "text": "<1>Voice Actor"
+    },
+    {
+      "key": "CREDIT_038",
+      "text": "André Sogliuzzo"
+    },
+    {
+      "key": "CREDIT_039",
+      "text": ""
+    },
+    {
+      "key": "CREDIT_040",
+      "text": "<1>Dreamworks"
+    },
+    {
+      "key": "CREDIT_041",
+      "text": "Chris Hewish"
+    },
+    {
+      "key": "CREDIT_042",
+      "text": "Stefan Makhoul"
+    },
+    {
+      "key": "CREDIT_043",
+      "text": "Abe Jamaleddine"
+    },
+    {
+      "key": "CREDIT_044",
+      "text": ""
+    },
+    {
+      "key": "CREDIT_045",
+      "text": "<1>THQ"
+    },
+    {
+      "key": "CREDIT_046",
+      "text": "Martin Good"
+    },
+    {
+      "key": "CREDIT_047",
+      "text": "Alison Quirion"
+    },
+    {
+      "key": "CREDIT_048",
+      "text": "Lisa Perry"
+    },
+    {
+      "key": "CREDIT_049",
+      "text": "Josh Austin"
+    },
+    {
+      "key": "CREDIT_050",
+      "text": "Adam Rodgers"
+    },
+    {
+      "key": "CREDIT_051",
+      "text": "Kerry Forsyth"
+    },
+    {
+      "key": "CREDIT_052",
+      "text": "Mary Beth Haggerty"
+    },
+    {
+      "key": "CREDIT_053",
+      "text": "Peter Armstrong"
+    },
+    {
+      "key": "CREDIT_054",
+      "text": "Nate Dykstra"
+    },
+    {
+      "key": "CREDIT_055",
+      "text": "Anthony Vasquez"
+    },
+    {
+      "key": "DOJO_BG_CANTINA_DESC",
+      "text": "Where a cat goes to quench their thirst."
+    },
+    {
+      "key": "DOJO_BG_CANTINA_NAME",
+      "text": "The Cat Cantina"
+    },
+    {
+      "key": "DOJO_BG_CANTINA_REQ",
+      "text": "Reach 150 points in Desperado without slicing a Magic Bean."
+    },
+    {
+      "key": "DOJO_BG_CASTLE_DESC",
+      "text": "I can see my scratching post from here!"
+    },
+    {
+      "key": "DOJO_BG_CASTLE_NAME",
+      "text": "Giant's Castle"
+    },
+    {
+      "key": "DOJO_BG_CASTLE_REQ",
+      "text": "Complete 3 challenges in a row without missing. %i to go."
+    },
+    {
+      "key": "DOJO_BG_DUNGEON_DESC",
+      "text": "Who needs Golden Eggs when you have a room full of treasure."
+    },
+    {
+      "key": "DOJO_BG_DUNGEON_NAME",
+      "text": "Treasure Room"
+    },
+    {
+      "key": "DOJO_BG_DUNGEON_REQ",
+      "text": "Complete 25 hard challenges. %i to go."
+    },
+    {
+      "key": "DOJO_BG_HIDEOUT_DESC",
+      "text": "A place for Humpty."
+    },
+    {
+      "key": "DOJO_BG_HIDEOUT_NAME",
+      "text": "Humpty's hideout"
+    },
+    {
+      "key": "DOJO_BG_HIDEOUT_REQ",
+      "text": "Check out More Games."
+    },
+    {
+      "key": "DOJO_BG_SAN_RICARDO_DESC",
+      "text": "A quaint country town."
+    },
+    {
+      "key": "DOJO_BG_SAN_RICARDO_NAME",
+      "text": "San Ricardo"
+    },
+    {
+      "key": "DOJO_BG_SAN_RICARDO_REQ",
+      "text": "Unlocked"
+    },
+    {
+      "key": "DOJO_BLADE_AURORA_DESC",
+      "text": "It's beautiful..."
+    },
+    {
+      "key": "DOJO_BLADE_AURORA_NAME",
+      "text": "The Aurora"
+    },
+    {
+      "key": "DOJO_BLADE_AURORA_REQ",
+      "text": "Pause the game when a Magic Bean is on screen."
+    },
+    {
+      "key": "DOJO_BLADE_BEAN_DESC",
+      "text": "Grown from magical fruit."
+    },
+    {
+      "key": "DOJO_BLADE_BEAN_NAME",
+      "text": "Beanstalk Blade"
+    },
+    {
+      "key": "DOJO_BLADE_BEAN_REQ",
+      "text": "Slice 50 magic beans. %i to go."
+    },
+    {
+      "key": "DOJO_BLADE_CARD_DESC",
+      "text": "Put your cards on the table."
+    },
+    {
+      "key": "DOJO_BLADE_CARD_NAME",
+      "text": "Royal Flush"
+    },
+    {
+      "key": "DOJO_BLADE_CARD_REQ",
+      "text": "Slice a combo that includes a Magic Bean in Desperado."
+    },
+    {
+      "key": "DOJO_BLADE_CAT_DESC",
+      "text": "I come with blades built in."
+    },
+    {
+      "key": "DOJO_BLADE_CAT_NAME",
+      "text": "Cat Claw"
+    },
+    {
+      "key": "DOJO_BLADE_CAT_REQ",
+      "text": "Get 100%% slice bonus 15 times. %i to go."
+    },
+    {
+      "key": "DOJO_BLADE_CHAIN_DESC",
+      "text": "Unlocked and ready to rock."
+    },
+    {
+      "key": "DOJO_BLADE_CHAIN_NAME",
+      "text": "Iron Shackle"
+    },
+    {
+      "key": "DOJO_BLADE_CHAIN_REQ",
+      "text": "Slice at least 1 Magic Bean in 3 consecutive games of desperado."
+    },
+    {
+      "key": "DOJO_BLADE_CLOUD_DESC",
+      "text": "What can you see?"
+    },
+    {
+      "key": "DOJO_BLADE_CLOUD_NAME",
+      "text": "Nimbus Cloud"
+    },
+    {
+      "key": "DOJO_BLADE_CLOUD_REQ",
+      "text": "Pop 99 balloons. %i to go."
+    },
+    {
+      "key": "DOJO_BLADE_FIREWORK_DESC",
+      "text": "Light up the sky with this spectacular blade."
+    },
+    {
+      "key": "DOJO_BLADE_FIREWORK_NAME",
+      "text": "Firework Blade"
+    },
+    {
+      "key": "DOJO_BLADE_FIREWORK_REQ",
+      "text": "Score 300 or more in the Finale of Bandito."
+    },
+    {
+      "key": "DOJO_BLADE_FIREWORK_REQ_LITE",
+      "text": "Complete 25 hard challenges. %i to go.\n"
+    },
+    {
+      "key": "DOJO_BLADE_GADGET_DESC",
+      "text": "Slicing fruit is just one of it's many features."
+    },
+    {
+      "key": "DOJO_BLADE_GADGET_NAME",
+      "text": "The Contraption"
+    },
+    {
+      "key": "DOJO_BLADE_GADGET_REQ",
+      "text": "Play a game of desperado 3 days in a row. %i to go."
+    },
+    {
+      "key": "DOJO_BLADE_GUITAR_DESC",
+      "text": "A large hollow blade, made of wood."
+    },
+    {
+      "key": "DOJO_BLADE_GUITAR_NAME",
+      "text": "The Guitar"
+    },
+    {
+      "key": "DOJO_BLADE_GUITAR_REQ",
+      "text": "Survive for 90 seconds in Desperado."
+    },
+    {
+      "key": "DOJO_BLADE_MAP_DESC",
+      "text": "Oooh, shiny!"
+    },
+    {
+      "key": "DOJO_BLADE_MAP_NAME",
+      "text": "Golden Blade"
+    },
+    {
+      "key": "DOJO_BLADE_MAP_REQ",
+      "text": "Play 30 different challenges. %i to go."
+    },
+    {
+      "key": "DOJO_BLADE_NACHOS_DESC",
+      "text": "The ideal recipe for slicing fruit."
+    },
+    {
+      "key": "DOJO_BLADE_NACHOS_NAME",
+      "text": "Nachos"
+    },
+    {
+      "key": "DOJO_BLADE_NACHOS_REQ",
+      "text": "Slice 100 Tomatoes. %i to go."
+    },
+    {
+      "key": "DOJO_BLADE_SENORITA_DESC",
+      "text": "One for the ladies."
+    },
+    {
+      "key": "DOJO_BLADE_SENORITA_NAME",
+      "text": "Señorita Blade"
+    },
+    {
+      "key": "DOJO_BLADE_SENORITA_REQ",
+      "text": "Finish Bandito with one heart left."
+    },
+    {
+      "key": "DOJO_BLADE_TREASURE_DESC",
+      "text": "Humpty's favorite."
+    },
+    {
+      "key": "DOJO_BLADE_TREASURE_NAME",
+      "text": "Crown Jewel"
+    },
+    {
+      "key": "DOJO_BLADE_TREASURE_REQ",
+      "text": "Post a score to Facebook or Twitter."
+    },
+    {
+      "key": "DOJO_OPTION_ANDROID_00",
+      "text": "PURCHASE"
+    },
+    {
+      "key": "DOJO_OPTION_ANDROID_01",
+      "text": "SELECT"
+    },
+    {
+      "key": "DOJO_OPTION_ANDROID_02",
+      "text": "GET STARFRUIT"
+    },
+    {
+      "key": "DOJO_TEXT_01",
+      "text": "Original Blade"
+    },
+    {
+      "key": "DOJO_TEXT_02",
+      "text": "The original, classic silver blade."
+    },
+    {
+      "key": "DOJO_TEXT_03",
+      "text": "The original, classic silver blade."
+    },
+    {
+      "key": "DOJO_TEXT_46",
+      "text": "Change View"
+    },
+    {
+      "key": "DOJO_TEXT_47",
+      "text": "Become a fan"
+    },
+    {
+      "key": "DOJO_TEXT_48",
+      "text": "Follow us"
+    },
+    {
+      "key": "DOJO_TEXT_ANDROID_12",
+      "text": "SPECIAL"
+    },
+    {
+      "key": "FN_Arcade_InGame_05",
+      "text": "WAITING FOR OPPONENT..."
+    },
+    {
+      "key": "FN_Arcade_InGame_06",
+      "text": "%d POINTS = 1 TICKET"
+    },
+    {
+      "key": "FN_Arcade_InGame_07",
+      "text": "PLAYER"
+    },
+    {
+      "key": "FN_Arcade_InGame_08",
+      "text": "YOU!"
+    },
+    {
+      "key": "FN_Arcade_InGame_09",
+      "text": "NEW HIGH SCORE"
+    },
+    {
+      "key": "FN_Arcade_InGame_10",
+      "text": "TOP TEN"
+    },
+    {
+      "key": "FN_Arcade_Textures_05",
+      "text": "WAITING FOR OPPONENT"
+    },
+    {
+      "key": "FN_Arcade_Textures_06",
+      "text": "ACCEPT"
+    },
+    {
+      "key": "FN_Arcade_Textures_07",
+      "text": "NEW BEST SCORE"
+    },
+    {
+      "key": "FN_Arcade_Textures_08",
+      "text": "CHOOSE YOUR BLADE"
+    },
+    {
+      "key": "FN_Arcade_Textures_09",
+      "text": "HI SCORE"
+    },
+    {
+      "key": "FN_Arcade_Textures_10",
+      "text": "FRUIT COMBO"
+    },
+    {
+      "key": "FN_Arcade_Textures_11",
+      "text": "SKIP"
+    },
+    {
+      "key": "FN_FREE_00",
+      "text": "REWARD PROGRESS"
+    },
+    {
+      "key": "FN_FREE_01",
+      "text": "REWARDS"
+    },
+    {
+      "key": "FN_FREE_02",
+      "text": "Skip"
+    },
+    {
+      "key": "FN_FREE_03",
+      "text": "ERROR SUBMITTING SCORE"
+    },
+    {
+      "key": "FN_FREE_04",
+      "text": "NO MORE REWARDS AVAILABLE TODAY\nTRY AGAIN TOMORROW"
+    },
+    {
+      "key": "FN_FREE_05",
+      "text": "NO REWARDS AVAILABLE\nIN YOUR AREA"
+    },
+    {
+      "key": "FN_FREE_06",
+      "text": "LOG INTO BEINTO TO EARN REWARDS!"
+    },
+    {
+      "key": "FN_FREE_07",
+      "text": "YOU HAVE EARNED A REWARD!\nCONNECT NOW TO CLAIM YOUR PRIZE"
+    },
+    {
+      "key": "FN_FREE_08",
+      "text": "CONNECT NOW TO EARN REWARDS!"
+    },
+    {
+      "key": "FN_FREE_09",
+      "text": "%d/%d POINTS"
+    },
+    {
+      "key": "FN_FREE_10",
+      "text": "YOUR SCORES ADD UP TO EARN REWARDS"
+    },
+    {
+      "key": "FN_PUSS_ABOUT_BEAN_LIVES",
+      "text": "Slice Magic Beans to get hearts back."
+    },
+    {
+      "key": "FN_PUSS_ABOUT_BEAN_POINTS",
+      "text": "Slicing a Magic Bean when you have three hearts will give you bonus points instead!"
+    },
+    {
+      "key": "FN_PUSS_ABOUT_BOMBS",
+      "text": "Never hit a bomb!"
+    },
+    {
+      "key": "FN_PUSS_ABOUT_COMBO_EXCLAIM",
+      "text": "Combo!"
+    },
+    {
+      "key": "FN_PUSS_ABOUT_FRUIT",
+      "text": "Slice extra fruit to boost your FRUIT score."
+    },
+    {
+      "key": "FN_PUSS_ABOUT_REFLEX",
+      "text": "React quickly as a challenge starts to boost your REFLEX score."
+    },
+    {
+      "key": "FN_PUSS_ABOUT_SLICE",
+      "text": "Slice accurately and get combos to boost your SLICE score."
+    },
+    {
+      "key": "FN_PUSS_ACT_1",
+      "text": "Act 1"
+    },
+    {
+      "key": "FN_PUSS_ACT_2",
+      "text": "Act 2"
+    },
+    {
+      "key": "FN_PUSS_ACT_3",
+      "text": "Act 3"
+    },
+    {
+      "key": "FN_PUSS_AVOID",
+      "text": "AVOID BOMBS!"
+    },
+    {
+      "key": "FN_PUSS_BONUS_FINALE",
+      "text": "Finale Bonus"
+    },
+    {
+      "key": "FN_PUSS_BONUS_INTRO_1",
+      "text": "finale!"
+    },
+    {
+      "key": "FN_PUSS_BONUS_INTRO_2",
+      "text": "get ready!"
+    },
+    {
+      "key": "FN_PUSS_BONUS_LIFE",
+      "text": "Life Bonus"
+    },
+    {
+      "key": "FN_PUSS_BONUS_RESULT_HEADING",
+      "text": "congratulations!"
+    },
+    {
+      "key": "FN_PUSS_BUY_FULL",
+      "text": "BUY FULL GAME!"
+    },
+    {
+      "key": "FN_PUSS_CAT_CANTINA",
+      "text": "Cat Cantina"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE",
+      "text": "BANDITO"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_BONUS_CRITICAL",
+      "text": "Massive Critical!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_BONUS_JUST_IN_TIME",
+      "text": "Just in Time!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_BONUS_NEAR_MISS",
+      "text": "Close Call!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_BONUS_ONE_HIT",
+      "text": "Single Slice!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_BONUS_QUICK_DRAW",
+      "text": "Quick Draw!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_BONUS_THREE_HIT",
+      "text": "Three Slices!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_BONUS_TWO_HIT",
+      "text": "Two Slices!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_COMBO",
+      "text": "1 combo"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_COMBOS",
+      "text": "%i combos!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_CRACK_1_COCONUT",
+      "text": "Crack a Coconut!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_CRACK_3_COCONUT",
+      "text": "Crack 3 Coconuts!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_DESC",
+      "text": "The gauntlet of CHALLENGES!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_DESTROY_MEGA",
+      "text": "Destroy the mega-%s!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_FINAL_ROUND",
+      "text": "Final Round!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_MAP_TITLE",
+      "text": "ACT %d"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_MISS",
+      "text": "1 miss"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_MISSES",
+      "text": "%i misses"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_NO_COMBOS",
+      "text": "no combos"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_NO_MISSES",
+      "text": "no misses!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_1",
+      "text": "Slice a %s!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_10",
+      "text": "Slice 10 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_10_FRUIT",
+      "text": "Slice 10 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_12",
+      "text": "Slice 12 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_12_FRUIT",
+      "text": "Slice 12 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_15",
+      "text": "Slice 15 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_15_FRUIT",
+      "text": "Slice 15 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_20",
+      "text": "Slice 20 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_20_FRUIT",
+      "text": "Slice 20 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_25",
+      "text": "Slice 25 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_25_FRUIT",
+      "text": "Slice 25 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_30",
+      "text": "Slice 30 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_30_FRUIT",
+      "text": "Slice 30 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_40",
+      "text": "Slice 40 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_40_FRUIT",
+      "text": "Slice 40 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_5",
+      "text": "Slice 5 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_50",
+      "text": "Slice 50 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_50_FRUIT",
+      "text": "Slice 50 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_60",
+      "text": "Slice 60 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_8",
+      "text": "Slice 8 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_80",
+      "text": "Slice 80 %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_80_FRUIT",
+      "text": "Slice 80 fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_ALL",
+      "text": "Slice all the %ss!"
+    },
+    {
+      "key": "FN_PUSS_CHALLENGE_SLICE_ALL_FRUIT",
+      "text": "Slice all the fruit!"
+    },
+    {
+      "key": "FN_PUSS_CHANGE_NETWORK",
+      "text": "CHANGE TO"
+    },
+    {
+      "key": "FN_PUSS_CLASSIC",
+      "text": "DESPERADO"
+    },
+    {
+      "key": "FN_PUSS_CLASSIC_DESC",
+      "text": "Survive if you DARE!"
+    },
+    {
+      "key": "FN_PUSS_CLICK_TO_BEGIN",
+      "text": "Touch to Begin!"
+    },
+    {
+      "key": "FN_PUSS_CLICK_TO_CHOOSE",
+      "text": "Touch to Choose"
+    },
+    {
+      "key": "FN_PUSS_COMPLETE",
+      "text": "Complete"
+    },
+    {
+      "key": "FN_PUSS_EXTRAS",
+      "text": "EXTRAS"
+    },
+    {
+      "key": "FN_PUSS_EXTRA_LIFE1",
+      "text": "extra"
+    },
+    {
+      "key": "FN_PUSS_EXTRA_LIFE2",
+      "text": "life"
+    },
+    {
+      "key": "FN_PUSS_FACT_001",
+      "text": "\"Thumbelina\" takes inspiration from the older tale \"Tom Thumb\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_002",
+      "text": "In the first telling of the \"Three Little Pigs\", the wolf ate the first two pigs."
+    },
+    {
+      "key": "FN_PUSS_FACT_003",
+      "text": "Mother Goose only appears in one nursery rhyme."
+    },
+    {
+      "key": "FN_PUSS_FACT_004",
+      "text": "Peter Pan first appeared in a section of \"The Little White Bird\", a 1902 novel written by L.M.Barrie."
+    },
+    {
+      "key": "FN_PUSS_FACT_005",
+      "text": "The moral of \"Cinderella\" is that beauty is a treasure, but graciousness is priceless."
+    },
+    {
+      "key": "FN_PUSS_FACT_006",
+      "text": "When Thumbelina married the Flower-Fairy prince, he gave her a pair of fairy wings as a present."
+    },
+    {
+      "key": "FN_PUSS_FACT_007",
+      "text": "The story of \"Puss In Boots\" originally comes from France."
+    },
+    {
+      "key": "FN_PUSS_FACT_008",
+      "text": "Goldilocks didn't get her famous name until 67 years after the first Three Bears publication."
+    },
+    {
+      "key": "FN_PUSS_FACT_009",
+      "text": "Studies have shown that children who read \"The boy who cried wolf\" are more likely to lie."
+    },
+    {
+      "key": "FN_PUSS_FACT_010",
+      "text": "\"Humpty Dumpty\" was originally a riddle with the answer being an egg."
+    },
+    {
+      "key": "FN_PUSS_FACT_011",
+      "text": "In early versions of \"The Frog Prince\", a night on the princess's pillow turned the Frog into a prince."
+    },
+    {
+      "key": "FN_PUSS_FACT_012",
+      "text": "Several cats appear in Aesop's Fables such as \"The Fox and the Cat\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_013",
+      "text": "The Emperor's New Clothes are invisible."
+    },
+    {
+      "key": "FN_PUSS_FACT_014",
+      "text": "It is quite common in fairytales for cats to be able to talk, much to their owners' surprise."
+    },
+    {
+      "key": "FN_PUSS_FACT_015",
+      "text": "The Brothers Grimm's first book of fairytales was published in 1812."
+    },
+    {
+      "key": "FN_PUSS_FACT_016",
+      "text": "Less than 10% of fairytales feature a fairy!"
+    },
+    {
+      "key": "FN_PUSS_FACT_017",
+      "text": "A statue of the Little Mermaid sits on a rock in the Copenhagen harbor in Langelinie."
+    },
+    {
+      "key": "FN_PUSS_FACT_018",
+      "text": "\"Jack and the Beanstalk\" was first told by the Vikings."
+    },
+    {
+      "key": "FN_PUSS_FACT_019",
+      "text": "Little Bo-Peep has lost her sheep.  Reward offered. No questions asked."
+    },
+    {
+      "key": "FN_PUSS_FACT_020",
+      "text": "Dick Whittington bought his cat for a penny which then earned him great riches."
+    },
+    {
+      "key": "FN_PUSS_FACT_021",
+      "text": "The gingerbread house in Hansel and Gretel is not only edible but functional as well."
+    },
+    {
+      "key": "FN_PUSS_FACT_022",
+      "text": "\"Puss In Boots\" was first released in 1697 and was an instant success."
+    },
+    {
+      "key": "FN_PUSS_FACT_023",
+      "text": "In alternate versions of the tale, Goldilocks was arrested for stealing the bears' porridge!"
+    },
+    {
+      "key": "FN_PUSS_FACT_024",
+      "text": "There have been more than 50 feature films based on \"Cinderella\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_025",
+      "text": "In the tale \"The White Cat\", a prince falls in love with a white cat - who is actually a princess!"
+    },
+    {
+      "key": "FN_PUSS_FACT_026",
+      "text": "In the original tale, Pinnochio rescues Geppetto from the belly of a shark."
+    },
+    {
+      "key": "FN_PUSS_FACT_027",
+      "text": "Run, run as fast as you can! You can't catch me, I'm the Gingerbread Man!"
+    },
+    {
+      "key": "FN_PUSS_FACT_028",
+      "text": "Jumping candlesticks was once a form of fortunetelling and also a sport!"
+    },
+    {
+      "key": "FN_PUSS_FACT_029",
+      "text": "The first record of the Pied Piper was in a stained glass window in Hamelin erected in 1300."
+    },
+    {
+      "key": "FN_PUSS_FACT_030",
+      "text": "In alternate versions of \"The Frog Prince\", the frog is thrown at a wall to break the curse."
+    },
+    {
+      "key": "FN_PUSS_FACT_031",
+      "text": "Jack is the most popular boys' name found in nursery rhymes."
+    },
+    {
+      "key": "FN_PUSS_FACT_032",
+      "text": "Cats are very rarely thwarted in their fairytale adventures."
+    },
+    {
+      "key": "FN_PUSS_FACT_033",
+      "text": "Rapunzel was locked in her tower in the woods when she was 12."
+    },
+    {
+      "key": "FN_PUSS_FACT_034",
+      "text": "Jack and Jill are mentioned in over 20 popular songs."
+    },
+    {
+      "key": "FN_PUSS_FACT_035",
+      "text": "\"The Goose That Laid the Golden Eggs\" is a fable written by Aesop over 2500 years ago!"
+    },
+    {
+      "key": "FN_PUSS_FACT_036",
+      "text": "Santa Claus and the Norse god Odin both put gifts in footwear for children."
+    },
+    {
+      "key": "FN_PUSS_FACT_037",
+      "text": "Snow White has a sister - Rose Red."
+    },
+    {
+      "key": "FN_PUSS_FACT_038",
+      "text": "A variant of the Gingerbread Man tale is \"The Runaway Pancake\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_039",
+      "text": "Rapunzel is named after the Rampion Bellflower which grows mainly in Europe."
+    },
+    {
+      "key": "FN_PUSS_FACT_040",
+      "text": "There are over 650 fables supposedly written by Aesop."
+    },
+    {
+      "key": "FN_PUSS_FACT_041",
+      "text": "In \"Beauty and the Beast\", Belle's tears magically turn The Beast back into a prince!"
+    },
+    {
+      "key": "FN_PUSS_FACT_042",
+      "text": "The Brothers Grimm collected their fairytales from various storytellers and peasants."
+    },
+    {
+      "key": "FN_PUSS_FACT_043",
+      "text": "The story of the Pied Piper is based on the real town of Hamelin where many children went missing."
+    },
+    {
+      "key": "FN_PUSS_FACT_044",
+      "text": "Cinderella's original name was \"Rhodopis\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_045",
+      "text": "\"Peter Pan\" was first performed as a play and then converted into a novel."
+    },
+    {
+      "key": "FN_PUSS_FACT_046",
+      "text": "Many languages have a phrase like 'Once upon a time' to begin fairytales."
+    },
+    {
+      "key": "FN_PUSS_FACT_047",
+      "text": "The Hansel and Gretel tale proves that putting your head in a burning hot oven is never a good idea."
+    },
+    {
+      "key": "FN_PUSS_FACT_048",
+      "text": "Originally, Aladdin was given no limit on the number of wishes he could make!"
+    },
+    {
+      "key": "FN_PUSS_FACT_049",
+      "text": "The Ugly Duckling was just misunderstood."
+    },
+    {
+      "key": "FN_PUSS_FACT_050",
+      "text": "In Charles Dickens' \"A Christmas Carol\", the word 'humbug' appears 8 times."
+    },
+    {
+      "key": "FN_PUSS_FACT_051",
+      "text": "A reference to Jack and Jill can be found in Shakespeare's \"A Midsummer Night's Dream\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_052",
+      "text": "Cinderella wore sandals in the earliest version of the story."
+    },
+    {
+      "key": "FN_PUSS_FACT_053",
+      "text": "\"Jack and Jill\" was originally published in \"Mother Goose's Melody\" in the 1760s."
+    },
+    {
+      "key": "FN_PUSS_FACT_054",
+      "text": "\"Tom Thumb\" was the first fairytale printed in English."
+    },
+    {
+      "key": "FN_PUSS_FACT_055",
+      "text": "In some fairytales, cats are beautiful princesses waiting to be returned to human form."
+    },
+    {
+      "key": "FN_PUSS_FACT_056",
+      "text": "The Brothers Grimm's fairytales have been translated into over 160 languages."
+    },
+    {
+      "key": "FN_PUSS_FACT_057",
+      "text": "The fairytale \"Brother and Sister\" is not to be confused with \"Hansel and Gretel\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_058",
+      "text": "If you can jump over a candlestick without extinguishing the flame, it's said to be good luck."
+    },
+    {
+      "key": "FN_PUSS_FACT_059",
+      "text": "\"To cry wolf\", meaning to give a false alarm, is from the fairytale \"The Boy Who Cried Wolf\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_060",
+      "text": "In the original version, Sleeping Beauty was asleep for 100 years."
+    },
+    {
+      "key": "FN_PUSS_FACT_061",
+      "text": "\"Rumpelstiltskin\" roughly translates to \"Little Rattle Stilt\" in German."
+    },
+    {
+      "key": "FN_PUSS_FACT_062",
+      "text": "What will happen if Pinocchio says \"My nose will grow now\"? Think about it!"
+    },
+    {
+      "key": "FN_PUSS_FACT_063",
+      "text": "The line, \"Fee! Fie! Foe! Fum!\" can be found in Shakespeare's \"King Lear\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_064",
+      "text": "Tom Thumb was accidently boiled into a Christmas pudding. He ate his way to freedom!"
+    },
+    {
+      "key": "FN_PUSS_FACT_065",
+      "text": "\"Little Red Riding Hood\" is a cautionary tale about stranger danger... and wolves."
+    },
+    {
+      "key": "FN_PUSS_FACT_066",
+      "text": "The happy endings in fairytales have often evolved from darker endings."
+    },
+    {
+      "key": "FN_PUSS_FACT_067",
+      "text": "Fairytales were originally for adults as much as children."
+    },
+    {
+      "key": "FN_PUSS_FACT_068",
+      "text": "\"Three Billy Goats Gruff\" is a Norwegian based fairytale."
+    },
+    {
+      "key": "FN_PUSS_FACT_069",
+      "text": "The giant in \"Jack and the Beanstalk\" is sometimes called \"Blunderbore\"."
+    },
+    {
+      "key": "FN_PUSS_FACT_070",
+      "text": "Hans Christian Andersen wrote over 30 original fairytales."
+    },
+    {
+      "key": "FN_PUSS_FACT_071",
+      "text": "In some cultures the tooth fairy is actually a mouse!"
+    },
+    {
+      "key": "FN_PUSS_FACT_HEADING",
+      "text": "FAIRYTALE FACT"
+    },
+    {
+      "key": "FN_PUSS_FAILED",
+      "text": "Failed"
+    },
+    {
+      "key": "FN_PUSS_FINALE",
+      "text": "FINALE"
+    },
+    {
+      "key": "FN_PUSS_GAME_MODE_HEADING",
+      "text": "CHOOSE YOUR DESTINY"
+    },
+    {
+      "key": "FN_PUSS_HARD",
+      "text": "HARD"
+    },
+    {
+      "key": "FN_PUSS_HARD_EXCLAIM",
+      "text": "HARD!"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_1",
+      "text": "50+ More Challenges!"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_10",
+      "text": "(Free Version Only)"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_2",
+      "text": "Desperado Mode!"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_3",
+      "text": "Blades and Backgrounds!"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_4",
+      "text": "Lite"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_5",
+      "text": "Want More?"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_6",
+      "text": "Available In Full Game"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_7",
+      "text": "Score Limit Reached!"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_8",
+      "text": "Thanks for Playing!"
+    },
+    {
+      "key": "FN_PUSS_LITE_UPSELL_9",
+      "text": "This item is only available in the full version!"
+    },
+    {
+      "key": "FN_PUSS_LIVES",
+      "text": "Lives"
+    },
+    {
+      "key": "FN_PUSS_MAGIC_BEAN",
+      "text": "Magic Bean"
+    },
+    {
+      "key": "FN_PUSS_MOVIE_SITE",
+      "text": "MOVIE SITE"
+    },
+    {
+      "key": "FN_PUSS_MOVIE_SITE_CANCEL",
+      "text": "Cancel"
+    },
+    {
+      "key": "FN_PUSS_MOVIE_SITE_MESSAGE",
+      "text": "You are about to connect to an external website"
+    },
+    {
+      "key": "FN_PUSS_MOVIE_SITE_OK",
+      "text": "OK"
+    },
+    {
+      "key": "FN_PUSS_MOVIE_SITE_TITLE",
+      "text": "Notice"
+    },
+    {
+      "key": "FN_PUSS_NEWS_1",
+      "text": "News"
+    },
+    {
+      "key": "FN_PUSS_NEWS_2",
+      "text": "Check out Halfbrick's previous smash-hit iOS game - the high-flying adventure Jetpack Joyride!"
+    },
+    {
+      "key": "FN_PUSS_NEWS_3",
+      "text": "Play now!"
+    },
+    {
+      "key": "FN_PUSS_NEWS_FEED",
+      "text": "Stay tuned for updates!"
+    },
+    {
+      "key": "FN_PUSS_RANK_1",
+      "text": "%dst"
+    },
+    {
+      "key": "FN_PUSS_RANK_2",
+      "text": "%dnd"
+    },
+    {
+      "key": "FN_PUSS_RANK_3",
+      "text": "%drd"
+    },
+    {
+      "key": "FN_PUSS_RANK_4",
+      "text": "%dth"
+    },
+    {
+      "key": "FN_PUSS_REFLEX",
+      "text": "Reflex"
+    },
+    {
+      "key": "FN_PUSS_SAN_RICARDO",
+      "text": "San Ricardo"
+    },
+    {
+      "key": "FN_PUSS_SKY_CASTLE",
+      "text": "Sky Castle"
+    },
+    {
+      "key": "FN_PUSS_SLICE",
+      "text": "Slice"
+    },
+    {
+      "key": "FN_PUSS_SLICE_BONUS_COMBO",
+      "text": "combo"
+    },
+    {
+      "key": "FN_PUSS_SLICE_BONUS_X_FRUIT",
+      "text": "%i fruit"
+    },
+    {
+      "key": "FN_PUSS_SLICE_FRUIT",
+      "text": "SLICE FRUIT!"
+    },
+    {
+      "key": "FN_PUSS_STASH",
+      "text": "STASH"
+    },
+    {
+      "key": "FN_PUSS_SUCCESS",
+      "text": "Success!"
+    },
+    {
+      "key": "FN_PUSS_TO_GO",
+      "text": "to go"
+    },
+    {
+      "key": "FN_UPSELL_1",
+      "text": "play the original fruit slicing hit for free"
+    },
+    {
+      "key": "FRUITNAME_APPLE",
+      "text": "APPLE"
+    },
+    {
+      "key": "FRUITNAME_BANANA",
+      "text": "BANANA"
+    },
+    {
+      "key": "FRUITNAME_COCONUT",
+      "text": "COCONUT"
+    },
+    {
+      "key": "FRUITNAME_DRAGON",
+      "text": "DRAGON FRUIT"
+    },
+    {
+      "key": "FRUITNAME_KIWIFRUIT",
+      "text": "KIWIFRUIT"
+    },
+    {
+      "key": "FRUITNAME_LEMON",
+      "text": "LEMON"
+    },
+    {
+      "key": "FRUITNAME_LIME",
+      "text": "LIME"
+    },
+    {
+      "key": "FRUITNAME_MANGO",
+      "text": "MANGO"
+    },
+    {
+      "key": "FRUITNAME_ORANGE",
+      "text": "ORANGE"
+    },
+    {
+      "key": "FRUITNAME_PASSIONFRUIT",
+      "text": "PASSION FRUIT"
+    },
+    {
+      "key": "FRUITNAME_PEACH",
+      "text": "PEACH"
+    },
+    {
+      "key": "FRUITNAME_PEAR",
+      "text": "PEAR"
+    },
+    {
+      "key": "FRUITNAME_PINEAPPLE",
+      "text": "PINEAPPLE"
+    },
+    {
+      "key": "FRUITNAME_PLUM",
+      "text": "PLUM"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_APPLE",
+      "text": "APPLES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_BANANA",
+      "text": "BANANAS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_COCONUT",
+      "text": "COCONUTS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_DRAGON",
+      "text": "DRAGON FRUITS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_KIWIFRUIT",
+      "text": "KIWIFRUITS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_LEMON",
+      "text": "LEMONS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_LIME",
+      "text": "LIMES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_MANGO",
+      "text": "MANGOES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_ORANGE",
+      "text": "ORANGES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_PASSIONFRUIT",
+      "text": "PASSION FRUITS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_PEACH",
+      "text": "PEACHES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_PEAR",
+      "text": "PEARS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_PINEAPPLE",
+      "text": "PINEAPPLES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_PLUM",
+      "text": "PLUMS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_POMEGRANATE",
+      "text": "POMEGRANATES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_RED_APPLE",
+      "text": "APPLES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_STARFRUIT",
+      "text": "STAR FRUITS"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_STRAWBERRY",
+      "text": "STRAWBERRIES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_TOMATO",
+      "text": "TOMATOES"
+    },
+    {
+      "key": "FRUITNAME_PLURAL_WATERMELON",
+      "text": "WATERMELONS"
+    },
+    {
+      "key": "FRUITNAME_POMEGRANATE",
+      "text": "POMEGRANATE"
+    },
+    {
+      "key": "FRUITNAME_RED_APPLE",
+      "text": "APPLE"
+    },
+    {
+      "key": "FRUITNAME_STARFRUIT",
+      "text": "STAR FRUIT"
+    },
+    {
+      "key": "FRUITNAME_STRAWBERRY",
+      "text": "STRAWBERRY"
+    },
+    {
+      "key": "FRUITNAME_TOMATO",
+      "text": "TOMATO"
+    },
+    {
+      "key": "FRUITNAME_WATERMELON",
+      "text": "WATERMELON"
+    },
+    {
+      "key": "GAME_DESCRIPTION_ITUNES",
+      "text": "Swipe your finger across the screen to deliciously slash and splatter fruit like a true ninja warrior. Be careful of bombs - they are explosive to touch and will put a swift end to your juicy adventure! Fruit Ninja also uses OpenFeint, so players can unlock achievements and shoot for the top of the global leaderboards while racking up OpenFeint points. Your success will also please the wise ninja Sensei, who will accompany your journey with wise words and fun fruit facts. Fruit Ninja is the messiest and most satisfying fruit game ever!"
+    },
+    {
+      "key": "GAME_DESCRIPTION_WIN",
+      "text": "Swipe your finger across the screen to deliciously slash and splatter fruit like a true ninja warrior. Be careful of bombs - they are explosive to touch and will put a swift end to your juicy adventure! Fruit Ninja also uses Xbox LIVE achievements, so players can unlock achievements and shoot for the top of the global leaderboards while racking up gamer score points. Your success will also please the wise ninja Sensei, who will accompany your journey with wise words and fun fruit facts. Fruit Ninja is the messiest and most satisfying fruit game ever!"
+    },
+    {
+      "key": "GAME_KEYWORD_01",
+      "text": "fruit"
+    },
+    {
+      "key": "GAME_KEYWORD_02",
+      "text": "ninja"
+    },
+    {
+      "key": "GAME_KEYWORD_03",
+      "text": "sesnsei"
+    },
+    {
+      "key": "GAME_KEYWORD_04",
+      "text": "slash"
+    },
+    {
+      "key": "GAME_KEYWORD_05",
+      "text": "blade"
+    },
+    {
+      "key": "GAME_KEYWORD_06",
+      "text": "bomb"
+    },
+    {
+      "key": "GAME_KEYWORD_07",
+      "text": "sword"
+    },
+    {
+      "key": "GAME_KEYWORD_08",
+      "text": "slice"
+    },
+    {
+      "key": "GAME_KEYWORD_09",
+      "text": "apple"
+    },
+    {
+      "key": "GAME_KEYWORD_10",
+      "text": "watermelon"
+    },
+    {
+      "key": "GAME_KEYWORD_11",
+      "text": "achievement"
+    },
+    {
+      "key": "GAME_KEYWORD_12",
+      "text": "banana"
+    },
+    {
+      "key": "GAME_KEYWORD_13",
+      "text": "orange"
+    },
+    {
+      "key": "GAME_KEYWORD_14",
+      "text": "juice"
+    },
+    {
+      "key": "GAME_KEYWORD_15",
+      "text": "Fruit slicing action!"
+    },
+    {
+      "key": "GAME_TEXTURE_00",
+      "text": "%i FRUIT COMBO + %i"
+    },
+    {
+      "key": "GAME_TEXTURE_01",
+      "text": "GAME OVER"
+    },
+    {
+      "key": "GAME_TEXTURE_02",
+      "text": "NEW BEST!"
+    },
+    {
+      "key": "GAME_TEXTURE_03",
+      "text": "SENSEI'S FRUIT FACT"
+    },
+    {
+      "key": "GAME_TEXTURE_04",
+      "text": "LEADERBOARDS"
+    },
+    {
+      "key": "GAME_TEXTURE_05",
+      "text": "RETRY"
+    },
+    {
+      "key": "GAME_TEXTURE_06",
+      "text": "QUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_07",
+      "text": "ULTRA RARE + 50"
+    },
+    {
+      "key": "GAME_TEXTURE_08",
+      "text": "BEST COMBO:"
+    },
+    {
+      "key": "GAME_TEXTURE_09",
+      "text": "%i FRUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_10",
+      "text": "NO COMBOS AWARDED"
+    },
+    {
+      "key": "GAME_TEXTURE_100",
+      "text": "READY"
+    },
+    {
+      "key": "GAME_TEXTURE_101",
+      "text": "CONNECT MICROPHONE TO CHAT"
+    },
+    {
+      "key": "GAME_TEXTURE_102",
+      "text": "GOOD!"
+    },
+    {
+      "key": "GAME_TEXTURE_103",
+      "text": "BAD!"
+    },
+    {
+      "key": "GAME_TEXTURE_104",
+      "text": "YOUR FRUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_105",
+      "text": "ANYONE'S FRUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_106",
+      "text": "THEIR FRUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_107",
+      "text": "START VOICE CHAT"
+    },
+    {
+      "key": "GAME_TEXTURE_108",
+      "text": "VOICE CHAT ENABLED"
+    },
+    {
+      "key": "GAME_TEXTURE_109",
+      "text": "VOICE CHAT NOT ENABLED"
+    },
+    {
+      "key": "GAME_TEXTURE_11",
+      "text": "SLICE 3 FRUIT IN A ROW TO GET A COMBO"
+    },
+    {
+      "key": "GAME_TEXTURE_110",
+      "text": "CONNECT TO WIFI FOR VOICE CHAT"
+    },
+    {
+      "key": "GAME_TEXTURE_111",
+      "text": "TO BUY"
+    },
+    {
+      "key": "GAME_TEXTURE_112",
+      "text": "TO SPEND"
+    },
+    {
+      "key": "GAME_TEXTURE_113",
+      "text": "CONNECTING"
+    },
+    {
+      "key": "GAME_TEXTURE_114",
+      "text": "CONNECT TO PLAY ONLINE"
+    },
+    {
+      "key": "GAME_TEXTURE_115",
+      "text": "CONNECT"
+    },
+    {
+      "key": "GAME_TEXTURE_116",
+      "text": "NEED MORE COINS"
+    },
+    {
+      "key": "GAME_TEXTURE_117",
+      "text": "CHANGE MODE"
+    },
+    {
+      "key": "GAME_TEXTURE_118",
+      "text": "%i FRUIT COMBO?!?!"
+    },
+    {
+      "key": "GAME_TEXTURE_12",
+      "text": "TIME UP"
+    },
+    {
+      "key": "GAME_TEXTURE_13",
+      "text": "COMBO ROOKIE"
+    },
+    {
+      "key": "GAME_TEXTURE_14",
+      "text": "COMBO APPRENTICE!"
+    },
+    {
+      "key": "GAME_TEXTURE_15",
+      "text": "COMBO ASSASSIN!!"
+    },
+    {
+      "key": "GAME_TEXTURE_16",
+      "text": "COMBO MASTER!!!"
+    },
+    {
+      "key": "GAME_TEXTURE_17",
+      "text": "COMBO GOD!!!!"
+    },
+    {
+      "key": "GAME_TEXTURE_18",
+      "text": "%i FRUIT COMBO"
+    },
+    {
+      "key": "GAME_TEXTURE_19",
+      "text": "GREAT %i FRUIT COMBO"
+    },
+    {
+      "key": "GAME_TEXTURE_20",
+      "text": "MEGA %i FRUIT COMBO"
+    },
+    {
+      "key": "GAME_TEXTURE_21",
+      "text": "GLORIOUS %i FRUIT COMBO"
+    },
+    {
+      "key": "GAME_TEXTURE_22",
+      "text": "IMPOSSIBLE %i FRUIT COMBO"
+    },
+    {
+      "key": "GAME_TEXTURE_23",
+      "text": "NO FRUIT DROPPED!"
+    },
+    {
+      "key": "GAME_TEXTURE_24",
+      "text": "NO BOMBS HIT!"
+    },
+    {
+      "key": "GAME_TEXTURE_25",
+      "text": "BOMB LOVER"
+    },
+    {
+      "key": "GAME_TEXTURE_26",
+      "text": "NO BANANAS SLICED!"
+    },
+    {
+      "key": "GAME_TEXTURE_27",
+      "text": "ALL THREE BANANAS"
+    },
+    {
+      "key": "GAME_TEXTURE_28",
+      "text": "NOTHIN BUT FRENZY"
+    },
+    {
+      "key": "GAME_TEXTURE_29",
+      "text": "NOTHIN BUT FREEZE"
+    },
+    {
+      "key": "GAME_TEXTURE_30",
+      "text": "NOTHIN BUT DOUBLE"
+    },
+    {
+      "key": "GAME_TEXTURE_31",
+      "text": "FIRST AND LAST FRUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_32",
+      "text": "TRIPLE DIGITS"
+    },
+    {
+      "key": "GAME_TEXTURE_33",
+      "text": "MULTIPLE OF FIVE"
+    },
+    {
+      "key": "GAME_TEXTURE_34",
+      "text": "MULTIPLE OF TEN"
+    },
+    {
+      "key": "GAME_TEXTURE_35",
+      "text": "RIGHT ON A HUNDRED"
+    },
+    {
+      "key": "GAME_TEXTURE_36",
+      "text": "FRUIT SALAD"
+    },
+    {
+      "key": "GAME_TEXTURE_37",
+      "text": "JUICY SLICING"
+    },
+    {
+      "key": "GAME_TEXTURE_38",
+      "text": "TASTY FRUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_39",
+      "text": "DELICIOUS FRUIT"
+    },
+    {
+      "key": "GAME_TEXTURE_40",
+      "text": "FRUIT MIX"
+    },
+    {
+      "key": "GAME_TEXTURE_41",
+      "text": "60 SECONDS"
+    },
+    {
+      "key": "GAME_TEXTURE_42",
+      "text": "GO!!"
+    },
+    {
+      "key": "GAME_TEXTURE_43",
+      "text": "FREEZE"
+    },
+    {
+      "key": "GAME_TEXTURE_44",
+      "text": "BOOST"
+    },
+    {
+      "key": "GAME_TEXTURE_45",
+      "text": "FRENZY"
+    },
+    {
+      "key": "GAME_TEXTURE_46",
+      "text": "DOUBLE POINTS"
+    },
+    {
+      "key": "GAME_TEXTURE_47",
+      "text": "SCORE X2"
+    },
+    {
+      "key": "GAME_TEXTURE_48",
+      "text": "HINTS"
+    },
+    {
+      "key": "GAME_TEXTURE_49",
+      "text": "BONUS"
+    },
+    {
+      "key": "GAME_TEXTURE_50",
+      "text": "TOTAL"
+    },
+    {
+      "key": "GAME_TEXTURE_51",
+      "text": "TIME UP!"
+    },
+    {
+      "key": "GAME_TEXTURE_52",
+      "text": "EXTRA TIME"
+    },
+    {
+      "key": "GAME_TEXTURE_53",
+      "text": "GAME OVER"
+    },
+    {
+      "key": "GAME_TEXTURE_54",
+      "text": "SCORE"
+    },
+    {
+      "key": "GAME_TEXTURE_55",
+      "text": "AMAZING!"
+    },
+    {
+      "key": "GAME_TEXTURE_56",
+      "text": "ALPHABETIC!"
+    },
+    {
+      "key": "GAME_TEXTURE_57",
+      "text": "BANANA CAKE!"
+    },
+    {
+      "key": "GAME_TEXTURE_58",
+      "text": "CHECKERS!"
+    },
+    {
+      "key": "GAME_TEXTURE_59",
+      "text": "DELICIOUS!"
+    },
+    {
+      "key": "GAME_TEXTURE_60",
+      "text": "EXQUISITE!"
+    },
+    {
+      "key": "GAME_TEXTURE_61",
+      "text": "FLIGHTLESS BIRD!"
+    },
+    {
+      "key": "GAME_TEXTURE_62",
+      "text": "FOUR OF A KIND!"
+    },
+    {
+      "key": "GAME_TEXTURE_63",
+      "text": "FRUIT SALAD!"
+    },
+    {
+      "key": "GAME_TEXTURE_64",
+      "text": "FRUITS BASKET!"
+    },
+    {
+      "key": "GAME_TEXTURE_65",
+      "text": "FRUITY!"
+    },
+    {
+      "key": "GAME_TEXTURE_66",
+      "text": "FULL HOUSE!"
+    },
+    {
+      "key": "GAME_TEXTURE_67",
+      "text": "FULL PUNNET!"
+    },
+    {
+      "key": "GAME_TEXTURE_68",
+      "text": "GOT THE SWEATS!"
+    },
+    {
+      "key": "GAME_TEXTURE_69",
+      "text": "ITS APPLES!"
+    },
+    {
+      "key": "GAME_TEXTURE_70",
+      "text": "JUICY!"
+    },
+    {
+      "key": "GAME_TEXTURE_71",
+      "text": "LEMON LINE UP"
+    },
+    {
+      "key": "GAME_TEXTURE_72",
+      "text": "LOVELY BUNCH"
+    },
+    {
+      "key": "GAME_TEXTURE_73",
+      "text": "LUSH!"
+    },
+    {
+      "key": "GAME_TEXTURE_74",
+      "text": "MANGO SMOOTHIE!"
+    },
+    {
+      "key": "GAME_TEXTURE_75",
+      "text": "MEGA MIX!"
+    },
+    {
+      "key": "GAME_TEXTURE_76",
+      "text": "MELON MAINA!"
+    },
+    {
+      "key": "GAME_TEXTURE_77",
+      "text": "PASSION PUNCH"
+    },
+    {
+      "key": "GAME_TEXTURE_78",
+      "text": "PEAR TREE!"
+    },
+    {
+      "key": "GAME_TEXTURE_79",
+      "text": "SCURVY CURE!"
+    },
+    {
+      "key": "GAME_TEXTURE_80",
+      "text": "SUCCULENT!"
+    },
+    {
+      "key": "GAME_TEXTURE_81",
+      "text": "TASTY!"
+    },
+    {
+      "key": "GAME_TEXTURE_82",
+      "text": "THREE OF A KIND!"
+    },
+    {
+      "key": "GAME_TEXTURE_83",
+      "text": "TWO PAIR!"
+    },
+    {
+      "key": "GAME_TEXTURE_84",
+      "text": "VITAMIN C!"
+    },
+    {
+      "key": "GAME_TEXTURE_85",
+      "text": "YUMMY!"
+    },
+    {
+      "key": "GAME_TEXTURE_86",
+      "text": "LEADERBOARDS"
+    },
+    {
+      "key": "GAME_TEXTURE_87",
+      "text": "UNLOCKED NEW BLADE"
+    },
+    {
+      "key": "GAME_TEXTURE_88",
+      "text": "UNLOCKED NEW BACKGROUND"
+    },
+    {
+      "key": "GAME_TEXTURE_89",
+      "text": "VERSION"
+    },
+    {
+      "key": "GAME_TEXTURE_90",
+      "text": "DEVELOPERS"
+    },
+    {
+      "key": "GAME_TEXTURE_91",
+      "text": "THANKS"
+    },
+    {
+      "key": "GAME_TEXTURE_92",
+      "text": "CREDITS"
+    },
+    {
+      "key": "GAME_TEXTURE_93",
+      "text": "SPECIAL THANKS"
+    },
+    {
+      "key": "GAME_TEXTURE_94",
+      "text": "ALL NINJAS HATE FRUIT!"
+    },
+    {
+      "key": "GAME_TEXTURE_95",
+      "text": "SWIPE THE FRUIT WITH YOUR FINGER"
+    },
+    {
+      "key": "GAME_TEXTURE_96",
+      "text": "TO END THEIR JOURNEY"
+    },
+    {
+      "key": "GAME_TEXTURE_97",
+      "text": "BE WARY OF BOMBS,"
+    },
+    {
+      "key": "GAME_TEXTURE_98",
+      "text": "HOPE FOR RANDOM CRITICALS,"
+    },
+    {
+      "key": "GAME_TEXTURE_99",
+      "text": "AND MAKE SENSEI PROUD"
+    },
+    {
+      "key": "GEN_ADD_FRIENDS",
+      "text": "Add Friends"
+    },
+    {
+      "key": "GEN_BACK",
+      "text": "Back"
+    },
+    {
+      "key": "GEN_CANCEL",
+      "text": "Cancel"
+    },
+    {
+      "key": "GEN_CONFIRM",
+      "text": "Confirm"
+    },
+    {
+      "key": "GEN_COPY",
+      "text": "Copy"
+    },
+    {
+      "key": "GEN_DISCONNECT",
+      "text": "Disconnect"
+    },
+    {
+      "key": "GEN_EMPTY",
+      "text": "Empty"
+    },
+    {
+      "key": "GEN_ERASE",
+      "text": "Erase"
+    },
+    {
+      "key": "GEN_ITEMS",
+      "text": "Items"
+    },
+    {
+      "key": "GEN_LEVEL",
+      "text": "Level"
+    },
+    {
+      "key": "GEN_NEXT",
+      "text": "Next"
+    },
+    {
+      "key": "GEN_NO",
+      "text": "No"
+    },
+    {
+      "key": "GEN_OK",
+      "text": "OK"
+    },
+    {
+      "key": "GEN_PLAY",
+      "text": "Play"
+    },
+    {
+      "key": "GEN_QUIT",
+      "text": "Quit"
+    },
+    {
+      "key": "GEN_READY",
+      "text": "Ready"
+    },
+    {
+      "key": "GEN_YES",
+      "text": "Yes"
+    },
+    {
+      "key": "JJ_UPSELL_1",
+      "text": "FROM THE CREATORS OF"
+    },
+    {
+      "key": "JJ_UPSELL_2",
+      "text": "GAME OF THE YEAR"
+    },
+    {
+      "key": "JJ_UPSELL_3",
+      "text": "- POCKET GAMER AWARDS 2012"
+    },
+    {
+      "key": "JJ_UPSELL_4",
+      "text": "GET IT FREE"
+    },
+    {
+      "key": "LEADERBOARDS_BEST_SCORE",
+      "text": "FRIEND'S BEST SCORES"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_00",
+      "text": "First Steps"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_01",
+      "text": "Fear me!"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_02",
+      "text": "Capped Cat"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_03",
+      "text": "Tough Tabby"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_04",
+      "text": "Stylin'"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_05",
+      "text": "Lite Lover"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_06",
+      "text": "Tall Tale"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_DESC_00",
+      "text": "Play your first challenge"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_DESC_01",
+      "text": "Score over 1000 in Bandito"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_DESC_02",
+      "text": "Reach the score limit in Bandito"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_DESC_03",
+      "text": "Complete a hard challenge"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_DESC_04",
+      "text": "Equip an item from the stash"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_DESC_05",
+      "text": "Slice 1000 fruit total"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_DESC_06",
+      "text": "Post a score to Facebook or Twitter"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_Post_DESC_00",
+      "text": "Played your first challenge"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_Post_DESC_01",
+      "text": "Scored over 1000 in Bandito"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_Post_DESC_02",
+      "text": "Reached the score limit in Bandito"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_Post_DESC_03",
+      "text": "Completed a hard challenge"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_Post_DESC_04",
+      "text": "Equipped an item from the stash"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_Post_DESC_05",
+      "text": "Sliced 1000 fruit total"
+    },
+    {
+      "key": "LITE_ACHIEVEMENT_Post_DESC_06",
+      "text": "Posted a score to Facebook or Twitter"
+    },
+    {
+      "key": "LOADING",
+      "text": "Loading..."
+    },
+    {
+      "key": "MAC_OS_ACHIEVEMENTS_SECRET",
+      "text": "SECRET"
+    },
+    {
+      "key": "MAC_OS_ACHIEVEMENTS_TOTAL_POINTS",
+      "text": "TOTAL POINTS:"
+    },
+    {
+      "key": "MAC_OS_MENU_ACHIEVEMENTS",
+      "text": "ACHIEVEMENTS"
+    },
+    {
+      "key": "MAC_OS_OPTIONS_APPLY",
+      "text": "APPLY"
+    },
+    {
+      "key": "MAC_OS_OPTIONS_FULLSCREEN",
+      "text": "FULLSCREEN"
+    },
+    {
+      "key": "MAC_OS_OPTIONS_MUSIC_VOLUME",
+      "text": "MUSIC VOLUME"
+    },
+    {
+      "key": "MAC_OS_OPTIONS_REQUIRES_RESTART",
+      "text": "REQUIRES RESTART"
+    },
+    {
+      "key": "MAC_OS_OPTIONS_SFX_VOLUME",
+      "text": "SFX VOLUME"
+    },
+    {
+      "key": "MAC_OS_OPTIONS_WIDESCREEN",
+      "text": "WIDESCREEN"
+    },
+    {
+      "key": "MENU_BATTLE_MULTIPLAYER",
+      "text": "Multiplayer"
+    },
+    {
+      "key": "MENU_BATTLE_SINGLE_PLAYER",
+      "text": "Single Player"
+    },
+    {
+      "key": "MENU_DIFFICULTY_EASY",
+      "text": "Easy"
+    },
+    {
+      "key": "MENU_DIFFICULTY_HARD",
+      "text": "Hard"
+    },
+    {
+      "key": "MENU_DIFFICULTY_MEDIUM",
+      "text": "Medium"
+    },
+    {
+      "key": "MENU_GAME_MODE_ARCADE",
+      "text": "Arcade Mode"
+    },
+    {
+      "key": "MENU_GAME_MODE_CLASSIC",
+      "text": "Classic"
+    },
+    {
+      "key": "MENU_GAME_MODE_ZEN",
+      "text": "Zen Mode"
+    },
+    {
+      "key": "MENU_LANGUAGE_DANISH",
+      "text": "Dansk"
+    },
+    {
+      "key": "MENU_LANGUAGE_DUTCH",
+      "text": "Nederlands"
+    },
+    {
+      "key": "MENU_LANGUAGE_ENGLISH",
+      "text": "English"
+    },
+    {
+      "key": "MENU_LANGUAGE_FINNISH",
+      "text": "Suomi"
+    },
+    {
+      "key": "MENU_LANGUAGE_FRENCH",
+      "text": "Français"
+    },
+    {
+      "key": "MENU_LANGUAGE_GERMAN",
+      "text": "Deutsch"
+    },
+    {
+      "key": "MENU_LANGUAGE_ITALIAN",
+      "text": "Italiano"
+    },
+    {
+      "key": "MENU_LANGUAGE_JAPANESE",
+      "text": "Japanese"
+    },
+    {
+      "key": "MENU_LANGUAGE_KOREAN",
+      "text": "Korean"
+    },
+    {
+      "key": "MENU_LANGUAGE_NORWEGIAN",
+      "text": "Norsk"
+    },
+    {
+      "key": "MENU_LANGUAGE_SPANISH",
+      "text": "Español"
+    },
+    {
+      "key": "MENU_LANGUAGE_SWEDISH",
+      "text": "Svenska"
+    },
+    {
+      "key": "MENU_MAIN_SETTINGS",
+      "text": "Settings"
+    },
+    {
+      "key": "MENU_MAIN_TITLE",
+      "text": "Main Menu"
+    },
+    {
+      "key": "MENU_QUIT_CONFIRM",
+      "text": "Are you sure you want to quit?"
+    },
+    {
+      "key": "MENU_SELECT_DIFFICULTY",
+      "text": "Difficulty"
+    },
+    {
+      "key": "MENU_SETTINGS_CREDITS",
+      "text": "Credits"
+    },
+    {
+      "key": "MENU_SETTINGS_LANGUAGE",
+      "text": "Language"
+    },
+    {
+      "key": "MENU_SOUND_MUSIC_VOLUME",
+      "text": "Music"
+    },
+    {
+      "key": "MENU_SOUND_SFX_VOLUME",
+      "text": "SFX"
+    },
+    {
+      "key": "MENU_TEXTURE_00",
+      "text": "Loading"
+    },
+    {
+      "key": "MENU_TEXTURE_01",
+      "text": "Game and software © 2010 Halfbrick Studios."
+    },
+    {
+      "key": "MENU_TEXTURE_02",
+      "text": "Halfbrick Studios and its logo are trademarks of Halfbrick Studios PTY LTD."
+    },
+    {
+      "key": "MENU_TEXTURE_03",
+      "text": "Welcome back"
+    },
+    {
+      "key": "MENU_TEXTURE_04",
+      "text": "FRUIT"
+    },
+    {
+      "key": "MENU_TEXTURE_05",
+      "text": "NINJA"
+    },
+    {
+      "key": "MENU_TEXTURE_06",
+      "text": "HD"
+    },
+    {
+      "key": "MENU_TEXTURE_07",
+      "text": "DOJO"
+    },
+    {
+      "key": "MENU_TEXTURE_08",
+      "text": "NEW GAME"
+    },
+    {
+      "key": "MENU_TEXTURE_09",
+      "text": "NEW"
+    },
+    {
+      "key": "MENU_TEXTURE_10",
+      "text": "NEWS"
+    },
+    {
+      "key": "MENU_TEXTURE_11",
+      "text": "OPENFEINT"
+    },
+    {
+      "key": "MENU_TEXTURE_12",
+      "text": "MORE GAMES"
+    },
+    {
+      "key": "MENU_TEXTURE_13",
+      "text": "SLICE FRUIT TO BEGIN"
+    },
+    {
+      "key": "MENU_TEXTURE_14",
+      "text": "SINGLE PLAYER"
+    },
+    {
+      "key": "MENU_TEXTURE_15",
+      "text": "MULTIPLAYER"
+    },
+    {
+      "key": "MENU_TEXTURE_16",
+      "text": "CLASSIC ATTACK"
+    },
+    {
+      "key": "MENU_TEXTURE_17",
+      "text": "GAME SPEED"
+    },
+    {
+      "key": "MENU_TEXTURE_18",
+      "text": "SLOW"
+    },
+    {
+      "key": "MENU_TEXTURE_19",
+      "text": "MED"
+    },
+    {
+      "key": "MENU_TEXTURE_20",
+      "text": "FAST"
+    },
+    {
+      "key": "MENU_TEXTURE_21",
+      "text": "ZEN DUEL"
+    },
+    {
+      "key": "MENU_TEXTURE_22",
+      "text": "GAME TIME"
+    },
+    {
+      "key": "MENU_TEXTURE_23",
+      "text": "30 SECS"
+    },
+    {
+      "key": "MENU_TEXTURE_24",
+      "text": "60 SECS"
+    },
+    {
+      "key": "MENU_TEXTURE_25",
+      "text": "90 SECS"
+    },
+    {
+      "key": "MENU_TEXTURE_26",
+      "text": "120 SECS"
+    },
+    {
+      "key": "MENU_TEXTURE_27",
+      "text": "180 SECS"
+    },
+    {
+      "key": "MENU_TEXTURE_28",
+      "text": "TAP TO DEPLOY"
+    },
+    {
+      "key": "MENU_TEXTURE_29",
+      "text": "QUIT"
+    },
+    {
+      "key": "MENU_TEXTURE_30",
+      "text": "BACK"
+    },
+    {
+      "key": "MENU_TEXTURE_31",
+      "text": "VS"
+    },
+    {
+      "key": "MENU_TEXTURE_32",
+      "text": "WINS"
+    },
+    {
+      "key": "MENU_TEXTURE_33",
+      "text": "LOSSES"
+    },
+    {
+      "key": "MENU_TEXTURE_34",
+      "text": "YOUR SCORE"
+    },
+    {
+      "key": "MENU_TEXTURE_35",
+      "text": "THEIR SCORE"
+    },
+    {
+      "key": "MENU_TEXTURE_36",
+      "text": "DRAW"
+    },
+    {
+      "key": "MENU_TEXTURE_37",
+      "text": "RETRY"
+    },
+    {
+      "key": "MENU_TEXTURE_38",
+      "text": "CHANGE MODE"
+    },
+    {
+      "key": "MENU_TEXTURE_39",
+      "text": "YOU WIN!"
+    },
+    {
+      "key": "MENU_TEXTURE_40",
+      "text": "BAD LUCK"
+    },
+    {
+      "key": "MENU_TEXTURE_41",
+      "text": "CRITICAL"
+    },
+    {
+      "key": "MENU_TEXTURE_42",
+      "text": "MODE SELECT"
+    },
+    {
+      "key": "MENU_TEXTURE_43",
+      "text": "CLASSIC"
+    },
+    {
+      "key": "MENU_TEXTURE_44",
+      "text": "ZEN MODE"
+    },
+    {
+      "key": "MENU_TEXTURE_45",
+      "text": "ARCADE MODE"
+    },
+    {
+      "key": "MENU_TEXTURE_46",
+      "text": "NO BOMBS!"
+    },
+    {
+      "key": "MENU_TEXTURE_47",
+      "text": "NO LIVES!"
+    },
+    {
+      "key": "MENU_TEXTURE_48",
+      "text": "90 SECS!"
+    },
+    {
+      "key": "MENU_TEXTURE_49",
+      "text": "COMING SOON"
+    },
+    {
+      "key": "MENU_TEXTURE_50",
+      "text": "SENSEI'S SWAG"
+    },
+    {
+      "key": "MENU_TEXTURE_51",
+      "text": "ABOUT"
+    },
+    {
+      "key": "MENU_TEXTURE_52",
+      "text": "FRUIT NINJA"
+    },
+    {
+      "key": "MENU_TEXTURE_53",
+      "text": "SELECTED"
+    },
+    {
+      "key": "MENU_TEXTURE_54",
+      "text": "SELECT"
+    },
+    {
+      "key": "MENU_TEXTURE_55",
+      "text": "LOCKED"
+    },
+    {
+      "key": "MENU_TEXTURE_56",
+      "text": "PAUSED"
+    },
+    {
+      "key": "MENU_TEXTURE_57",
+      "text": "CRITICAL"
+    },
+    {
+      "key": "MENU_TEXTURE_58",
+      "text": "ONLINE"
+    },
+    {
+      "key": "NUM_TEXTURE_00",
+      "text": "1"
+    },
+    {
+      "key": "NUM_TEXTURE_01",
+      "text": "2"
+    },
+    {
+      "key": "NUM_TEXTURE_02",
+      "text": "3"
+    },
+    {
+      "key": "NUM_TEXTURE_03",
+      "text": "4"
+    },
+    {
+      "key": "NUM_TEXTURE_04",
+      "text": "5"
+    },
+    {
+      "key": "NUM_TEXTURE_05",
+      "text": "6"
+    },
+    {
+      "key": "NUM_TEXTURE_06",
+      "text": "7"
+    },
+    {
+      "key": "NUM_TEXTURE_07",
+      "text": "8"
+    },
+    {
+      "key": "NUM_TEXTURE_08",
+      "text": "9"
+    },
+    {
+      "key": "NUM_TEXTURE_09",
+      "text": "10"
+    },
+    {
+      "key": "PAUSE_CONTINUE",
+      "text": "Continue"
+    },
+    {
+      "key": "PAUSE_QUIT",
+      "text": "Quit"
+    },
+    {
+      "key": "PAUSE_RESUME",
+      "text": "Resume"
+    },
+    {
+      "key": "PAUSE_RETRY",
+      "text": "Retry"
+    },
+    {
+      "key": "PAUSE_TITLE",
+      "text": "PAUSED"
+    },
+    {
+      "key": "Parental_00",
+      "text": "Parental controls are blocking this content."
+    },
+    {
+      "key": "RESULTS_DRAW",
+      "text": "Result: Draw"
+    },
+    {
+      "key": "RESULTS_PLACE",
+      "text": "Result: %s place"
+    },
+    {
+      "key": "RESULTS_POSITION_1",
+      "text": "1st"
+    },
+    {
+      "key": "RESULTS_POSITION_2",
+      "text": "2nd"
+    },
+    {
+      "key": "RESULTS_POSITION_3",
+      "text": "3rd"
+    },
+    {
+      "key": "RESULTS_POSITION_4",
+      "text": "4th"
+    },
+    {
+      "key": "RESULTS_SCORE",
+      "text": "Score: %d"
+    },
+    {
+      "key": "Ranking_00",
+      "text": "1st"
+    },
+    {
+      "key": "Ranking_01",
+      "text": "2nd"
+    },
+    {
+      "key": "Ranking_02",
+      "text": "3rd"
+    },
+    {
+      "key": "Ranking_03",
+      "text": "4th"
+    },
+    {
+      "key": "Ranking_04",
+      "text": "5th"
+    },
+    {
+      "key": "Ranking_05",
+      "text": "6th"
+    },
+    {
+      "key": "Ranking_06",
+      "text": "7th"
+    },
+    {
+      "key": "Ranking_07",
+      "text": "8th"
+    },
+    {
+      "key": "Ranking_08",
+      "text": "9th"
+    },
+    {
+      "key": "Ranking_09",
+      "text": "10th"
+    },
+    {
+      "key": "SAVED",
+      "text": "Saving complete"
+    },
+    {
+      "key": "SAVING",
+      "text": "Saving..."
+    },
+    {
+      "key": "SPLASH_LEGAL",
+      "text": "GAME AND SOFTWARE © 2012 HALFBRICK STUDIOS.\nHALFBRICK STUDIOS AND ITS LOGO ARE TRADEMARKS OF HALFBRICK STUDIOS PTY LTD."
+    },
+    {
+      "key": "SUPER_FRUIT_MULTIPLE_HIT",
+      "text": "%i Hits"
+    },
+    {
+      "key": "SUPER_FRUIT_ONE_HIT",
+      "text": "1 Hit"
+    },
+    {
+      "key": "SUPER_FRUIT_SLICE",
+      "text": "Slice"
+    },
+    {
+      "key": "TITLE_TOUCH",
+      "text": "Click anywhere to play!"
+    },
+    {
+      "key": "TITLE_TOUCH_PC",
+      "text": "Click anywhere to play!"
+    },
+    {
+      "key": "WP7_02",
+      "text": "Production Team"
+    },
+    {
+      "key": "WP7_03",
+      "text": "Test Team"
+    },
+    {
+      "key": "WP7_04",
+      "text": "Product Planning & Business Team"
+    },
+    {
+      "key": "WP7_05",
+      "text": "Marketing"
+    },
+    {
+      "key": "WP7_07",
+      "text": "Language"
+    },
+    {
+      "key": "WP7_08",
+      "text": "PAUSE"
+    },
+    {
+      "key": "WP7_09",
+      "text": "PAUSED"
+    },
+    {
+      "key": "WP7_10",
+      "text": "Error"
+    },
+    {
+      "key": "WP7_12",
+      "text": "Buy Our Game"
+    },
+    {
+      "key": "WP7_13",
+      "text": "Buy Now!"
+    },
+    {
+      "key": "WP7_14",
+      "text": "Game Modes"
+    },
+    {
+      "key": "WP7_15",
+      "text": "Help & Options"
+    },
+    {
+      "key": "WP7_16",
+      "text": "Classic"
+    },
+    {
+      "key": "WP7_17",
+      "text": "Arcade"
+    },
+    {
+      "key": "WP7_18",
+      "text": "Zen"
+    },
+    {
+      "key": "WP7_19",
+      "text": "Unlockable items in Sensei's Swag"
+    },
+    {
+      "key": "WP7_20",
+      "text": "New Backgrounds"
+    },
+    {
+      "key": "WP7_21",
+      "text": "New Swords"
+    },
+    {
+      "key": "WP7_22",
+      "text": "Achievements"
+    },
+    {
+      "key": "WP7_23",
+      "text": "Leaderboards"
+    },
+    {
+      "key": "WP7_24",
+      "text": "Purchase Full Version"
+    },
+    {
+      "key": "WP7_26",
+      "text": "BONUS POINTS"
+    },
+    {
+      "key": "WP7_27",
+      "text": "Weekly Scores"
+    },
+    {
+      "key": "WP7_28",
+      "text": "Arcade Weekly"
+    },
+    {
+      "key": "WP7_29",
+      "text": "Arcade Total"
+    },
+    {
+      "key": "WP7_30",
+      "text": "Total Fruit"
+    },
+    {
+      "key": "WP7_31",
+      "text": "Gamertag"
+    },
+    {
+      "key": "WP7_33",
+      "text": "Page Up"
+    },
+    {
+      "key": "WP7_34",
+      "text": "Page Down"
+    },
+    {
+      "key": "WP7_35",
+      "text": "Saving content, please do not turn off your device"
+    },
+    {
+      "key": "WP7_38",
+      "text": "Gamer"
+    },
+    {
+      "key": "WP7_39",
+      "text": "Score"
+    },
+    {
+      "key": "WP7_40",
+      "text": "Date"
+    },
+    {
+      "key": "WP7_42",
+      "text": "Accessing leaderboards.#Please wait."
+    },
+    {
+      "key": "WP7_44",
+      "text": "An unknown error has occurred.#The leaderboards data cannot be accessed!"
+    },
+    {
+      "key": "WP7_47",
+      "text": "Insufficient space to save game data. Do you wish to retry saving?"
+    },
+    {
+      "key": "WP7_48",
+      "text": "Save failed. Do you wish to retry saving?"
+    },
+    {
+      "key": "WP7_49",
+      "text": "Load failed. Do you wish to retry?"
+    },
+    {
+      "key": "WP7_50",
+      "text": "Change Language"
+    },
+    {
+      "key": "WP7_51",
+      "text": "Are you sure? "
+    },
+    {
+      "key": "WP7_52",
+      "text": "Unable to connect to OpenFeint"
+    },
+    {
+      "key": "WP7_53",
+      "text": "Audio"
+    },
+    {
+      "key": "WP7_55",
+      "text": "Custom music playing."
+    },
+    {
+      "key": "WP7_56",
+      "text": "Would you like to continue listening to custom music?"
+    },
+    {
+      "key": "iTunes_00",
+      "text": "Addicitive"
+    }
+  ]
+}

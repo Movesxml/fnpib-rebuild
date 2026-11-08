@@ -320,6 +320,14 @@ final class GameHost: ObservableObject {
         self.store = entityStore
         self.saveData = saveStore.load()
 
+        // 界面文案：发售版字符串表全量（Content/localizedStrings.json，879 条）。
+        // FNPBUI 不依赖 Core，故在此注入查表闭包；失败时界面回落各自的 fallback。
+        if let url = Bundle.main.url(forResource: "localizedStrings", withExtension: "json"),
+           let data = try? Data(contentsOf: url),
+           let table = try? LocalizedStrings.load(from: data) {
+            UIStrings.lookup = { table.text($0) }
+        }
+
         let contentResult = OriginalContentBundle.load()
         let resolvedContent: OriginalContent?
         let resolvedError: String?
