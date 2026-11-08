@@ -153,7 +153,8 @@ public struct InGameHUDScreen: View {
     /// 仅投影独立 bonus 状态机的真实数值；原版图集与 UISF 坐标尚未闭合。
     private func challengeBonusPanel(_ bonus: ChallengeBonusHUDState) -> some View {
         VStack(spacing: 10) {
-            Text("BONUS")
+            // GAME_TEXTURE_49 = "BONUS"（inGameChallengeHud.json 的 label 组件）。
+            Text(UIStrings.text("GAME_TEXTURE_49", fallback: "BONUS"))
                 .font(.system(size: 13, weight: .heavy, design: .rounded))
                 .tracking(2)
                 .foregroundStyle(UIPalette.parchment.opacity(0.85))
@@ -237,7 +238,8 @@ public struct InGameHUDScreen: View {
 
     private var scoreBlock: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("SCORE")
+            // 原版 HUD 的分数标题来自字符串表 GAME_TEXTURE_54 = "SCORE"（inGameClassic.json）。
+            Text(UIStrings.text("GAME_TEXTURE_54", fallback: "SCORE"))
                 .font(.system(size: 11, weight: .heavy, design: .rounded))
                 .tracking(2)
                 .foregroundStyle(UIPalette.parchment.opacity(0.80))

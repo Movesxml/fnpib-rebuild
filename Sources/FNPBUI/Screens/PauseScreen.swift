@@ -36,7 +36,8 @@ public struct PauseScreen: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 12) {
-                Text("PAUSED")
+                // 原版 pause.uiscreen 的 heading 用 WP7_09 = "PAUSED"。
+                Text(UIStrings.text("WP7_09", fallback: "PAUSED"))
                     .font(.system(size: 28, weight: .black, design: .rounded))
                     .tracking(4)
                     .foregroundStyle(UIPalette.parchment)
@@ -50,7 +51,8 @@ public struct PauseScreen: View {
                     actions.send(.restart)
                 }
 
-                PillButton(title: "QUIT") {
+                // 原版 quitText 用 GEN_QUIT = "Quit"。
+                PillButton(title: UIStrings.text("GEN_QUIT", fallback: "QUIT")) {
                     actions.send(.quitToMenu)
                 }
 

@@ -30,7 +30,8 @@ public struct GameModeScreen: View {
     public var body: some View {
         ScreenScaffold(backgroundKey: "screen.gamemode.background") {
             VStack(spacing: 16) {
-                Text("SELECT MODE")
+                // 原版 gamemode.uiscreen 的标题：FN_PUSS_GAME_MODE_HEADING = "CHOOSE YOUR DESTINY"。
+                Text(UIStrings.text("FN_PUSS_GAME_MODE_HEADING", fallback: "SELECT MODE"))
                     .font(.system(size: 26, weight: .black, design: .rounded))
                     .tracking(3)
                     .foregroundStyle(UIPalette.parchment)
@@ -45,7 +46,8 @@ public struct GameModeScreen: View {
                 .frame(maxWidth: 760)
 
                 HStack(spacing: 12) {
-                    PillButton(title: "BACK", compact: true) {
+                    PillButton(title: UIStrings.text("MENU_TEXTURE_30", fallback: "BACK"),
+                               compact: true) {
                         actions.send(.quitToMenu)
                     }
                     .frame(maxWidth: 160)
@@ -59,6 +61,21 @@ public struct GameModeScreen: View {
             }
             .padding(24)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+
+    // MARK: 文案
+
+    /// 原版 gamemode.uiscreen 只有两条模式文案：FN_PUSS_CLASSIC = "DESPERADO"、
+    /// FN_PUSS_CHALLENGE = "BANDITO"（adventure 不在该屏的文本组件里，保留枚举名）。
+    static func title(for mode: GameMode) -> String {
+        switch mode {
+        case .classic:
+            return UIStrings.text("FN_PUSS_CLASSIC", fallback: mode.displayName)
+        case .challenge:
+            return UIStrings.text("FN_PUSS_CHALLENGE", fallback: mode.displayName)
+        case .adventure:
+            return mode.displayName
         }
     }
 
@@ -77,7 +94,7 @@ public struct GameModeScreen: View {
                 .frame(maxWidth: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
-                Text(mode.displayName)
+                Text(Self.title(for: mode))
                     .font(.system(size: 18, weight: .heavy, design: .rounded))
                     .tracking(1)
                     .foregroundStyle(UIPalette.parchment)
