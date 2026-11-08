@@ -91,7 +91,8 @@ public enum UIArtwork {
     /// 贴图包在 bundle 里的子目录名；XcodeGen 的 folder 引用可能保留原名，两处都试。
     private static let artworkDirectories = ["Artwork", "textures"]
 
-    private static let textureCache = NSCache<NSString, UIImage>()
+    /// NSCache 本身线程安全（文档保证），但类型不是 Sendable，故显式声明。
+    nonisolated(unsafe) private static let textureCache = NSCache<NSString, UIImage>()
 
     /// 按 UISF 引用（如 textures/menus/basicPoster.tex）装载纹理；未命中返回 nil。
     public static func textureImage(for reference: String, bundle: Bundle = .main) -> UIImage? {
