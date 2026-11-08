@@ -33,7 +33,9 @@ public struct MainMenuScreen: View {
                 Spacer(minLength: 8)
                 titleBlock
                 Spacer(minLength: 8)
-                PillButton(title: "PLAY", prominent: true) {
+                // 原版 mainscreen.uiscreen 的主按钮 newgame = MENU_TEXTURE_08 "NEW GAME"。
+                PillButton(title: UIStrings.text("MENU_TEXTURE_08", fallback: "PLAY"),
+                           prominent: true) {
                     actions.send(.showModeSelect)
                 }
                 .frame(maxWidth: 280)
@@ -67,10 +69,13 @@ public struct MainMenuScreen: View {
 
     private var secondaryRow: some View {
         HStack(spacing: 12) {
-            PillButton(title: "EXTRAS", compact: true) {
+            // 原版：extras = FN_PUSS_EXTRAS "EXTRAS"、stash = FN_PUSS_STASH "STASH"。
+            PillButton(title: UIStrings.text("FN_PUSS_EXTRAS", fallback: "EXTRAS"),
+                       compact: true) {
                 actions.send(.openScreen(.extras))
             }
-            PillButton(title: "SHOP", compact: true) {
+            PillButton(title: UIStrings.text("FN_PUSS_STASH", fallback: "SHOP"),
+                       compact: true) {
                 actions.send(.openScreen(.shop))
             }
             PillButton(title: "ABOUT", compact: true) {

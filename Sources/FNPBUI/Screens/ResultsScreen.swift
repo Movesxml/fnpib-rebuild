@@ -66,10 +66,12 @@ public struct ResultsScreen: View {
                 }
 
                 HStack(spacing: 12) {
-                    PillButton(title: "RESTART", prominent: true) {
+                    // 原版 results.uiscreen：retry = MENU_TEXTURE_37 "RETRY"、back = MENU_TEXTURE_30 "BACK"。
+                    PillButton(title: UIStrings.text("MENU_TEXTURE_37", fallback: "RESTART"),
+                               prominent: true) {
                         actions.send(.restart)
                     }
-                    PillButton(title: "MENU") {
+                    PillButton(title: UIStrings.text("MENU_TEXTURE_30", fallback: "MENU")) {
                         actions.send(.quitToMenu)
                     }
                 }
@@ -84,7 +86,8 @@ public struct ResultsScreen: View {
     // MARK: 组件
 
     private var newBestBadge: some View {
-        Text("NEW BEST")
+        // 原版 results.uiscreen 的 newBest 用 GAME_TEXTURE_02 = "NEW BEST!"。
+        Text(UIStrings.text("GAME_TEXTURE_02", fallback: "NEW BEST"))
             .font(.system(size: 14, weight: .black, design: .rounded))
             .tracking(3)
             .foregroundStyle(UIPalette.ink)
