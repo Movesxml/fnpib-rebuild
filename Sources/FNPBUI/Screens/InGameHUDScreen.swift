@@ -216,11 +216,15 @@ public struct InGameHUDScreen: View {
                 )
                 let heart = snapshot.classicHearts.first { $0.index == layout.index }
 
-                ArtworkImage(key: "classicHeartBacking", fallback: .clear, contentMode: .fit)
+                // 原版经典 HUD 没有爱心：backing1..3 用的就是 textures/hud/hud_cross.tex
+                // （inGameClassic.json 的组件表），此处改为按引用取真实资源。
+                ArtworkImage(reference: "textures/hud/hud_cross.tex",
+                             fallback: .clear, contentMode: .fit)
                     .frame(width: side, height: side)
                     .position(backingPosition)
                 if let heart {
-                    ArtworkImage(key: "classicHeartActive", fallback: .clear, contentMode: .fit)
+                    ArtworkImage(reference: "textures/hud/hud_cross.tex",
+                                 fallback: .clear, contentMode: .fit)
                         .frame(width: side, height: side)
                         .scaleEffect(heart.scale)
                         .position(activePosition)

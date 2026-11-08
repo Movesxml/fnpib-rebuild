@@ -128,8 +128,14 @@ public enum UIArtwork {
 }
 
 /// 素材视图：有图用图，无图用色块（版面结构保持不变）。
+///
+/// 两种取图方式：
+///   · key：语义 key（走 asset catalog / <key>.png 的旧路径，多数已无对应资源）；
+///   · reference：UISF 里的原始贴图引用（如 textures/hud/hud_cross.tex），
+///     经 Content/artworkManifest.json 解析到 assets_png 里的实际 png —— 这是有证据的那条路。
 public struct ArtworkImage: View {
     public let key: String
+    public let reference: String?
     public let fallback: Color
     public let contentMode: ContentMode
 
@@ -139,13 +145,30 @@ public struct ArtworkImage: View {
         contentMode: ContentMode = .fill
     ) {
         self.key = key
+        self.reference = nil
         self.fallback = fallback
         self.contentMode = contentMode
     }
 
+    public init(
+        reference: String,
+        fallback: Color = UIPalette.placeholder,
+        contentMode: ContentMode = .fill
+    ) {
+        self.key = reference
+        self.reference = reference
+        self.fallback = fallback
+        self.contentMode = contentMode
+    }
+
+    private var resolvedImage: UIImage? {
+        if let reference { return UIArtwork.textureImage(for: reference) }
+        return UIArtwork.image(key)
+    }
+
     public var body: some View {
         Group {
-            if let image = UIArtwork.image(key) {
+            if let image = resolvedImage {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: contentMode)
