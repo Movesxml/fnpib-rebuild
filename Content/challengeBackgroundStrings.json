@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "language": "English_US",
+  "entries": [
+    {
+      "componentIndex": 8,
+      "name": "livesText",
+      "key": "FN_PUSS_LIVES",
+      "text": "Lives",
+      "fontName": "FontsTrueType/bronic.ttf",
+      "fontSize": 22.0
+    }
+  ]
+}

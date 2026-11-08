@@ -2,6 +2,7 @@ import json
 import math
 import os
 import struct
+import sys
 import tempfile
 from pathlib import Path
 
@@ -121,7 +122,7 @@ def write_json_atomic(path, payload):
         raise
 
 
-def main():
+def extract(uis_path, output_path, expected_count):
     header_identifier, header_count, header_records = parse_table(HEADER_PATH, 40)
     language_identifier, language_count, language_texts = parse_table(LANGUAGE_PATH, 12)
 
@@ -146,7 +147,7 @@ def main():
         if mapping.get(key) != expected:
             raise ValueError(f"sample mismatch for {key}")
 
-    document = json.loads(UISF_PATH.read_text(encoding="utf-8"))
+    document = json.loads(uis_path.read_text(encoding="utf-8"))
     if not isinstance(document, dict):
         raise ValueError("UISF root is not an object")
 
@@ -207,18 +208,28 @@ def main():
             }
         )
 
-    if len(rows) != 11:
-        raise ValueError(f"expected exactly 11 text components, found {len(rows)}")
+    if len(rows) != expected_count:
+        raise ValueError(f"expected exactly {expected_count} text components, found {len(rows)}")
 
     output = {
         "version": 1,
         "language": LANGUAGE,
         "entries": rows,
     }
-    write_json_atomic(OUTPUT_PATH, output)
+    write_json_atomic(output_path, output)
 
     for row in rows:
         print(f"{row['key']}={row['text']}")
+
+
+BACKGROUND_UISF_PATH = Path("reverse/uiscreen_reports/inGameChallengeBackground.json")
+BACKGROUND_OUTPUT_PATH = Path("Content/challengeBackgroundStrings.json")
+
+
+def main():
+    extract(UISF_PATH, OUTPUT_PATH, 11)
+    if "--with-background" in sys.argv:
+        extract(BACKGROUND_UISF_PATH, BACKGROUND_OUTPUT_PATH, 1)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import SwiftUI
 import OSLog
+import FNPBCore
 import FNPBRender
 import FNPBUI
 
@@ -74,9 +75,16 @@ struct ChallengeMapTextureOverlay: View {
             textRenderer = renderer
         }
         do {
-            let strings = try renderer.loadStrings()
-            textQuads = try renderer.makeTextQuads(
-                components: components, strings: strings, viewportSize: viewportSize)
+            // 地图屏 11 条 + 背景屏（Lives 等）；背景先提交，与四边形层级一致。
+            var screens: [(components: [ChallengeMapLayoutComponent],
+                           strings: ChallengeMapStrings)] = []
+            if !backgroundComponents.isEmpty,
+               let backgroundStrings = try? renderer.loadStrings(named: "challengeBackgroundStrings") {
+                screens.append((backgroundComponents, backgroundStrings))
+            }
+            let mapStrings = try renderer.loadStrings()
+            screens.append((components, mapStrings))
+            textQuads = try renderer.makeTextQuads(screens: screens, viewportSize: viewportSize)
         } catch {
             textQuads = []
             logger.error("地图文字渲染失败：\(error.localizedDescription, privacy: .public)")

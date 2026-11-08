@@ -51,28 +51,55 @@ final class ChallengeMapTextRenderer {
 
     private let device: MTLDevice
     private var fonts: [String: FontContext] = [:]
-    private var cachedStrings: ChallengeMapStrings?
+    private var cachedStrings: [String: ChallengeMapStrings] = [:]
 
     init(device: MTLDevice) {
         self.device = device
     }
 
-    /// 读取包内的 challengeMapStrings.json（只读一次）。
-    func loadStrings(bundle: Bundle = .main) throws -> ChallengeMapStrings {
-        if let cachedStrings { return cachedStrings }
+    /// 读取包内的本地化文案 JSON（按资源名缓存）。
+    func loadStrings(named name: String, bundle: Bundle = .main) throws -> ChallengeMapStrings {
+        if let cached = cachedStrings[name] { return cached }
         // Content 资源被 XcodeGen 平铺到 bundle 根目录。
-        guard let url = bundle.url(forResource: "challengeMapStrings", withExtension: "json")
-        else { throw TextRenderError.missingStringsResource }
+        guard let url = bundle.url(forResource: name, withExtension: "json") else {
+            throw TextRenderError.missingStringsResource
+        }
         let strings = try ChallengeMapStrings.load(from: Data(contentsOf: url))
-        cachedStrings = strings
+        cachedStrings[name] = strings
         return strings
     }
 
-    /// 为每个有文案的组件生成文字段；只有新增字形时才重新上传纹理。
+    func loadStrings(bundle: Bundle = .main) throws -> ChallengeMapStrings {
+        try loadStrings(named: "challengeMapStrings", bundle: bundle)
+    }
+
+    /// 单屏入口（保留给只画地图屏的调用方）。
     func makeTextQuads(components: [ChallengeMapLayoutComponent],
                        strings: ChallengeMapStrings,
                        viewportSize: CGSize) throws -> [TextQuad] {
+        try makeTextQuads(screens: [(components, strings)], viewportSize: viewportSize)
+    }
+
+    /// 多屏入口：按传入顺序生成文字段（背景屏在前，地图屏在后）。
+    func makeTextQuads(screens: [(components: [ChallengeMapLayoutComponent],
+                                  strings: ChallengeMapStrings)],
+                       viewportSize: CGSize) throws -> [TextQuad] {
         guard viewportSize.width > 0, viewportSize.height > 0 else { return [] }
+        var all: [TextQuad] = []
+        for screen in screens {
+            all.append(contentsOf: try makeTextQuads(components: screen.components,
+                                                     strings: screen.strings,
+                                                     viewportSize: viewportSize,
+                                                     helper: true))
+        }
+        return all
+    }
+
+    private func makeTextQuads(components: [ChallengeMapLayoutComponent],
+                               strings: ChallengeMapStrings,
+                               viewportSize: CGSize,
+                               helper isHelper: Bool) throws -> [TextQuad] {
+        _ = isHelper
 
         var quads: [TextQuad] = []
         for component in components {
