@@ -168,13 +168,18 @@ public struct ChallengeMapHUDState: Sendable, Equatable {
     public var rounds: [ChallengeMapRoundHUDState]
     /// Current logical 480×320 UIScreen projection; never reused after a failure.
     public var components: [ChallengeMapLayoutComponent]
+    /// inGameChallengeBackground.uiscreen 的投影：画在地图之前（更底层）。
+    /// 原版结算流程在进入地图时对它是 animate_in（challenge_settlement_full_macho.md:28-33）。
+    public var backgroundComponents: [ChallengeMapLayoutComponent]
 
     public init(controllerState: Int,
                 rounds: [ChallengeMapRoundHUDState],
-                components: [ChallengeMapLayoutComponent] = []) {
+                components: [ChallengeMapLayoutComponent] = [],
+                backgroundComponents: [ChallengeMapLayoutComponent] = []) {
         self.controllerState = controllerState
         self.rounds = rounds
         self.components = components
+        self.backgroundComponents = backgroundComponents
     }
 
     public var canSelect: Bool { controllerState == 7 }

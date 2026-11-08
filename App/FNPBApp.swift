@@ -107,7 +107,8 @@ struct ContentView: View {
                 ChallengeMapTextureOverlay(
                     metalContext: renderer.metalContext,
                     adapter: adapter,
-                    components: map.components)
+                    components: map.components,
+                    backgroundComponents: map.backgroundComponents)
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
             }
@@ -423,6 +424,7 @@ final class GameHost: ObservableObject {
         if let map = challengeMap, let input = map.snapshot {
             let spinner = input.isBonus ? "bossChallengeContainer.spinner" : "challengeContainer.spinner"
             var components: [ChallengeMapLayoutComponent] = []
+            var backgroundComponents: [ChallengeMapLayoutComponent] = []
             if let player = challengeMapAnimationPlayer {
                 do {
                     components = try Self.makeChallengeMapComponents(
@@ -435,6 +437,18 @@ final class GameHost: ObservableObject {
             } else {
                 mapProjectionError = "挑战地图缺少 UIScreen 动画播放器"
             }
+            // 背景屏：原版进入地图时对它 animate_in（challenge_settlement_full_macho.md:28-33）。
+            if let backgroundPlayer = challengeBackgroundAnimationPlayer {
+                do {
+                    backgroundComponents = try Self.makeChallengeMapComponents(
+                        from: UIScreenLayoutProjection.project(backgroundPlayer),
+                        iconTargets: [:],
+                        visibleTargets: [:])
+                } catch {
+                    mapProjectionError = (mapProjectionError.map { $0 + "；" } ?? "")
+                        + "挑战背景组件投影失败：\(error.localizedDescription)"
+                }
+            }
             mapState = ChallengeMapHUDState(
                 controllerState: Int(map.state),
                 rounds: input.rounds.enumerated().map { index, round in
@@ -444,7 +458,8 @@ final class GameHost: ObservableObject {
                         outcomeRawValue: round.outcome.map { Int($0.rawValue) },
                         iconIndex: challengeIconTargets["\(spinner).adventureNode_\(index + 1)"])
                 },
-                components: components)
+                components: components,
+                backgroundComponents: backgroundComponents)
         }
         var bonusState: ChallengeBonusHUDState?
         if let host = challengeBonusSettlement,

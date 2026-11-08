@@ -8,6 +8,8 @@ struct ChallengeMapTextureOverlay: View {
     let metalContext: MetalContext
     let adapter: ChallengeMapQuadAdapter
     let components: [ChallengeMapLayoutComponent]
+    /// inGameChallengeBackground 的投影；先于地图提交，因此位于其下层。
+    let backgroundComponents: [ChallengeMapLayoutComponent]
 
     @State private var quads: [OrderedTextureQuad] = []
     @State private var textQuads: [TextQuad] = []
@@ -48,8 +50,12 @@ struct ChallengeMapTextureOverlay: View {
 
     private func updateQuads(viewportSize: CGSize) {
         do {
-            quads = try adapter.makeQuads(
+            // 背景屏先提交，地图后提交 —— 绘制顺序即层级。
+            let background = try adapter.makeQuads(
+                components: backgroundComponents, viewportSize: viewportSize)
+            let map = try adapter.makeQuads(
                 components: components, viewportSize: viewportSize)
+            quads = background + map
         } catch {
             quads = []
             textQuads = []
