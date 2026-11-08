@@ -57,7 +57,7 @@ final class ChallengeMapQuadAdapter {
                 throw ChallengeMapQuadAdapterError.invalidGeometry(componentIndex: componentIndex)
             }
 
-            let texture = try textureHandle(for: resolved.textureKey)
+            let texture = try textureHandle(for: resolved)
             guard let quad = OrderedTextureQuad(
                 texture: texture, componentIndex: componentIndex, vertices: vertices) else {
                 throw ChallengeMapQuadAdapterError.invalidQuad(componentIndex: componentIndex)
@@ -67,16 +67,21 @@ final class ChallengeMapQuadAdapter {
         return result
     }
 
-    private func textureHandle(for key: ChallengeMapTextureKey) throws -> TextureHandle {
-        if let cached = textureCache[key] { return cached }
-        guard let url = UIArtwork.url(for: key.rawValue) else {
-            throw ChallengeMapQuadAdapterError.missingTextureURL(key.rawValue)
+    /// 从已解析的图像建纹理。
+    ///
+    /// 之前这里按语义 key 去找 `<key>.png`，而实际资源是按 UISF 引用存放的
+    /// （menus/basicPoster.png 等），因此每个组件都会走到 missingTextureURL、整屏报错。
+    /// 现在直接用 resolver 已经装载好的 UIImage。
+    private func textureHandle(for resolved: ChallengeMapResolvedTexture) throws -> TextureHandle {
+        if let cached = textureCache[resolved.textureKey] { return cached }
+        guard let data = resolved.image.pngData() else {
+            throw ChallengeMapQuadAdapterError.missingTextureURL(resolved.textureKey.rawValue)
         }
         let handle = try textureLoader.load(TextureAsset(
-            id: "challengeMap/" + key.rawValue,
-            source: .url(url), srgb: false,
+            id: "challengeMap/" + resolved.textureKey.rawValue,
+            source: .data(data), srgb: false,
             generateMipmaps: false, premultipliedAlpha: false))
-        textureCache[key] = handle
+        textureCache[resolved.textureKey] = handle
         return handle
     }
 }
